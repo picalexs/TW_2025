@@ -1,4 +1,5 @@
 const db = require("../dbConnection");
+const oracledb = require("oracledb");
 
 // Data Transfer Object for User entity
 const userDTO = {
