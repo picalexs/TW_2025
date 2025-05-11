@@ -1,0 +1,28 @@
+.language-selector {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    z-index: 1000;
+}
+
+.language-btn {
+    background: none;
+    border: 1px solid #ddd;
+    padding: 5px 10px;
+    margin-left: 5px;
+    cursor: pointer;
+    border-radius: 3px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.language-btn:hover,
+.language-btn.active {
+    opacity: 1;
+    border-color: #4a89dc;
+}
+
+.language-btn.active {
+    background-color: #4a89dc;
+    color: white;
+}

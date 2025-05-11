@@ -1,0 +1,38 @@
+{
+  "nav": {
+    "home": "Home",
+    "pets": "Pets",
+    "about": "About Us",
+    "login": "Login",
+    "signup": "Sign Up"
+  },
+  "hero": {
+    "title": "Find Your Perfect Companion",
+    "subtitle": "Adopt a pet and change both your lives forever",
+    "browseButton": "Browse Pets"
+  },
+  "featuredPets": {
+    "title": "Featured Pets",
+    "subtitle": "Meet some of our amazing pets waiting for adoption"
+  },
+  "about": {
+    "title": "About Our Center",
+    "subtitle": "We're dedicated to finding loving homes for pets in need",
+    "description1": "Our pet adoption center strives to connect animals with loving families. We believe every pet deserves a caring home.",
+    "description2": "Founded in 2020, we have successfully placed over 500 pets in forever homes. Our mission is to ensure every animal finds a loving family."
+  },
+  "users": {
+    "title": "Our Community",
+    "subtitle": "Meet some of our users who have adopted pets",
+    "joined": "Joined",
+    "viewProfile": "View Profile"
+  },
+  "footer": {
+    "tagline": "Finding forever homes for pets in need",
+    "links": "Links",
+    "contact": "Contact Us",
+    "email": "Email: info@petadoptioncenter.com",
+    "phone": "Phone: (123) 456-7890",
+    "copyright": "© 2025 Pet Adoption Center. All rights reserved."
+  }
+}
