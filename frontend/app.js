@@ -8,7 +8,5 @@ document.addEventListener('DOMContentLoaded', () => {
       loadPage(route);
     });
   });
-
-  // Load home page by default
   loadPage('home');
 });
