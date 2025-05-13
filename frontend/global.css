@@ -21,7 +21,6 @@ body {
     background-color: var(--background-color);
 }
 
-/* Header Styles */
 header {
     background-color: var(--light-color);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -32,17 +31,20 @@ header {
 }
 
 .header-container {
-    max-width: 1200px;
+    width: 100%;
     margin: 0 auto;
     padding: 0 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: nowrap;
 }
 
 .logo {
     display: flex;
     align-items: center;
+    margin-left: 0px;
+    flex-shrink: 0;
 }
 
 .logo img {
@@ -58,6 +60,8 @@ header {
 .nav-menu {
     display: flex;
     list-style: none;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 
 .nav-item {
@@ -83,12 +87,14 @@ header {
     display: flex;
     align-items: center;
     justify-content: flex-end;
+    margin-right: 0;
+    gap: 10px;
+    flex-shrink: 0;
 }
 
-/* Language Dropdown Styling */
 .language-dropdown {
     position: relative;
-    margin-left: 15px;
+    margin-left: 10px;
     z-index: 101;
 }
 
@@ -97,7 +103,7 @@ header {
     align-items: center;
     background: none;
     border: none;
-    padding: 8px 12px;
+    padding: 5px 10px;
     font-weight: 600;
     cursor: pointer;
     border-radius: 20px;
@@ -168,7 +174,6 @@ header {
     color: white;
 }
 
-/* Hero Section */
 .hero {
     background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../assets/pet-hero-bg.jpg');
     background-size: cover;
@@ -184,6 +189,8 @@ header {
 
 .hero-content {
     max-width: 800px;
+    padding: 0 1rem;
+    width: 100%;
 }
 
 .hero-title {
@@ -196,7 +203,6 @@ header {
     margin-bottom: 2rem;
 }
 
-/* Featured Pets Section */
 .featured-pets {
     background-color: var(--light-color);
     padding: 4rem 1rem;
@@ -205,6 +211,8 @@ header {
 .section-container {
     max-width: 1200px;
     margin: 0 auto;
+    padding: 0 1rem;
+    width: 100%;
 }
 
 .section-header {
@@ -270,10 +278,9 @@ header {
     font-size: 0.8rem;
 }
 
-/* Button Styles */
 .btn {
     display: inline-block;
-    padding: 0.6rem 1.2rem;
+    padding: 0.4rem 1rem;
     border-radius: 4px;
     text-decoration: none;
     font-weight: 500;
@@ -302,7 +309,6 @@ header {
     color: var(--light-color);
 }
 
-/* About Section */
 .about {
     padding: 4rem 1rem;
     background-color: var(--background-color);
@@ -375,7 +381,6 @@ footer {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* For backwards compatibility - can be removed later */
 .language-selector {
     display: none;
 }
@@ -384,58 +389,61 @@ footer {
     display: none;
 }
 
-/* Media Queries */
-@media (max-width: 768px) {
-    .hero-title {
-        font-size: 2rem;
-    }
-
-    .hero-subtitle {
-        font-size: 1.2rem;
-    }
-
-    .section-title {
-        font-size: 1.75rem;
-    }
-    
+@media (max-width: 920px) {
     .header-container {
-        flex-wrap: wrap;
+        padding: 0 0.5rem;
+    }
+    .nav-item {
+        margin: 0 0.7rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .header-container {
+        flex-wrap: nowrap;
     }
     
     .nav-menu {
         order: 3;
         width: 100%;
         justify-content: center;
-        margin-top: 1rem;
+        margin-top: 0.7rem;
     }
     
     .nav-item {
         margin: 0 0.5rem;
+        padding: 0.3rem 0;
     }
     
     .auth-container {
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
+        width: auto;
     }
     
-    .language-dropdown {
-        margin-top: 0.5rem;
+    .btn {
+        padding: 0.3rem 0.8rem;
+        font-size: 0.9rem;
     }
 }
-
 @media (max-width: 480px) {
     .auth-container {
-        flex-direction: column;
-        align-items: flex-end;
+        flex-direction: row;
+        align-items: center;
+        gap: 5px;
     }
+
     
     .language-dropdown {
-        margin-left: 0;
-        margin-top: 0.5rem;
+        margin-left: 5px;
     }
     
     .auth-buttons .btn {
-        margin: 0.25rem;
-        font-size: 0.9rem;
-        padding: 0.5rem 1rem;
+        margin: 0.15rem;
+        font-size: 0.85rem;
+        padding: 0.3rem 0.7rem;
+    }
+    
+    .logo h1 {
+        font-size: 1.2rem;
     }
 }
