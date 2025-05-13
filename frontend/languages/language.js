@@ -4,32 +4,35 @@ class LanguageManager {
     this.translations = {};
     this.loadTranslation();
     
-    // Create custom event for language changes
     this.languageChangedEvent = new CustomEvent('languageChanged');
   }
 
   async loadTranslation() {
     try {
-      // Fix path to the translation files
-      const response = await fetch(`../languages/${this.currentLanguage}/home.json`);
+      let path;
+      if (window.location.pathname.includes('/home/')) {
+        path = `../languages/${this.currentLanguage}/home.json`;
+      } else {
+        path = `./languages/${this.currentLanguage}/home.json`;
+      }
+      
+      console.log(`Loading translations from: ${path}`);
+      const response = await fetch(path);
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
       
       this.translations = await response.json();
+      console.log('Translations loaded:', this.translations);
       
-      // Update the page content with the new language
       this.updateContent();
-      
-      // Dispatch event to notify other components
       document.dispatchEvent(this.languageChangedEvent);
       
       return true;
     } catch (error) {
       console.error('Failed to load translations:', error);
       
-      // Fallback to English if translation file can't be loaded
       if (this.currentLanguage !== 'en') {
         this.currentLanguage = 'en';
         localStorage.setItem('language', 'en');
@@ -40,9 +43,7 @@ class LanguageManager {
     }
   }
 
-  // Get a translated string by key path (e.g., "nav.home")
   translate(keyPath) {
-    // Split the key path to navigate through the translations object
     const keys = keyPath.split('.');
     let value = this.translations;
     
@@ -51,7 +52,7 @@ class LanguageManager {
         value = value[key];
       } else {
         console.warn(`Translation not found for key: ${keyPath}`);
-        return keyPath; // Return the key if translation not found
+        return keyPath;
       }
     }
     
@@ -60,27 +61,29 @@ class LanguageManager {
   
   // Switch to a different language
   async changeLanguage(language) {
+    console.log(`Changing language to: ${language}`);
     if (this.currentLanguage === language) return;
     
     this.currentLanguage = language;
     localStorage.setItem('language', language);
     await this.loadTranslation();
+    console.log('Language changed and content updated');
   }
   
-  // Update all elements with data-i18n attributes
   updateContent() {
+    console.log('Updating content with translations');
     document.querySelectorAll('[data-i18n]').forEach(element => {
       const key = element.getAttribute('data-i18n');
-      element.textContent = this.translate(key);
+      const translated = this.translate(key);
+      console.log(`Translating ${key} to ${translated}`);
+      element.textContent = translated;
     });
     
-    // Update placeholders for input elements
     document.querySelectorAll('[data-i18n-placeholder]').forEach(element => {
       const key = element.getAttribute('data-i18n-placeholder');
       element.placeholder = this.translate(key);
     });
     
-    // Update button values
     document.querySelectorAll('[data-i18n-value]').forEach(element => {
       const key = element.getAttribute('data-i18n-value');
       element.value = this.translate(key);
@@ -88,6 +91,8 @@ class LanguageManager {
   }
 }
 
-// Initialize and export the language manager
+// Initialize and make available globally
 const languageManager = new LanguageManager();
+window.languageManager = languageManager;
+
 export default languageManager;

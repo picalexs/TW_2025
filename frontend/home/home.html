@@ -1,108 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pet Adoption Center</title>
   <link rel="stylesheet" href="../global.css">
   <link rel="stylesheet" href="./home.css">
+  <script type="module" src="../global.js"></script>
+  <script type="module" src="./home.js"></script>
 </head>
-
 <body>
-  <!-- Main content -->
-  <div class="header-container">
-    <div class="logo">
-      <h1>Pet Adoption Center</h1>
+  <header>
+    <div class="header-container">
+      <div class="logo">
+        <h1 class="site.name">Pet Adoption Center</h1>
+      </div>
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="../index.html" class="nav-link" data-i18n="nav.home">Home</a></li>
+        <li class="nav-item"><a href="#" class="nav-link" data-i18n="nav.pets">Pets</a></li>
+        <li class="nav-item"><a href="#about" class="nav-link" data-i18n="nav.about">About Us</a></li>
+      </ul>
+      <div class="auth-container">
+        <div class="auth-buttons">
+          <a href="../login.html" class="btn btn-outline" data-i18n="nav.login">Login</a>
+          <a href="../signup.html" class="btn btn-primary" data-i18n="nav.signup">Sign Up</a>
+        </div>
+        <div class="language-dropdown">
+          <button class="language-current">
+            <span class="flag-icon flag-en">🇬🇧</span>
+            <span>EN</span>
+            <i class="dropdown-arrow">▼</i>
+          </button>
+          <div class="language-options">
+            <a href="#" class="language-option" data-lang="en">
+              <span class="flag-icon flag-en">🇬🇧</span>
+              <span>English</span>
+            </a>
+            <a href="#" class="language-option" data-lang="ro">
+              <span class="flag-icon flag-ro">🇷🇴</span>
+              <span>Română</span>
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Add hamburger menu button -->
+      <div class="mobile-menu-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
     </div>
-    <ul class="nav-menu">
-      <li class="nav-item"><a href="../index.html" class="nav-link" data-i18n="nav.home">Home</a></li>
-      <li class="nav-item"><a href="#" class="nav-link" data-i18n="nav.pets">Pets</a></li>
-      <li class="nav-item"><a href="#about" class="nav-link" data-i18n="nav.about">About Us</a></li>
-    </ul>
-    <div class="auth-container">
-      <div class="auth-buttons">
+
+    <!-- Mobile menu container -->
+    <div class="mobile-menu-container">
+      <!-- Mobile login/signup section -->
+      <div class="mobile-auth">
         <a href="../login.html" class="btn btn-outline" data-i18n="nav.login">Login</a>
         <a href="../signup.html" class="btn btn-primary" data-i18n="nav.signup">Sign Up</a>
       </div>
-      <div class="language-dropdown">
-        <button class="language-current">
-          <span class="flag-icon flag-en">🇬🇧</span>
-          <span>EN</span>
-          <i class="dropdown-arrow">▼</i>
-        </button>
-        <div class="language-options">
-          <a href="#" class="language-option" data-lang="en">
+      
+      <!-- Mobile navigation -->
+      <nav class="mobile-nav">
+        <ul class="mobile-nav-menu">
+          <li class="mobile-nav-item"><a href="../index.html" class="mobile-nav-link" data-i18n="nav.home">Home</a></li>
+          <li class="mobile-nav-item"><a href="#" class="mobile-nav-link" data-i18n="nav.pets">Pets</a></li>
+          <li class="mobile-nav-item"><a href="#about" class="mobile-nav-link" data-i18n="nav.about">About Us</a></li>
+        </ul>
+      </nav>
+      
+      <!-- Mobile language selector -->
+      <div class="mobile-language">
+        <div class="mobile-language-title" data-i18n="language.title">Language</div>
+        <div class="mobile-language-options">
+          <a href="#" class="mobile-language-option" data-lang="en">
             <span class="flag-icon flag-en">🇬🇧</span>
-            <span>English</span>
+            <span data-i18n="language.english">English</span>
           </a>
-          <a href="#" class="language-option" data-lang="ro">
+          <a href="#" class="mobile-language-option" data-lang="ro">
             <span class="flag-icon flag-ro">🇷🇴</span>
-            <span>Română</span>
+            <span data-i18n="language.romanian">Română</span>
           </a>
         </div>
       </div>
     </div>
-  </div>
   </header>
 
+  <!-- Mobile overlay -->
+  <div class="mobile-overlay"></div>
+  
+  <!-- Main content -->
   <main id="content-container">
     <!-- Hero Section -->
     <section class="hero">
       <div class="hero-content">
-        <h1 class="hero-title" data-i18n="hero.title">Find Your Perfect Companion</h1>
-        <p class="hero-subtitle" data-i18n="hero.subtitle">Adopt a pet and change both your lives forever</p>
+        <h2 class="hero-title" data-i18n="hero.title">Find Your Perfect Pet</h2>
+        <p class="hero-subtitle" data-i18n="hero.subtitle">Adopt a friend and give them a loving home</p>
         <a href="#" class="btn btn-primary" data-i18n="hero.browseButton">Browse Pets</a>
       </div>
     </section>
-
-    <!-- Featured Pets Section -->
-    <section class="featured-pets">
-      <div class="section-container">
-        <div class="section-header">
-          <h2 class="section-title" data-i18n="featuredPets.title">Featured Pets</h2>
-          <p data-i18n="featuredPets.subtitle">Meet some of our amazing pets waiting for adoption</p>
-        </div>
-        <div id="pets-grid" class="pets-grid">
-          <!-- Pet cards will go here -->
-        </div>
-      </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="about">
-      <div class="section-container">
-        <div class="section-header">
-          <h2 class="section-title" data-i18n="about.title">About Our Center</h2>
-          <p data-i18n="about.subtitle">We're dedicated to finding loving homes for pets in need</p>
-        </div>
-        <div class="about-content">
-          <p data-i18n="about.description1">Our pet adoption center strives to connect animals with loving families. We
-            believe every pet deserves a caring home.</p>
-          <p data-i18n="about.description2">Founded in 2020, we have successfully placed over 500 pets in forever homes.
-            Our mission is to ensure every animal finds a loving family.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- User Section -->
-    <section class="featured-users">
-      <div class="section-container">
-        <div class="section-header">
-          <h2 class="section-title" data-i18n="users.title">Our Community</h2>
-          <p data-i18n="users.subtitle">Meet some of our users who have adopted pets</p>
-        </div>
-        <div id="users-container" class="pets-grid">
-          <!-- User cards will be inserted here -->
-        </div>
-      </div>
-    </section>
+    
+    <!-- Pets will be loaded here by home.js -->
   </main>
-
+  
+  <!-- About Section -->
   <footer id="main-footer">
     <div class="footer-container">
       <div class="footer-section">
-        <h3>Pet Adoption Center</h3>
+        <h3 class="site.name">Pet Adoption Center</h3>
         <p data-i18n="footer.tagline">Finding forever homes for pets in need</p>
       </div>
       <div class="footer-section">
@@ -113,19 +118,14 @@
           <li class="footer-link"><a href="#about" data-i18n="nav.about">About Us</a></li>
         </ul>
       </div>
-      <div class="footer-section">
-        <h3 data-i18n="footer.contact">Contact Us</h3>
-        <p data-i18n="footer.email">Email: info@petadoptioncenter.com</p>
-        <p data-i18n="footer.phone">Phone: (123) 456-7890</p>
-      </div>
     </div>
     <div class="copyright">
       <p data-i18n="footer.copyright">&copy; 2025 Pet Adoption Center. All rights reserved.</p>
     </div>
   </footer>
 
-  <!-- Load external JavaScript instead of inline script -->
-  <script type="module" src="./home.js"></script>
+  <script type="module">
+    import languageManager from '../languages/language.js';
+  </script>
 </body>
-
 </html>
