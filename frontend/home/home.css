@@ -22,14 +22,14 @@ body {
 }
 
 /* Header Styles */
-header {
+/* header {
   background-color: var(--light-color);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   padding: 1rem 0;
   position: sticky;
   top: 0;
   z-index: 100;
-}
+} */
 
 .header-container {
   max-width: 1200px;
