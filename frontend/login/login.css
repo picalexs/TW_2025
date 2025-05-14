@@ -89,9 +89,6 @@ header {
     color: var(--primary-color);
 }
   
-.auth-buttons .btn {
-    margin-left: 10px;
-}
   
   /* Login container */
   .login-container {
