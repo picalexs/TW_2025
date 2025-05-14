@@ -1,0 +1,277 @@
+/* Variables */
+:root {
+    --primary-color: #4a89dc;
+    --secondary-color: #5d9cec;
+    --accent-color: #f6bb42;
+    --text-color: #434a54;
+    --light-color: #ffffff;
+    --dark-color: #3c3c3c;
+    --background-color: #f5f7fa;
+}
+  
+  /* Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+  
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+  }
+  
+  .login-background {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../assets/pet-hero-bg.jpg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    background-size: cover;
+    min-height: 100vh;
+  }
+   
+  /* Header reused style */
+
+header {
+    background-color: var(--light-color);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    height: 40px;
+    margin-right: 10px;
+}
+  
+.logo h1 {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+  
+.nav-menu {
+    display: flex;
+    list-style: none;
+}
+  
+.nav-item {
+    margin: 0 1rem;
+}
+  
+.nav-link {
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+  
+.nav-link:hover {
+    color: var(--primary-color);
+}
+  
+  
+  /* Login container */
+  .login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4rem 1rem;
+    min-height: calc(100vh - 80px);
+  }
+  
+  /* Glassmorphism form */
+  .login-box {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 12px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    color: white;
+  }
+  
+  .login-box h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+  }
+  
+  /* Input fields */
+  .form-group {
+    margin-bottom: 1.2rem;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 0.65rem;
+    border: none;
+    border-radius: 6px;
+    background-color: rgba(255,255,255,0.2);
+    color: white;
+  }
+  
+  .form-group input::placeholder {
+    color: #ddd;
+  }
+  
+  .form-group input:focus {
+    outline: none;
+    background-color: rgba(255,255,255,0.3);
+  }
+  
+  /* Options */
+  .form-options {
+    font-size: 0.85rem;
+    margin-bottom: 1.2rem;
+    color: white;
+  }
+  
+  /* Submit Button */
+  .btn-submit {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-submit:hover {
+    background-color: var(--secondary-color);
+  }
+  
+  /* Redirect link */
+  .redirect-link {
+    text-align: center;
+    margin-top: 1rem;
+    font-size: 0.85rem;
+  }
+  
+  .redirect-link a {
+    color: #a5d3ff;
+    text-decoration: none;
+  }
+  
+  .redirect-link a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Language dropdown and button styles */
+  .language-dropdown {
+    position: relative;
+  }
+  
+  .language-current {
+    background-color: transparent;
+    border: 1px solid var(--primary-color);
+    border-radius: 20px;
+    padding: 0.3rem 0.8rem;
+    color: var(--primary-color);
+    cursor: pointer;
+  }
+  
+  .language-options {
+    display: none;
+    position: absolute;
+    top: 110%;
+    right: 0;
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    overflow: hidden;
+    z-index: 100;
+  }
+  
+  .language-option {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: var(--text-color);
+    text-decoration: none;
+  }
+  
+  .language-option:hover {
+    background-color: var(--background-color);
+  }
+
+  
+  /* Responsive */
+  /* Responsive Media Queries */
+@media (max-width: 768px) {
+.hero-title {
+  font-size: 2rem;
+}
+  
+.hero-subtitle {
+  font-size: 1.2rem;
+}
+  
+.section-title {
+  font-size: 1.75rem;
+}
+  
+.language-selector {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 25px;
+  padding: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+  
+.language-btn {
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  color: var(--text-color);
+  transition: all 0.3s ease;
+}
+  
+.language-btn:hover {
+  background-color: rgba(74, 137, 220, 0.1);
+}
+  
+.language-btn.active {
+  background-color: var(--primary-color);
+  color: white;
+  box-shadow: 0 2px 5px rgba(74, 137, 220, 0.4);
+}
+}
+  

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="../global.css" />
+  <link rel="stylesheet" href="./login.css" />
+</head>
+
+<body>
+<!-- Main content -->
+  <!-- Header Section -->
+<header>
+<div class="header-container">
+    <div class="logo">
+      <h1>Pet Adoption Center</h1>
+    </div>
+    <ul class="nav-menu">
+      <li class="nav-item"><a href="../index.html" class="nav-link" data-i18n="nav.home">Home</a></li>
+      <li class="nav-item"><a href="#" class="nav-link" data-i18n="nav.pets">Pets</a></li>
+      <li class="nav-item"><a href="#about" class="nav-link" data-i18n="nav.about">About Us</a></li>
+    </ul>
+    <div class="auth-container">
+      <div class="language-dropdown">
+        <button class="language-current">
+          <span class="flag-icon flag-en">🇬🇧</span>
+          <span>EN</span>
+          <i class="dropdown-arrow">▼</i>
+        </button>
+        <div class="language-options">
+          <a href="#" class="language-option" data-lang="en">
+            <span class="flag-icon flag-en">🇬🇧</span>
+            <span>English</span>
+          </a>
+          <a href="#" class="language-option" data-lang="ro">
+            <span class="flag-icon flag-ro">🇷🇴</span>
+            <span>Română</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="login-background">
+  <div class="login-container">
+    <form class="login-box">
+      <h2>Login</h2>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="Enter your email" required />
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter your password" required />
+      </div>
+
+      <!-- sa vedem daca putem sa implementam asta, dar am impresia ca e destul -->
+      <div class="form-options">
+        <label><input type="checkbox" /> Remember me</label>
+      </div>
+
+      <button class="btn-submit" type="submit">Login</button>
+
+      <div class="redirect-link">
+        Don't have an account? <a href="#">Register</a>
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>
