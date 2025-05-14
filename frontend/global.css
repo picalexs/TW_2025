@@ -499,11 +499,12 @@ footer {
 
 .mobile-menu-container {
     display: flex;
+    flex-direction: column;
     position: fixed;
     top: 0;
     right: -100%;
     width: 280px;
-    height: 100vh;
+    height: 100%;
     background-color: var(--light-color);
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
     transition: right 0.3s ease;
