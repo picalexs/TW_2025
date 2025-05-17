@@ -12,6 +12,8 @@ class LanguageManager {
       let path;
       if (window.location.pathname.includes('/home/')) {
         path = `../languages/${this.currentLanguage}/home.json`;
+      } else if (window.location.pathname.includes('/login/')) {
+        path = `../languages/${this.currentLanguage}/home.json`;
       } else {
         path = `./languages/${this.currentLanguage}/home.json`;
       }
@@ -59,7 +61,6 @@ class LanguageManager {
     return value;
   }
   
-  // Switch to a different language
   async changeLanguage(language) {
     console.log(`Changing language to: ${language}`);
     if (this.currentLanguage === language) return;
@@ -91,7 +92,6 @@ class LanguageManager {
   }
 }
 
-// Initialize and make available globally
 const languageManager = new LanguageManager();
 window.languageManager = languageManager;
 

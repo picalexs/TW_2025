@@ -13,7 +13,24 @@
   },
   "featuredPets": {
     "title": "Featured Pets",
-    "subtitle": "Meet some of our amazing pets waiting for adoption"
+    "subtitle": "Meet some of our amazing pets waiting for adoption",
+    "viewDetails": "View Details",
+    "tags": {
+      "dog": "Dog",
+      "cat": "Cat",
+      "healthy": "Healthy",
+      "needsMedication": "Needs Medication",
+      "senior": "Senior",
+      "friendly": "Friendly",
+      "energetic": "Energetic",
+      "shy": "Shy"
+    }
+  },
+  "featuredUsers": {
+    "title": "Our Community",
+    "subtitle": "Meet some of our users who have adopted pets",
+    "joined": "Joined",
+    "viewProfile": "View Profile"
   },
   "about": {
     "title": "About Our Center",
@@ -34,5 +51,14 @@
     "email": "Email: info@petadoptioncenter.com",
     "phone": "Phone: (123) 456-7890",
     "copyright": "© 2025 Pet Adoption Center. All rights reserved."
+  },
+  "login": {
+    "title": "Login",
+    "email": "Email",
+    "password": "Password",
+    "rememberMe": "Remember me",
+    "loginButton": "Login",
+    "noAccount": "Don't have an account?",
+    "register": "Register"
   }
 }

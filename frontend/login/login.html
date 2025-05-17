@@ -7,6 +7,7 @@
   <title>Login</title>
   <link rel="stylesheet" href="../global.css" />
   <link rel="stylesheet" href="./login.css" />
+  <script type="module" src="./login.js"></script>
 </head>
 
 <body>
@@ -47,27 +48,26 @@
 <div class="login-background">
   <div class="login-container">
     <form class="login-box">
-      <h2>Login</h2>
+      <h2 data-i18n="login.title">Login</h2>
 
       <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" placeholder="Enter your email" required />
+        <label for="email" data-i18n="login.email">Email</label>
+        <input type="email" id="email" data-i18n-placeholder="login.email" placeholder="Enter your email" required />
       </div>
 
       <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" placeholder="Enter your password" required />
+        <label for="password" data-i18n="login.password">Password</label>
+        <input type="password" id="password" data-i18n-placeholder="login.password" placeholder="Enter your password" required />
       </div>
 
-      <!-- sa vedem daca putem sa implementam asta, dar am impresia ca e destul -->
       <div class="form-options">
-        <label><input type="checkbox" /> Remember me</label>
+        <label><input type="checkbox" /> <span data-i18n="login.rememberMe">Remember me</span></label>
       </div>
 
-      <button class="btn-submit" type="submit">Login</button>
+      <button class="btn-submit" type="submit" data-i18n="login.loginButton">Login</button>
 
       <div class="redirect-link">
-        Don't have an account? <a href="#">Register</a>
+        <span data-i18n="login.noAccount">Don't have an account?</span> <a href="#" data-i18n="login.register">Register</a>
       </div>
     </form>
   </div>

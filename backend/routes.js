@@ -1,7 +1,7 @@
 const url = require("url");
 const userDTO = require("./dto/userDTO");
+const petDTO = require("./dto/petDTO");
 
-// Helper function to parse request body
 async function collectRequestData(req) {
   return new Promise((resolve, reject) => {
     const body = [];
@@ -23,8 +23,47 @@ async function collectRequestData(req) {
 }
 
 function sendResponse(res, statusCode, data) {
-  res.writeHead(statusCode, { "Content-Type": "application/json" });
-  res.end(JSON.stringify(data));
+  if (res.headersSent) {
+    console.warn("Headers already sent, cannot send response");
+    return;
+  }
+
+  res.writeHead(statusCode, {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+  });
+
+  let responseBody;
+  try {
+    const safeStringify = (obj) => {
+      const seen = new WeakSet();
+      return JSON.stringify(obj, (key, value) => {
+        if (key === 'conn' || key === 'pool' || key === 'desc' || key === 'cOpts') {
+          return '[Circular]';
+        }
+        if (typeof value === 'object' && value !== null) {
+          if (seen.has(value)) {
+            return '[Circular]';
+          }
+          seen.add(value);
+        }
+        return value;
+      });
+    };
+
+    responseBody = safeStringify(data);
+  } catch (error) {
+    console.error("Failed to stringify response data:", error);
+    const safeError = {
+      error: "Internal server error",
+      message: "Failed to serialize response data"
+    };
+    
+    responseBody = JSON.stringify(safeError);
+  }
+  res.end(responseBody);
 }
 
 async function handleRoutes(req, res) {
@@ -39,9 +78,11 @@ async function handleRoutes(req, res) {
     }
 
     if (trimmedPath === "api/users" && method === "get") {
-      const users = await userDTO.getAllUsers();
+      const users = await userDTO.getAll();
       return sendResponse(res, 200, users);
-    } else if (trimmedPath.match(/^api\/users\/\d+$/) && method === "get") {
+    }
+
+    if (trimmedPath.match(/^api\/users\/\d+$/) && method === "get") {
       const id = parseInt(trimmedPath.split("/").pop());
       const user = await userDTO.getUserById(id);
 
@@ -50,18 +91,48 @@ async function handleRoutes(req, res) {
       } else {
         return sendResponse(res, 404, { error: "User not found" });
       }
-    } else if (trimmedPath === "api/users" && method === "post") {
+    }
+
+    if (trimmedPath === "api/users" && method === "post") {
       const userData = await collectRequestData(req);
       const userId = await userDTO.createUser(userData);
       return sendResponse(res, 201, { id: userId });
     }
+
+    if (trimmedPath === "api/pets" && method === "get") {
+      try {
+        const pets = await petDTO.getAll();
+        return sendResponse(res, 200, pets);
+      } catch (petError) {
+        console.error("Error fetching pets:", petError);
+        return sendResponse(res, 500, {
+          error: "Failed to fetch pets",
+          message: petError.message,
+        });
+      }
+    }
+
+    if (trimmedPath.match(/^api\/pets\/\d+$/) && method === "get") {
+      const id = parseInt(trimmedPath.split("/").pop());
+      const pet = await petDTO.getById(id);
+
+      if (pet) {
+        return sendResponse(res, 200, pet);
+      } else {
+        return sendResponse(res, 404, { error: "Pet not found" });
+      }
+    }
+
     return sendResponse(res, 404, { error: "Route not found" });
   } catch (error) {
     console.error("Route handler error:", error);
-    return sendResponse(res, 500, {
+    const safeError = {
       error: "Internal server error",
-      details: error.message,
-    });
+      message: error.message || "Unknown error",
+      code: error.code || "UNKNOWN_ERROR",
+    };
+
+    return sendResponse(res, 500, safeError);
   }
 }
 

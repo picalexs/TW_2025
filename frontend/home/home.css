@@ -12,3 +12,48 @@
   gap: 2rem;
   margin-top: 2rem;
 }
+
+.loading-spinner {
+  text-align: center;
+  padding: 2rem;
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+.loading-spinner::after {
+  content: "...";
+  animation: dots 1.5s steps(5, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% {
+    content: ".";
+  }
+  40% {
+    content: "..";
+  }
+  60%, 100% {
+    content: "...";
+  }
+}
+
+.error-message {
+  text-align: center;
+  padding: 2rem;
+  background-color: rgba(231, 76, 60, 0.1);
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+.error-details {
+  color: #e74c3c;
+  margin: 0.5rem 0 1rem;
+  font-size: 0.9rem;
+}
+
+.no-pets-message {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-color);
+  font-style: italic;
+}
