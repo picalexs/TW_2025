@@ -1,4 +1,4 @@
-import { setupLanguageDropdown, setupMobileMenu } from '../global.js';
+import { setupLanguageDropdown, setupMobileMenu } from '../global/global.js';
 
 function initHomePage() {
   fetchAndRenderUsers();

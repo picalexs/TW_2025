@@ -1,11 +1,4 @@
 {
-  "nav": {
-    "home": "Home",
-    "pets": "Pets",
-    "about": "About Us",
-    "login": "Login",
-    "signup": "Sign Up"
-  },
   "hero": {
     "title": "Find Your Perfect Companion",
     "subtitle": "Adopt a pet and change both your lives forever",
@@ -26,13 +19,5 @@
     "subtitle": "Meet some of our users who have adopted pets",
     "joined": "Joined",
     "viewProfile": "View Profile"
-  },
-  "footer": {
-    "tagline": "Finding forever homes for pets in need",
-    "links": "Links",
-    "contact": "Contact Us",
-    "email": "Email: info@petadoptioncenter.com",
-    "phone": "Phone: (123) 456-7890",
-    "copyright": "© 2025 Pet Adoption Center. All rights reserved."
   }
 }

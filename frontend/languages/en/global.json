@@ -1,0 +1,18 @@
+{
+  "nav": {
+    "home": "Home",
+    "pets": "Pets",
+    "about": "About Us",
+    "login": "Login",
+    "signup": "Sign Up"
+  },
+  "footer": {
+    "tagline": "Finding forever homes for pets in need",
+    "links": "Links",
+    "contact": "Contact Us",
+    "email": "Email: info@petadoptioncenter.com",
+    "phone": "Phone: (123) 456-7890",
+    "copyright": "© 2025 Pet Adoption Center. All rights reserved."
+  }
+
+}

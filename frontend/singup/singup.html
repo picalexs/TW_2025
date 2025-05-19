@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sing up</title>
+  <link rel="stylesheet" href="../global/global.css" />
+  <link rel="stylesheet" href="./singup.css" />
+  <script type="module" src="../global/global.js"></script>
+  <!-- <link rel="stylesheet" href="../global-navbar.html" /> -->
+</head>
+
+<body>
+  <!-- Main content -->
+  <!-- Header Section -->
+
+  <div id="global-navbar"></div>
+  <div id="mobile-overlay" class="mobile-overlay"></div>
+
+  <div class="singup-background">
+    <div class="singup-container">
+      <form class="singup-box">
+
+        <h2 data-i18n="title">Sing up</h2>
+
+        <div class="form-group">
+          <label for="email" data-i18n="emailLabel">Email</label>
+          <input type="email" id="email" data-i18n-placeholder="emailPlaceholder" required />
+        </div>
+
+        <div class="form-group">
+          <label for="password" data-i18n="passwordLabel">Password</label>
+          <input type="password" id="password" data-i18n-placeholder="passwordPlaceholder" required />
+        </div>
+
+        <div class="form-group">
+          <label for="username" data-i18n="usernameLabel">username</label>
+          <input type="username" id="username" data-i18n-placeholder="usernamePlaceholder" required />
+        </div>
+
+        <button class="btn-submit" type="submit" data-i18n="singupButton">Next</button>
+
+        <div class="singup-divider">
+          <hr><span data-i18n="or">OR</span>
+          <hr>
+        </div>
+
+        <button type="button" class="btn-google-login">
+          <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo">
+          <span data-i18n="googleLogin">Log in with Google</span>
+        </button>
+
+        <div class="redirect-link">
+          <span data-i18n="registerPrompt">Have an account?</span>
+          <a href="../login/login.html" data-i18n="registerLink">Log in</a>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <div id="global-footer"></div>
+
+  <!-- 1. incarca doar functiile din global.js (nu le ruleaza automat!) -->
+  <script type="module" src="../global/global.js"></script>
+
+  <!-- 2. Apoi incarci bara + executi functiile dupa ce e injectata -->
+  <script type="module" src="../global/inject-navbar.js"></script>
+
+  <!-- 3. Codul paginii de singup (ce faci cu form-ul etc.) -->
+  <script type="module" src="./singup.js"></script>
+
+
+</body>
+
+</html>

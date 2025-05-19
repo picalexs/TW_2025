@@ -4,73 +4,113 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
-  <link rel="stylesheet" href="../global.css" />
+  <title>Log In</title>
+  <link rel="stylesheet" href="../global/global.css" />
   <link rel="stylesheet" href="./login.css" />
+  <script type="module" src="../global/global.js"></script>
+  <!-- <link rel="stylesheet" href="../global-navbar.html" /> -->
 </head>
 
 <body>
-<!-- Main content -->
+  <!-- Main content -->
   <!-- Header Section -->
-<header>
-<div class="header-container">
-    <div class="logo">
-      <h1>Pet Adoption Center</h1>
-    </div>
-    <ul class="nav-menu">
-      <li class="nav-item"><a href="../index.html" class="nav-link" data-i18n="nav.home">Home</a></li>
-      <li class="nav-item"><a href="#" class="nav-link" data-i18n="nav.pets">Pets</a></li>
-      <li class="nav-item"><a href="#about" class="nav-link" data-i18n="nav.about">About Us</a></li>
-    </ul>
-    <div class="auth-container">
-      <div class="language-dropdown">
-        <button class="language-current">
-          <span class="flag-icon flag-en">🇬🇧</span>
-          <span>EN</span>
-          <i class="dropdown-arrow">▼</i>
-        </button>
-        <div class="language-options">
-          <a href="#" class="language-option" data-lang="en">
-            <span class="flag-icon flag-en">🇬🇧</span>
-            <span>English</span>
-          </a>
-          <a href="#" class="language-option" data-lang="ro">
-            <span class="flag-icon flag-ro">🇷🇴</span>
-            <span>Română</span>
-          </a>
+
+  <div id="global-navbar"></div>
+  <div id="mobile-overlay" class="mobile-overlay"></div>
+
+  <div class="login-background">
+    <div class="login-container">
+      <form class="login-box">
+        <!-- <h2>Login</h2>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="Enter your email" required />
         </div>
-      </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter your password" required />
+        </div>
+
+         sa vedem daca putem sa implementam asta, dar am impresia ca e destul 
+        <div class="form-options">
+          <label><input type="checkbox" /> Remember me</label>
+        </div>
+
+        <button class="btn-submit" type="submit">Login</button>
+
+        <div class="login-divider">
+          <hr><span>OR</span><hr>
+        </div>
+
+        <button type="button" class="btn-google-login">
+          <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo">
+          Log in with Google
+        </button>
+
+        <div class="forgot-password">
+          <a href="#">Forgot password?</a>
+        </div>
+
+        <div class="redirect-link">
+          Don't have an account? <a href="#">Register</a>
+        </div> -->
+
+
+        <h2 data-i18n="title">Log In</h2>
+
+        <div class="form-group">
+          <label for="email" data-i18n="emailLabel">Email</label>
+          <input type="email" id="email" data-i18n-placeholder="emailPlaceholder" required />
+        </div>
+
+        <div class="form-group">
+          <label for="password" data-i18n="passwordLabel">Password</label>
+          <input type="password" id="password" data-i18n-placeholder="passwordPlaceholder" required />
+        </div>
+
+        <div class="form-options">
+          <label><input type="checkbox" /> <span data-i18n="rememberMe">Remember me</span></label>
+        </div>
+
+        <button class="btn-submit" type="submit" data-i18n="loginButton">Log In</button>
+
+        <div class="login-divider">
+          <hr><span data-i18n="or">OR</span>
+          <hr>
+        </div>
+
+        <button type="button" class="btn-google-login">
+          <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo">
+          <span data-i18n="googleLogin">Log in with Google</span>
+        </button>
+
+        <div class="forgot-password">
+          <a href="#" data-i18n="forgotPassword">Forgot password?</a>
+        </div>
+
+        <div class="redirect-link">
+          <span data-i18n="registerPrompt">Don't have an account?</span>
+          <a href="../singup/singup.html" data-i18n="registerLink">Register</a>
+        </div>
+
+      </form>
     </div>
   </div>
-</header>
 
-<div class="login-background">
-  <div class="login-container">
-    <form class="login-box">
-      <h2>Login</h2>
+  <div id="global-footer"></div>
 
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" placeholder="Enter your email" required />
-      </div>
+  <!-- 1. incarca doar functiile din global.js (nu le ruleaza automat!) -->
+  <script type="module" src="../global/global.js"></script>
 
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" placeholder="Enter your password" required />
-      </div>
+  <!-- 2. Apoi incarci bara + executi functiile dupa ce e injectata -->
+  <script type="module" src="../global/inject-navbar.js"></script>
 
-      <!-- sa vedem daca putem sa implementam asta, dar am impresia ca e destul -->
-      <div class="form-options">
-        <label><input type="checkbox" /> Remember me</label>
-      </div>
+  <!-- 3. Codul paginii de login (ce faci cu form-ul etc.) -->
+  <script type="module" src="./login.js"></script>
 
-      <button class="btn-submit" type="submit">Login</button>
 
-      <div class="redirect-link">
-        Don't have an account? <a href="#">Register</a>
-      </div>
-    </form>
-  </div>
-</div>
 </body>
+
 </html>

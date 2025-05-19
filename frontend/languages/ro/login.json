@@ -1,0 +1,14 @@
+{
+  "title": "Autentificare",
+  "emailLabel": "Email",
+  "emailPlaceholder": "Introdu adresa de email",
+  "passwordLabel": "Parolă",
+  "passwordPlaceholder": "Introdu parola",
+  "rememberMe": "Ține-mă minte",
+  "loginButton": "Autentificare",
+  "or": "SAU",
+  "googleLogin": "Autentificare cu Google",
+  "forgotPassword": "Ai uitat parola?",
+  "registerPrompt": "Nu ai cont?",
+  "registerLink": "Înregistrează-te"
+}

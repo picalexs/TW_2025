@@ -1,0 +1,14 @@
+{
+  "title": "Log In",
+  "emailLabel": "Email",
+  "emailPlaceholder": "Enter your email",
+  "passwordLabel": "Password",
+  "passwordPlaceholder": "Enter your password",
+  "rememberMe": "Remember me",
+  "loginButton": "Log In",
+  "or": "OR",
+  "googleLogin": "Log in with Google",
+  "forgotPassword": "Forgot password?",
+  "registerPrompt": "Don't have an account?",
+  "registerLink": "Register"
+}
