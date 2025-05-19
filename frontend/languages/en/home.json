@@ -60,5 +60,10 @@
     "loginButton": "Login",
     "noAccount": "Don't have an account?",
     "register": "Register"
+  },
+  "language": {
+    "title": "Language",
+    "english": "English",
+    "romanian": "Romanian"
   }
 }

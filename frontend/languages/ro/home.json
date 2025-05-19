@@ -8,7 +8,7 @@
   },
   "hero": {
     "title": "Găsește-ți Companionul Perfect",
-    "subtitle": "Adoptă un animal și schimbă-vă viețile pentru totdeauna",
+    "subtitle": "Adoptă un animal și schimbă-ți viața pentru totdeauna",
     "browseButton": "Caută Animale"
   },
   "featuredPets": {
@@ -60,5 +60,10 @@
     "loginButton": "Autentificare",
     "noAccount": "Nu ai cont?",
     "register": "Înregistrează-te"
+  },
+  "language": {
+    "title": "Limbă",
+    "english": "Engleză",
+    "romanian": "Română"
   }
 }

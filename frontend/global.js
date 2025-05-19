@@ -1,30 +1,41 @@
 export function setupLanguageDropdown() {
   const currentLangButton = document.querySelector('.language-current');
-  const dropdownArrow = document.querySelector('.dropdown-arrow');
   const languageOptions = document.querySelectorAll('.language-option');
   
-  if (!currentLangButton || !languageOptions.length) return;
+  if (!currentLangButton || !languageOptions.length) {
+    console.warn('Language dropdown elements not found');
+    return;
+  }
+  
+  console.log('Setting up language dropdown with options:', languageOptions.length);
   
   const currentLang = localStorage.getItem('language') || 'en';
   updateCurrentLanguage(currentLang);
   
   languageOptions.forEach(option => {
-    const lang = option.getAttribute('data-lang');
+    const newOption = option.cloneNode(true);
+    option.parentNode.replaceChild(newOption, option);
+    
+    const lang = newOption.getAttribute('data-lang');
     if (lang === currentLang) {
-      option.classList.add('active');
+      newOption.classList.add('active');
     }
     
-    option.addEventListener('click', (e) => {
+    newOption.addEventListener('click', (e) => {
       e.preventDefault();
-    
+      console.log(`Language option clicked: ${lang}`);
+      
       updateCurrentLanguage(lang);
       
-      languageOptions.forEach(opt => opt.classList.remove('active'));
-      option.classList.add('active');
+      document.querySelectorAll('.language-option').forEach(opt => {
+        opt.classList.remove('active');
+      });
+      newOption.classList.add('active');
       
-      if (typeof languageManager !== 'undefined') {
-        languageManager.changeLanguage(lang);
+      if (window.languageManager) {
+        window.languageManager.changeLanguage(lang);
       } else {
+        console.warn('languageManager not found, falling back to localStorage');
         localStorage.setItem('language', lang);
         window.location.reload();
       }
@@ -35,14 +46,16 @@ export function setupLanguageDropdown() {
     const flagSpan = currentLangButton.querySelector('.flag-icon');
     const textSpan = currentLangButton.querySelector('span:not(.flag-icon):not(.dropdown-arrow)');
     
+    console.log(`Updating language UI to ${lang}`);
+    
     if (lang === 'en') {
       flagSpan.textContent = '🇬🇧';
       flagSpan.className = 'flag-icon flag-en';
-      textSpan.textContent = 'EN';
+      textSpan.textContent = '';
     } else if (lang === 'ro') {
       flagSpan.textContent = '🇷🇴';
       flagSpan.className = 'flag-icon flag-ro';
-      textSpan.textContent = 'RO';
+      textSpan.textContent = '';
     }
   }
 }
@@ -145,12 +158,90 @@ export function setupMobileMenu() {
   }
 }
 
+export function initSlideshow(options = {}) {
+  const defaults = {
+    containerSelector: '.hero-slideshow, .login-slideshow',
+    slideClass: 'hero-slide',
+    images: [
+      '../assets/hero-bg.jpg',
+      '../assets/hero-bg2.jpg',
+      '../assets/hero-bg3.jpg', 
+      '../assets/hero-bg4.jpg',
+      '../assets/hero-bg5.jpg'
+    ],
+    interval: 5000,
+    overlay: 'rgba(0, 0, 0, 0.5)'
+  };
+  
+  const settings = { ...defaults, ...options };
+  
+  const slideshowContainers = document.querySelectorAll(settings.containerSelector);
+  if (!slideshowContainers.length) {
+    console.warn(`No slideshow containers found with selector: ${settings.containerSelector}`);
+    return;
+  }
+  
+  slideshowContainers.forEach(container => {
+    console.log(`Setting up slideshow for container:`, container);
+    
+    // Clear existing slides
+    container.querySelectorAll(`.${settings.slideClass}`).forEach(slide => slide.remove());
+    
+    // Load new slides
+    settings.images.forEach(imageUrl => {
+      const img = new Image();
+      img.src = imageUrl;
+
+      img.onload = () => {
+        const slide = document.createElement('div');
+        slide.className = settings.slideClass;
+        slide.style.backgroundImage = `linear-gradient(${settings.overlay}, ${settings.overlay}), url('${imageUrl}')`;
+        container.appendChild(slide);
+        
+        // Activate first slide
+        if (container.querySelectorAll(`.${settings.slideClass}`).length === 1) {
+          slide.classList.add('active');
+        }
+      };
+      img.onerror = () => {
+        console.warn(`Could not load slide image: ${imageUrl}`);
+      };
+    });
+    
+    // Setup rotation
+    let currentSlide = 0;
+    const rotateSlides = () => {
+      const slides = container.querySelectorAll(`.${settings.slideClass}`);
+      if (slides.length <= 1) return;
+      
+      slides.forEach(slide => slide.classList.remove('active'));
+      currentSlide = (currentSlide + 1) % slides.length;
+      slides[currentSlide].classList.add('active');
+    };
+    
+    setInterval(rotateSlides, settings.interval);
+  });
+}
+
 // Initialize when DOM is loaded
 function initBasicFunctionality() {
   console.log("Initializing basic functionality");
-  setupLanguageDropdown();
-  setupMobileMenu();
-  console.log("Initialization complete");
+  
+  // Check if we're using component loader
+  if (document.querySelector('[data-component]')) {
+    console.log("Components detected, waiting for components to load");
+    document.addEventListener('componentsLoaded', () => {
+      console.log("Components loaded, now setting up language and menu");
+      setupLanguageDropdown();
+      setupMobileMenu();
+    });
+  } else {
+    // Direct initialization for pages without components
+    setupLanguageDropdown();
+    setupMobileMenu();
+  }
+  
+  console.log("Basic initialization complete");
 }
 
-document.addEventListener('DOMContentLoaded', initBasicFunctionality);  
+document.addEventListener('DOMContentLoaded', initBasicFunctionality);

@@ -1,8 +1,16 @@
 import languageManager from '../languages/language.js';
+import { setupMobileMenu, initSlideshow } from '../global.js';
 
 document.addEventListener('DOMContentLoaded', function() {
   initLoginPage();
   setupLanguageDropdown();
+  setupMobileMenu();
+  
+  initSlideshow({
+    containerSelector: '.login-slideshow',
+    slideClass: 'login-slide',
+    overlay: 'rgba(0, 0, 0, 0.6)'
+  });
 });
 
 function initLoginPage() {
@@ -33,6 +41,8 @@ function initLoginPage() {
   if (form) {
     form.addEventListener('submit', handleLogin);
   }
+  
+  document.body.classList.add('login-page');
 }
 
 function handleLogin(event) {
@@ -88,12 +98,35 @@ function updateCurrentLanguageUI(lang) {
   const textSpan = currentLangButton.querySelector('span:not(.flag-icon):not(.dropdown-arrow)');
   
   if (lang === 'en') {
-    flagSpan.textContent = '🇬🇧';
+    flagSpan.textContent = 'GB';
     flagSpan.className = 'flag-icon flag-en';
     textSpan.textContent = 'EN';
   } else if (lang === 'ro') {
-    flagSpan.textContent = '🇷🇴';
+    flagSpan.textContent = 'RO';
     flagSpan.className = 'flag-icon flag-ro';
     textSpan.textContent = 'RO';
   }
+}
+
+// Add mobile menu setup function
+function setupMobileMenu() {
+  const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+  const mobileMenuContainer = document.querySelector('.mobile-menu-container');
+  const mobileOverlay = document.querySelector('.mobile-overlay');
+  
+  if (!mobileMenuToggle || !mobileMenuContainer || !mobileOverlay) return;
+  
+  mobileMenuToggle.addEventListener('click', () => {
+    mobileMenuToggle.classList.toggle('active');
+    mobileMenuContainer.classList.toggle('active');
+    mobileOverlay.classList.toggle('active');
+    document.body.style.overflow = mobileMenuContainer.classList.contains('active') ? 'hidden' : '';
+  });
+  
+  mobileOverlay.addEventListener('click', () => {
+    mobileMenuToggle.classList.remove('active');
+    mobileMenuContainer.classList.remove('active');
+    mobileOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+  });
 }

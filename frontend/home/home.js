@@ -1,9 +1,14 @@
 import { fetchPets, renderPets, showPetLoadError } from './pets.js';
+import { initSlideshow } from '../global.js';
 
 function initHomePage() {
   fetchAndRenderUsers();
   addEventListeners();
   loadPets();
+  
+  initSlideshow({
+    containerSelector: '.hero-slideshow'
+  });
 }
 
 async function loadPets() {
