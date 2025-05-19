@@ -39,6 +39,7 @@ header {
     justify-content: space-between;
     align-items: center;
     flex-wrap: nowrap;
+    position: relative; 
 }
 
 .logo {
@@ -46,6 +47,7 @@ header {
     align-items: center;
     margin-left: 0;
     flex-shrink: 0;
+    z-index: 1;
 }
 
 .logo img {
@@ -63,6 +65,10 @@ header {
     list-style: none;
     flex-wrap: wrap;
     justify-content: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
 }
 
 .nav-item {
@@ -91,6 +97,7 @@ header {
     margin-right: 0;
     gap: 0.625rem;
     flex-shrink: 0;
+    z-index: 1;
 }
 
 .language-dropdown {
@@ -570,6 +577,7 @@ footer {
     .header-container {
         justify-content: space-between;
         padding: 0 1rem;
+        position: relative;
     }
 }
 

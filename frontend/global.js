@@ -163,11 +163,15 @@ export function initSlideshow(options = {}) {
     containerSelector: '.hero-slideshow, .login-slideshow',
     slideClass: 'hero-slide',
     images: [
-      '../assets/hero-bg.jpg',
+       '../assets/hero-bg.jpg',
+      '../assets/hero-bg1.jpg',  
       '../assets/hero-bg2.jpg',
-      '../assets/hero-bg3.jpg', 
+      '../assets/hero-bg3.jpg',
       '../assets/hero-bg4.jpg',
-      '../assets/hero-bg5.jpg'
+      '../assets/hero-bg5.jpg',
+      '../assets/hero-bg6.jpg',
+      '../assets/hero-bg7.jpg',
+      '../assets/hero-bg8.jpg'
     ],
     interval: 5000,
     overlay: 'rgba(0, 0, 0, 0.5)'
