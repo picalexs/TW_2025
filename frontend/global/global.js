@@ -234,62 +234,74 @@ function initSlideshow(options = {}) {
   existingSlides.forEach(slide => slide.remove());
   
   const slideImages = [
-    '/frontend/assets/hero-bg1.jpg',
-    '/frontend/assets/hero-bg2.jpg',
-    '/frontend/assets/hero-bg3.jpg'
+    '../assets/hero-bg.jpg',
+    '../assets/hero-bg2.jpg',
+    '../assets/hero-bg3.jpg',
+    '../assets/hero-bg4.jpg',
+    '../assets/hero-bg5.jpg',
+    '../assets/hero-bg6.jpg',
+    '../assets/hero-bg7.jpg',
+    '../assets/hero-bg8.jpg'
   ];
 
-  // Create and add slides - append them to ensure they're behind other content
-  slideImages.forEach((image, index) => {
-    const slide = document.createElement('div');
-    slide.className = 'hero-slide';
-    slide.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('${image}')`;
-    if (index === 0) {
-      slide.classList.add('active');
-    }
-    // Insert slides at the beginning of the container to ensure they're behind the content
-    slideshowContainer.insertBefore(slide, slideshowContainer.firstChild);
+  const preloadPromises = slideImages.map(src => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(src);
+      img.onerror = () => {
+        console.error(`Failed to load image: ${src}`);
+        reject(new Error(`Failed to load image: ${src}`));
+      };
+      img.src = src;
+    });
   });
 
-  // Add fallback slide if needed - also at the beginning
-  if (slideshowContainer.querySelectorAll('.hero-slide').length === 0) {
-    const fallbackSlide = document.createElement('div');
-    fallbackSlide.className = 'hero-slide active';
-    fallbackSlide.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-    slideshowContainer.insertBefore(fallbackSlide, slideshowContainer.firstChild);
-    console.log('Added fallback slide');
-  }
+  const fallbackSlide = document.createElement('div');
+  fallbackSlide.className = 'hero-slide active';
+  fallbackSlide.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../assets/hero-bg.jpg')`;
+  slideshowContainer.insertBefore(fallbackSlide, slideshowContainer.firstChild);
 
-  // Set up rotation if multiple slides exist
-  if (slideshowContainer.querySelectorAll('.hero-slide').length > 1) {
-    let activeIndex = 0;
-    setInterval(() => {
-      const slides = slideshowContainer.querySelectorAll('.hero-slide');
-      slides[activeIndex].classList.remove('active');
-      activeIndex = (activeIndex + 1) % slides.length;
-      slides[activeIndex].classList.add('active');
-    }, 5000);
-    console.log('Slideshow rotation initialized');
-  }
-  
-  console.log('Slideshow initialization complete');
+  Promise.all(preloadPromises).then(loadedImages => {
+    fallbackSlide.remove();
+    
+    loadedImages.forEach((image, index) => {
+      const slide = document.createElement('div');
+      slide.className = 'hero-slide';
+      slide.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('${image}')`;
+      slideshowContainer.insertBefore(slide, slideshowContainer.firstChild);
+    });
+    
+    setTimeout(() => {
+      const firstSlide = slideshowContainer.querySelector('.hero-slide');
+      if (firstSlide) firstSlide.classList.add('active');
+    }, 50);
+    
+    if (slideshowContainer.querySelectorAll('.hero-slide').length > 1) {
+      let activeIndex = 0;
+      
+      setInterval(() => {
+        const slides = slideshowContainer.querySelectorAll('.hero-slide');
+        const nextIndex = (activeIndex + 1) % slides.length;
+        slides[activeIndex].classList.remove('active');
+        activeIndex = nextIndex;
+        slides[activeIndex].classList.add('active');
+      }, 5000);
+    }
+  }).catch(error => {
+    console.error('Error loading slideshow images:', error);
+  });
 }
 
 function initializePageLanguage() {
-  // Check if page is already initialized
   if (document.body.classList.contains('language-initialized')) {
     return;
   }
-  
   document.body.classList.add('language-initialized');
   
-  // Initialize language components
   const currentPath = window.location.pathname;
   const pageName = currentPath.split('/').pop().replace('.html', '');
-  
   console.log(`Initializing language for page: ${pageName}`);
   
-  // Update content with translations
   if (languageManager) {
     languageManager.updateContent();
   } else {

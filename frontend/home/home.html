@@ -7,13 +7,13 @@
     <link rel="stylesheet" href="../global/global.css" />
     <link rel="stylesheet" href="./home.css" />
   </head>
-  <body class="home-page">
+  <body>
     <div data-component="header"></div>
     <div id="mobile-overlay" class="mobile-overlay"></div>
 
     <main id="content-container">
-      <section class="hero hero-slideshow" style="order: 1;">
-        <!-- The slides will be injected here by JavaScript -->
+      <section class="hero">
+        <div class="hero-slideshow"></div>
         <div class="hero-content">
           <h2 class="hero-title" data-i18n="hero.title"></h2>
           <p class="hero-subtitle" data-i18n="hero.subtitle"></p>
@@ -21,8 +21,7 @@
         </div>
       </section>
 
-      <div id="dynamic-sections-container" style="order: 2;"></div>
-      <section id="featured-pets" class="featured-pets" style="order: 3;">
+      <section id="featured-pets" class="featured-pets">
         <div class="section-container">
           <div class="section-header">
             <h2 class="section-title" data-i18n="featuredPets.title"></h2>
@@ -38,10 +37,11 @@
 
     <div data-component="footer"></div>
 
-    <script type="module" src="../services/api-service.js"></script>
+    <!-- Scripts -->
     <script type="module" src="../global/global.js"></script>
     <script type="module" src="../global/inject-navbar.js"></script>
     <script type="module" src="../languages/language.js"></script>
+    <script type="module" src="../services/api-service.js"></script>
     <script type="module" src="./home.js"></script>
   </body>
 </html>

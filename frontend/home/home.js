@@ -42,13 +42,20 @@ function initHeroSection() {
   }
   
   heroSection.classList.add('hero-section');
-  const heroTitle = heroSection.querySelector('.hero-title');
-  const heroSubtitle = heroSection.querySelector('.hero-subtitle');
-  const browseButton = heroSection.querySelector('.btn.btn-primary');
   
-  initSlideshow({
-    containerSelector: '.hero-slideshow',
-  });
+  let slideshowContainer = heroSection.querySelector('.hero-slideshow');
+  if (!slideshowContainer) {
+    console.log("Creating slideshow container as it was not found");
+    slideshowContainer = document.createElement('div');
+    slideshowContainer.className = 'hero-slideshow';
+    heroSection.insertBefore(slideshowContainer, heroSection.firstChild);
+  }
+  
+  setTimeout(() => {
+    initSlideshow({
+      containerSelector: '.hero-slideshow',
+    });
+  }, 100);
 }
 
 async function loadPets() {
