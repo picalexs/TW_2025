@@ -1,3 +1,11 @@
+/* -------------------------------------------
+  LAYOUT & GLOBAL STRUCTURE
+------------------------------------------- */
+body.signup-page .auth-buttons,
+body.signup-page .mobile-auth {
+  display: none !important;
+}
+
 .signup-background {
   background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 10, 20, 0.6)), url('../assets/pet-hero-bg.jpg');
   background-repeat: no-repeat;
@@ -7,11 +15,9 @@
   min-height: 100vh;
 }
 
-body.signup-page .auth-buttons,
-body.signup-page .mobile-auth {
-  display: none !important;
-}
-
+/* -------------------------------------------
+  SIGNUP CONTAINER & FORM
+------------------------------------------- */
 .signup-container {
   display: flex;
   justify-content: center;
@@ -38,6 +44,9 @@ body.signup-page .mobile-auth {
   font-weight: 600;
 }
 
+/* -------------------------------------------
+  FORM ELEMENTS
+------------------------------------------- */
 .form-group {
   margin-bottom: 1.2rem;
 }
@@ -72,6 +81,9 @@ body.signup-page .mobile-auth {
   color: white;
 }
 
+/* -------------------------------------------
+  BUTTONS & LINKS
+------------------------------------------- */
 .btn-submit {
   width: 100%;
   padding: 0.75rem;
@@ -103,6 +115,7 @@ body.signup-page .mobile-auth {
   text-decoration: underline;
 }
 
+/* Divider OR */
 .signup-divider {
   display: flex;
   align-items: center;
@@ -120,6 +133,7 @@ body.signup-page .mobile-auth {
   margin: 0 10px;
 }
 
+/* Google login button */
 .btn-google-login {
   display: flex;
   align-items: center;
@@ -161,7 +175,9 @@ body.signup-page .mobile-auth {
   text-decoration: underline;
 }
 
-/* Responsive Media Queries */
+/* -------------------------------------------
+  RESPONSIVE STYLES
+------------------------------------------- */
 @media (max-width: 768px) {
   .hero-title {
     font-size: 2rem;
