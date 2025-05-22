@@ -324,7 +324,6 @@ header {
     background-color: var(--background-color);
 }
 
-/* Footer Styles */
 footer {
     background-color: var(--dark-color);
     color: var(--light-color);
@@ -482,7 +481,7 @@ footer {
 }
 
 .mobile-menu-toggle {
-    display: none; /*Hidden on larger screens*/
+    display: none;
     flex-direction: column;
     justify-content: space-between;
     width: 1.875rem;

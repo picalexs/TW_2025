@@ -1,51 +1,110 @@
 <header>
   <div class="header-container">
     <div class="logo">
-      <h1 class="site.name">Pet Adoption Center</h1>
+      <a href="/frontend/home/home.html" style="text-decoration: none;">
+        <h1>Pet Adoption Center</h1>
+      </a>
     </div>
     <ul class="nav-menu">
-      <li class="nav-item"><a href="../home/home.html" class="nav-link" data-i18n="nav.home">Home</a></li>
-      <li class="nav-item"><a href="#" class="nav-link" data-i18n="nav.pets">Pets</a></li>
+      <li class="nav-item"><a href="/frontend/home/home.html" class="nav-link" data-i18n="nav.home">Home</a></li>
+      <li class="nav-item"><a href="/frontend/pets/pets.html" class="nav-link" data-i18n="nav.pets">Pets</a></li>
       <li class="nav-item"><a href="#about" class="nav-link" data-i18n="nav.about">About Us</a></li>
     </ul>
     <div class="auth-container">
-      <div class="auth-buttons">
-        <a href="../login/login.html" class="btn btn-outline" data-i18n="nav.login">Log In</a>
-        <a href="../singup/singup.html" class="btn btn-primary" data-i18n="nav.signup">Sign Up</a>
+      <div class="auth-buttons" data-component-auth-hide="loggedIn,signupPage,loginPage">
+        <a href="/frontend/login/login.html" class="btn btn-outline" data-i18n="nav.login">Login</a>
+        <a href="/frontend/signup/signup.html" class="btn btn-primary" data-i18n="nav.signup">Sign Up</a>
       </div>
       <div class="language-dropdown">
         <button class="language-current">
-          <span class="flag-icon flag-en">🇬🇧</span>
-          <span>EN</span>
+          <span class="flag-icon flag-en"></span>
+          <span></span>
           <i class="dropdown-arrow">▼</i>
         </button>
         <div class="language-options">
           <a href="#" class="language-option" data-lang="en">
-            <span class="flag-icon flag-en">🇬🇧</span>
-            <span>English</span>
+            <span class="flag-icon flag-en">GB</span>
+            <span data-i18n="language.english">English</span>
           </a>
           <a href="#" class="language-option" data-lang="ro">
-            <span class="flag-icon flag-ro">🇷🇴</span>
-            <span>Română</span>
+            <span class="flag-icon flag-ro">RO</span>
+            <span data-i18n="language.romanian">Română</span>
           </a>
         </div>
       </div>
     </div>
+
+    <div class="mobile-menu-toggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+
+  <!-- Mobile menu container -->
+  <div class="mobile-menu-container">
+    <!-- Mobile login/signup section -->
+    <div class="mobile-auth" data-component-auth-hide="loggedIn,signupPage,loginPage">
+      <a href="/frontend/login/login.html" class="btn btn-outline" data-i18n="nav.login">Login</a>
+      <a href="/frontend/signup/signup.html" class="btn btn-primary" data-i18n="nav.signup">Sign Up</a>
+    </div>
+
+    <!-- Mobile navigation -->
+    <nav class="mobile-nav">
+      <ul class="mobile-nav-menu">
+        <li class="mobile-nav-item">
+          <a href="/frontend/home/home.html" class="mobile-nav-link" data-i18n="nav.home">Home</a>
+        </li>
+        <li class="mobile-nav-item">
+          <a href="/frontend/pets/pets.html" class="mobile-nav-link" data-i18n="nav.pets">Pets</a>
+        </li>
+        <li class="mobile-nav-item">
+          <a href="#about" class="mobile-nav-link" data-i18n="nav.about">About Us</a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Mobile language selector -->
+    <div class="mobile-language">
+      <div class="mobile-language-title" data-i18n="language.title">Language</div>
+      <div class="mobile-language-options">
+        <a href="#" class="mobile-language-option" data-lang="en">
+          <span class="flag-icon flag-en">🇬🇧</span>
+          <span data-i18n="language.english">English</span>
+        </a>
+        <a href="#" class="mobile-language-option" data-lang="ro">
+          <span class="flag-icon flag-ro">🇷🇴</span>
+          <span data-i18n="language.romanian">Română</span>
+        </a>
+      </div>
+    </div>
+  </div>
 </header>
 
-<!-- About Section -->
+<!-- Mobile overlay -->
+<div class="mobile-overlay"></div>
+
+
 <footer id="main-footer">
   <div class="footer-container">
     <div class="footer-section">
-      <h3 class="site.name">Pet Adoption Center</h3>
+      <a href="/frontend/home/home.html" style="text-decoration: none; color: inherit;">
+        <h3>Pet Adoption Center</h3>
+      </a>
       <p data-i18n="footer.tagline">Finding forever homes for pets in need</p>
     </div>
     <div class="footer-section">
       <h3 data-i18n="footer.links">Links</h3>
       <ul class="footer-links">
-        <li class="footer-link"><a href="../index.html" data-i18n="nav.home">Home</a></li>
-        <li class="footer-link"><a href="#" data-i18n="nav.pets">Pets</a></li>
-        <li class="footer-link"><a href="#about" data-i18n="nav.about">About Us</a></li>
+        <li class="footer-link">
+          <a href="/frontend/home/home.html" data-i18n="nav.home">Home</a>
+        </li>
+        <li class="footer-link">
+          <a href="/frontend/pets/pets.html" data-i18n="nav.pets">Pets</a>
+        </li>
+        <li class="footer-link">
+          <a href="#about" data-i18n="nav.about">About Us</a>
+        </li>
       </ul>
     </div>
   </div>

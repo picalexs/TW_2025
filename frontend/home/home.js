@@ -7,7 +7,14 @@ function initHomePage() {
   loadPets();
   
   initSlideshow({
-    containerSelector: '.hero-slideshow'
+    containerSelector: '.hero-slideshow',
+    images: [
+      '../assets/hero-bg1.jpg',  
+      '../assets/hero-bg2.jpg',
+      '../assets/hero-bg3.jpg',
+      '../assets/hero-bg4.jpg',
+      '../assets/hero-bg5.jpg'
+    ]
   });
 }
 

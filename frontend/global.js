@@ -50,19 +50,15 @@ export function setupLanguageDropdown() {
     
     if (lang === 'en') {
       flagSpan.textContent = '🇬🇧';
-      flagSpan.className = 'flag-icon flag-en';
-      textSpan.textContent = '';
+      textSpan.textContent = 'EN';
     } else if (lang === 'ro') {
       flagSpan.textContent = '🇷🇴';
-      flagSpan.className = 'flag-icon flag-ro';
-      textSpan.textContent = '';
+      textSpan.textContent = 'RO';
     }
   }
 }
 
 export function setupMobileMenu() {
-  console.log("Setting up mobile menu");
-  
   const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
   const mobileMenuContainer = document.querySelector('.mobile-menu-container');
   const mobileOverlay = document.querySelector('.mobile-overlay');
@@ -83,8 +79,6 @@ export function setupMobileMenu() {
     return;
   }
   const currentLang = localStorage.getItem('language') || 'en';
-  console.log("Current language:", currentLang);
-
   
   setActiveMobileLanguage(currentLang);
   
@@ -128,8 +122,6 @@ export function setupMobileMenu() {
     
     option.addEventListener('click', (e) => {
       e.preventDefault();
-      console.log(`Language option clicked: ${lang}`);
-      
       setActiveMobileLanguage(lang);
       
       if (typeof languageManager !== 'undefined') {

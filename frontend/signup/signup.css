@@ -1,5 +1,5 @@
-.singup-background {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../assets/pet-hero-bg.jpg');
+.signup-background {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 10, 20, 0.6)), url('../assets/pet-hero-bg.jpg');
   background-repeat: no-repeat;
   background-position: center center;
   background-attachment: fixed;
@@ -7,8 +7,12 @@
   min-height: 100vh;
 }
 
-/* singup container */
-.singup-container {
+body.signup-page .auth-buttons,
+body.signup-page .mobile-auth {
+  display: none !important;
+}
+
+.signup-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,8 +20,7 @@
   min-height: calc(100vh - 80px);
 }
 
-/* Glassmorphism form */
-.singup-box {
+.signup-box {
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -29,13 +32,12 @@
   color: white;
 }
 
-.singup-box h2 {
+.signup-box h2 {
   text-align: center;
   margin-bottom: 1.5rem;
   font-weight: 600;
 }
 
-/* Input fields */
 .form-group {
   margin-bottom: 1.2rem;
 }
@@ -64,14 +66,12 @@
   background-color: rgba(255, 255, 255, 0.3);
 }
 
-/* Options */
 .form-options {
   font-size: 0.85rem;
   margin-bottom: 1.2rem;
   color: white;
 }
 
-/* Submit Button */
 .btn-submit {
   width: 100%;
   padding: 0.75rem;
@@ -88,7 +88,6 @@
   background-color: var(--secondary-color);
 }
 
-/* Redirect link */
 .redirect-link {
   text-align: center;
   margin-top: 1rem;
@@ -104,17 +103,7 @@
   text-decoration: underline;
 }
 
-/* Language dropdown and button styles */
-
-.language-option {
-  display: block;
-  padding: 0.5rem 1rem;
-  color: var(--text-color);
-  text-decoration: none;
-}
-
-/* Divider OR */
-.singup-divider {
+.signup-divider {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -124,14 +113,13 @@
   font-size: 0.85rem;
 }
 
-.singup-divider hr {
+.signup-divider hr {
   flex: 1;
   border: none;
   border-top: 1px solid rgba(255, 255, 255, 0.3);
   margin: 0 10px;
 }
 
-/* Google login button */
 .btn-google-login {
   display: flex;
   align-items: center;
@@ -158,7 +146,6 @@
   height: 20px;
 }
 
-/* Forgot password */
 .forgot-password {
   text-align: center;
   margin-top: 1rem;
@@ -174,8 +161,6 @@
   text-decoration: underline;
 }
 
-
-/* Responsive */
 /* Responsive Media Queries */
 @media (max-width: 768px) {
   .hero-title {
@@ -188,39 +173,5 @@
 
   .section-title {
     font-size: 1.75rem;
-  }
-
-  .language-selector {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    z-index: 1000;
-    display: flex;
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 25px;
-    padding: 4px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-
-  .language-btn {
-    background: none;
-    border: none;
-    padding: 8px 12px;
-    font-weight: 600;
-    cursor: pointer;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    color: var(--text-color);
-    transition: all 0.3s ease;
-  }
-
-  .language-btn:hover {
-    background-color: rgba(74, 137, 220, 0.1);
-  }
-
-  .language-btn.active {
-    background-color: var(--primary-color);
-    color: white;
-    box-shadow: 0 2px 5px rgba(74, 137, 220, 0.4);
   }
 }

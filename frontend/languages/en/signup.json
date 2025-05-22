@@ -1,14 +1,15 @@
 {
-  "title": "Sing up",
+  "title": "Sign up",
   "emailLabel": "Email",
   "emailPlaceholder": "Enter your email",
   "passwordLabel": "Password",
   "passwordPlaceholder": "Enter your password",
   "usernameLabel": "Username",
   "usernamePlaceholder": "Enter your username",
-  "singupButton": "Sing up",
+  "signupButton": "Sign up",
   "or": "OR",
   "googleLogin": "Log in with Google",
+  "forgotPassword": "Forgot password?",
   "registerPrompt": "Have an account?",
   "registerLink": "Log in"
 }

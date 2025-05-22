@@ -2,7 +2,6 @@ export function loadPage(pageId) {
   const contentArea = document.getElementById('app');
   contentArea.innerHTML = '<div class="loading">Loading...</div>';
   
-
   // Nu e ok sa facem redirectionare (momentan o sa fac asta, dar am sa schim)
   /*
      
@@ -25,9 +24,8 @@ export function loadPage(pageId) {
       //contentArea.innerHTML = '<h1>Login Page</h1><p>Login form will go here.</p>';
       window.location.href = './login/login.html';
       break;
-    case 'signin':
-      //contentArea.innerHTML = '<h1>Sign In</h1><form>...</form>';
-      window.location.href = './signin/signin.html';
+    case 'signup':
+      window.location.href = './signup/signup.html';
       break;
     
     default:

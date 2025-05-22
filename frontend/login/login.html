@@ -7,11 +7,6 @@
   <title>Log In</title>
   <link rel="stylesheet" href="../global/global.css" />
   <link rel="stylesheet" href="./login.css" />
-  <script type="module" src="../global.js"></script>
-  <script type="module" src="./login.js"></script>
-  <script type="module" src="../components/component-loader.js"></script>
-  <script type="module" src="../global/global.js"></script>
-  <!-- <link rel="stylesheet" href="../global-navbar.html" /> -->
 </head>
 
 <body class="login-page">
@@ -27,33 +22,6 @@
     </div>
     <div class="login-container">
       <form class="login-box">
-        <h2 data-i18n="login.title">Login</h2>
-        <!---->
-
-        <div class="form-group">
-          <label for="email" data-i18n="login.email">Email</label>
-          <input type="email" id="email" data-i18n-placeholder="login.email" placeholder="Enter your email" required />
-        </div>
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" placeholder="Enter your email" required />
-        </div>
-
-        <div class="form-group">
-          <label for="password" data-i18n="login.password">Password</label>
-          <input type="password" id="password" data-i18n-placeholder="login.password" placeholder="Enter your password" required />
-        </div>
-
-        <div class="form-options">
-          <label><input type="checkbox" /> <span data-i18n="login.rememberMe">Remember me</span></label>
-        </div>
-
-        <button class="btn-submit" type="submit" data-i18n="login.loginButton">Login</button>
-
-        <div class="redirect-link">
-          <span data-i18n="login.noAccount">Don't have an account?</span> <a href="#" data-i18n="login.register">Register</a>
-        </div>
-        -->
         <h2 data-i18n="title">Log In</h2>
 
         <div class="form-group">
@@ -88,7 +56,7 @@
 
         <div class="redirect-link">
           <span data-i18n="registerPrompt">Don't have an account?</span>
-          <a href="../singup/singup.html" data-i18n="registerLink">Register</a>
+          <a href="../signup/signup.html" data-i18n="registerLink">Register</a>
         </div>
 
       </form>
@@ -103,10 +71,10 @@
   <!-- 2. Apoi incarci bara + executi functiile dupa ce e injectata -->
   <script type="module" src="../global/inject-navbar.js"></script>
 
-  <!-- 3. Codul paginii de login (ce faci cu form-ul etc.) -->
+  <!-- 3. Load languages -->
+  <script type="module" src="../languages/language.js"></script>
+
+  <!-- 4. Codul paginii de login (ce faci cu form-ul etc.) -->
   <script type="module" src="./login.js"></script>
-
-
 </body>
-
 </html>

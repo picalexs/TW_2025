@@ -1,42 +1,24 @@
 import languageManager from '../languages/language.js';
-import { setupMobileMenu, initSlideshow } from '../global.js';
+import { setupMobileMenu } from '../global/global.js';
 
 document.addEventListener('DOMContentLoaded', function() {
   initLoginPage();
-  setupLanguageDropdown();
   setupMobileMenu();
   
-  initSlideshow({
-    containerSelector: '.login-slideshow',
-    slideClass: 'login-slide',
-    overlay: 'rgba(0, 0, 0, 0.6)'
-  });
+  import('../global/global.js')
+    .then(module => {
+      if (module.initSlideshow) {
+        module.initSlideshow({
+          containerSelector: '.login-slideshow',
+          slideClass: 'login-slide',
+          overlay: 'rgba(0, 0, 0, 0.6)'
+        });
+      }
+    })
+    .catch(err => console.warn('Could not load slideshow:', err));
 });
 
 function initLoginPage() {
-  const elements = {
-    'h2': 'login.title',
-    'label[for="email"]': 'login.email',
-    'label[for="password"]': 'login.password',
-    '.form-options label': 'login.rememberMe',
-    '.btn-submit': 'login.loginButton',
-    '.redirect-link': 'login.noAccount'
-  };
-
-  for (const [selector, key] of Object.entries(elements)) {
-    const element = document.querySelector(selector);
-    if (element) {
-      element.setAttribute('data-i18n', key);
-    }
-  }
-
-  const registerLink = document.querySelector('.redirect-link a');
-  if (registerLink) {
-    registerLink.setAttribute('data-i18n', 'login.register');
-  }
-
-  languageManager.updateContent();
-
   const form = document.querySelector('.login-box');
   if (form) {
     form.addEventListener('submit', handleLogin);
@@ -60,52 +42,6 @@ function handleLogin(event) {
     // Redirect to home page after "login"
     window.location.href = '../home/home.html';
   }, 1000);
-}
-
-function setupLanguageDropdown() {
-  const languageOptions = document.querySelectorAll('.language-option');
-  const currentLangButton = document.querySelector('.language-current');
-  
-  if (!languageOptions.length || !currentLangButton) return;
-  
-  const currentLang = localStorage.getItem('language') || 'en';
-  updateCurrentLanguageUI(currentLang);
-  
-  languageOptions.forEach(option => {
-    const lang = option.getAttribute('data-lang');
-    
-    if (lang === currentLang) {
-      option.classList.add('active');
-    }
-    
-    option.addEventListener('click', (e) => {
-      e.preventDefault();
-      
-      languageOptions.forEach(opt => opt.classList.remove('active'));
-      option.classList.add('active');
-      
-      updateCurrentLanguageUI(lang);
-      languageManager.changeLanguage(lang);
-    });
-  });
-}
-
-function updateCurrentLanguageUI(lang) {
-  const currentLangButton = document.querySelector('.language-current');
-  if (!currentLangButton) return;
-  
-  const flagSpan = currentLangButton.querySelector('.flag-icon');
-  const textSpan = currentLangButton.querySelector('span:not(.flag-icon):not(.dropdown-arrow)');
-  
-  if (lang === 'en') {
-    flagSpan.textContent = 'GB';
-    flagSpan.className = 'flag-icon flag-en';
-    textSpan.textContent = 'EN';
-  } else if (lang === 'ro') {
-    flagSpan.textContent = 'RO';
-    flagSpan.className = 'flag-icon flag-ro';
-    textSpan.textContent = 'RO';
-  }
 }
 
 // Add mobile menu setup function
