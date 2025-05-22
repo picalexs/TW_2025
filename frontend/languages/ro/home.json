@@ -1,12 +1,29 @@
 {
   "hero": {
     "title": "Găsește-ți Companionul Perfect",
-    "subtitle": "Adoptă un animal și schimbă-vă viețile pentru totdeauna",
+    "subtitle": "Adoptă un animal și schimbă-ți viața pentru totdeauna",
     "browseButton": "Caută Animale"
   },
   "featuredPets": {
     "title": "Animale Recomandate",
-    "subtitle": "Întâlnește câteva dintre animalele noastre care așteaptă să fie adoptate"
+    "subtitle": "Întâlnește câteva dintre animalele noastre care așteaptă să fie adoptate",
+    "viewDetails": "Vezi Detalii",
+    "tags": {
+      "dog": "Câine",
+      "cat": "Pisică",
+      "healthy": "Sănătos",
+      "needsMedication": "Necesită Medicație",
+      "senior": "Vârstnic",
+      "friendly": "Prietenos",
+      "energetic": "Energic",
+      "shy": "Timid"
+    }
+  },
+  "featuredUsers": {
+    "title": "Comunitatea Noastră",
+    "subtitle": "Întâlnește câțiva dintre utilizatorii noștri care au adoptat animale",
+    "joined": "Înscris",
+    "viewProfile": "Vezi Profilul"
   },
   "about": {
     "title": "Despre Centrul Nostru",
@@ -19,6 +36,27 @@
     "subtitle": "Întâlnește câțiva dintre utilizatorii noștri care au adoptat animale",
     "joined": "Înscris",
     "viewProfile": "Vezi Profilul"
+  },
+  "footer": {
+    "tagline": "Găsim cămine pentru totdeauna pentru animalele care au nevoie",
+    "links": "Linkuri",
+    "contact": "Contactează-ne",
+    "email": "Email: info@petadoptioncenter.com",
+    "phone": "Telefon: (123) 456-7890",
+    "copyright": "© 2025 Centrul de Adopție a Animalelor. Toate drepturile rezervate."
+  },
+  "login": {
+    "title": "Autentificare",
+    "email": "Email",
+    "password": "Parolă",
+    "rememberMe": "Ține-mă minte",
+    "loginButton": "Autentificare",
+    "noAccount": "Nu ai cont?",
+    "register": "Înregistrează-te"
+  },
+  "language": {
+    "title": "Limbă",
+    "english": "Engleză",
+    "romanian": "Română"
   }
-
 }

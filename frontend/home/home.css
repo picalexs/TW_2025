@@ -1,5 +1,55 @@
 .hero {
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('../assets/pet-hero-bg.jpg');
+  background: none;
+  position: relative;
+  min-height: 100vh;
+  color: var(--light-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem 1rem;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.hero-slideshow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.hero-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center center;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.hero-slide.active {
+  opacity: 1;
+}
+
+.hero-slide.scrolling {
+  position: absolute;
+  top: 0;
+  background-attachment: scroll;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 50rem;
+  padding: 0 1rem;
+  width: 100%;
 }
 
 .featured-users .section-header {
@@ -8,7 +58,63 @@
 
 .about-content {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(18.75rem, 1fr));
   gap: 2rem;
   margin-top: 2rem;
+}
+
+.loading-spinner {
+  text-align: center;
+  padding: 2rem;
+  color: var(--primary-color);
+  font-weight: 500;
+}
+
+.loading-spinner::after {
+  content: "...";
+  animation: dots 1.5s steps(5, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% {
+    content: ".";
+  }
+  40% {
+    content: "..";
+  }
+  60%, 100% {
+    content: "...";
+  }
+}
+
+.error-message {
+  text-align: center;
+  padding: 2rem;
+  background-color: rgba(231, 76, 60, 0.1);
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+
+.error-details {
+  color: #e74c3c;
+  margin: 0.5rem 0 1rem;
+  font-size: 0.9rem;
+}
+
+.no-pets-message {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-color);
+  font-style: italic;
+}
+
+#content-container {
+  position: relative;
+  z-index: 2;
+}
+
+.featured-pets {
+  position: relative;
+  z-index: 5;
+  background-color: var(--light-color);
 }

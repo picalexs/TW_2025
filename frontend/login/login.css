@@ -1,3 +1,164 @@
+body.login-page {
+  background-color: var(--background-color);
+}
+
+body.login-page .auth-buttons,
+body.login-page .mobile-auth {
+  display: none !important;
+}
+
+.login-background {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* Slideshow styles for login */
+.login-slideshow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.login-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  z-index: 1;
+}
+
+.login-slide.active {
+  opacity: 1;
+}
+
+/* Fallback background if slides don't load */
+.login-slideshow::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../assets/pet-hero-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+}
+
+/* Login container */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 1rem;
+  min-height: calc(100vh - 4.5rem);
+  position: relative;
+  z-index: 2;
+}
+
+/* Glassmorphism form */
+.login-box {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(0.75rem);
+  -webkit-backdrop-filter: blur(0.75rem);
+  border-radius: 0.75rem;
+  padding: 2rem;
+  width: 100%;
+  max-width: 25rem;
+  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.3);
+  color: white;
+}
+
+.login-box h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+}
+
+/* Input fields */
+.form-group {
+  margin-bottom: 1.2rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.9rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.65rem;
+  border: none;
+  border-radius: 0.375rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.form-group input::placeholder {
+  color: #ddd;
+}
+
+.form-group input:focus {
+  outline: none;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Options */
+.form-options {
+  font-size: 0.85rem;
+  margin-bottom: 1.2rem;
+  color: white;
+}
+
+/* Submit Button */
+.btn-submit {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--primary-color);
+  border: none;
+  border-radius: 0.375rem;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-submit:hover {
+  background-color: var(--secondary-color);
+}
+
+/* Redirect link */
+.redirect-link {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.85rem;
+}
+
+.redirect-link a {
+  color: #a5d3ff;
+  text-decoration: none;
+}
+
+.redirect-link a:hover {
+  text-decoration: underline;
+}
+
+.login-page-hide {
+  display: none !important;
+}
+
+/* Responsive */
 .login-background {
   background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../assets/pet-hero-bg.jpg');
   background-repeat: no-repeat;
@@ -190,37 +351,7 @@
     font-size: 1.75rem;
   }
 
-  .language-selector {
-    position: absolute;
-    top: 15px;
-    right: 20px;
-    z-index: 1000;
-    display: flex;
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 25px;
-    padding: 4px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-
-  .language-btn {
-    background: none;
-    border: none;
-    padding: 8px 12px;
-    font-weight: 600;
-    cursor: pointer;
-    border-radius: 20px;
-    font-size: 0.9rem;
-    color: var(--text-color);
-    transition: all 0.3s ease;
-  }
-
-  .language-btn:hover {
-    background-color: rgba(74, 137, 220, 0.1);
-  }
-
-  .language-btn.active {
-    background-color: var(--primary-color);
-    color: white;
-    box-shadow: 0 2px 5px rgba(74, 137, 220, 0.4);
+  .login-box {
+    max-width: 90%;
   }
 }

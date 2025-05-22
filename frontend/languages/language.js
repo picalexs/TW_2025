@@ -5,6 +5,12 @@ class LanguageManager {
     this.loadTranslation();
 
     this.languageChangedEvent = new CustomEvent('languageChanged');
+    
+    // Listen for component loading to update translations in newly loaded components
+    document.addEventListener('componentsLoaded', () => {
+      console.log('Components loaded, updating translations');
+      this.updateContent();
+    });
   }
 
  async loadTranslation() {
@@ -67,8 +73,7 @@ class LanguageManager {
 
     return value;
   }
-
-  // Switch to a different language
+  
   async changeLanguage(language) {
     console.log(`Changing language to: ${language}`);
     if (this.currentLanguage === language) return;
@@ -76,6 +81,10 @@ class LanguageManager {
     this.currentLanguage = language;
     localStorage.setItem('language', language);
     await this.loadTranslation();
+    
+    // Update UI elements that show the current language
+    this.updateLanguageUI();
+    
     console.log('Language changed and content updated');
   }
 
@@ -84,7 +93,6 @@ class LanguageManager {
     document.querySelectorAll('[data-i18n]').forEach(element => {
       const key = element.getAttribute('data-i18n');
       const translated = this.translate(key);
-      console.log(`Translating ${key} to ${translated}`);
       element.textContent = translated;
     });
 
@@ -98,9 +106,43 @@ class LanguageManager {
       element.value = this.translate(key);
     });
   }
+  
+  updateLanguageUI() {
+    const currentLang = this.currentLanguage;
+    const currentLangButton = document.querySelector('.language-current');
+    if (currentLangButton) {
+      const flagSpan = currentLangButton.querySelector('.flag-icon');
+      if (flagSpan) {
+        if (currentLang === 'en') {
+          flagSpan.textContent = '🇬🇧';
+          flagSpan.className = 'flag-icon flag-en';
+        } else if (currentLang === 'ro') {
+          flagSpan.textContent = '🇷🇴';
+          flagSpan.className = 'flag-icon flag-ro';
+        }
+      }
+    }
+    
+    document.querySelectorAll('.language-option').forEach(option => {
+      const lang = option.getAttribute('data-lang');
+      if (lang === currentLang) {
+        option.classList.add('active');
+      } else {
+        option.classList.remove('active');
+      }
+    });
+    
+    document.querySelectorAll('.mobile-language-option').forEach(option => {
+      const lang = option.getAttribute('data-lang');
+      if (lang === currentLang) {
+        option.classList.add('active');
+      } else {
+        option.classList.remove('active');
+      }
+    });
+  }
 }
 
-// Initialize and make available globally
 const languageManager = new LanguageManager();
 window.languageManager = languageManager;
 
