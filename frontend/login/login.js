@@ -1,21 +1,15 @@
 import languageManager from '../languages/language.js';
-import { setupMobileMenu } from '../global/global.js';
+import { setupMobileMenu, createSlideshow } from '../global/global.js';
 
 document.addEventListener('DOMContentLoaded', function() {
   initLoginPage();
   setupMobileMenu();
   
-  import('../global/global.js')
-    .then(module => {
-      if (module.initSlideshow) {
-        module.initSlideshow({
-          containerSelector: '.login-slideshow',
-          slideClass: 'login-slide',
-          overlay: 'rgba(0, 0, 0, 0.6)'
-        });
-      }
-    })
-    .catch(err => console.warn('Could not load slideshow:', err));
+  createSlideshow({
+    containerSelector: '.login-slideshow',
+    slideClass: 'login-slide',
+    overlay: 'rgba(0, 0, 0, 0.6)'
+  });
 });
 
 function initLoginPage() {

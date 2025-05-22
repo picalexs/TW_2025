@@ -1,25 +1,72 @@
-.hero {
-  background: none;
+/* -------------------------------------------
+   1. LAYOUT & GLOBAL STRUCTURE
+------------------------------------------- */
+body {
   position: relative;
-  min-height: 100vh;
+}
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+main {
+  position: relative;
+  z-index: 1;
+}
+
+#content-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin-top: 0;
+  background: var(--light-color);
+}
+
+section {
+  position: relative;
+  margin: 0;
+  padding: 5vh 0;
+  width: 100%;
+}
+
+#dynamic-sections-container {
+  order: 2 !important;
+  position: relative;
+  z-index: 5;
+  width: 100%;
+}
+
+/* -------------------------------------------
+   2. HERO SECTION
+------------------------------------------- */
+.hero {
+  position: relative;
+  min-height: 80vh;
   color: var(--light-color);
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 2rem 1rem;
-  overflow: hidden;
+  padding: 2rem 5%;
   z-index: 1;
+  margin-top: 0;
+  margin-bottom: 0;
+  overflow: hidden;
+  order: 1 !important;
+}
+
+.hero-section {
+  order: 1;
 }
 
 .hero-slideshow {
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: relative;
   width: 100%;
   height: 100%;
   overflow: hidden;
-  z-index: -1;
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .hero-slide {
@@ -32,6 +79,7 @@
   background-position: center center;
   opacity: 0;
   transition: opacity 1s ease-in-out;
+  z-index: 1;
 }
 
 .hero-slide.active {
@@ -47,8 +95,58 @@
 .hero-content {
   position: relative;
   z-index: 2;
-  max-width: 50rem;
-  padding: 0 1rem;
+  max-width: 80%;
+  padding: 2rem;
+  width: 100%;
+}
+
+.hero-title {
+  font-size: 4.5rem;
+  margin-bottom: 1.5rem;
+  text-shadow: 0.125rem 0.125rem 0.25rem rgba(0, 0, 0, 0.5);
+  color: white;
+  position: relative;
+  z-index: 41;
+  font-weight: 700;
+}
+
+.hero-subtitle {
+  font-size: 1.75rem;
+  margin-bottom: 2rem;
+  text-shadow: 0.0625rem 0.0625rem 0.125rem rgba(0, 0, 0, 0.5);
+  color: white;
+  position: relative;
+  z-index: 41;
+}
+
+.hero .btn {
+  position: relative;
+  z-index: 2;
+}
+
+/* -------------------------------------------
+   3. FEATURED PETS SECTION
+------------------------------------------- */
+.featured-pets {
+  order: 3 !important;
+  position: relative;
+  z-index: 5;
+  background-color: var(--light-color);
+  padding: 3rem 0;
+  margin: 0;
+  width: 100%;
+}
+
+/* -------------------------------------------
+   4. FEATURED USERS SECTION
+------------------------------------------- */
+.featured-users {
+  order: 2;
+  position: relative;
+  z-index: 5;
+  background-color: var(--light-color);
+  padding: 3rem 0;
+  margin: 0;
   width: 100%;
 }
 
@@ -56,6 +154,9 @@
   margin-bottom: 3rem;
 }
 
+/* -------------------------------------------
+   5. ABOUT SECTION
+------------------------------------------- */
 .about-content {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(18.75rem, 1fr));
@@ -63,6 +164,9 @@
   margin-top: 2rem;
 }
 
+/* -------------------------------------------
+   6. LOADING STATES & MESSAGES
+------------------------------------------- */
 .loading-spinner {
   text-align: center;
   padding: 2rem;
@@ -98,7 +202,7 @@
 .error-details {
   color: #e74c3c;
   margin: 0.5rem 0 1rem;
-  font-size: 0.9rem;
+  font-size: 0.9em;
 }
 
 .no-pets-message {
@@ -108,13 +212,39 @@
   font-style: italic;
 }
 
-#content-container {
-  position: relative;
-  z-index: 2;
+/* -------------------------------------------
+   7. RESPONSIVE STYLES
+------------------------------------------- */
+@media (max-width: 48em) { /* 768px/16px = 48em */
+  .hero-title {
+    font-size: 3rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.5rem;
+  }
+
+  .section-title {
+    font-size: 1.75rem;
+  }
 }
 
-.featured-pets {
-  position: relative;
-  z-index: 5;
-  background-color: var(--light-color);
+@media (max-width: 36em) { /* 576px/16px = 36em */
+  .hero-title {
+    font-size: 2.5rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 26em) { /* 416px/16px = 26em */
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-content {
+    padding: 1rem;
+  }
 }

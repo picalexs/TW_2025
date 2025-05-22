@@ -6,26 +6,23 @@
     <title>Pet Adoption Center</title>
     <link rel="stylesheet" href="../global/global.css" />
     <link rel="stylesheet" href="./home.css" />
-    <script type="module" src="../global/global.js"></script>
   </head>
-  <body>
+  <body class="home-page">
     <div data-component="header"></div>
-    <div id="global-navbar"></div>
     <div id="mobile-overlay" class="mobile-overlay"></div>
 
     <main id="content-container">
-      <!-- Hero Section -->
-      <section class="hero hero-slideshow">
-        <div class="hero-content">
+      <section class="hero hero-slideshow" style="order: 1;">
+        <!-- The slides will be injected here by JavaScript -->
+        <div class="hero-content" style="position: relative; z-index: 40;">
           <h2 class="hero-title" data-i18n="hero.title"></h2>
           <p class="hero-subtitle" data-i18n="hero.subtitle"></p>
-          <a href="#" class="btn btn-primary" data-i18n="hero.browseButton"
-            >Browse Pets</a
-          >
+          <a href="../pets/pets.html" class="btn btn-primary" data-i18n="hero.browseButton"></a>
         </div>
       </section>
 
-      <section id="featured-pets" class="featured-pets">
+      <div id="dynamic-sections-container" style="order: 2;"></div>
+      <section id="featured-pets" class="featured-pets" style="order: 3;">
         <div class="section-container">
           <div class="section-header">
             <h2 class="section-title" data-i18n="featuredPets.title"></h2>
@@ -33,25 +30,18 @@
           </div>
           <div id="pets-grid" class="pets-grid">
             <!-- Pets will be inserted here from .js -->
-            <div class="loading-spinner">Loading pets...</div>
+            <div class="loading-spinner"></div>
           </div>
         </div>
       </section>
     </main>
 
     <div data-component="footer"></div>
-    <div id="global-footer"></div>
 
-    <!-- 1. incarca doar functiile din global.js (nu le ruleaza automat!) -->
     <script type="module" src="../global/global.js"></script>
 
-    <!-- 2. Apoi incarci bara + executi functiile dupa ce e injectata -->
     <script type="module" src="../global/inject-navbar.js"></script>
-
-    <!-- 3. Load languages -->
     <script type="module" src="../languages/language.js"></script>
-
-    <!-- 4. Load page specific script -->
     <script type="module" src="./home.js"></script>
   </body>
 </html>
