@@ -14,5 +14,10 @@
     "email": "Email: info@petadoptioncenter.com",
     "phone": "Telefon: (123) 456-7890",
     "copyright": "© 2025 Centrul de Adopție a Animalelor. Toate drepturile rezervate."
+  },
+  "language": {
+    "title": "Limbă",
+    "english": "Engleză",
+    "romanian": "Română"
   }
 }

@@ -1,13 +1,43 @@
 import { fetchPets, renderPets, showPetLoadError } from '../pets/pets.js';
-import { initSlideshow } from '../global/global.js';
+import { initSlideshow, setupMobileMenu } from '../global/global.js';
+
+import languageManager from '../languages/language.js';
 
 function initHomePage() {
   console.log("Initializing home page...");
   initHeroSection();
   
+  setupMobileMenu();
+  initializePageLanguage(); // Add this line to ensure language is updated
+  
   loadPets();
   fetchAndRenderUsers();
   addEventListeners();
+}
+
+// Add this function to ensure the dynamic sections container exists
+function ensureDynamicSectionsContainer() {
+  let container = document.getElementById('dynamic-sections-container');
+  if (!container) {
+    console.log('Creating dynamic sections container');
+    container = document.createElement('div');
+    container.id = 'dynamic-sections-container';
+    container.style.order = '2';
+    
+    const contentContainer = document.getElementById('content-container');
+    if (contentContainer) {
+      // Insert after hero section
+      const heroSection = document.querySelector('.hero');
+      if (heroSection && heroSection.parentNode === contentContainer) {
+        contentContainer.insertBefore(container, heroSection.nextSibling);
+      } else {
+        contentContainer.appendChild(container);
+      }
+    } else {
+      console.error('Content container not found');
+      document.body.appendChild(container);
+    }
+  }
 }
 
 function initHeroSection() {
@@ -23,6 +53,7 @@ function initHeroSection() {
 
   const heroTitle = heroSection.querySelector('.hero-title');
   const heroSubtitle = heroSection.querySelector('.hero-subtitle');
+  const browseButton = heroSection.querySelector('.btn.btn-primary');
   
   if (heroTitle && !heroTitle.textContent.trim()) {
     heroTitle.textContent = 'Find Your Perfect Pet Companion';
@@ -32,6 +63,12 @@ function initHeroSection() {
     heroSubtitle.textContent = 'Adopt a pet and change a life forever';
   }
   
+  if (browseButton && !browseButton.textContent.trim()) {
+    browseButton.textContent = 'Browse Pets';
+  }
+  
+  // Initialize the slideshow with more logging
+  console.log("Starting slideshow initialization");
   initSlideshow({
     containerSelector: '.hero-slideshow',
   });
@@ -62,26 +99,10 @@ async function loadPets() {
     }
     
     console.log(`Successfully fetched ${pets.length} pets`);
-    renderPets(pets);
+    renderPets(pets, 'pets-grid');
   } catch (error) {
     console.error("Error in loadPets:", error);
-
-    if (error.message && error.message.includes('500')) {
-      petsGrid.innerHTML = `
-        <div class="error-message">
-          <p>Sorry, the server encountered an error while loading pets.</p>
-          <p>This could be because the server is down or the database is unavailable.</p>
-          <button class="btn btn-primary retry-btn">Try Again</button>
-        </div>
-      `;
-      
-      const retryBtn = petsGrid.querySelector('.retry-btn');
-      if (retryBtn) {
-        retryBtn.addEventListener('click', () => loadPets());
-      }
-    } else {
-      showPetLoadError(error);
-    }
+    showPetLoadError(error, 'pets-grid');
   }
 }
 
@@ -169,33 +190,48 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   
   document.body.classList.add('home-initialized');
+  document.body.classList.add('home-page');
   
-  const headerComponent = document.querySelector('[data-component="header"]');
-  const footerComponent = document.querySelector('[data-component="footer"]');
+  // Attempt to set up mobile menu immediately
+  try {
+    setupMobileMenu();
+  } catch (e) {
+    console.warn("Mobile menu setup failed on initial try:", e);
+  }
   
-  if (headerComponent && footerComponent) {
-    console.log("Components found, waiting for them to load");
-    let hasInitialized = false;
+  // Create a more robust initialization approach with multiple fallbacks
+  const componentsLoaded = new Promise((resolve) => {
+    const headerComponent = document.querySelector('[data-component="header"]');
+    const footerComponent = document.querySelector('[data-component="footer"]');
     
-    document.addEventListener('componentsLoaded', function() {
-      if (!hasInitialized) {
-        console.log('Components loaded, initializing home page');
-        hasInitialized = true;
-        initHomePage();
-      }
-    });
+    if (headerComponent && footerComponent) {
+      // Listen for componentsLoaded event
+      document.addEventListener('componentsLoaded', function() {
+        console.log('Components loaded event fired');
+        resolve();
+      }, { once: true });
+      
+      // Fallback if event never fires
+      setTimeout(resolve, 2000);
+    } else {
+      resolve(); // No components to wait for
+    }
+  });
+  
+  componentsLoaded.then(() => {
+    console.log('Starting home page initialization now');
+    
+    // Try setting up mobile menu again after components load
+    try {
+      setupMobileMenu();
+    } catch (e) {
+      console.warn("Mobile menu setup failed after components loaded:", e);
+    }
     
     setTimeout(() => {
-      if (!hasInitialized) {
-        console.log('Fallback: initializing home page');
-        hasInitialized = true;
-        initHomePage();
-      }
-    }, 1000);
-  } else {
-    console.warn("Header or footer components not found, initializing immediately");
-    initHomePage();
-  }
+      initHomePage();
+    }, 100);
+  });
 });
 
 function loadFeaturedPets() {

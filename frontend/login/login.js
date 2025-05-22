@@ -1,9 +1,10 @@
 import languageManager from '../languages/language.js';
-import { setupMobileMenu, createSlideshow } from '../global/global.js';
+import { setupMobileMenu, createSlideshow, initializePageLanguage } from '../global/global.js';
 
 document.addEventListener('DOMContentLoaded', function() {
   initLoginPage();
   setupMobileMenu();
+  initializePageLanguage(); // Add this line to ensure language is properly initialized
   
   createSlideshow({
     containerSelector: '.login-slideshow',
@@ -36,27 +37,4 @@ function handleLogin(event) {
     // Redirect to home page after "login"
     window.location.href = '../home/home.html';
   }, 1000);
-}
-
-// Add mobile menu setup function
-function setupMobileMenu() {
-  const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-  const mobileMenuContainer = document.querySelector('.mobile-menu-container');
-  const mobileOverlay = document.querySelector('.mobile-overlay');
-  
-  if (!mobileMenuToggle || !mobileMenuContainer || !mobileOverlay) return;
-  
-  mobileMenuToggle.addEventListener('click', () => {
-    mobileMenuToggle.classList.toggle('active');
-    mobileMenuContainer.classList.toggle('active');
-    mobileOverlay.classList.toggle('active');
-    document.body.style.overflow = mobileMenuContainer.classList.contains('active') ? 'hidden' : '';
-  });
-  
-  mobileOverlay.addEventListener('click', () => {
-    mobileMenuToggle.classList.remove('active');
-    mobileMenuContainer.classList.remove('active');
-    mobileOverlay.classList.remove('active');
-    document.body.style.overflow = '';
-  });
 }

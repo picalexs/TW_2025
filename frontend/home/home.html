@@ -39,9 +39,21 @@
     <div data-component="footer"></div>
 
     <script type="module" src="../global/global.js"></script>
-
     <script type="module" src="../global/inject-navbar.js"></script>
     <script type="module" src="../languages/language.js"></script>
+    <script type="module" src="../pets/pets.js"></script>
+    
+    <script type="module">
+      import { setupMobileMenu } from '../global/global.js';
+      
+      document.addEventListener('DOMContentLoaded', function() {
+        setupMobileMenu();
+        document.addEventListener('componentsLoaded', function() {
+          setTimeout(() => setupMobileMenu(), 100);
+        });
+      });
+    </script>
+    
     <script type="module" src="./home.js"></script>
   </body>
 </html>

@@ -1,5 +1,5 @@
 /* -------------------------------------------
-   1. LAYOUT & GLOBAL STRUCTURE
+  LAYOUT & GLOBAL STRUCTURE
 ------------------------------------------- */
 body {
   position: relative;
@@ -39,7 +39,7 @@ section {
 }
 
 /* -------------------------------------------
-   2. HERO SECTION
+  HERO SECTION
 ------------------------------------------- */
 .hero {
   position: relative;
@@ -125,7 +125,7 @@ section {
 }
 
 /* -------------------------------------------
-   3. FEATURED PETS SECTION
+  FEATURED PETS SECTION
 ------------------------------------------- */
 .featured-pets {
   order: 3 !important;
@@ -138,7 +138,7 @@ section {
 }
 
 /* -------------------------------------------
-   4. FEATURED USERS SECTION
+  FEATURED USERS SECTION
 ------------------------------------------- */
 .featured-users {
   order: 2;
@@ -155,7 +155,7 @@ section {
 }
 
 /* -------------------------------------------
-   5. ABOUT SECTION
+  ABOUT SECTION
 ------------------------------------------- */
 .about-content {
   display: grid;
@@ -165,7 +165,7 @@ section {
 }
 
 /* -------------------------------------------
-   6. LOADING STATES & MESSAGES
+  LOADING STATES & MESSAGES
 ------------------------------------------- */
 .loading-spinner {
   text-align: center;
@@ -213,9 +213,9 @@ section {
 }
 
 /* -------------------------------------------
-   7. RESPONSIVE STYLES
+  RESPONSIVE STYLES
 ------------------------------------------- */
-@media (max-width: 48em) { /* 768px/16px = 48em */
+@media (max-width: 48em) {
   .hero-title {
     font-size: 3rem;
   }
@@ -229,7 +229,7 @@ section {
   }
 }
 
-@media (max-width: 36em) { /* 576px/16px = 36em */
+@media (max-width: 36em) {
   .hero-title {
     font-size: 2.5rem;
   }
@@ -239,7 +239,7 @@ section {
   }
 }
 
-@media (max-width: 26em) { /* 416px/16px = 26em */
+@media (max-width: 26em) {
   .hero-title {
     font-size: 2rem;
   }
