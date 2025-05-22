@@ -275,6 +275,28 @@ function initSlideshow(options = {}) {
   console.log('Slideshow initialization complete');
 }
 
+function initializePageLanguage() {
+  // Check if page is already initialized
+  if (document.body.classList.contains('language-initialized')) {
+    return;
+  }
+  
+  document.body.classList.add('language-initialized');
+  
+  // Initialize language components
+  const currentPath = window.location.pathname;
+  const pageName = currentPath.split('/').pop().replace('.html', '');
+  
+  console.log(`Initializing language for page: ${pageName}`);
+  
+  // Update content with translations
+  if (languageManager) {
+    languageManager.updateContent();
+  } else {
+    console.warn('Language manager not available');
+  }
+}
+
 function initBasicFunctionality() {
   console.log("Initializing basic functionality");
   
@@ -341,4 +363,4 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-export { setupLanguageDropdown, setupMobileMenu, initSlideshow, createSlideshow };
+export { setupLanguageDropdown, setupMobileMenu, initSlideshow, createSlideshow, initializePageLanguage };
