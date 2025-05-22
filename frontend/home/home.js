@@ -50,12 +50,71 @@ function initHeroSection() {
     slideshowContainer.className = 'hero-slideshow';
     heroSection.insertBefore(slideshowContainer, heroSection.firstChild);
   }
+
+  slideshowContainer.innerHTML = '';
+  createManualSlideshow(slideshowContainer);
+}
+
+function createManualSlideshow(container) {
+  const slideImages = [
+    '../assets/hero-bg.jpg',
+    '../assets/hero-bg2.jpg',
+    '../assets/hero-bg3.jpg',
+    '../assets/hero-bg4.jpg',
+    '../assets/hero-bg5.jpg',
+    '../assets/hero-bg6.jpg',
+    '../assets/hero-bg7.jpg',
+    '../assets/hero-bg8.jpg'
+  ];
+  
+  const uniqueImages = [...new Set(slideImages)];
+  console.log(`Loading ${uniqueImages.length} unique slideshow images`);
+  
+  const fallbackSlide = document.createElement('div');
+  fallbackSlide.className = 'hero-slide initial active';
+  fallbackSlide.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('${uniqueImages[0]}')`;
+  container.appendChild(fallbackSlide);
+  
+  const loadedSlides = [fallbackSlide];
   
   setTimeout(() => {
-    initSlideshow({
-      containerSelector: '.hero-slideshow',
-    });
+    for (let i = 1; i < uniqueImages.length; i++) {
+      const imgPath = uniqueImages[i];
+      const slide = document.createElement('div');
+      slide.className = 'hero-slide';
+      slide.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('${imgPath}')`;
+      container.appendChild(slide);
+      loadedSlides.push(slide);
+    }
+    
+    startSlideRotation(container);
+    setTimeout(() => {
+      fallbackSlide.classList.remove('initial');
+    }, 2000);
   }, 100);
+}
+
+function startSlideRotation(container) {
+  const slides = container.querySelectorAll('.hero-slide');
+  if (slides.length <= 1) {
+    console.log("Not enough slides for rotation");
+    return;
+  }
+  
+  let currentIndex = 0;
+  const SLIDE_DURATION = 5000;
+  
+  const interval = setInterval(() => {
+    slides[currentIndex].classList.remove('active');
+    currentIndex = (currentIndex + 1) % slides.length;
+    slides[currentIndex].classList.add('active');
+  }, SLIDE_DURATION);
+  
+  window.addEventListener('beforeunload', () => {
+    clearInterval(interval);
+  });
+  
+  console.log(`Started slideshow rotation with ${slides.length} slides`);
 }
 
 async function loadPets() {
@@ -172,9 +231,6 @@ document.addEventListener('DOMContentLoaded', () => {
   
   document.body.classList.add('home-initialized');
   document.body.classList.add('home-page');
-  
   ensureDynamicSectionsContainer();
-  setTimeout(() => {
-    initHomePage();
-  }, 100);
+  initHomePage();
 });

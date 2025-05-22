@@ -243,53 +243,61 @@ function initSlideshow(options = {}) {
     '../assets/hero-bg7.jpg',
     '../assets/hero-bg8.jpg'
   ];
-
-  const preloadPromises = slideImages.map(src => {
+  
+  slideshowContainer.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+  
+  const staticSlide = document.createElement('div');
+  staticSlide.className = 'hero-slide initial active';
+  staticSlide.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('${slideImages[0]}')`;
+  slideshowContainer.appendChild(staticSlide);
+  
+  const preloadedImages = [];
+  const preloadPromises = slideImages.slice(1).map(src => {
     return new Promise((resolve, reject) => {
       const img = new Image();
-      img.onload = () => resolve(src);
+      img.onload = () => {
+        preloadedImages.push(src);
+        resolve(src);
+      };
       img.onerror = () => {
-        console.error(`Failed to load image: ${src}`);
+        console.warn(`Failed to load image: ${src}`);
         reject(new Error(`Failed to load image: ${src}`));
       };
       img.src = src;
     });
   });
-
-  const fallbackSlide = document.createElement('div');
-  fallbackSlide.className = 'hero-slide active';
-  fallbackSlide.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../assets/hero-bg.jpg')`;
-  slideshowContainer.insertBefore(fallbackSlide, slideshowContainer.firstChild);
-
-  Promise.all(preloadPromises).then(loadedImages => {
-    fallbackSlide.remove();
-    
-    loadedImages.forEach((image, index) => {
-      const slide = document.createElement('div');
-      slide.className = 'hero-slide';
-      slide.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('${image}')`;
-      slideshowContainer.insertBefore(slide, slideshowContainer.firstChild);
+  
+  Promise.all(preloadPromises.slice(0, 2))
+    .then(() => {
+      console.log('First batch of images loaded for slideshow');
+      preloadedImages.forEach(imgPath => {
+        const slide = document.createElement('div');
+        slide.className = 'hero-slide';
+        slide.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('${imgPath}')`;
+        slideshowContainer.appendChild(slide);
+      });
+      
+      setTimeout(() => {
+        staticSlide.classList.remove('initial');
+        let activeIndex = 0;
+        const slides = slideshowContainer.querySelectorAll('.hero-slide');
+        
+        const intervalId = setInterval(() => {
+          slides[activeIndex].classList.remove('active');
+          activeIndex = (activeIndex + 1) % slides.length;
+          slides[activeIndex].classList.add('active');
+        }, 5000);
+        
+        window.addEventListener('beforeunload', () => clearInterval(intervalId));
+      }, 100);
+    })
+    .catch(error => {
+      console.error('Error in slideshow setup:', error);
     });
     
-    setTimeout(() => {
-      const firstSlide = slideshowContainer.querySelector('.hero-slide');
-      if (firstSlide) firstSlide.classList.add('active');
-    }, 50);
-    
-    if (slideshowContainer.querySelectorAll('.hero-slide').length > 1) {
-      let activeIndex = 0;
-      
-      setInterval(() => {
-        const slides = slideshowContainer.querySelectorAll('.hero-slide');
-        const nextIndex = (activeIndex + 1) % slides.length;
-        slides[activeIndex].classList.remove('active');
-        activeIndex = nextIndex;
-        slides[activeIndex].classList.add('active');
-      }, 5000);
-    }
-  }).catch(error => {
-    console.error('Error loading slideshow images:', error);
-  });
+  Promise.all(preloadPromises)
+    .then(() => console.log('All slideshow images loaded'))
+    .catch(err => console.warn('Some slideshow images failed to load:', err));
 }
 
 function initializePageLanguage() {

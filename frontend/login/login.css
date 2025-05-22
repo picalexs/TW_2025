@@ -31,6 +31,7 @@ body.login-page .mobile-auth {
   width: 100%;
   height: 100%;
   z-index: -1;
+  background-color: rgba(0, 0, 0, 0.6);
 }
 
 .login-slide {
@@ -46,12 +47,16 @@ body.login-page .mobile-auth {
   transition: opacity 1s ease-in-out;
   z-index: 1;
 }
+.login-slide:first-child,
+.login-slide.initial {
+  transition: none;
+  opacity: 1;
+}
 
 .login-slide.active {
   opacity: 1;
 }
 
-/* Fallback background if slides don't load */
 .login-slideshow::before {
   content: '';
   position: absolute;
@@ -59,7 +64,7 @@ body.login-page .mobile-auth {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../assets/pet-hero-bg.jpg');
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('../assets/hero-bg.jpg');
   background-size: cover;
   background-position: center;
   z-index: 0;

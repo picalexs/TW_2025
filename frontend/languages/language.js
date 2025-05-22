@@ -6,9 +6,7 @@ class LanguageManager {
 
     this.languageChangedEvent = new CustomEvent('languageChanged');
     
-    // Listen for component loading to update translations in newly loaded components
     document.addEventListener('componentsLoaded', () => {
-      console.log('Components loaded, updating translations');
       this.updateContent();
     });
   }
@@ -22,7 +20,6 @@ class LanguageManager {
     const pagePath = `${basePath}languages/${this.currentLanguage}/${page}.json`;
 
     console.log(`Loading translations from:\n  Global: ${globalPath}\n  Page: ${pagePath}`);
-
     const [globalRes, pageRes] = await Promise.all([
       fetch(globalPath),
       fetch(pagePath)
@@ -35,9 +32,7 @@ class LanguageManager {
     const globalTranslations = await globalRes.json();
     const pageTranslations = await pageRes.json();
 
-    // Combine global + page translations
     this.translations = { ...globalTranslations, ...pageTranslations };
-
     console.log('Translations loaded:', this.translations);
 
     this.updateContent();
@@ -52,7 +47,6 @@ class LanguageManager {
       localStorage.setItem('language', 'en');
       this.loadTranslation();
     }
-
     return false;
   }
 }
@@ -82,9 +76,7 @@ class LanguageManager {
     localStorage.setItem('language', language);
     await this.loadTranslation();
     
-    // Update UI elements that show the current language
     this.updateLanguageUI();
-    
     console.log('Language changed and content updated');
   }
 
