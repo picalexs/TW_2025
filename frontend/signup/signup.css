@@ -1,12 +1,19 @@
 /* -------------------------------------------
   LAYOUT & GLOBAL STRUCTURE
 ------------------------------------------- */
+body.signup-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 body.signup-page .auth-buttons,
 body.signup-page .mobile-auth {
   display: none !important;
 }
 
 .signup-background {
+  flex: 1 0 auto;
   background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 10, 20, 0.6)), url('../assets/pet-hero-bg.jpg');
   background-repeat: no-repeat;
   background-position: center center;

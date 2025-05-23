@@ -3,6 +3,9 @@
 ------------------------------------------- */
 body.login-page {
   background-color: var(--background-color);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 body.login-page .auth-buttons,
@@ -12,7 +15,7 @@ body.login-page .mobile-auth {
 
 .login-background {
   position: relative;
-  min-height: 100vh;
+  flex: 1 0 auto;
   overflow: hidden;
   background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../assets/pet-hero-bg.jpg');
   background-repeat: no-repeat;

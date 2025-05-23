@@ -1,0 +1,32 @@
+{
+  "pageTitle": "Animale Disponibile",
+  "sectionTitle": "Animale Disponibile pentru Adopție",
+  "noResults": "Nu există animale disponibile pentru adopție în acest moment.",
+  "loading": "Se încarcă animalele...",
+  "viewDetails": "Vezi Detalii",
+  "petInfo": {
+    "species": "Necunoscut",
+    "healthStatus": "Stare necunoscută"
+  },
+  "errorMessage": {
+    "title": "Ne pare rău, a apărut o problemă la încărcarea animalelor.",
+    "retryButton": "Încearcă din nou"
+  },
+  "filters": {
+    "title": "Filtre"
+  },
+  "species": {
+    "dog": "Câine",
+    "cat": "Pisică",
+    "bird": "Pasăre",
+    "rabbit": "Iepure",
+    "other": "Altele"
+  },
+  "healthStatus": {
+    "healthy": "Sănătos",
+    "needsMedication": "Necesită Medicație",
+    "chronicCondition": "Condiție Cronică",
+    "specialNeeds": "Nevoi Speciale",
+    "unknown": "Necunoscut"
+  }
+}

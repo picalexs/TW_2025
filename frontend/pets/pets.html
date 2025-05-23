@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Available Pets</title>
+    <title data-i18n="pageTitle">Available Pets</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../global/global.css">
     <link rel="stylesheet" href="pets.css">
@@ -12,7 +12,7 @@
     
     <main class="section-container">
         <div class="section-header">
-            <h1 class="section-title">Available Pets for Adoption</h1>
+            <h1 class="section-title" data-i18n="sectionTitle">Available Pets for Adoption</h1>
         </div>
         
         <div class="filters-container">
@@ -20,7 +20,7 @@
         </div>
         
         <div id="pets-grid" class="pets-grid">
-            <div class="loading-spinner">Loading pets...</div>
+            <div class="loading-spinner" data-i18n="loading">Loading pets...</div>
         </div>
     </main>
     
@@ -29,6 +29,7 @@
     <script type="module">
         import { fetchPets, renderPets, showPetLoadError } from './pets.js';
         import '../global/inject-navbar.js';
+        import languageManager from '../languages/language.js';
         
         document.addEventListener('componentsLoaded', async () => {
             try {

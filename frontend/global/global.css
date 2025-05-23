@@ -20,12 +20,23 @@
     padding: 0;
 }
 
+html, body {
+    height: 100%;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
     color: var(--text-color);
     background-color: var(--background-color);
     font-size: 1rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main, #content-container {
+    flex: 1 0 auto;
 }
 
 /* -------------------------------------------
@@ -316,6 +327,8 @@ footer {
     background-color: var(--dark-color);
     color: var(--light-color);
     padding: 3rem 1rem;
+    flex-shrink: 0;
+    margin-top: auto;
 }
 
 .footer-container {

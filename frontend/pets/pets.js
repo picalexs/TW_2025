@@ -21,7 +21,8 @@ export function renderPets(pets, containerId = 'pets-grid') {
   container.innerHTML = '';
   
   if (!pets || pets.length === 0) {
-    container.innerHTML = '<div class="no-pets-message">No pets available for adoption at this time.</div>';
+    const noResultsMessage = window.languageManager?.translate('noResults') || 'No pets available for adoption at this time.';
+    container.innerHTML = `<div class="no-pets-message">${noResultsMessage}</div>`;
     return;
   }
 
@@ -42,16 +43,28 @@ function createPetCard(pet) {
     ? pet.description.substring(0, 100) + '...' 
     : pet.description || 'No description available';
   
+  // Get translations
+  const lm = window.languageManager;
+  const speciesText = pet.species ? 
+    (lm?.translate(`species.${pet.species.toLowerCase()}`) || pet.species) : 
+    lm?.translate('petInfo.species') || 'Unknown';
+    
+  const healthText = pet.healthStatus ? 
+    (lm?.translate(`healthStatus.${pet.healthStatus.toLowerCase().replace(/\s+/g, '')}`) || pet.healthStatus) : 
+    lm?.translate('petInfo.healthStatus') || 'Status unknown';
+    
+  const viewDetailsText = lm?.translate('viewDetails') || 'View Details';
+  
   card.innerHTML = `
     <img src="${imagePath}" alt="${pet.name}" class="pet-image">
     <div class="pet-info">
       <h3 class="pet-name">${pet.name}</h3>
       <p class="pet-description">${description}</p>
       <div class="pet-tags">
-        <span class="tag">${pet.species || 'Unknown'}</span>
-        <span class="tag">${pet.healthStatus || 'Status unknown'}</span>
+        <span class="tag">${speciesText}</span>
+        <span class="tag">${healthText}</span>
       </div>
-      <a href="./pet-details.html?id=${pet.id}" class="btn btn-primary">View Details</a>
+      <a href="./pet-details.html?id=${pet.id}" class="btn btn-primary">${viewDetailsText}</a>
     </div>
   `;
   
@@ -62,18 +75,23 @@ export function showPetLoadError(error, containerId = 'pets-grid') {
   const container = document.getElementById(containerId);
   if (!container) return;
   
+  const lm = window.languageManager;
+  const errorTitle = lm?.translate('errorMessage.title') || 'Sorry, there was a problem loading pets.';
+  const retryButtonText = lm?.translate('errorMessage.retryButton') || 'Try Again';
+  
   container.innerHTML = `
     <div class="error-message">
-      <p>Sorry, there was a problem loading pets.</p>
+      <p>${errorTitle}</p>
       <p class="error-details">${error.message}</p>
-      <button class="btn btn-primary retry-btn">Try Again</button>
+      <button class="btn btn-primary retry-btn">${retryButtonText}</button>
     </div>
   `;
   
   const retryBtn = container.querySelector('.retry-btn');
   if (retryBtn) {
     retryBtn.addEventListener('click', async () => {
-      container.innerHTML = '<div class="loading-spinner">Loading pets...</div>';
+      const loadingText = lm?.translate('loading') || 'Loading pets...';
+      container.innerHTML = `<div class="loading-spinner">${loadingText}</div>`;
       try {
         const pets = await fetchPets();
         renderPets(pets, containerId);

@@ -1,0 +1,32 @@
+{
+  "pageTitle": "Available Pets",
+  "sectionTitle": "Available Pets for Adoption",
+  "noResults": "No pets available for adoption at this time.",
+  "loading": "Loading pets...",
+  "viewDetails": "View Details",
+  "petInfo": {
+    "species": "Unknown",
+    "healthStatus": "Status unknown"
+  },
+  "errorMessage": {
+    "title": "Sorry, there was a problem loading pets.",
+    "retryButton": "Try Again"
+  },
+  "filters": {
+    "title": "Filters"
+  },
+  "species": {
+    "dog": "Dog",
+    "cat": "Cat",
+    "bird": "Bird",
+    "rabbit": "Rabbit",
+    "other": "Other"
+  },
+  "healthStatus": {
+    "healthy": "Healthy",
+    "needsMedication": "Needs Medication",
+    "chronicCondition": "Chronic Condition",
+    "specialNeeds": "Special Needs",
+    "unknown": "Unknown"
+  }
+}
