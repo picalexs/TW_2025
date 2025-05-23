@@ -1,4 +1,5 @@
 import { setupLanguageDropdown, setupMobileMenu, initSlideshow } from './global.js';
+import NavbarService from '../services/navbarService.js';
 
 document.addEventListener('DOMContentLoaded', function() {
   console.log("Inject-navbar.js - Loading components");
@@ -23,19 +24,11 @@ document.addEventListener('DOMContentLoaded', function() {
     return;
   }
 
-  fetch('../global/global.html')
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      return response.text();
-    })
+  const navbarService = new NavbarService();
+  
+  navbarService.fetchGlobalComponents()
     .then(html => {
-      const tempDiv = document.createElement('div');
-      tempDiv.innerHTML = html;
-
-      const header = tempDiv.querySelector('header');
-      const footer = tempDiv.querySelector('footer');
+      const { header, footer } = navbarService.parseGlobalComponents(html);
 
       if (header) {
         if (headerComponent) {

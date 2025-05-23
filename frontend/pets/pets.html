@@ -2,10 +2,42 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Pets</title>
+    <title>Available Pets</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../global/global.css">
+    <link rel="stylesheet" href="pets.css">
 </head>
 <body>
-    <h1>Welcome to the Pets Page</h1>
+    <div data-component="header"></div>
+    
+    <main class="section-container">
+        <div class="section-header">
+            <h1 class="section-title">Available Pets for Adoption</h1>
+        </div>
+        
+        <div class="filters-container">
+            <!-- Filters can be added here later -->
+        </div>
+        
+        <div id="pets-grid" class="pets-grid">
+            <div class="loading-spinner">Loading pets...</div>
+        </div>
+    </main>
+    
+    <div data-component="footer"></div>
+    
+    <script type="module">
+        import { fetchPets, renderPets, showPetLoadError } from './pets.js';
+        import '../global/inject-navbar.js';
+        
+        document.addEventListener('componentsLoaded', async () => {
+            try {
+                const pets = await fetchPets();
+                renderPets(pets);
+            } catch (error) {
+                showPetLoadError(error);
+            }
+        });
+    </script>
 </body>
 </html>

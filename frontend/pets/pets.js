@@ -1,32 +1,10 @@
+import PetService from '../services/petService.js';
+const petService = new PetService();
+
 export async function fetchPets() {
   try {
     console.log('Attempting to fetch pets from API...');
-
-    try {
-      const response = await fetch('http://localhost:3000/api/pets');
-      
-      if (!response.ok) {
-        console.warn(`API returned status: ${response.status}`);
-        if (response.status === 500) {
-          console.log('Server error detected, using fallback data');
-          return;
-        }
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      
-      const pets = await response.json();
-      return pets;
-    } catch (fetchError) {
-      console.error('Fetch error:', fetchError);
-      
-      if (fetchError.message.includes('Failed to fetch') || 
-          fetchError.message.includes('500') ||
-          fetchError.message.includes('NetworkError')) {
-        return;
-      }
-      
-      throw fetchError;
-    }
+    return await petService.getAllPets();
   } catch (error) {
     console.error('Error in fetchPets:', error);
     throw error;
