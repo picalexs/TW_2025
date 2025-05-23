@@ -1,0 +1,8 @@
+npm install 
+
+sa rulezi asta in terminal
+
+(fisierele in plus de aici sunt de la npm init -y # "-y" raspunde "yes"   si   npm install oracledb dotenv bcrypt) 
+-> Conține metadate despre proiect (nume, versiune, descriere etc.).
+listează toate dependențele (bibliotecile) de care are nevoie proiectul.
+am facut asta pt cryptare

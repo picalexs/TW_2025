@@ -28,7 +28,7 @@ CREATE TABLE address (
 CREATE TABLE users (
   id NUMBER PRIMARY KEY,
   username VARCHAR2(50) UNIQUE NOT NULL,
-  password VARCHAR2(100) NOT NULL,
+  password_hash VARCHAR2(100) NOT NULL,
   email VARCHAR2(100) UNIQUE NOT NULL,
   is_verified NUMBER(1) DEFAULT 0, -- 0 = false, 1 = true
   email_token VARCHAR2(255),       -- tokenul de confirmare

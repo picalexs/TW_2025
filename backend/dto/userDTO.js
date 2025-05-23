@@ -1,22 +1,25 @@
+// backend/dto/userDTO.js
 const abstractDTO = require("./abstractDTO");
 const bcrypt = require("bcrypt");
 const oracledb = require("oracledb");
 
-class userDTO extends abstractDTO {
+class UserDTO extends abstractDTO {
   constructor() {
-    super('users');
+    super('users'); // Numele tabelului in baza de date
   }
 
+  // Mapeaza o inregistrare din baza de date la un obiect User
   mapToEntity(dbRow) {
     return {
       id: dbRow.ID,
       username: dbRow.USERNAME,
       email: dbRow.EMAIL,
       createdAt: dbRow.CREATED_AT
-      // Not including password
+      // Nu includem parola din motive de securitate
     };
   }
 
+  // Creeaza un utilizator nou, hash-uind parola
   async create(userData) {
     if (!userData.username || !userData.email || !userData.password) {
       throw new Error("Missing required user fields");
@@ -26,7 +29,7 @@ class userDTO extends abstractDTO {
     const passwordHash = await bcrypt.hash(userData.password, saltRounds);
 
     const result = await this.executeCustomQuery(
-      `INSERT INTO users (username, email, password_hash) 
+      `INSERT INTO users (username, email, password_hash)
        VALUES (:username, :email, :password_hash)
        RETURNING id INTO :id`,
       {
@@ -41,6 +44,7 @@ class userDTO extends abstractDTO {
     return result.outBinds.id[0];
   }
 
+  // Autentifica un utilizator pe baza de email si parola
   async authenticateUser(email, password) {
     const result = await this.executeCustomQuery(
       `SELECT * FROM users WHERE email = :email`,
@@ -49,18 +53,18 @@ class userDTO extends abstractDTO {
     );
 
     if (result.rows.length === 0) {
-      return null;
+      return null; // Utilizatorul nu a fost gasit
     }
 
     const user = result.rows[0];
     const passwordMatch = await bcrypt.compare(password, user.PASSWORD_HASH);
 
     if (!passwordMatch) {
-      return null;
+      return null; // Parola incorecta
     }
 
-    return this.mapToEntity(user);
+    return this.mapToEntity(user); // Returneaza obiectul utilizatorului fara parola
   }
 }
 
-module.exports = new userDTO();
+module.exports = new UserDTO();
