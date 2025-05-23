@@ -1,16 +1,22 @@
 import languageManager from '../languages/language.js';
 import { setupMobileMenu, createSlideshow, initializePageLanguage } from '../global/global.js';
+import UserService from '../services/userService.js';
 
 document.addEventListener('DOMContentLoaded', function() {
   initLoginPage();
   setupMobileMenu();
-  initializePageLanguage(); // Add this line to ensure language is properly initialized
+  initializePageLanguage();
   
   createSlideshow({
     containerSelector: '.login-slideshow',
     slideClass: 'login-slide',
     overlay: 'rgba(0, 0, 0, 0.6)'
   });
+  
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.has('registered')) {
+    showMessage('Registration successful! Please log in with your credentials.');
+  }
 });
 
 function initLoginPage() {
@@ -22,7 +28,7 @@ function initLoginPage() {
   document.body.classList.add('login-page');
 }
 
-function handleLogin(event) {
+async function handleLogin(event) {
   event.preventDefault();
   
   const email = document.getElementById('email').value;

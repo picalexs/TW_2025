@@ -17,38 +17,38 @@
     <div class="signup-container">
       <form class="signup-box">
 
-        <h2 data-i18n="title">Sign up</h2>
+        <h2 data-i18n="title" data-i18n-fallback="Sign up"></h2>
 
         <div class="form-group">
-          <label for="email" data-i18n="emailLabel">Email</label>
-          <input type="email" id="email" data-i18n-placeholder="emailPlaceholder" required />
+          <label for="email" data-i18n="emailLabel" data-i18n-fallback="Email"></label>
+          <input type="email" id="email" data-i18n-placeholder="emailPlaceholder" data-i18n-placeholder-fallback="Enter your email address" required />
         </div>
 
         <div class="form-group">
-          <label for="password" data-i18n="passwordLabel">Password</label>
-          <input type="password" id="password" data-i18n-placeholder="passwordPlaceholder" required />
+          <label for="password" data-i18n="passwordLabel" data-i18n-fallback="Password"></label>
+          <input type="password" id="password" data-i18n-placeholder="passwordPlaceholder" data-i18n-placeholder-fallback="Enter your password" required />
         </div>
 
         <div class="form-group">
-          <label for="username" data-i18n="usernameLabel">username</label>
-          <input type="username" id="username" data-i18n-placeholder="usernamePlaceholder" required />
+          <label for="username" data-i18n="usernameLabel" data-i18n-fallback="Username"></label>
+          <input type="username" id="username" data-i18n-placeholder="usernamePlaceholder" data-i18n-placeholder-fallback="Choose a username" required />
         </div>
 
-        <button class="btn-submit" type="submit" data-i18n="signupButton">Next</button>
+        <button class="btn-submit" type="submit" data-i18n="signupButton" data-i18n-fallback="Next"></button>
 
         <div class="signup-divider">
-          <hr><span data-i18n="or">OR</span>
+          <hr><span data-i18n="or" data-i18n-fallback="OR"></span>
           <hr>
         </div>
 
         <button type="button" class="btn-google-login">
           <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google logo">
-          <span data-i18n="googleLogin">Log in with Google</span>
+          <span data-i18n="googleLogin" data-i18n-fallback="Log in with Google"></span>
         </button>
 
         <div class="redirect-link">
-          <span data-i18n="registerPrompt">Have an account?</span>
-          <a href="../login/login.html" data-i18n="registerLink">Log in</a>
+          <span data-i18n="registerPrompt" data-i18n-fallback="Have an account?"></span>
+          <a href="../login/login.html" data-i18n="registerLink" data-i18n-fallback="Log in"></a>
         </div>
 
       </form>

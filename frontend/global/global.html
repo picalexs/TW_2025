@@ -6,14 +6,14 @@
       </a>
     </div>
     <ul class="nav-menu">
-      <li class="nav-item"><a href="/frontend/home/home.html" class="nav-link" data-i18n="nav.home"></a></li>
-      <li class="nav-item"><a href="/frontend/pets/pets.html" class="nav-link" data-i18n="nav.pets"></a></li>
-      <li class="nav-item"><a href="#about" class="nav-link" data-i18n="nav.about"></a></li>
+      <li class="nav-item"><a href="/frontend/home/home.html" class="nav-link" data-i18n="nav.home" data-i18n-fallback="Home"></a></li>
+      <li class="nav-item"><a href="/frontend/pets/pets.html" class="nav-link" data-i18n="nav.pets" data-i18n-fallback="Pets"></a></li>
+      <li class="nav-item"><a href="#about" class="nav-link" data-i18n="nav.about" data-i18n-fallback="About Us"></a></li>
     </ul>
     <div class="auth-container">
       <div class="auth-buttons" data-component-auth-hide="loggedIn,signupPage,loginPage">
-        <a href="/frontend/login/login.html" class="btn btn-outline" data-i18n="nav.login"></a>
-        <a href="/frontend/signup/signup.html" class="btn btn-primary" data-i18n="nav.signup"></a>
+        <a href="/frontend/login/login.html" class="btn btn-outline" data-i18n="nav.login" data-i18n-fallback="Login"></a>
+        <a href="/frontend/signup/signup.html" class="btn btn-primary" data-i18n="nav.signup" data-i18n-fallback="Sign Up"></a>
       </div>
       <div class="language-dropdown">
         <button class="language-current">
@@ -24,11 +24,11 @@
         <div class="language-options">
           <a href="#" class="language-option" data-lang="en">
             <span class="flag-icon flag-en"></span>
-            <span data-i18n="language.english"></span>
+            <span data-i18n="language.english" data-i18n-fallback="English"></span>
           </a>
           <a href="#" class="language-option" data-lang="ro">
             <span class="flag-icon flag-ro"></span>
-            <span data-i18n="language.romanian"></span>
+            <span data-i18n="language.romanian" data-i18n-fallback="Romanian"></span>
           </a>
         </div>
       </div>
@@ -91,24 +91,24 @@
       <a href="/frontend/home/home.html" style="text-decoration: none; color: inherit;">
         <h3></h3>
       </a>
-      <p data-i18n="footer.tagline"></p>
+      <p data-i18n="footer.tagline" data-i18n-fallback="Finding forever homes for pets in need"></p>
     </div>
     <div class="footer-section">
-      <h3 data-i18n="footer.links">Links</h3>
+      <h3 data-i18n="footer.links" data-i18n-fallback="Links">Links</h3>
       <ul class="footer-links">
         <li class="footer-link">
-          <a href="/frontend/home/home.html" data-i18n="nav.home"></a>
+          <a href="/frontend/home/home.html" data-i18n="nav.home" data-i18n-fallback="Home"></a>
         </li>
         <li class="footer-link">
-          <a href="/frontend/pets/pets.html" data-i18n="nav.pets"></a>
+          <a href="/frontend/pets/pets.html" data-i18n="nav.pets" data-i18n-fallback="Pets"></a>
         </li>
         <li class="footer-link">
-          <a href="#about" data-i18n="nav.about"></a>
+          <a href="#about" data-i18n="nav.about" data-i18n-fallback="About Us"></a>
         </li>
       </ul>
     </div>
   </div>
   <div class="copyright">
-    <p data-i18n="footer.copyright"></p>
+    <p data-i18n="footer.copyright" data-i18n-fallback="© 2025 Pet Adoption Center. All rights reserved."></p>
   </div>
 </footer>

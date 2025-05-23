@@ -21,7 +21,7 @@ export function renderPets(pets, containerId = 'pets-grid') {
   container.innerHTML = '';
   
   if (!pets || pets.length === 0) {
-    const noResultsMessage = window.languageManager?.translate('noResults') || 'No pets available for adoption at this time.';
+    const noResultsMessage = window.languageManager?.translate('noResults', 'No pets available for adoption at this time.');
     container.innerHTML = `<div class="no-pets-message">${noResultsMessage}</div>`;
     return;
   }
@@ -43,17 +43,17 @@ function createPetCard(pet) {
     ? pet.description.substring(0, 100) + '...' 
     : pet.description || 'No description available';
   
-  // Get translations
+  // Get translations with fallbacks
   const lm = window.languageManager;
   const speciesText = pet.species ? 
-    (lm?.translate(`species.${pet.species.toLowerCase()}`) || pet.species) : 
-    lm?.translate('petInfo.species') || 'Unknown';
+    (lm?.translate(`species.${pet.species.toLowerCase()}`, pet.species)) : 
+    lm?.translate('petInfo.species', 'Unknown');
     
   const healthText = pet.healthStatus ? 
-    (lm?.translate(`healthStatus.${pet.healthStatus.toLowerCase().replace(/\s+/g, '')}`) || pet.healthStatus) : 
-    lm?.translate('petInfo.healthStatus') || 'Status unknown';
+    (lm?.translate(`healthStatus.${pet.healthStatus.toLowerCase().replace(/\s+/g, '')}`, pet.healthStatus)) : 
+    lm?.translate('petInfo.healthStatus', 'Status unknown');
     
-  const viewDetailsText = lm?.translate('viewDetails') || 'View Details';
+  const viewDetailsText = lm?.translate('viewDetails', 'View Details');
   
   card.innerHTML = `
     <img src="${imagePath}" alt="${pet.name}" class="pet-image">
@@ -76,8 +76,8 @@ export function showPetLoadError(error, containerId = 'pets-grid') {
   if (!container) return;
   
   const lm = window.languageManager;
-  const errorTitle = lm?.translate('errorMessage.title') || 'Sorry, there was a problem loading pets.';
-  const retryButtonText = lm?.translate('errorMessage.retryButton') || 'Try Again';
+  const errorTitle = lm?.translate('errorMessage.title', 'Sorry, there was a problem loading pets.');
+  const retryButtonText = lm?.translate('errorMessage.retryButton', 'Try Again');
   
   container.innerHTML = `
     <div class="error-message">
@@ -90,7 +90,7 @@ export function showPetLoadError(error, containerId = 'pets-grid') {
   const retryBtn = container.querySelector('.retry-btn');
   if (retryBtn) {
     retryBtn.addEventListener('click', async () => {
-      const loadingText = lm?.translate('loading') || 'Loading pets...';
+      const loadingText = lm?.translate('loading', 'Loading pets...');
       container.innerHTML = `<div class="loading-spinner">${loadingText}</div>`;
       try {
         const pets = await fetchPets();

@@ -1,4 +1,5 @@
 import { setupMobileMenu, initializePageLanguage } from '../global/global.js';
+import UserService from '../services/userService.js';
 
 document.addEventListener('DOMContentLoaded', function() {
   initSignupPage();
@@ -15,12 +16,17 @@ function initSignupPage() {
   document.body.classList.add('signup-page');
 }
 
-function handleSignup(event) {
+async function handleSignup(event) {
   event.preventDefault();
   
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
   const username = document.getElementById('username').value;
+  
+  if (!email || !password || !username) {
+    alert('Please fill in all fields');
+    return;
+  }
   
   console.log('Signup attempt:', { email, username, password: '****' });
   
