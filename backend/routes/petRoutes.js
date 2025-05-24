@@ -1,7 +1,6 @@
-// backend/routes/petRoutes.js
 const petController = require("../controllers/petController");
 const url = require("url");
-const { sendResponse, collectRequestData } = require("../../utils/helpers"); // Functii utilitare generale
+const { sendResponse, collectRequestData } = require("../utils/helpers");
 
 async function handlePetRoutes(req, res) {
   const parsedUrl = url.parse(req.url, true);
@@ -9,7 +8,6 @@ async function handlePetRoutes(req, res) {
   const trimmedPath = path.replace(/^\/+|\/+$/g, "");
   const method = req.method.toLowerCase();
 
-  // Rute pentru animale
   if (trimmedPath === "api/pets") {
     if (method === "get") {
       await petController.getAllPets(req, res);
@@ -21,7 +19,6 @@ async function handlePetRoutes(req, res) {
     return true;
   }
 
-  // Rute pentru un anumit animal dupa ID
   const petIdMatch = trimmedPath.match(/^api\/pets\/(\d+)$/);
   if (petIdMatch) {
     const id = parseInt(petIdMatch[1]);
@@ -37,7 +34,6 @@ async function handlePetRoutes(req, res) {
     return true;
   }
 
-  return false; // Ruta nu a fost gestionata de acest handler
+  return false;
 }
-
 module.exports = handlePetRoutes;

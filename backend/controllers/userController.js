@@ -1,12 +1,10 @@
-// backend/controllers/userController.js
 const userModel = require("../models/userModel");
-const { sendResponse, collectRequestData } = require("../../utils/helpers"); // Functii utilitare generale
+const { sendResponse, collectRequestData } = require("../utils/helpers");
 
 class UserController {
-  // Obtine toti utilizatorii
   async getAllUsers(req, res) {
     try {
-      const users = await userModel.getAllUsers();
+      const users = await userModel.getAll();
       sendResponse(res, 200, users);
     } catch (error) {
       console.error("Error getting all users:", error);
@@ -14,10 +12,9 @@ class UserController {
     }
   }
 
-  // Obtine un utilizator dupa ID
   async getUserById(req, res, id) {
     try {
-      const user = await userModel.getUserById(id);
+      const user = await userModel.getById(id);
       if (user) {
         sendResponse(res, 200, user);
       } else {
@@ -29,7 +26,6 @@ class UserController {
     }
   }
 
-  // Creeaza un utilizator nou
   async createUser(req, res) {
     try {
       const userData = await collectRequestData(req);
@@ -41,7 +37,6 @@ class UserController {
     }
   }
 
-  // Actualizeaza un utilizator
   async updateUser(req, res, id) {
     try {
       const userData = await collectRequestData(req);
@@ -57,12 +52,11 @@ class UserController {
     }
   }
 
-  // Sterge un utilizator
   async deleteUser(req, res, id) {
     try {
-      const deleted = await userModel.deleteUser(id);
+      const deleted = await userModel.delete(id);
       if (deleted) {
-        sendResponse(res, 204, {}); // 204 No Content for successful deletion
+        sendResponse(res, 204, {});
       } else {
         sendResponse(res, 404, { error: "User not found for deletion" });
       }
@@ -72,7 +66,6 @@ class UserController {
     }
   }
 
-  // Autentifica utilizatorul
   async authenticateUser(req, res) {
     try {
       const { email, password } = await collectRequestData(req);
@@ -88,5 +81,4 @@ class UserController {
     }
   }
 }
-
 module.exports = new UserController();

@@ -1,13 +1,11 @@
-// backend/dto/petDTO.js
 const abstractDTO = require("./abstractDTO");
 const oracledb = require("oracledb");
 
-class PetDTO extends abstractDTO {
+class petDTO extends abstractDTO {
   constructor() {
-    super('animals'); // Numele tabelului in baza de date
+    super('animals');
   }
 
-  // Mapeaza o inregistrare din baza de date la un obiect Pet
   mapToEntity(dbRow) {
     return {
       id: dbRow.ID,
@@ -17,11 +15,10 @@ class PetDTO extends abstractDTO {
       description: dbRow.DESCRIPTION,
       relationWithOthers: dbRow.RELATION_WITH_OTHERS,
       createdAt: dbRow.CREATED_AT,
-      imagePath: dbRow.FILE_PATH // Presupunem ca este deja in JOIN
+      imagePath: dbRow.FILE_PATH
     };
   }
 
-  // Obtine toate animalele, inclusiv calea imaginii principale
   async getAll() {
     const result = await this.executeCustomQuery(
       `SELECT a.*, m.file_path
@@ -37,7 +34,6 @@ class PetDTO extends abstractDTO {
     return result.rows.map(row => this.mapToEntity(row));
   }
 
-  // Obtine un animal dupa ID, inclusiv calea imaginii principale si tag-urile
   async getById(id) {
     const result = await this.executeCustomQuery(
       `SELECT a.*, m.file_path
@@ -56,7 +52,6 @@ class PetDTO extends abstractDTO {
 
     const pet = this.mapToEntity(result.rows[0]);
 
-    // Extrage tag-urile asociate animalului
     const tagsResult = await this.executeCustomQuery(
       `SELECT t.id, t.name
        FROM tags t
@@ -74,7 +69,6 @@ class PetDTO extends abstractDTO {
     return pet;
   }
 
-  // Creeaza un animal nou si asociaza-l cu tag-urile
   async create(petData) {
     const { name, species, healthStatus, description, relationWithOthers, tags } = petData;
 
@@ -113,4 +107,4 @@ class PetDTO extends abstractDTO {
   }
 }
 
-module.exports = new PetDTO();
+module.exports = new petDTO();

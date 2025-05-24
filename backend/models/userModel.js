@@ -1,37 +1,23 @@
-// backend/models/userModel.js
 const userDTO = require("../dto/userDTO");
+const AbstractModel = require("./abstractModel");
 
-class UserModel {
-  // Obtine toti utilizatorii
-  async getAllUsers() {
-    return await userDTO.getAll();
+class UserModel extends AbstractModel {
+  constructor() {
+    super(userDTO);
   }
 
-  // Obtine un utilizator dupa ID
-  async getUserById(id) {
-    return await userDTO.getById(id);
-  }
-
-  // Creeaza un utilizator nou
   async createUser(userData) {
-    // Aici poti adauga logica de validare suplimentara inainte de a crea utilizatorul
-    return await userDTO.create(userData);
+    // ADD validation logic here
+    return await this.dto.create(userData);
   }
 
-  // Actualizeaza un utilizator
   async updateUser(id, userData) {
-    // Aici poti adauga logica de validare sau business inainte de a actualiza
-    return await userDTO.update(id, userData);
+    // ADD validation logic here
+    return await this.dto.update(id, userData);
   }
 
-  // Sterge un utilizator
-  async deleteUser(id) {
-    return await userDTO.delete(id);
-  }
-
-  // Autentifica un utilizator
   async authenticate(email, password) {
-    return await userDTO.authenticateUser(email, password);
+    return await this.dto.authenticateUser(email, password);
   }
 }
 

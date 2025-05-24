@@ -1,4 +1,3 @@
-// backend/db/dbConnection.js
 require("dotenv").config();
 const oracledb = require("oracledb");
 
@@ -11,7 +10,6 @@ const dbConfig = {
   poolIncrement: 1,
 };
 
-// Functie pentru initializarea pool-ului de conexiuni Oracle
 async function initialize() {
   try {
     await oracledb.createPool(dbConfig);
@@ -23,7 +21,6 @@ async function initialize() {
   }
 }
 
-// Functie pentru a obtine o conexiune din pool
 async function getConnection() {
   try {
     const connection = await oracledb.getConnection();
@@ -34,7 +31,6 @@ async function getConnection() {
   }
 }
 
-// Functie pentru a inchide o conexiune
 async function closeConnection(connection) {
   if (connection) {
     try {
@@ -45,7 +41,6 @@ async function closeConnection(connection) {
   }
 }
 
-// Functie pentru a inchide pool-ul de conexiuni
 async function closePool() {
   try {
     await oracledb.getPool().close(0);
@@ -55,7 +50,6 @@ async function closePool() {
   }
 }
 
-// Functie generica pentru executarea interogarilor
 async function executeQuery(query, binds = [], options = {}) {
   let connection;
   try {

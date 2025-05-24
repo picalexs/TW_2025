@@ -1,12 +1,10 @@
-// backend/controllers/petController.js
 const petModel = require("../models/petModel");
-const { sendResponse, collectRequestData } = require("../../utils/helpers"); // Functii utilitare generale
+const { sendResponse, collectRequestData } = require("../utils/helpers");
 
 class PetController {
-  // Obtine toate animalele
   async getAllPets(req, res) {
     try {
-      const pets = await petModel.getAllPets();
+      const pets = await petModel.getAll();
       sendResponse(res, 200, pets);
     } catch (error) {
       console.error("Error getting all pets:", error);
@@ -14,10 +12,9 @@ class PetController {
     }
   }
 
-  // Obtine un animal dupa ID
   async getPetById(req, res, id) {
     try {
-      const pet = await petModel.getPetById(id);
+      const pet = await petModel.getById(id);
       if (pet) {
         sendResponse(res, 200, pet);
       } else {
@@ -29,7 +26,6 @@ class PetController {
     }
   }
 
-  // Creeaza un animal nou
   async createPet(req, res) {
     try {
       const petData = await collectRequestData(req);
@@ -41,7 +37,6 @@ class PetController {
     }
   }
 
-  // Actualizeaza un animal
   async updatePet(req, res, id) {
     try {
       const petData = await collectRequestData(req);
@@ -57,12 +52,11 @@ class PetController {
     }
   }
 
-  // Sterge un animal
   async deletePet(req, res, id) {
     try {
-      const deleted = await petModel.deletePet(id);
+      const deleted = await petModel.delete(id);
       if (deleted) {
-        sendResponse(res, 204, {}); // 204 No Content for successful deletion
+        sendResponse(res, 204, {});
       } else {
         sendResponse(res, 404, { error: "Pet not found for deletion" });
       }
