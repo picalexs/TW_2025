@@ -16,20 +16,21 @@ class ApiError extends Error {
 
 class ApiService {
   constructor(baseURL = '', options = {}) {
-    
-    // config from config.js
     const config = window.APP_CONFIG || {};
+    const features = config.features || {};
+    const timeouts = config.timeouts || {};
+    const retry = config.retry || {};
     
-    this.baseURL = baseURL;
+    this.baseURL = baseURL || 'http://localhost:8080';
     this.defaultHeaders = {
       'Content-Type': 'application/json',
       ...options.headers
     };
     
-    this.debug = options.debug || config.features.enableDebugLogging;
-    this.timeout = options.timeout || config.timeouts.default;
-    this.retryCount = options.retryCount || config.retry.maxRetries;
-    this.retryDelay = options.retryDelay || config.retry.initialDelay;
+    this.debug = options.debug ?? features.enableDebugLogging ?? false;
+    this.timeout = options.timeout ?? timeouts.default ?? 30000;
+    this.retryCount = options.retryCount ?? retry.maxRetries ?? 2;
+    this.retryDelay = options.retryDelay ?? retry.initialDelay ?? 1000;
     
     this.pendingRequests = new Map();
     if (this.debug) {
@@ -289,7 +290,7 @@ class ApiService {
 
   async testApiConnection() {
     try {
-      const response = await this.get('/status');
+      const response = await this.get('/api/status');
       
       return {
         success: response && response.status === 'ok',
