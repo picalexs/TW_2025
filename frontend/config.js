@@ -1,4 +1,4 @@
-// Global configuration for the application
+// Global config
 window.APP_CONFIG = {
   api: {
     baseURL: 'http://localhost:8080',

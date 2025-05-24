@@ -5,7 +5,7 @@ const handlePetRoutes = require('./routes/petRoutes');
 const { sendResponse } = require('./utils/helpers');
 require("dotenv").config();
 
-const PORT = process.env.API_PORT || 8080;
+const PORT = process.env.API_PORT;
 
 const server = http.createServer(async (req, res) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
@@ -19,9 +19,6 @@ const server = http.createServer(async (req, res) => {
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
-  } else {
-    // In production, remove this wildcard and strictly use allowedOrigins
-    res.setHeader('Access-Control-Allow-Origin', '*');
   }
   
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -34,7 +31,6 @@ const server = http.createServer(async (req, res) => {
     return;
   }
 
-  // Status endpoint for health checks and connection testing
   if (req.url === '/api/status' && req.method.toLowerCase() === 'get') {
     sendResponse(res, 200, { 
       status: 'ok', 
@@ -94,5 +90,4 @@ async function startServer() {
     process.exit(1);
   }
 }
-
 startServer();
