@@ -2,6 +2,7 @@ const http = require('http');
 const db = require('./db/dbConnection');
 const handleUserRoutes = require('./routes/userRoutes');
 const handlePetRoutes = require('./routes/petRoutes');
+const handleStaticRoutes = require('./routes/staticRoutes');
 const { sendResponse } = require('./utils/helpers');
 require("dotenv").config();
 
@@ -42,7 +43,11 @@ const server = http.createServer(async (req, res) => {
   }
 
   try {
-    let routeHandled = await handleUserRoutes(req, res);
+    let routeHandled = await handleStaticRoutes(req, res);
+    
+    if (!routeHandled) {
+      routeHandled = await handleUserRoutes(req, res);
+    }
 
     if (!routeHandled) {
       routeHandled = await handlePetRoutes(req, res);
