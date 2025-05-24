@@ -1,4 +1,4 @@
-const db = require("../dbConnection");
+const db = require("../db/dbConnection");
 const oracledb = require("oracledb");
 
 class abstractDTO {
@@ -13,11 +13,11 @@ class abstractDTO {
 
   async getAll(orderBy = null) {
     let query = `SELECT * FROM ${this.tableName}`;
-    
+
     if (orderBy) {
       query += ` ORDER BY ${orderBy}`;
     }
-    
+
     const result = await db.executeQuery(query, [], {
       outFormat: oracledb.OUT_FORMAT_OBJECT
     });
@@ -66,8 +66,8 @@ class abstractDTO {
 
   async delete(id) {
     await db.executeQuery(
-      `DELETE FROM ${this.tableName} WHERE ${this.primaryKey} = :id`, 
-      [id], 
+      `DELETE FROM ${this.tableName} WHERE ${this.primaryKey} = :id`,
+      [id],
       { autoCommit: true }
     );
     return true;

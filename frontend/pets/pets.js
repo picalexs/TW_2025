@@ -37,13 +37,17 @@ function createPetCard(pet) {
   card.className = 'pet-card';
   card.setAttribute('data-pet-id', pet.id);
   
-  const imagePath = pet.imagePath || '../assets/default-pet.jpg';
+  let imagePath = pet.imagePath;
+  if (!imagePath) {
+    imagePath = '../assets/default-profile.jpg';
+  } else if (!imagePath.startsWith('http') && !imagePath.startsWith('/server/')) {
+    imagePath = `/server/${imagePath}`;
+  }
   
   const description = pet.description && pet.description.length > 100 
     ? pet.description.substring(0, 100) + '...' 
     : pet.description || 'No description available';
   
-  // Get translations with fallbacks
   const lm = window.languageManager;
   const speciesText = pet.species ? 
     (lm?.translate(`species.${pet.species.toLowerCase()}`, pet.species)) : 
@@ -56,7 +60,7 @@ function createPetCard(pet) {
   const viewDetailsText = lm?.translate('viewDetails', 'View Details');
   
   card.innerHTML = `
-    <img src="${imagePath}" alt="${pet.name}" class="pet-image">
+    <img src="${imagePath}" alt="${pet.name}" class="pet-image" onerror="this.src='../assets/default-profile.jpg'">
     <div class="pet-info">
       <h3 class="pet-name">${pet.name}</h3>
       <p class="pet-description">${description}</p>

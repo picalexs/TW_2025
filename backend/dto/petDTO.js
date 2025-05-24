@@ -1,5 +1,6 @@
 const abstractDTO = require("./abstractDTO");
 const oracledb = require("oracledb");
+const path = require("path");
 
 class petDTO extends abstractDTO {
   constructor() {
@@ -7,6 +8,19 @@ class petDTO extends abstractDTO {
   }
 
   mapToEntity(dbRow) {
+    let imagePath = dbRow.FILE_PATH;
+    
+    if (imagePath) {
+      if (imagePath.startsWith('/')) {
+        imagePath = imagePath.substring(1);
+      }
+      if (!imagePath.startsWith('http')) {
+        imagePath = `/server/${imagePath}`;
+      }
+    } else {
+      imagePath = '/server/images/profile/default-profile.jpg';
+    }
+    
     return {
       id: dbRow.ID,
       name: dbRow.NAME,
@@ -15,19 +29,19 @@ class petDTO extends abstractDTO {
       description: dbRow.DESCRIPTION,
       relationWithOthers: dbRow.RELATION_WITH_OTHERS,
       createdAt: dbRow.CREATED_AT,
-      imagePath: dbRow.FILE_PATH
+      imagePath: imagePath
     };
   }
 
   async getAll() {
     const result = await this.executeCustomQuery(
-      `SELECT a.*, m.file_path 
-       FROM animals a 
-       LEFT JOIN media m ON a.id = m.animal_id 
+      `SELECT a.*, m.file_path
+       FROM animals a
+       LEFT JOIN media m ON a.id = m.animal_id
        WHERE m.id IS NULL OR m.id = (
          SELECT MIN(id) FROM media WHERE animal_id = a.id
        )`,
-      [], 
+      [],
       { outFormat: oracledb.OUT_FORMAT_OBJECT }
     );
 
@@ -36,9 +50,9 @@ class petDTO extends abstractDTO {
 
   async getById(id) {
     const result = await this.executeCustomQuery(
-      `SELECT a.*, m.file_path 
-       FROM animals a 
-       LEFT JOIN media m ON a.id = m.animal_id 
+      `SELECT a.*, m.file_path
+       FROM animals a
+       LEFT JOIN media m ON a.id = m.animal_id
        WHERE a.id = :id AND (m.id IS NULL OR m.id = (
          SELECT MIN(id) FROM media WHERE animal_id = a.id
        ))`,
@@ -51,7 +65,7 @@ class petDTO extends abstractDTO {
     }
 
     const pet = this.mapToEntity(result.rows[0]);
-    
+
     const tagsResult = await this.executeCustomQuery(
       `SELECT t.id, t.name
        FROM tags t
@@ -60,7 +74,7 @@ class petDTO extends abstractDTO {
       [id],
       { outFormat: oracledb.OUT_FORMAT_OBJECT }
     );
-    
+
     pet.tags = tagsResult.rows.map(tag => ({
       id: tag.ID,
       name: tag.NAME
@@ -70,14 +84,14 @@ class petDTO extends abstractDTO {
   }
 
   async create(petData) {
-    const { name, species, healthStatus, description, relationWithOthers } = petData;
-    
+    const { name, species, healthStatus, description, relationWithOthers, tags } = petData;
+
     if (!name || !species) {
       throw new Error("Missing required pet fields");
     }
 
     const result = await this.executeCustomQuery(
-      `INSERT INTO animals (name, species, health_status, description, relation_with_others) 
+      `INSERT INTO animals (name, species, health_status, description, relation_with_others)
        VALUES (:name, :species, :healthStatus, :description, :relationWithOthers)
        RETURNING id INTO :id`,
       {
@@ -92,9 +106,9 @@ class petDTO extends abstractDTO {
     );
 
     const petId = result.outBinds.id[0];
-    
-    if (petData.tags && Array.isArray(petData.tags)) {
-      for (const tagId of petData.tags) {
+
+    if (tags && Array.isArray(tags)) {
+      for (const tagId of tags) {
         await this.executeCustomQuery(
           `INSERT INTO animal_tags (animal_id, tag_id) VALUES (:animalId, :tagId)`,
           { animalId: petId, tagId },
@@ -102,8 +116,9 @@ class petDTO extends abstractDTO {
         );
       }
     }
-    
+
     return petId;
   }
 }
+
 module.exports = new petDTO();

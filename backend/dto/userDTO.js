@@ -13,7 +13,7 @@ class userDTO extends abstractDTO {
       username: dbRow.USERNAME,
       email: dbRow.EMAIL,
       createdAt: dbRow.CREATED_AT
-      // Not including password
+      // Nu includem parola din motive de securitate
     };
   }
 
@@ -26,7 +26,7 @@ class userDTO extends abstractDTO {
     const passwordHash = await bcrypt.hash(userData.password, saltRounds);
 
     const result = await this.executeCustomQuery(
-      `INSERT INTO users (username, email, password_hash) 
+      `INSERT INTO users (username, email, password_hash)
        VALUES (:username, :email, :password_hash)
        RETURNING id INTO :id`,
       {
@@ -62,5 +62,4 @@ class userDTO extends abstractDTO {
     return this.mapToEntity(user);
   }
 }
-
 module.exports = new userDTO();

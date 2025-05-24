@@ -177,6 +177,7 @@ async function fetchAndRenderUsers() {
         <div class="users-grid pets-grid">
           ${users.map(user => `
             <div class="pet-card" data-user-id="${user.id}">
+              <img src="../server/images/profile/default.jpg" alt="${user.username}" class="progile-image">
               <div class="pet-info">
                 <h3 class="pet-name">${user.username}</h3>
                 <p class="pet-description">${user.email}</p>
