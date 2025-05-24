@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Connection Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .success {
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        .error {
+            color: #c62828;
+            font-weight: bold;
+        }
+        .warning {
+            color: #f57c00;
+            font-weight: bold;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        pre {
+            background-color: #f5f5f5;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-size: 14px;
+        }
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #4CAF50;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>API Connection Test</h1>
+        
+        <div class="card">
+            <h2>Backend Server Status</h2>
+            <p>This page tests the connection to your backend API server.</p>
+            <button id="testConnection">Test Connection</button>
+            <button id="getPets">Get Pets</button>
+            <button id="getStatus">API Status</button>
+            <div id="connectionResult"></div>
+        </div>
+        
+        <div class="card">
+            <h2>Configuration Information</h2>
+            <div id="browserInfo"></div>
+        </div>
+        
+        <div class="card">
+            <h2>API Response</h2>
+            <pre id="apiResponse">No data yet. Click a button above to test.</pre>
+        </div>
+    </div>
+
+    <script type="module">
+        import ApiService from './services/api.js';
+        import PetService from './services/petService.js';
+        
+        // Enable debug mode for testing
+        const api = new ApiService();
+        api.debug = true;
+        
+        const petService = new PetService();
+        petService.debug = true;
+        
+        // Display configuration information
+        const browserInfoEl = document.getElementById('browserInfo');
+        browserInfoEl.innerHTML = `
+            <p><strong>Current URL:</strong> ${window.location.href}</p>
+            <p><strong>Origin:</strong> ${window.location.origin}</p>
+            <p><strong>API Base URL:</strong> ${api.baseURL}</p>
+        `;
+        
+        // Helper function to show loading state
+        function setLoading(buttonId, isLoading) {
+            const button = document.getElementById(buttonId);
+            if (isLoading) {
+                button.disabled = true;
+                if (!document.getElementById(`${buttonId}-loader`)) {
+                    const loader = document.createElement('span');
+                    loader.id = `${buttonId}-loader`;
+                    loader.className = 'loader';
+                    button.parentNode.insertBefore(loader, button.nextSibling);
+                }
+            } else {
+                button.disabled = false;
+                const loader = document.getElementById(`${buttonId}-loader`);
+                if (loader) loader.remove();
+            }
+        }
+        
+        // Test connection button
+        document.getElementById('testConnection').addEventListener('click', async () => {
+            const resultEl = document.getElementById('connectionResult');
+            const responseEl = document.getElementById('apiResponse');
+            
+            setLoading('testConnection', true);
+            resultEl.innerHTML = '<p>Testing connection...</p>';
+            
+            try {
+                const result = await api.testApiConnection();
+                
+                if (result.success) {
+                    resultEl.innerHTML = `<p class="success">✓ Connection successful! Status: ${result.status} ${result.statusText}</p>`;
+                } else {
+                    resultEl.innerHTML = `<p class="error">✗ Connection failed: ${result.error || 'Unknown error'}</p>`;
+                }
+                
+                responseEl.textContent = JSON.stringify(result, null, 2);
+            } catch (error) {
+                resultEl.innerHTML = `<p class="error">✗ Test failed with error: ${error.message}</p>`;
+                responseEl.textContent = JSON.stringify(error, null, 2);
+            } finally {
+                setLoading('testConnection', false);
+            }
+        });
+        
+        // Get pets button
+        document.getElementById('getPets').addEventListener('click', async () => {
+            const resultEl = document.getElementById('connectionResult');
+            const responseEl = document.getElementById('apiResponse');
+            
+            setLoading('getPets', true);
+            resultEl.innerHTML = '<p>Fetching pets...</p>';
+            
+            try {
+                const pets = await petService.getAllPets();
+                if (Array.isArray(pets) && pets.length > 0) {
+                    resultEl.innerHTML = `<p class="success">✓ Successfully fetched ${pets.length} pets!</p>`;
+                } else if (Array.isArray(pets) && pets.length === 0) {
+                    resultEl.innerHTML = `<p class="warning">⚠ No pets found. The API is working but the database may be empty.</p>`;
+                } else {
+                    resultEl.innerHTML = `<p class="warning">⚠ Unexpected response format.</p>`;
+                }
+                responseEl.textContent = JSON.stringify(pets, null, 2);
+            } catch (error) {
+                resultEl.innerHTML = `<p class="error">✗ Failed to fetch pets: ${error.message || 'Unknown error'}</p>`;
+                responseEl.textContent = JSON.stringify(error, null, 2);
+            } finally {
+                setLoading('getPets', false);
+            }
+        });
+        
+        // Get API status button
+        document.getElementById('getStatus').addEventListener('click', async () => {
+            const resultEl = document.getElementById('connectionResult');
+            const responseEl = document.getElementById('apiResponse');
+            
+            setLoading('getStatus', true);
+            resultEl.innerHTML = '<p>Checking API status...</p>';
+            
+            try {
+                const response = await fetch(`${api.baseURL}/api/status`);
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultEl.innerHTML = `<p class="success">✓ API status check successful!</p>`;
+                } else {
+                    resultEl.innerHTML = `<p class="error">✗ API status check failed: ${response.statusText}</p>`;
+                }
+                
+                responseEl.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                resultEl.innerHTML = `<p class="error">✗ API status check failed: ${error.message}</p>`;
+                responseEl.textContent = JSON.stringify({ error: error.message }, null, 2);
+            } finally {
+                setLoading('getStatus', false);
+            }
+        });
+    </script>
+</body>
+</html>

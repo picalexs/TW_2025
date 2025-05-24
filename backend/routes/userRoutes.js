@@ -1,17 +1,16 @@
 const userController = require("../controllers/userController");
 const url = require("url");
+const { sendResponse } = require("../utils/helpers")
 
 async function handleUserRoutes(req, res) {
   const parsedUrl = url.parse(req.url, true);
   const path = parsedUrl.pathname;
   const trimmedPath = path.replace(/^\/+|\/+$/g, "");
   const method = req.method.toLowerCase();
+  
+  console.log(`Processing user route: ${trimmedPath}, method: ${method}`);
 
-  if (trimmedPath === "test" && method === "get") {
-    return sendResponse(res, 200, { message: "Server is working!" });
-  }
-
-  if (trimmedPath === "api/users") {
+  if (trimmedPath === "api/users" || trimmedPath === "api\/users") {
     if (method === "get") {
       await userController.getAllUsers(req, res);
     } else if (method === "post") {
@@ -41,6 +40,11 @@ async function handleUserRoutes(req, res) {
     await userController.authenticateUser(req, res);
     return true;
   }
+
+  // Missing endpoints for:
+  // - '/api/users/me' (used in frontend's getCurrentUser)
+  // - '/api/auth/register' (used in frontend's register)
+  // - '/api/users/profile' (used in frontend's updateProfile)
 
   return false;
 }

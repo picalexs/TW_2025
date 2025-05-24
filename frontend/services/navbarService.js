@@ -1,10 +1,4 @@
-import ApiService from './api.js';
-
 class NavbarService {
-  constructor() {
-    this.apiService = new ApiService();
-  }
-
   async fetchGlobalComponents() {
     try {
       const response = await fetch('../global/global.html');

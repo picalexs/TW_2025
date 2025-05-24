@@ -7,8 +7,11 @@ async function handlePetRoutes(req, res) {
   const path = parsedUrl.pathname;
   const trimmedPath = path.replace(/^\/+|\/+$/g, "");
   const method = req.method.toLowerCase();
+  
+  console.log(`Processing pet route: ${trimmedPath}, method: ${method}`);
 
-  if (trimmedPath === "api/pets") {
+  if (trimmedPath === "api/pets" || trimmedPath === "api/pets/" || 
+      trimmedPath === "/api/pets" || trimmedPath === "/api/pets/") {
     if (method === "get") {
       await petController.getAllPets(req, res);
     } else if (method === "post") {
@@ -19,7 +22,7 @@ async function handlePetRoutes(req, res) {
     return true;
   }
 
-  const petIdMatch = trimmedPath.match(/^api\/pets\/(\d+)$/);
+  const petIdMatch = trimmedPath.match(/^(?:\/)?api\/pets\/(\d+)\/?$/);
   if (petIdMatch) {
     const id = parseInt(petIdMatch[1]);
     if (method === "get") {
