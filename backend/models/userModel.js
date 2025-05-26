@@ -1,5 +1,6 @@
 const userDTO = require("../dto/userDTO");
 const AbstractModel = require("./abstractModel");
+const db = require('../db/dbConnection');
 
 class UserModel extends AbstractModel {
   constructor() {
@@ -7,12 +8,45 @@ class UserModel extends AbstractModel {
   }
 
   async createUser(userData) {
-    // ADD validation logic here
-    return await this.dto.create(userData);
+    let connection;
+    try {
+      connection = await db.getConnection();
+      const result = await this.dto.create(connection, userData);
+      return result;
+    } finally {
+      if (connection) {
+        await connection.close();
+      }
+    }
+  }
+
+  async findUserByEmailToken(token) {
+    let connection;
+    try {
+      connection = await db.getConnection();
+      const user = await this.dto.findByToken(connection, token);
+      return user;
+    } finally {
+      if (connection) {
+        await connection.close();
+      }
+    }
+  }
+
+  async verifyUser(userId) {
+    let connection;
+    try {
+      connection = await db.getConnection();
+      const result = await this.dto.updateVerificationStatus(connection, userId);
+      return result;
+    } finally {
+      if (connection) {
+        await connection.close();
+      }
+    }
   }
 
   async updateUser(id, userData) {
-    // ADD validation logic here
     return await this.dto.update(id, userData);
   }
 
