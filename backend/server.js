@@ -1,10 +1,11 @@
+require("dotenv").config();
+
 const http = require('http');
 const db = require('./db/dbConnection');
 const handleUserRoutes = require('./routes/userRoutes');
 const handlePetRoutes = require('./routes/petRoutes');
 const handleStaticRoutes = require('./routes/staticRoutes');
 const { sendResponse } = require('./utils/helpers');
-require("dotenv").config();
 
 const PORT = process.env.API_PORT;
 

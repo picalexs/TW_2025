@@ -3,6 +3,7 @@ const url = require("url");
 const { sendResponse } = require("../utils/helpers")
 
 async function handleUserRoutes(req, res) {
+  let routeHandled = false;
   const parsedUrl = url.parse(req.url, true);
   const path = parsedUrl.pathname;
   const trimmedPath = path.replace(/^\/+|\/+$/g, "");

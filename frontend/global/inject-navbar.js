@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       setupLanguageDropdown();
       setupMobileMenu();
+      checkLoginStatusAndToggleNavButtons();
       
       document.dispatchEvent(new CustomEvent('componentsLoaded'));
       

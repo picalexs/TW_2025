@@ -1,11 +1,13 @@
 import { fetchPets, renderPets, showPetLoadError } from '../pets/pets.js';
-import { initSlideshow, setupMobileMenu, initializePageLanguage } from '../global/global.js';
+//import { initSlideshow, setupMobileMenu, initializePageLanguage } from '../global/global.js';
+import { initSlideshow, setupMobileMenu, initializePageLanguage, checkLoginStatusAndToggleNavButtons } from '../global/global.js';
 
 function initHomePage() {
   initHeroSection();
   
   setupMobileMenu();
   initializePageLanguage();
+  checkLoginStatusAndToggleNavButtons()
   
   loadPets();
   fetchAndRenderUsers();

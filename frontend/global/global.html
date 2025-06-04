@@ -11,10 +11,10 @@
       <li class="nav-item"><a href="#about" class="nav-link" data-i18n="nav.about" data-i18n-fallback="About Us"></a></li>
     </ul>
     <div class="auth-container">
-      <div class="auth-buttons" data-component-auth-hide="loggedIn,signupPage,loginPage">
-        <a href="/frontend/login/login.html" class="btn btn-outline" data-i18n="nav.login" data-i18n-fallback="Login"></a>
-        <a href="/frontend/signup/signup.html" class="btn btn-primary" data-i18n="nav.signup" data-i18n-fallback="Sign Up"></a>
-      </div>
+      <div class="auth-buttons" id="auth-buttons-logged-out"> <a href="/frontend/login/login.html" class="btn btn-outline nav-login-btn" data-i18n="nav.login" data-i18n-fallback="Login"></a> <a href="/frontend/signup/signup.html" class="btn btn-primary nav-signup-btn" data-i18n="nav.signup" data-i18n-fallback="Sign Up"></a> </div>
+
+      <div class="auth-buttons" id="auth-buttons-logged-in" style="display: none;"> <a href="#" class="btn btn-primary nav-logout-btn" data-i18n="nav.logout" data-i18n-fallback="Logout">Logout</a> </div>
+
       <div class="language-dropdown">
         <button class="language-current">
           <span class="flag-icon flag-en"></span>
@@ -41,15 +41,11 @@
     </div>
   </div>
 
-  <!-- Mobile menu container -->
   <div class="mobile-menu-container">
-    <!-- Mobile login/signup section -->
-    <div class="mobile-auth" data-component-auth-hide="loggedIn,signupPage,loginPage">
-      <a href="/frontend/login/login.html" class="btn btn-outline" data-i18n="nav.login"></a>
-      <a href="/frontend/signup/signup.html" class="btn btn-primary" data-i18n="nav.signup"></a>
-    </div>
+    <div class="mobile-auth" id="mobile-auth-logged-out"> <a href="/frontend/login/login.html" class="btn btn-outline mobile-nav-login" data-i18n="nav.login"></a> <a href="/frontend/signup/signup.html" class="btn btn-primary mobile-nav-signup" data-i18n="nav.signup"></a> </div>
 
-    <!-- Mobile navigation -->
+    <div class="mobile-auth" id="mobile-auth-logged-in" style="display: none;"> <a href="#" class="btn btn-primary mobile-nav-logout" data-i18n="nav.logout">Logout</a> </div>
+
     <nav class="mobile-nav">
       <ul class="mobile-nav-menu">
         <li class="mobile-nav-item">
@@ -64,7 +60,6 @@
       </ul>
     </nav>
 
-    <!-- Mobile language selector -->
     <div class="mobile-language">
       <div class="mobile-language-title" data-i18n="language.title"></div>
       <div class="mobile-language-options">
@@ -81,10 +76,7 @@
   </div>
 </header>
 
-<!-- Mobile overlay -->
 <div class="mobile-overlay"></div>
-
-
 
 <footer id="main-footer">
   <div class="footer-container">

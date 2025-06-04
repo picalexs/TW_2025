@@ -5,6 +5,7 @@ const db = require('../db/dbConnection');
 class UserModel extends AbstractModel {
   constructor() {
     super(userDTO);
+    this.dto = userDTO;
   }
 
   async createUser(userData) {
@@ -51,7 +52,20 @@ class UserModel extends AbstractModel {
   }
 
   async authenticate(email, password) {
-    return await this.dto.authenticateUser(email, password);
+    let connection;
+    try {
+      connection = await db.getConnection();
+      const authResult = await this.dto.authenticateUser(connection, email, password);
+      return authResult;
+    } finally {
+      if (connection) {
+        try {
+          await connection.close();
+        } catch (err) {
+          console.error('Error closing connection in authenticate model:', err);
+        }
+      }
+    }
   }
 }
 

@@ -10,8 +10,7 @@
 </head>
 
 <body class="signup-page">
-  <div data-component="header"></div>
-  <div id="mobile-overlay" class="mobile-overlay"></div>
+  <div id="global-navbar"></div> <div id="mobile-overlay" class="mobile-overlay"></div>
 
   <div class="signup-background">
     <div class="signup-container">
@@ -57,16 +56,10 @@
 
   <div id="global-footer"></div>
 
-  <!-- 1. incarca doar functiile din global.js (nu le ruleaza automat!) -->
   <script type="module" src="../global/global.js"></script>
 
-  <!-- 2. Apoi incarci bara + executi functiile dupa ce e injectata -->
-  <script type="module" src="../global/inject-navbar.js"></script>
-
-  <!-- 3. Load languages -->
   <script type="module" src="../languages/language.js"></script>
 
-  <!-- 4. Codul paginii de signup (ce faci cu form-ul etc.) -->
   <script type="module" src="./signup.js"></script>
 
 </body>

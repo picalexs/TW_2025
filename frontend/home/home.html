@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="./home.css" />
   </head>
   <body>
-    <div data-component="header"></div>
+    <div id="global-navbar">
+        </div>
     <div id="mobile-overlay" class="mobile-overlay"></div>
 
     <main id="content-container">
@@ -30,18 +31,16 @@
             <p data-i18n="featuredPets.subtitle"></p>
           </div>
           <div id="pets-grid" class="pets-grid">
-            <!-- Pets will be inserted here from .js -->
             <div class="loading-spinner"></div>
           </div>
         </div>
       </section>
     </main>
 
-    <div data-component="footer"></div>
+    <div id="global-footer">
+        </div>
 
-    <!-- Scripts -->
     <script type="module" src="../global/global.js"></script>
-    <script type="module" src="../global/inject-navbar.js"></script>
     <script type="module" src="../languages/language.js"></script>
     <script type="module" src="../services/api.js"></script>
     <script type="module" src="./home.js"></script>

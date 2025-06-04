@@ -1,11 +1,15 @@
 import languageManager from '../languages/language.js';
-import { setupMobileMenu, createSlideshow, initializePageLanguage } from '../global/global.js';
+//import { setupMobileMenu, createSlideshow, initializePageLanguage } from '../global/global.js';
+import { setupMobileMenu, createSlideshow, initializePageLanguage, checkLoginStatusAndToggleNavButtons } from '../global/global.js';
 import UserService from '../services/userService.js';
+
+const API_BASE_URL = 'http://localhost:3000';
 
 document.addEventListener('DOMContentLoaded', function() {
   initLoginPage();
   setupMobileMenu();
   initializePageLanguage();
+  checkLoginStatusAndToggleNavButtons();
   
   createSlideshow({
     containerSelector: '.login-slideshow',
@@ -33,14 +37,42 @@ async function handleLogin(event) {
   
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
-  const rememberMe = document.querySelector('.form-options input[type="checkbox"]').checked;
+  //const rememberMe = document.querySelector('.form-options input[type="checkbox"]').checked;
   
-  console.log('Login attempt:', { email, password: '****', rememberMe });
-  
-  // TODO: Add actual login API call when backend is ready
-  // For now just simulate a login
-  setTimeout(() => {
-    // Redirect to home page after "login"
-    window.location.href = '../home/home.html';
-  }, 1000);
+  //console.log('Login attempt:', { email, password: '****', rememberMe });
+  console.log('Login attempt:', { email, password: '****'});
+
+   try {
+      const userService = new UserService({ baseURL: API_BASE_URL });
+      const response = await userService.login(email, password);
+
+    if (response.success) {
+      localStorage.setItem('isLoggedIn', 'true');
+
+      showMessage('Login successful! Redirecting...', 'success');
+      window.location.href = '../home/home.html';
+    } else {
+      showMessage(`Login failed: ${response.message || 'Invalid credentials.'}`, 'error');
+    }
+  } catch (error) {
+    console.error("Error during login API call:", error);
+    showMessage(`Login failed: ${error.message || 'An unexpected error occurred.'}`, 'error');
+  }
+  // setTimeout(() => {
+  //   window.location.href = '../home/home.html';
+  // }, 1000);
+}
+
+function showMessage(message, type = 'info') {
+  const messageArea = document.getElementById('loginMessageArea');
+  if (messageArea) {
+    messageArea.textContent = message;
+    messageArea.className = `message ${type}`; 
+    messageArea.style.display = 'block';
+    setTimeout(() => {
+      messageArea.style.display = 'none';
+    }, 5000);
+  } else {
+    alert(message);
+  }
 }

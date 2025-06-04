@@ -1,8 +1,10 @@
 const userModel = require("../models/userModel");
 const { sendResponse, collectRequestData } = require("../utils/helpers");
-const bcrypt = require('bcrypt');
-const crypto = require('crypto');
+const bcrypt = require('bcrypt'); 
+const crypto = require('crypto'); 
 const nodemailer = require('nodemailer');
+const jwt = require('jsonwebtoken');
+//require("dotenv").config();
 
 class UserController {
   async getAllUsers(req, res) {
@@ -113,70 +115,70 @@ class UserController {
 
       res.writeHead(200, { 'Content-Type': 'text/html' });
       res.end(`
-      <!DOCTYPE html>
-      <html lang="en">
-      <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Email Verified</title>
-          <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
-          <style>
-              body {
-                  font-family: 'Quicksand', sans-serif;
-                  text-align: center;
-                  background: linear-gradient(to bottom right, #e0f7ff, #ffffff);
-                  margin: 0;
-                  padding: 40px 20px;
-                  color: #2c3e50;
-              }
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Email Verified</title>
+        <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+        <style>
+            body {
+                font-family: 'Quicksand', sans-serif;
+                text-align: center;
+                background: linear-gradient(to bottom right, #e0f7ff, #ffffff);
+                margin: 0;
+                padding: 40px 20px;
+                color: #2c3e50;
+            }
 
-              .container {
-                  max-width: 500px;
-                  margin: auto;
-                  background-color: #ffffff;
-                  padding: 30px;
-                  border-radius: 15px;
-                  box-shadow: 0 8px 20px rgba(0, 123, 255, 0.2);
-              }
+            .container {
+                max-width: 500px;
+                margin: auto;
+                background-color: #ffffff;
+                padding: 30px;
+                border-radius: 15px;
+                box-shadow: 0 8px 20px rgba(0, 123, 255, 0.2);
+            }
 
-              h1 {
-                  color: #007bff;
-                  font-size: 2em;
-                  margin-bottom: 20px;
-              }
+            h1 {
+                color: #007bff;
+                font-size: 2em;
+                margin-bottom: 20px;
+            }
 
-              p {
-                  font-size: 1.1em;
-                  line-height: 1.6;
-                  margin-bottom: 15px;
-              }
+            p {
+                font-size: 1.1em;
+                line-height: 1.6;
+                margin-bottom: 15px;
+            }
 
-              .button {
-                  background-color: #007bff;
-                  color: white;
-                  padding: 12px 24px;
-                  border: none;
-                  border-radius: 25px;
-                  font-size: 1em;
-                  font-weight: bold;
-                  cursor: pointer;
-                  transition: background-color 0.3s ease;
-              }
+            .button {
+                background-color: #007bff;
+                color: white;
+                padding: 12px 24px;
+                border: none;
+                border-radius: 25px;
+                font-size: 1em;
+                font-weight: bold;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
 
-              .button:hover {
-                  background-color: #0056b3;
-              }
-          </style>
-      </head>
-      <body>
-          <div class="container">
-              <h1>Email Verified! 🐶</h1>
-              <p>Your email address has been successfully verified.</p>
-              <p>You can now return to the website and log in to your account.</p>
-              <button class="button" onclick="window.close();">Close this window</button>
-          </div>
-      </body>
-      </html>
+            .button:hover {
+                background-color: #0056b3;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Email Verified! 🐶</h1>
+            <p>Your email address has been successfully verified.</p>
+            <p>You can now return to the website and log in to your account.</p>
+            <button class="button" onclick="window.close();">Close this window</button>
+        </div>
+    </body>
+    </html>
       `);
 
     } catch (error) {
@@ -215,18 +217,86 @@ class UserController {
     }
   }
 
-  async authenticateUser(req, res) {
+   async authenticateUser(req, res) {
+        try {
+            const { email, password } = await collectRequestData(req);
+
+            // Aici primești obiectul { success: boolean, message: string, user?: object }
+            const authResult = await userModel.authenticate(email, password); 
+
+            if (authResult.success && authResult.user) {
+                // Acum ai acces la obiectul utilizatorului autentificat prin authResult.user
+                const user = authResult.user;
+
+                // Opțional, poți reintroduce verificarea is_verified aici, deși DTO-ul o face deja.
+                // Dar pentru o claritate mai bună, lasă DTO-ul să decidă autentificarea completă.
+                // Daca ai mesaj de eroare in DTO pentru "The account is not verified", atunci nu mai ai nevoie de acest if aici.
+                // Verifica DTO-ul tau!
+                // Conform DTO-ului tău actual, dacă IS_VERIFIED nu e 1, DTO-ul deja returnează success: false cu mesajul "The account is not verified".
+                // Deci, e suficient să verifici doar authResult.success.
+
+                // Generează un token JWT
+                const token = jwt.sign(
+                    { id: user.id, email: user.email, username: user.username }, 
+                    process.env.JWT_SECRET, 
+                    { expiresIn: '1h' } 
+                );
+
+                // Prepară datele utilizatorului pentru răspuns
+                const userResponse = {
+                    id: user.id,
+                    username: user.username,
+                    email: user.email,
+                    is_verified: user.is_verified // DTO-ul tău returnează IS_VERIFIED, care este mapat la is_verified
+                };
+
+                sendResponse(res, 200, { 
+                    success: true,
+                    message: authResult.message, // Folosește mesajul din DTO
+                    token: token, 
+                    user: userResponse 
+                });
+
+            } else {
+                // Dacă autentificarea a eșuat (authResult.success este false)
+                // DTO-ul tău deja returnează mesaje specifice pentru "Incorrect email or word" și "The account is not verified"
+                const statusCode = authResult.message.includes("not verified") ? 401 : 401; // Poți folosi un alt status code dacă vrei (ex: 403 Forbidden pentru neverificat)
+                sendResponse(res, statusCode, { 
+                    success: false, 
+                    error: "Authentication failed", 
+                    message: authResult.message 
+                });
+            }
+        } catch (error) {
+            console.error("Error during authentication in UserController:", error); // Adaugă un log mai specific aici
+            sendResponse(res, 500, { 
+                success: false,
+                error: "Authentication failed", 
+                message: error.message || "Internal server error during authentication." 
+            });
+        }
+    }
+
+  async login(req, res) {
     try {
-      const { email, password } = await collectRequestData(req);
-      const user = await userModel.authenticate(email, password);
-      if (user) {
-        sendResponse(res, 200, { message: "Authentication successful", user });
-      } else {
-        sendResponse(res, 401, { error: "Authentication failed", message: "Invalid credentials" });
+      const body = await collectRequestData(req);
+      const { email, password } = JSON.parse(body);
+
+      if (!email || !password) {
+        return sendResponse(res, 400, { error: "Bad Request", message: "Email și parolă sunt obligatorii." });
       }
+
+      const authResult = await userModel.authenticate(email, password);
+
+      if (authResult.success) {
+        sendResponse(res, 200, { message: authResult.message, user: authResult.user });
+      } else {
+        sendResponse(res, 401, { error: "Unauthorized", message: authResult.message });
+      }
+
     } catch (error) {
-      console.error("Error during authentication:", error);
-      sendResponse(res, 500, { error: "Authentication failed", message: error.message });
+      console.error("Error during user login:", error);
+      sendResponse(res, 500, { error: "Server Error", message: "Eroare internă a serverului în timpul autentificării." });
     }
   }
 }

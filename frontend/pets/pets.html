@@ -8,31 +8,26 @@
     <link rel="stylesheet" href="pets.css">
 </head>
 <body>
-    <div data-component="header"></div>
-    
-    <main class="section-container">
+    <div id="global-navbar"></div> <main class="section-container">
         <div class="section-header">
             <h1 class="section-title" data-i18n="sectionTitle" data-i18n-fallback="Available Pets for Adoption"></h1>
         </div>
         
         <div class="filters-container">
-            <!-- Filters can be added here later -->
-        </div>
+            </div>
         
         <div id="pets-grid" class="pets-grid">
             <div class="loading-spinner" data-i18n="loading" data-i18n-fallback="Loading pets..."></div>
         </div>
     </main>
     
-    <div data-component="footer"></div>
-    
-    <script type="module">
+    <div id="global-footer"></div> <script type="module">
         import { fetchPets, renderPets, showPetLoadError } from './pets.js';
-        import '../global/inject-navbar.js';
+        import '../global/global.js'; 
         import languageManager from '../languages/language.js';
         
-        document.addEventListener('componentsLoaded', async () => {
-            try {
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {    
                 const pets = await fetchPets();
                 renderPets(pets);
             } catch (error) {

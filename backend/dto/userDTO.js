@@ -72,37 +72,73 @@ class userDTO extends abstractDTO {
   }
 
 
-  async authenticateUser(email, password) {
-    let connection;
+  // async authenticateUser(email, password) {
+  //   let connection;
+  //   try {
+  //     connection = await this.getConnection(); // Utilizează metoda din AbstractDTO
+  //     const sql = `SELECT ID, USERNAME, PASSWORD_HASH, EMAIL, IS_VERIFIED FROM users WHERE email = :email`;
+  //     const binds = { email };
+  //     const result = await connection.execute(sql, binds);
+
+  //     if (result.rows.length > 0) {
+  //       const user = result.rows[0];
+  //       const isMatch = await bcrypt.compare(password, user.PASSWORD_HASH);
+  //       if (isMatch) {
+  //         return {
+  //           id: user.ID,
+  //           username: user.USERNAME,
+  //           email: user.EMAIL,
+  //           is_verified: user.IS_VERIFIED
+  //         };
+  //       }
+  //     }
+  //     return null;
+  //   } catch (error) {
+  //     console.error("Error during authentication DTO:", error);
+  //     throw error;
+  //   } finally {
+  //     if (connection) {
+  //       await connection.close();
+  //     }
+  //   }
+  // }
+
+  async authenticateUser(connection, email, password) { 
     try {
-      connection = await this.getConnection(); // Utilizează metoda din AbstractDTO
       const sql = `SELECT ID, USERNAME, PASSWORD_HASH, EMAIL, IS_VERIFIED FROM users WHERE email = :email`;
       const binds = { email };
-      const result = await connection.execute(sql, binds);
+      const options = {
+        outFormat: oracledb.OUT_FORMAT_OBJECT
+      };
+      const result = await connection.execute(sql, binds, options);
 
-      if (result.rows.length > 0) {
-        const user = result.rows[0];
-        const isMatch = await bcrypt.compare(password, user.PASSWORD_HASH);
-        if (isMatch) {
-          return {
-            id: user.ID,
-            username: user.USERNAME,
-            email: user.EMAIL,
-            is_verified: user.IS_VERIFIED
-          };
-        }
+      if (result.rows.length === 0) {
+        return { success: false, message: "Incorrect email or word." };
       }
-      return null;
+
+      const user = result.rows[0];
+
+      const passwordMatch = await bcrypt.compare(password, user.PASSWORD_HASH);
+
+      if (!passwordMatch) {
+        return { success: false, message: "Incorrect email or word." };
+      }
+
+      if (user.IS_VERIFIED !== 1) { 
+        return { success: false, message: "The account is not verified. Please check your email." };
+      }
+
+      const mappedUser = {};
+      for (const key in user) {
+        mappedUser[key.toLowerCase()] = user[key];
+      }
+      return { success: true, message: "Authentication successful!", user: mappedUser };
+
     } catch (error) {
       console.error("Error during authentication DTO:", error);
-      throw error;
-    } finally {
-      if (connection) {
-        await connection.close();
-      }
+      throw error; 
     }
   }
-
 
 }
 module.exports = new userDTO();
