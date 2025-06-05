@@ -1,4 +1,5 @@
 # server/
 
 backend/.env
+.env
 node_modules/
