@@ -12,7 +12,6 @@
         <div class="section-header">
             <h1 class="section-title" data-i18n="sectionTitle" data-i18n-fallback="Available Pets for Adoption"></h1>
         </div>
-          <!-- Smart Recommendations Section -->
         <div id="recommendations-section" class="recommendations-section" style="display: none;">
             <div class="section-header">
                 <h2 class="section-subtitle" data-i18n="smartRecommendations" data-i18n-fallback="Smart Recommendations for You">Smart Recommendations for You</h2>
@@ -23,7 +22,6 @@
             </div>
         </div>
 
-        <!-- Advanced Filters -->
         <div class="filters-container">
             <div class="filters-header">
                 <h3 data-i18n="filterPets" data-i18n-fallback="Filter Pets">Filter Pets</h3>
@@ -138,7 +136,6 @@
             </div>
         </div>
         
-        <!-- Results Summary -->
         <div id="results-summary" class="results-summary">
             <span id="results-count" data-i18n="showingResults" data-i18n-fallback="Showing all pets">Showing all pets</span>
             <div class="view-options">
@@ -155,14 +152,17 @@
             <div class="loading-spinner" data-i18n="loading" data-i18n-fallback="Loading pets..."></div>
         </div>
     </main>
-    
-    <div id="global-footer"></div> <script type="module">
-        import { fetchPets, renderPets, showPetLoadError } from './pets.js';
+      <div id="global-footer"></div> <script type="module">
+        import { fetchPets, renderPets, showPetLoadError, initializeViewToggle, initializeAdvancedFilters, initializeFilterButtons } from './pets.js';
         import '../global/global.js'; 
         import languageManager from '../languages/language.js';
         
         document.addEventListener('DOMContentLoaded', async () => {
-            try {    
+            try {
+                initializeViewToggle();
+                initializeAdvancedFilters();
+                initializeFilterButtons();
+                
                 const pets = await fetchPets();
                 renderPets(pets);
             } catch (error) {
