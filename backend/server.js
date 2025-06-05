@@ -6,7 +6,6 @@ const handleUserRoutes = require('./routes/userRoutes');
 const handlePetRoutes = require('./routes/petRoutes');
 const handleRecommendationRoutes = require('./routes/recommendationRoutes');
 const handleStaticRoutes = require('./routes/staticRoutes');
-const { handleCareScheduleRoutes } = require('./routes/careScheduleRoutes');
 const { handleNotificationRoutes } = require('./routes/notificationRoutes');
 const { sendResponse } = require('./utils/helpers');
 
