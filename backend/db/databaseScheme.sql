@@ -44,6 +44,7 @@ CREATE TABLE users (
   token_expires TIMESTAMP,
   address_id NUMBER,
   role VARCHAR2(20) DEFAULT 'user',
+  profile_picture VARCHAR2(255) DEFAULT '/images/profile/default-user-profile.jpg',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_users_address FOREIGN KEY (address_id) REFERENCES address(id),
   CONSTRAINT chk_users_role CHECK (role IN ('user', 'admin', 'shelter'))

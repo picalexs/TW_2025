@@ -39,7 +39,7 @@ function createPetCard(pet) {
   
   let imagePath = pet.imagePath;
   if (!imagePath) {
-    imagePath = '../assets/default-profile.jpg';
+    imagePath = '../assets/default-pet-profile.jpg';
   } else if (!imagePath.startsWith('http') && !imagePath.startsWith('/server/')) {
     imagePath = `/server/${imagePath}`;
   }
@@ -60,7 +60,7 @@ function createPetCard(pet) {
   const viewDetailsText = lm?.translate('viewDetails', 'View Details');
   
   card.innerHTML = `
-    <img src="${imagePath}" alt="${pet.name}" class="pet-image" onerror="this.src='../assets/default-profile.jpg'">
+    <img src="${imagePath}" alt="${pet.name}" class="pet-image" onerror="this.src='../assets/default-pet-profile.jpg'">
     <div class="pet-info">
       <h3 class="pet-name">${pet.name}</h3>
       <p class="pet-description">${description}</p>

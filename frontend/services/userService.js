@@ -6,8 +6,9 @@ class UserService {
       debug: options.debug || false
     });
     
-    this.debug = options.debug || false;
+    this.debug = options.debug || false;    
     this.endpoints = {
+      getAllUsers: '/api/users',
       currentUser: '/api/users/me',
       login: '/api/auth/login',
       register: '/api/auth/register',
@@ -16,7 +17,6 @@ class UserService {
     
     this._restoreAuthState();
   }
-
   async getCurrentUser() {
     try {
       return await this.apiService.get(this.endpoints.currentUser);
@@ -24,6 +24,17 @@ class UserService {
       if (error instanceof ApiError && error.details && error.details.status === 401) {
         // Clear invalid auth state
         this.logout();
+      }
+      throw error;
+    }
+  }
+
+  async getAllUsers() {
+    try {
+      return await this.apiService.get(this.endpoints.getAllUsers);
+    } catch (error) {
+      if (this.debug) {
+        console.error('Get all users error:', error);
       }
       throw error;
     }

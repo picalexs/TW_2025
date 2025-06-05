@@ -4,7 +4,6 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto'); 
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
-//require("dotenv").config();
 
 class UserController {
   async getAllUsers(req, res) {
@@ -80,7 +79,6 @@ class UserController {
       sendResponse(res, 201, { message: 'User registered successfully. Please check your email for verification.' });    } catch (error) {
       console.error("Error during user registration:", error);
       
-      // Enhanced Oracle-specific error handling
       if (error.errorNum) {
         switch (error.errorNum) {
           case 1:

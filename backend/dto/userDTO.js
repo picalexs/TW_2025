@@ -6,14 +6,31 @@ class userDTO extends abstractDTO {
   constructor() {
     super('users');
   }
-
   mapToEntity(dbRow) {
+    let imagePath = dbRow.FILE_PATH;
+    
+    if (imagePath) {
+      if (imagePath.startsWith('/')) {
+        imagePath = imagePath.substring(1);
+      }
+      if (!imagePath.startsWith('http')) {
+        imagePath = `/server/${imagePath}`;
+      }
+    } else {
+      imagePath = '/server/images/profile/default-person-profile.jpg';
+    }
+
     return {
       id: dbRow.ID,
       username: dbRow.USERNAME,
       email: dbRow.EMAIL,
-      createdAt: dbRow.CREATED_AT
-
+      first_name: dbRow.FIRST_NAME,
+      last_name: dbRow.LAST_NAME,
+      phone: dbRow.PHONE,
+      role: dbRow.ROLE,
+      profile_picture: dbRow.PROFILE_PICTURE,
+      createdAt: dbRow.CREATED_AT,
+      imagePath: imagePath
     };
   }
 

@@ -1,6 +1,7 @@
 import { fetchPets, renderPets, showPetLoadError } from '../pets/pets.js';
-//import { initSlideshow, setupMobileMenu, initializePageLanguage } from '../global/global.js';
-import { initSlideshow, setupMobileMenu, initializePageLanguage, checkLoginStatusAndToggleNavButtons } from '../global/global.js';
+import { setupMobileMenu, initializePageLanguage, checkLoginStatusAndToggleNavButtons } from '../global/global.js';
+import ApiService from '../services/api.js';
+import UserService from '../services/userService.js';
 
 function initHomePage() {
   initHeroSection();
@@ -161,43 +162,27 @@ async function fetchAndRenderUsers() {
   const usersSection = document.createElement('section');
   usersSection.className = 'featured-users';
   usersSection.id = 'featured-users';
-  
   try {
-    //temporary mock data
-    const users = [
-      { id: 1, username: 'JohnDoe', email: 'john@example.com', createdAt: new Date().toISOString() },
-      { id: 2, username: 'JaneSmith', email: 'jane@example.com', createdAt: new Date().toISOString() },
-      { id: 3, username: 'BobJohnson', email: 'bob@example.com', createdAt: new Date().toISOString() }
-    ];
+    const userService = new UserService({ debug: true });
+    const users = await userService.getAllUsers();
+    const featuredUsers = users.slice(0, 6);
     
     usersSection.innerHTML = `
       <div class="section-container">
         <div class="section-header">
           <h2 class="section-title" data-i18n="featuredUsers.title">Our Community</h2>
           <p data-i18n="featuredUsers.subtitle">Meet some of our registered users</p>
-        </div>
+        </div>        
         <div class="users-grid pets-grid">
-          ${users.map(user => `
-            <div class="pet-card" data-user-id="${user.id}">
-              <img src="../server/images/profile/default.jpg" alt="${user.username}" class="progile-image">
-              <div class="pet-info">
-                <h3 class="pet-name">${user.username}</h3>
-                <p class="pet-description">${user.email}</p>
-                <p><span data-i18n="featuredUsers.joined">Joined</span>: ${new Date(user.createdAt).toLocaleDateString()}</p>
-                <div class="pet-tags">
-                  <span class="tag">User</span>
-                </div>
-                <a href="#" class="btn btn-outline view-user-btn" data-user-id="${user.id}" data-i18n="featuredUsers.viewProfile">View Profile</a>
-              </div>
-            </div>
-          `).join('')}
+          ${featuredUsers.map(user => createUserCardHTML(user)).join('')}
         </div>
-      </div>
-    `;
+      </div>`;
     
     dynamicSectionsContainer.appendChild(usersSection);
+    
+    addEventListeners();
   } catch (error) {
-    console.error('Error handling users section:', error);
+    console.error('Error fetching users:', error);
     usersSection.innerHTML = `
       <div class="section-container">
         <div class="section-header">
@@ -212,6 +197,38 @@ async function fetchAndRenderUsers() {
   if (window.languageManager) {
     window.languageManager.updateContent();
   }
+}
+
+function createUserCardHTML(user) {
+  let imagePath = user.profile_picture;
+  if (!imagePath) {
+    imagePath = '../assets/default-profile.jpg';
+  } else if (!imagePath.startsWith('http') && !imagePath.startsWith('/server/')) {
+    imagePath = `/server/${imagePath}`;
+  }
+  
+  const displayName = user.first_name && user.last_name 
+    ? `${user.first_name} ${user.last_name}` 
+    : user.first_name || user.username;
+  
+  const joinedDate = user.createdAt 
+    ? new Date(user.createdAt).toLocaleDateString() 
+    : 'Unknown';
+  
+  return `
+    <div class="pet-card" data-user-id="${user.id}">
+      <img src="${imagePath}" alt="${user.username}" class="pet-image" onerror="this.src='../assets/default-profile.jpg'">
+      <div class="pet-info">
+        <h3 class="pet-name">${displayName}</h3>
+        <p class="pet-description">@${user.username}</p>
+        <p><span data-i18n="featuredUsers.joined">Joined</span>: ${joinedDate}</p>
+        <div class="pet-tags">
+          <span class="tag">${user.role || 'User'}</span>
+        </div>
+        <a href="#" class="btn btn-outline view-user-btn" data-user-id="${user.id}" data-i18n="featuredUsers.viewProfile">View Profile</a>
+      </div>
+    </div>
+  `;
 }
 
 function addEventListeners() {

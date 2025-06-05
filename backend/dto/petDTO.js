@@ -18,7 +18,7 @@ class petDTO extends abstractDTO {
         imagePath = `/server/${imagePath}`;
       }
     } else {
-      imagePath = '/server/images/profile/default-profile.jpg';
+      imagePath = '/server/images/profile/default-pet-profile.jpg';
     }
     
     return {
