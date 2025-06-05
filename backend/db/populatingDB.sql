@@ -1,4 +1,9 @@
-delete from adoption_status_log;
+delete from system_logs;
+delete from messages;
+delete from conversations;
+delete from system_notifications;
+delete from user_preferences;
+delete from adoption_status_history;
 delete from user_preference_tags;
 delete from animal_tags;
 delete from favorites;
@@ -7,632 +12,630 @@ delete from media;
 delete from medical_history;
 delete from care_resources;
 delete from care_schedule;
+delete from animal_metrics;
 delete from animals;
 delete from users;
 delete from tags;
 delete from address;
-
 commit;
 
--- Insert into address
-insert into address (
-   id,
-   street,
-   city,
-   country,
-   latitude,
-   longitude
-) values ( 1,
-           '123 Main St',
-           'Springfield',
-           'USA',
-           40.7128,
-           - 74.0060 );
-insert into address (
-   id,
-   street,
-   city,
-   country,
-   latitude,
-   longitude
-) values ( 2,
-           '456 Elm St',
-           'Shelbyville',
-           'USA',
-           41.0000,
-           - 75.0000 );
-insert into address (
-   id,
-   street,
-   city,
-   country,
-   latitude,
-   longitude
-) values ( 3,
-           '789 Oak St',
-           'Capital City',
-           'USA',
-           39.9526,
-           - 75.1652 );
-insert into address (
-   id,
-   street,
-   city,
-   country,
-   latitude,
-   longitude
-) values ( 4,
-           '101 Pine St',
-           'Riverdale',
-           'USA',
-           42.3601,
-           - 71.0589 );
-
+insert into address (id, street, city, country, postal_code, latitude, longitude) values (1, '123 Main St', 'Springfield', 'USA', '12345', 40.7128, -74.0060);
+insert into address (id, street, city, country, postal_code, latitude, longitude) values (2, '456 Elm St', 'Shelbyville', 'USA', '23456', 41.0000, -75.0000);
+insert into address (id, street, city, country, postal_code, latitude, longitude) values (3, '789 Oak St', 'Capital City', 'USA', '34567', 39.9526, -75.1652);
+insert into address (id, street, city, country, postal_code, latitude, longitude) values (4, '101 Pine St', 'Riverdale', 'USA', '45678', 42.3601, -71.0589);
+insert into address (id, street, city, country, postal_code, latitude, longitude) values (5, '202 Maple Ave', 'Westfield', 'USA', '56789', 40.6589, -74.3473);
+insert into address (id, street, city, country, postal_code, latitude, longitude) values (6, '303 Cedar Blvd', 'Eastwood', 'USA', '67890', 41.2033, -77.1945);
+insert into address (id, street, city, country, postal_code, latitude, longitude) values (7, '404 Birch Rd', 'Northtown', 'USA', '78901', 42.0451, -87.6877);
+insert into address (id, street, city, country, postal_code, latitude, longitude) values (8, '505 Walnut Dr', 'Southside', 'USA', '89012', 39.7391, -104.9847);
+insert into address (id, street, city, country, postal_code, latitude, longitude) values (9, '606 Cherry Ln', 'Midville', 'USA', '90123', 36.1627, -86.7816);
+insert into address (id, street, city, country, postal_code, latitude, longitude) values (10, '707 Ash St', 'Greendale', 'USA', '01234', 43.0642, -87.9073);
+insert into address (id, street, city, country, postal_code, latitude, longitude) values (11, '808 Poplar Way', 'Fairview', 'USA', '11111', 34.0522, -118.2437);
+insert into address (id, street, city, country, postal_code, latitude, longitude) values (12, '909 Hickory Ct', 'Hillcrest', 'USA', '22222', 25.7617, -80.1918);
+insert into address (id, street, city, country, postal_code, latitude, longitude) values (13, '1010 Sycamore Pl', 'Valley View', 'USA', '33333', 32.7767, -96.7970);
+insert into address (id, street, city, country, postal_code, latitude, longitude) values (14, '1111 Dogwood Ave', 'Riverside', 'USA', '44444', 47.6062, -122.3321);
+insert into address (id, street, city, country, postal_code, latitude, longitude) values (15, '1212 Willow St', 'Lakeside', 'USA', '55555', 41.8781, -87.6298);
+insert into address (id, street, city, country, postal_code, latitude, longitude) values (16, '1313 Redwood Dr', 'Mountain View', 'USA', '66666', 37.3861, -122.0839);
+insert into address (id, street, city, country, postal_code, latitude, longitude) values (17, '1414 Spruce Ln', 'Oceanside', 'USA', '77777', 33.1959, -117.3795);
+insert into address (id, street, city, country, postal_code, latitude, longitude) values (18, '1515 Fir Ave', 'Desert Springs', 'USA', '88888', 33.4484, -112.0740);
+insert into address (id, street, city, country, postal_code, latitude, longitude) values (19, '1616 Juniper Rd', 'Forest Hills', 'USA', '99999', 35.2271, -80.8431);
+insert into address (id, street, city, country, postal_code, latitude, longitude) values (20, '1717 Cypress St', 'Garden City', 'USA', '00000', 40.7272, -73.6370);
 commit;
 
--- Insert into users
-insert into users (
-   id,
-   username,
-   password_hash,
-   email,
-   is_verified,
-   email_token,
-   token_expires,
-   address_id,
-   role,
-   created_at
-) values ( 1,
-           'john_doe',
-           'hashed_pass_john',
-           'john@example.com',
-           1,
-           null,
-           null,
-           1,
-           'user',
-           current_timestamp );
-insert into users (
-   id,
-   username,
-   password_hash,
-   email,
-   is_verified,
-   email_token,
-   token_expires,
-   address_id,
-   role,
-   created_at
-) values ( 2,
-           'jane_admin',
-           'hashed_pass_jane',
-           'jane@example.com',
-           1,
-           null,
-           null,
-           2,
-           'admin',
-           current_timestamp );
-insert into users (
-   id,
-   username,
-   password_hash,
-   email,
-   is_verified,
-   email_token,
-   token_expires,
-   address_id,
-   role,
-   created_at
-) values ( 3,
-           'alice_smith',
-           'hashed_pass_alice',
-           'alice@example.com',
-           0,
-           'token_alice_123',
-           current_timestamp + interval '1' day,
-           3,
-           'user',
-           current_timestamp );
-insert into users (
-   id,
-   username,
-   password_hash,
-   email,
-   is_verified,
-   email_token,
-   token_expires,
-   address_id,
-   role,
-   created_at
-) values ( 4,
-           'bob_williams',
-           'hashed_pass_bob',
-           'bob@example.com',
-           0,
-           'token_bob_456',
-           current_timestamp + interval '1' day,
-           4,
-           'admin',
-           current_timestamp );
-
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (1, 'john_doe', 'hashed_pass_john', 'john@example.com', 'John', 'Doe', '555-0101', 1, 1, 'user');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (2, 'jane_admin', 'hashed_pass_jane', 'jane@example.com', 'Jane', 'Smith', '555-0102', 1, 2, 'admin');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (3, 'alice_smith', 'hashed_pass_alice', 'alice@example.com', 'Alice', 'Johnson', '555-0103', 1, 3, 'user');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (4, 'bob_williams', 'hashed_pass_bob', 'bob@example.com', 'Bob', 'Williams', '555-0104', 1, 4, 'shelter');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (5, 'charlie_brown', 'hashed_pass_charlie', 'charlie@example.com', 'Charlie', 'Brown', '555-0105', 1, 5, 'user');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (6, 'diana_shelter', 'hashed_pass_diana', 'diana@example.com', 'Diana', 'Wilson', '555-0106', 1, 6, 'shelter');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (7, 'edward_jones', 'hashed_pass_edward', 'edward@example.com', 'Edward', 'Jones', '555-0107', 1, 7, 'user');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (8, 'fiona_admin', 'hashed_pass_fiona', 'fiona@example.com', 'Fiona', 'Davis', '555-0108', 1, 8, 'admin');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (9, 'george_user', 'hashed_pass_george', 'george@example.com', 'George', 'Miller', '555-0109', 1, 9, 'user');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (10, 'helen_shelter', 'hashed_pass_helen', 'helen@example.com', 'Helen', 'Garcia', '555-0110', 1, 10, 'shelter');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (11, 'ivan_user', 'hashed_pass_ivan', 'ivan@example.com', 'Ivan', 'Rodriguez', '555-0111', 1, 11, 'user');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (12, 'julia_user', 'hashed_pass_julia', 'julia@example.com', 'Julia', 'Martinez', '555-0112', 1, 12, 'user');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (13, 'kevin_shelter', 'hashed_pass_kevin', 'kevin@example.com', 'Kevin', 'Anderson', '555-0113', 1, 13, 'shelter');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (14, 'linda_user', 'hashed_pass_linda', 'linda@example.com', 'Linda', 'Taylor', '555-0114', 1, 14, 'user');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (15, 'mike_user', 'hashed_pass_mike', 'mike@example.com', 'Mike', 'Thomas', '555-0115', 1, 15, 'user');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (16, 'nancy_admin', 'hashed_pass_nancy', 'nancy@example.com', 'Nancy', 'Jackson', '555-0116', 1, 16, 'admin');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (17, 'oscar_user', 'hashed_pass_oscar', 'oscar@example.com', 'Oscar', 'White', '555-0117', 1, 17, 'user');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (18, 'paula_shelter', 'hashed_pass_paula', 'paula@example.com', 'Paula', 'Harris', '555-0118', 1, 18, 'shelter');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (19, 'quinn_user', 'hashed_pass_quinn', 'quinn@example.com', 'Quinn', 'Martin', '555-0119', 1, 19, 'user');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (20, 'rachel_user', 'hashed_pass_rachel', 'rachel@example.com', 'Rachel', 'Thompson', '555-0120', 1, 20, 'user');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (21, 'steve_user', 'hashed_pass_steve', 'steve@example.com', 'Steve', 'Lee', '555-0121', 0, 1, 'user');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (22, 'tina_user', 'hashed_pass_tina', 'tina@example.com', 'Tina', 'Walker', '555-0122', 0, 2, 'user');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (23, 'ursula_shelter', 'hashed_pass_ursula', 'ursula@example.com', 'Ursula', 'Hall', '555-0123', 1, 3, 'shelter');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (24, 'victor_user', 'hashed_pass_victor', 'victor@example.com', 'Victor', 'Allen', '555-0124', 1, 4, 'user');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (25, 'wendy_admin', 'hashed_pass_wendy', 'wendy@example.com', 'Wendy', 'Young', '555-0125', 1, 5, 'admin');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (26, 'xavier_user', 'hashed_pass_xavier', 'xavier@example.com', 'Xavier', 'Clark', '555-0126', 1, 6, 'user');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (27, 'yvonne_shelter', 'hashed_pass_yvonne', 'yvonne@example.com', 'Yvonne', 'Lewis', '555-0127', 1, 7, 'shelter');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (28, 'zach_user', 'hashed_pass_zach', 'zach@example.com', 'Zach', 'Turner', '555-0128', 1, 8, 'user');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (29, 'amanda_admin', 'hashed_pass_amanda', 'amanda@example.com', 'Amanda', 'Baker', '555-0129', 1, 9, 'admin');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role) values (30, 'ben_shelter', 'hashed_pass_ben', 'ben@example.com', 'Ben', 'Cooper', '555-0130', 1, 10, 'shelter');
 commit;
 
--- Insert into animals
-insert into animals (
-   id,
-   name,
-   species,
-   health_status,
-   description,
-   address_id,
-   relation_with_others,
-   created_at
-) values ( 1,
-           'Buddy',
-           'Dog',
-           'Healthy',
-           'Friendly golden retriever.',
-           1,
-           'Good with other pets',
-           current_timestamp );
-insert into animals (
-   id,
-   name,
-   species,
-   health_status,
-   description,
-   address_id,
-   relation_with_others,
-   created_at
-) values ( 2,
-           'Whiskers',
-           'Cat',
-           'Needs medication',
-           'Calm senior cat.',
-           2,
-           'Prefers to be alone',
-           current_timestamp );
-insert into animals (
-   id,
-   name,
-   species,
-   health_status,
-   description,
-   address_id,
-   relation_with_others,
-   created_at
-) values ( 3,
-           'Bella',
-           'Dog',
-           'Healthy',
-           'Energetic bulldog.',
-           3,
-           'Loves to play fetch',
-           current_timestamp );
-insert into animals (
-   id,
-   name,
-   species,
-   health_status,
-   description,
-   address_id,
-   relation_with_others,
-   created_at
-) values ( 4,
-           'Mittens',
-           'Cat',
-           'Needs Medication',
-           'Shy black cat.',
-           4,
-           'Likes quiet places',
-           current_timestamp );
-
+insert into tags (id, name) values (1, 'Friendly');
+insert into tags (id, name) values (2, 'Senior');
+insert into tags (id, name) values (3, 'Needs Medication');
+insert into tags (id, name) values (4, 'Energetic');
+insert into tags (id, name) values (5, 'Shy');
+insert into tags (id, name) values (6, 'Loves Fetch');
+insert into tags (id, name) values (7, 'Good with Kids');
+insert into tags (id, name) values (8, 'Good with Cats');
+insert into tags (id, name) values (9, 'Good with Dogs');
+insert into tags (id, name) values (10, 'House Trained');
+insert into tags (id, name) values (11, 'Playful');
+insert into tags (id, name) values (12, 'Calm');
+insert into tags (id, name) values (13, 'Special Needs');
+insert into tags (id, name) values (14, 'Large Size');
+insert into tags (id, name) values (15, 'Small Size');
 commit;
 
--- Insert into tags
-insert into tags (
-   id,
-   name
-) values ( 1,
-           'Friendly' );
-insert into tags (
-   id,
-   name
-) values ( 2,
-           'Senior' );
-insert into tags (
-   id,
-   name
-) values ( 3,
-           'Needs Medication' );
-insert into tags (
-   id,
-   name
-) values ( 4,
-           'Energetic' );
-insert into tags (
-   id,
-   name
-) values ( 5,
-           'Shy' );
-insert into tags (
-   id,
-   name
-) values ( 6,
-           'Loves Fetch' );
-
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (1, 'Buddy', 'Dog', 'Golden Retriever', 3.5, 'male', 'large', 30.5, 'Golden', 'Healthy', 'Friendly golden retriever who loves fetch and swimming.', 'available', 250.00, 1, 4, 'Good with other pets');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (2, 'Whiskers', 'Cat', 'Persian', 8.0, 'female', 'medium', 4.2, 'White', 'Needs medication', 'Calm senior cat who loves quiet spaces.', 'available', 150.00, 2, 6, 'Prefers to be alone');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (3, 'Bella', 'Dog', 'Bulldog', 2.0, 'female', 'medium', 20.0, 'Brindle', 'Healthy', 'Energetic bulldog who loves to play.', 'available', 300.00, 3, 10, 'Loves to play fetch');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (4, 'Mittens', 'Cat', 'Domestic Shorthair', 1.5, 'male', 'small', 3.8, 'Black', 'Healthy', 'Shy black cat who likes quiet places.', 'pending', 100.00, 4, 13, 'Likes quiet places');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (5, 'Max', 'Dog', 'Labrador', 4.0, 'male', 'large', 32.0, 'Chocolate', 'Healthy', 'Active lab who loves running and swimming.', 'available', 275.00, 5, 18, 'Great with children');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (6, 'Luna', 'Cat', 'Siamese', 3.0, 'female', 'medium', 4.5, 'Seal Point', 'Healthy', 'Vocal and social Siamese cat.', 'available', 180.00, 6, 23, 'Very social');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (7, 'Rocky', 'Dog', 'German Shepherd', 5.0, 'male', 'large', 35.0, 'Black and Tan', 'Healthy', 'Loyal and protective German Shepherd.', 'available', 350.00, 7, 4, 'Good guard dog');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (8, 'Princess', 'Cat', 'Maine Coon', 6.0, 'female', 'large', 6.5, 'Tabby', 'Healthy', 'Large, gentle Maine Coon cat.', 'available', 200.00, 8, 6, 'Gentle giant');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (9, 'Charlie', 'Dog', 'Beagle', 2.5, 'male', 'medium', 15.0, 'Tri-color', 'Healthy', 'Curious beagle with lots of energy.', 'adopted', 225.00, 9, 10, 'Good with other dogs');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (10, 'Shadow', 'Cat', 'Russian Blue', 4.0, 'male', 'medium', 5.0, 'Blue-Gray', 'Healthy', 'Quiet and reserved Russian Blue.', 'available', 190.00, 10, 13, 'Independent');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (11, 'Daisy', 'Dog', 'Poodle', 1.0, 'female', 'small', 8.0, 'White', 'Healthy', 'Smart and hypoallergenic poodle puppy.', 'available', 400.00, 11, 18, 'Very intelligent');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (12, 'Smokey', 'Cat', 'British Shorthair', 7.0, 'male', 'medium', 5.8, 'Gray', 'Needs medication', 'Senior cat with arthritis.', 'available', 120.00, 12, 23, 'Calm and gentle');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (13, 'Thor', 'Dog', 'Rottweiler', 3.0, 'male', 'large', 45.0, 'Black and Tan', 'Healthy', 'Strong but gentle Rottweiler.', 'available', 320.00, 13, 4, 'Protective');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (14, 'Ginger', 'Cat', 'Orange Tabby', 2.0, 'female', 'medium', 4.0, 'Orange', 'Healthy', 'Playful orange tabby cat.', 'available', 160.00, 14, 6, 'Very playful');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (15, 'Rex', 'Dog', 'Border Collie', 6.0, 'male', 'medium', 22.0, 'Black and White', 'Healthy', 'Highly intelligent Border Collie.', 'available', 280.00, 15, 10, 'Needs mental stimulation');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (16, 'Cleo', 'Cat', 'Egyptian Mau', 3.5, 'female', 'medium', 4.3, 'Silver', 'Healthy', 'Active and spotted Egyptian Mau.', 'available', 220.00, 16, 13, 'Very active');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (17, 'Bear', 'Dog', 'Newfoundland', 4.5, 'male', 'large', 55.0, 'Black', 'Healthy', 'Gentle giant Newfoundland dog.', 'available', 380.00, 17, 18, 'Excellent with kids');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (18, 'Patches', 'Cat', 'Calico', 5.0, 'female', 'medium', 4.7, 'Calico', 'Healthy', 'Beautiful calico with unique markings.', 'pending', 170.00, 18, 23, 'Friendly');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (19, 'Duke', 'Dog', 'Great Dane', 2.0, 'male', 'large', 50.0, 'Fawn', 'Healthy', 'Young Great Dane with gentle temperament.', 'available', 450.00, 19, 4, 'Gentle giant');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (20, 'Misty', 'Cat', 'Ragdoll', 1.5, 'female', 'medium', 3.5, 'Blue Point', 'Healthy', 'Docile and affectionate Ragdoll kitten.', 'available', 250.00, 20, 6, 'Very affectionate');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (21, 'Scout', 'Dog', 'Australian Shepherd', 3.0, 'male', 'medium', 25.0, 'Blue Merle', 'Healthy', 'Energetic herding dog.', 'available', 290.00, 1, 10, 'High energy');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (22, 'Snowball', 'Cat', 'Turkish Angora', 4.0, 'female', 'medium', 4.1, 'White', 'Healthy', 'Elegant white Turkish Angora.', 'available', 210.00, 2, 13, 'Elegant');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (23, 'Buster', 'Dog', 'Jack Russell Terrier', 5.0, 'male', 'small', 12.0, 'White and Brown', 'Healthy', 'Energetic and fearless terrier.', 'available', 240.00, 3, 18, 'Fearless');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (24, 'Olive', 'Cat', 'Abyssinian', 2.5, 'female', 'medium', 3.9, 'Ruddy', 'Healthy', 'Active and curious Abyssinian.', 'available', 230.00, 4, 23, 'Very curious');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (25, 'Titan', 'Dog', 'Mastiff', 6.0, 'male', 'large', 70.0, 'Fawn', 'Needs medication', 'Large mastiff with hip issues.', 'available', 200.00, 5, 4, 'Gentle despite size');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (26, 'Willow', 'Cat', 'Norwegian Forest Cat', 3.0, 'female', 'large', 6.0, 'Brown Tabby', 'Healthy', 'Hardy Norwegian Forest Cat.', 'available', 195.00, 6, 6, 'Independent');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (27, 'Ace', 'Dog', 'Husky', 2.0, 'male', 'large', 28.0, 'Black and White', 'Healthy', 'Energetic Siberian Husky.', 'available', 310.00, 7, 10, 'Needs lots of exercise');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (28, 'Duchess', 'Cat', 'Scottish Fold', 4.5, 'female', 'medium', 4.4, 'Silver Tabby', 'Healthy', 'Sweet Scottish Fold with folded ears.', 'available', 240.00, 8, 13, 'Very sweet');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (29, 'Storm', 'Dog', 'Weimaraner', 3.5, 'male', 'large', 33.0, 'Silver Gray', 'Healthy', 'Athletic Weimaraner hunting dog.', 'available', 330.00, 9, 18, 'Athletic');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (30, 'Pearl', 'Cat', 'Birman', 2.0, 'female', 'medium', 4.2, 'Seal Point', 'Healthy', 'Beautiful Birman with blue eyes.', 'available', 260.00, 10, 23, 'Beautiful');
 commit;
 
--- Insert into adoptions
-insert into adoptions (
-   id,
-   user_id,
-   animal_id,
-   request_date,
-   adoption_date,
-   status
-) values ( 1,
-           1,
-           1,
-           current_timestamp,
-           null,
-           'open' );
-insert into adoptions (
-   id,
-   user_id,
-   animal_id,
-   request_date,
-   adoption_date,
-   status
-) values ( 2,
-           2,
-           2,
-           current_timestamp,
-           current_timestamp,
-           'completed' );
-insert into adoptions (
-   id,
-   user_id,
-   animal_id,
-   request_date,
-   adoption_date,
-   status
-) values ( 3,
-           3,
-           3,
-           current_timestamp,
-           null,
-           'open' );
-insert into adoptions (
-   id,
-   user_id,
-   animal_id,
-   request_date,
-   adoption_date,
-   status
-) values ( 4,
-           4,
-           4,
-           current_timestamp,
-           current_timestamp,
-           'completed' );
-
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (1, 3, 45, 1, null);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (2, 2, 38, 1, 7);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (3, 4, 52, 1, null);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (4, 1, 23, 1, null);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (5, 5, 67, 1, null);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (6, 2, 41, 0, null);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (7, 3, 56, 1, null);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (8, 2, 34, 1, null);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (9, 4, 78, 1, 12);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (10, 1, 29, 1, null);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (11, 3, 48, 1, null);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (12, 2, 33, 1, null);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (13, 2, 44, 1, 18);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (14, 1, 27, 1, null);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (15, 3, 51, 1, null);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (16, 1, 31, 1, null);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (17, 4, 65, 1, 25);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (18, 2, 39, 1, null);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (19, 3, 58, 1, null);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (20, 2, 42, 1, null);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (21, 1, 26, 0, null);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (22, 1, 35, 0, null);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (23, 2, 47, 0, null);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (24, 1, 24, 0, null);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (25, 2, 36, 0, null);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (26, 1, 28, 0, null);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (27, 1, 32, 0, null);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (28, 1, 30, 0, null);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (29, 1, 37, 0, null);
+insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (30, 2, 43, 0, null);
 commit;
 
--- Insert into favorites
-insert into favorites (
-   user_id,
-   animal_id,
-   favorited_at
-) values ( 1,
-           2,
-           current_timestamp );
-insert into favorites (
-   user_id,
-   animal_id,
-   favorited_at
-) values ( 2,
-           1,
-           current_timestamp );
-insert into favorites (
-   user_id,
-   animal_id,
-   favorited_at
-) values ( 3,
-           4,
-           current_timestamp );
-insert into favorites (
-   user_id,
-   animal_id,
-   favorited_at
-) values ( 4,
-           3,
-           current_timestamp );
-
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (1, 1, 1, current_timestamp - 5, null, 'pending');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (2, 2, 2, current_timestamp - 10, current_timestamp - 3, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (3, 3, 3, current_timestamp - 7, null, 'approved');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (4, 5, 4, current_timestamp - 12, null, 'pending');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (5, 7, 9, current_timestamp - 15, current_timestamp - 8, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (6, 9, 5, current_timestamp - 3, null, 'open');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (7, 11, 6, current_timestamp - 6, null, 'rejected');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (8, 12, 18, current_timestamp - 4, null, 'approved');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (9, 14, 7, current_timestamp - 8, null, 'pending');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (10, 15, 8, current_timestamp - 2, null, 'open');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (11, 17, 10, current_timestamp - 9, null, 'pending');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (12, 19, 11, current_timestamp - 11, null, 'approved');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (13, 20, 12, current_timestamp - 1, null, 'open');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (14, 21, 13, current_timestamp - 13, current_timestamp - 6, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (15, 22, 14, current_timestamp - 14, null, 'rejected');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (16, 24, 15, current_timestamp - 16, null, 'pending');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (17, 1, 16, current_timestamp - 17, null, 'open');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (18, 3, 17, current_timestamp - 18, current_timestamp - 11, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (19, 7, 19, current_timestamp - 19, null, 'approved');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (20, 9, 20, current_timestamp - 20, null, 'pending');
 commit;
 
--- Insert into care_schedule
-insert into care_schedule (
-   id,
-   animal_id,
-   activity,
-   hour,
-   frequency
-) values ( 1,
-           1,
-           'Feeding',
-           '08:00',
-           'Daily' );
-insert into care_schedule (
-   id,
-   animal_id,
-   activity,
-   hour,
-   frequency
-) values ( 2,
-           2,
-           'Vet Visit',
-           '14:00',
-           'Weekly' );
-insert into care_schedule (
-   id,
-   animal_id,
-   activity,
-   hour,
-   frequency
-) values ( 3,
-           3,
-           'Feeding',
-           '09:00',
-           'Daily' );
-insert into care_schedule (
-   id,
-   animal_id,
-   activity,
-   hour,
-   frequency
-) values ( 4,
-           4,
-           'Vet Visit',
-           '10:00',
-           'Monthly' );
-
+insert into favorites (user_id, animal_id, favorited_at) values (1, 2, current_timestamp - 10);
+insert into favorites (user_id, animal_id, favorited_at) values (1, 5, current_timestamp - 8);
+insert into favorites (user_id, animal_id, favorited_at) values (1, 8, current_timestamp - 6);
+insert into favorites (user_id, animal_id, favorited_at) values (2, 1, current_timestamp - 9);
+insert into favorites (user_id, animal_id, favorited_at) values (2, 7, current_timestamp - 7);
+insert into favorites (user_id, animal_id, favorited_at) values (2, 12, current_timestamp - 5);
+insert into favorites (user_id, animal_id, favorited_at) values (3, 4, current_timestamp - 11);
+insert into favorites (user_id, animal_id, favorited_at) values (3, 9, current_timestamp - 9);
+insert into favorites (user_id, animal_id, favorited_at) values (3, 14, current_timestamp - 4);
+insert into favorites (user_id, animal_id, favorited_at) values (5, 3, current_timestamp - 12);
+insert into favorites (user_id, animal_id, favorited_at) values (5, 6, current_timestamp - 10);
+insert into favorites (user_id, animal_id, favorited_at) values (5, 11, current_timestamp - 3);
+insert into favorites (user_id, animal_id, favorited_at) values (7, 10, current_timestamp - 8);
+insert into favorites (user_id, animal_id, favorited_at) values (7, 15, current_timestamp - 6);
+insert into favorites (user_id, animal_id, favorited_at) values (7, 20, current_timestamp - 2);
+insert into favorites (user_id, animal_id, favorited_at) values (9, 13, current_timestamp - 7);
+insert into favorites (user_id, animal_id, favorited_at) values (9, 16, current_timestamp - 5);
+insert into favorites (user_id, animal_id, favorited_at) values (9, 21, current_timestamp - 1);
+insert into favorites (user_id, animal_id, favorited_at) values (11, 17, current_timestamp - 6);
+insert into favorites (user_id, animal_id, favorited_at) values (11, 22, current_timestamp - 4);
+insert into favorites (user_id, animal_id, favorited_at) values (11, 25, current_timestamp - 2);
+insert into favorites (user_id, animal_id, favorited_at) values (12, 18, current_timestamp - 5);
+insert into favorites (user_id, animal_id, favorited_at) values (12, 23, current_timestamp - 3);
+insert into favorites (user_id, animal_id, favorited_at) values (12, 26, current_timestamp - 1);
+insert into favorites (user_id, animal_id, favorited_at) values (14, 19, current_timestamp - 4);
+insert into favorites (user_id, animal_id, favorited_at) values (14, 24, current_timestamp - 2);
+insert into favorites (user_id, animal_id, favorited_at) values (14, 27, current_timestamp);
+insert into favorites (user_id, animal_id, favorited_at) values (15, 1, current_timestamp - 3);
+insert into favorites (user_id, animal_id, favorited_at) values (15, 28, current_timestamp - 1);
+insert into favorites (user_id, animal_id, favorited_at) values (17, 29, current_timestamp);
+insert into favorites (user_id, animal_id, favorited_at) values (19, 2, current_timestamp - 2);
+insert into favorites (user_id, animal_id, favorited_at) values (19, 30, current_timestamp);
+insert into favorites (user_id, animal_id, favorited_at) values (20, 3, current_timestamp - 1);
+insert into favorites (user_id, animal_id, favorited_at) values (21, 4, current_timestamp);
+insert into favorites (user_id, animal_id, favorited_at) values (22, 5, current_timestamp - 1);
+insert into favorites (user_id, animal_id, favorited_at) values (24, 6, current_timestamp);
+insert into favorites (user_id, animal_id, favorited_at) values (1, 15, current_timestamp - 2);
+insert into favorites (user_id, animal_id, favorited_at) values (2, 25, current_timestamp - 1);
+insert into favorites (user_id, animal_id, favorited_at) values (3, 30, current_timestamp);
+insert into favorites (user_id, animal_id, favorited_at) values (5, 22, current_timestamp - 1);
 commit;
 
--- Insert into care_resources
-insert into care_resources (
-   id,
-   animal_id,
-   resource_type,
-   title,
-   content
-) values ( 1,
-           1,
-           'Guide',
-           'Feeding Tips',
-           'Feed twice daily with dog food.' );
-insert into care_resources (
-   id,
-   animal_id,
-   resource_type,
-   title,
-   content
-) values ( 2,
-           2,
-           'Video',
-           'How to Give Pills',
-           'Instructional video on giving medication.' );
-insert into care_resources (
-   id,
-   animal_id,
-   resource_type,
-   title,
-   content
-) values ( 3,
-           3,
-           'Guide',
-           'Exercise Tips',
-           'Walk bulldog three times a week.' );
-insert into care_resources (
-   id,
-   animal_id,
-   resource_type,
-   title,
-   content
-) values ( 4,
-           4,
-           'Video',
-           'Cat Grooming',
-           'Instructions on grooming a cat.' );
-
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (1, 1, 'Feeding', '08:00', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (2, 1, 'Walk', '07:00', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (3, 1, 'Grooming', '15:00', 'Weekly');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (4, 2, 'Feeding', '07:30', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (5, 2, 'Medication', '19:00', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (6, 2, 'Vet Check', '10:00', 'Monthly');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (7, 3, 'Feeding', '09:00', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (8, 3, 'Exercise', '16:00', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (9, 3, 'Training', '14:00', 'Weekly');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (10, 4, 'Feeding', '08:30', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (11, 4, 'Playtime', '18:00', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (12, 4, 'Litter Box', '20:00', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (13, 5, 'Feeding', '07:00', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (14, 5, 'Swimming', '15:00', 'Weekly');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (15, 5, 'Vet Check', '11:00', 'Quarterly');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (16, 6, 'Feeding', '08:00', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (17, 6, 'Grooming', '16:00', 'Weekly');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (18, 6, 'Play', '19:00', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (19, 7, 'Feeding', '07:30', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (20, 7, 'Training', '17:00', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (21, 7, 'Exercise', '06:00', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (22, 8, 'Feeding', '09:00', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (23, 8, 'Brushing', '20:00', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (24, 8, 'Vet Check', '14:00', 'Bi-Annual');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (25, 9, 'Feeding', '08:30', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (26, 9, 'Walk', '18:00', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (27, 9, 'Socialization', '15:00', 'Weekly');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (28, 10, 'Feeding', '07:45', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (29, 10, 'Quiet Time', '21:00', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (30, 10, 'Health Check', '12:00', 'Monthly');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (31, 11, 'Feeding', '08:15', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (32, 11, 'Training', '16:30', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (33, 11, 'Grooming', '13:00', 'Weekly');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (34, 12, 'Feeding', '09:30', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (35, 12, 'Medication', '18:30', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (36, 12, 'Gentle Exercise', '14:30', 'Weekly');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (37, 13, 'Feeding', '07:15', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (38, 13, 'Guard Training', '17:30', 'Weekly');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (39, 13, 'Exercise', '06:30', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (40, 14, 'Feeding', '08:45', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (41, 14, 'Interactive Play', '19:30', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (42, 14, 'Climbing', '15:30', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (43, 15, 'Feeding', '07:00', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (44, 15, 'Mental Stimulation', '16:00', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (45, 15, 'Agility', '14:00', 'Weekly');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (46, 16, 'Feeding', '08:00', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (47, 16, 'Active Play', '17:00', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (48, 16, 'Climbing', '19:00', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (49, 17, 'Feeding', '09:00', 'Daily');
+insert into care_schedule (id, animal_id, activity, hour, frequency) values (50, 17, 'Swimming', '16:00', 'Weekly');
 commit;
 
--- Insert into medical_history
-insert into medical_history (
-   id,
-   animal_id,
-   description,
-   record_date
-) values ( 1,
-           2,
-           'Kidney issues, requires special diet.',
-           current_timestamp );
-insert into medical_history (
-   id,
-   animal_id,
-   description,
-   record_date
-) values ( 2,
-           3,
-           'Has arthritis, needs joint supplements.',
-           current_timestamp );
-insert into medical_history (
-   id,
-   animal_id,
-   description,
-   record_date
-) values ( 3,
-           4,
-           'Has a sensitive stomach, needs special food.',
-           current_timestamp );
-
+insert into care_resources (id, animal_id, resource_type, title, content) values (1, 1, 'Guide', 'Golden Retriever Care', 'Complete guide for caring for golden retrievers including diet, exercise, and grooming.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (2, 2, 'Video', 'Senior Cat Medication', 'Step-by-step video on administering medication to senior cats.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (3, 3, 'Guide', 'Bulldog Exercise Tips', 'Safe exercise routines for bulldogs to prevent overheating.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (4, 4, 'Article', 'Socializing Shy Cats', 'Techniques for helping shy cats become more confident.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (5, 5, 'Video', 'Lab Swimming Safety', 'Water safety tips for Labrador retrievers.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (6, 6, 'Guide', 'Siamese Cat Vocalization', 'Understanding and managing Siamese cat communication.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (7, 7, 'Article', 'German Shepherd Training', 'Advanced training techniques for German Shepherds.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (8, 8, 'Guide', 'Maine Coon Grooming', 'Long-hair cat grooming essentials for Maine Coons.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (9, 9, 'Video', 'Beagle Nose Work', 'Engaging activities for scent-driven beagles.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (10, 10, 'Article', 'Russian Blue Temperament', 'Understanding the quiet nature of Russian Blues.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (11, 11, 'Guide', 'Poodle Intelligence Training', 'Mental stimulation activities for intelligent poodles.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (12, 12, 'Video', 'Arthritis Care for Cats', 'Managing arthritis in senior cats.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (13, 13, 'Article', 'Rottweiler Socialization', 'Proper socialization techniques for Rottweilers.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (14, 14, 'Guide', 'Orange Tabby Behavior', 'Understanding the playful nature of orange tabbies.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (15, 15, 'Video', 'Border Collie Mental Stimulation', 'Advanced puzzle games for Border Collies.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (16, 16, 'Article', 'Egyptian Mau Exercise', 'High-energy activities for Egyptian Maus.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (17, 17, 'Guide', 'Newfoundland Water Rescue', 'Training Newfoundlands for water activities.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (18, 18, 'Video', 'Calico Cat Genetics', 'Understanding calico cat color genetics.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (19, 19, 'Article', 'Great Dane Puppy Care', 'Special considerations for giant breed puppies.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (20, 20, 'Guide', 'Ragdoll Handling', 'Proper techniques for handling docile Ragdolls.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (21, 21, 'Video', 'Australian Shepherd Herding', 'Channel herding instincts in domestic settings.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (22, 22, 'Article', 'Turkish Angora History', 'The elegant history of Turkish Angora cats.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (23, 23, 'Guide', 'Jack Russell Energy Management', 'Keeping high-energy terriers happy.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (24, 24, 'Video', 'Abyssinian Climbing', 'Safe climbing setups for active Abyssinians.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (25, 25, 'Article', 'Mastiff Joint Care', 'Managing joint health in giant breeds.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (26, 26, 'Guide', 'Norwegian Forest Cat Care', 'Caring for hardy Norwegian Forest Cats.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (27, 27, 'Video', 'Husky Exercise Needs', 'Meeting the high exercise needs of Huskies.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (28, 28, 'Article', 'Scottish Fold Health', 'Health considerations for Scottish Folds.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (29, 29, 'Guide', 'Weimaraner Training', 'Training athletic hunting dogs.');
+insert into care_resources (id, animal_id, resource_type, title, content) values (30, 30, 'Video', 'Birman Grooming', 'Grooming beautiful Birman cats.');
 commit;
 
--- Insert into media
-insert into media (
-   id,
-   animal_id,
-   type,
-   file_path
-) values ( 1,
-           1,
-           'image',
-           '/images/profile/1.jpg' );
-insert into media (
-   id,
-   animal_id,
-   type,
-   file_path
-) values ( 2,
-           2,
-           'video',
-           '/images/profile/2.jpg' );
-insert into media (
-   id,
-   animal_id,
-   type,
-   file_path
-) values ( 3,
-           3,
-           'image',
-           '/images/profile/3.jpg' );
-insert into media (
-   id,
-   animal_id,
-   type,
-   file_path
-) values ( 4,
-           4,
-           'video',
-           '/images/profile/4.jpg' );
-
+insert into medical_history (id, animal_id, description, record_date) values (1, 2, 'Diagnosed with kidney disease. Requires prescription diet and daily medication.', current_timestamp - 30);
+insert into medical_history (id, animal_id, description, record_date) values (2, 3, 'Spayed at 6 months. Recovery was excellent.', current_timestamp - 365);
+insert into medical_history (id, animal_id, description, record_date) values (3, 4, 'Neutered at 8 months. No complications.', current_timestamp - 200);
+insert into medical_history (id, animal_id, description, record_date) values (4, 5, 'Vaccinated against rabies, DHPP. All current.', current_timestamp - 90);
+insert into medical_history (id, animal_id, description, record_date) values (5, 6, 'Dental cleaning performed. Two teeth extracted.', current_timestamp - 60);
+insert into medical_history (id, animal_id, description, record_date) values (6, 7, 'Hip x-rays show no signs of dysplasia.', current_timestamp - 120);
+insert into medical_history (id, animal_id, description, record_date) values (7, 8, 'Annual checkup. All vitals normal.', current_timestamp - 180);
+insert into medical_history (id, animal_id, description, record_date) values (8, 9, 'Microchipped for identification.', current_timestamp - 150);
+insert into medical_history (id, animal_id, description, record_date) values (9, 10, 'Treated for upper respiratory infection. Fully recovered.', current_timestamp - 45);
+insert into medical_history (id, animal_id, description, record_date) values (10, 11, 'Puppy vaccinations completed on schedule.', current_timestamp - 75);
+insert into medical_history (id, animal_id, description, record_date) values (11, 12, 'Arthritis diagnosis. Started on joint supplements.', current_timestamp - 100);
+insert into medical_history (id, animal_id, description, record_date) values (12, 13, 'Obedience training completed successfully.', current_timestamp - 250);
+insert into medical_history (id, animal_id, description, record_date) values (13, 14, 'Spayed at 1 year. Quick recovery.', current_timestamp - 180);
+insert into medical_history (id, animal_id, description, record_date) values (14, 15, 'Eye examination shows no hereditary issues.', current_timestamp - 90);
+insert into medical_history (id, animal_id, description, record_date) values (15, 16, 'Treated for minor skin irritation. Resolved.', current_timestamp - 30);
+insert into medical_history (id, animal_id, description, record_date) values (16, 17, 'Heart examination shows strong cardiac health.', current_timestamp - 120);
+insert into medical_history (id, animal_id, description, record_date) values (17, 18, 'Annual vaccinations updated.', current_timestamp - 60);
+insert into medical_history (id, animal_id, description, record_date) values (18, 19, 'Growth plates monitored due to giant breed status.', current_timestamp - 45);
+insert into medical_history (id, animal_id, description, record_date) values (19, 20, 'Initial kitten vaccinations completed.', current_timestamp - 90);
+insert into medical_history (id, animal_id, description, record_date) values (20, 21, 'Treated for minor ear infection. Fully healed.', current_timestamp - 75);
+insert into medical_history (id, animal_id, description, record_date) values (21, 22, 'Grooming appointment for matted fur. Resolved.', current_timestamp - 40);
+insert into medical_history (id, animal_id, description, record_date) values (22, 23, 'Neutered at 1 year. No complications.', current_timestamp - 200);
+insert into medical_history (id, animal_id, description, record_date) values (23, 24, 'Annual blood work shows excellent health.', current_timestamp - 110);
+insert into medical_history (id, animal_id, description, record_date) values (24, 25, 'Hip dysplasia management plan established.', current_timestamp - 80);
+insert into medical_history (id, animal_id, description, record_date) values (25, 26, 'Treated for parasites. Clean bill of health.', current_timestamp - 50);
 commit;
 
--- Insert into animal_tags
-insert into animal_tags (
-   animal_id,
-   tag_id
-) values ( 1,
-           1 );
-insert into animal_tags (
-   animal_id,
-   tag_id
-) values ( 2,
-           2 );
-insert into animal_tags (
-   animal_id,
-   tag_id
-) values ( 2,
-           3 );
-insert into animal_tags (
-   animal_id,
-   tag_id
-) values ( 3,
-           4 );
-insert into animal_tags (
-   animal_id,
-   tag_id
-) values ( 4,
-           5 );
-insert into animal_tags (
-   animal_id,
-   tag_id
-) values ( 4,
-           3 );
-
+insert into media (id, animal_id, type, file_path) values (1, 1, 'image', '/images/animals/buddy_1.jpg');
+insert into media (id, animal_id, type, file_path) values (2, 1, 'image', '/images/animals/buddy_2.jpg');
+insert into media (id, animal_id, type, file_path) values (3, 1, 'video', '/videos/animals/buddy_playing.mp4');
+insert into media (id, animal_id, type, file_path) values (4, 2, 'image', '/images/animals/whiskers_1.jpg');
+insert into media (id, animal_id, type, file_path) values (5, 2, 'image', '/images/animals/whiskers_2.jpg');
+insert into media (id, animal_id, type, file_path) values (6, 3, 'image', '/images/animals/bella_1.jpg');
+insert into media (id, animal_id, type, file_path) values (7, 3, 'video', '/videos/animals/bella_exercise.mp4');
+insert into media (id, animal_id, type, file_path) values (8, 4, 'image', '/images/animals/mittens_1.jpg');
+insert into media (id, animal_id, type, file_path) values (9, 4, 'image', '/images/animals/mittens_2.jpg');
+insert into media (id, animal_id, type, file_path) values (10, 5, 'image', '/images/animals/max_1.jpg');
+insert into media (id, animal_id, type, file_path) values (11, 5, 'image', '/images/animals/max_2.jpg');
+insert into media (id, animal_id, type, file_path) values (12, 5, 'video', '/videos/animals/max_swimming.mp4');
+insert into media (id, animal_id, type, file_path) values (13, 6, 'image', '/images/animals/luna_1.jpg');
+insert into media (id, animal_id, type, file_path) values (14, 6, 'video', '/videos/animals/luna_talking.mp4');
+insert into media (id, animal_id, type, file_path) values (15, 7, 'image', '/images/animals/rocky_1.jpg');
+insert into media (id, animal_id, type, file_path) values (16, 7, 'image', '/images/animals/rocky_2.jpg');
+insert into media (id, animal_id, type, file_path) values (17, 8, 'image', '/images/animals/princess_1.jpg');
+insert into media (id, animal_id, type, file_path) values (18, 8, 'image', '/images/animals/princess_2.jpg');
+insert into media (id, animal_id, type, file_path) values (19, 9, 'image', '/images/animals/charlie_1.jpg');
+insert into media (id, animal_id, type, file_path) values (20, 9, 'video', '/videos/animals/charlie_sniffing.mp4');
+insert into media (id, animal_id, type, file_path) values (21, 10, 'image', '/images/animals/shadow_1.jpg');
+insert into media (id, animal_id, type, file_path) values (22, 10, 'image', '/images/animals/shadow_2.jpg');
+insert into media (id, animal_id, type, file_path) values (23, 11, 'image', '/images/animals/daisy_1.jpg');
+insert into media (id, animal_id, type, file_path) values (24, 11, 'video', '/videos/animals/daisy_tricks.mp4');
+insert into media (id, animal_id, type, file_path) values (25, 12, 'image', '/images/animals/smokey_1.jpg');
+insert into media (id, animal_id, type, file_path) values (26, 12, 'image', '/images/animals/smokey_2.jpg');
+insert into media (id, animal_id, type, file_path) values (27, 13, 'image', '/images/animals/thor_1.jpg');
+insert into media (id, animal_id, type, file_path) values (28, 13, 'image', '/images/animals/thor_2.jpg');
+insert into media (id, animal_id, type, file_path) values (29, 14, 'image', '/images/animals/ginger_1.jpg');
+insert into media (id, animal_id, type, file_path) values (30, 14, 'video', '/videos/animals/ginger_playing.mp4');
+insert into media (id, animal_id, type, file_path) values (31, 15, 'image', '/images/animals/rex_1.jpg');
+insert into media (id, animal_id, type, file_path) values (32, 15, 'video', '/videos/animals/rex_agility.mp4');
+insert into media (id, animal_id, type, file_path) values (33, 16, 'image', '/images/animals/cleo_1.jpg');
+insert into media (id, animal_id, type, file_path) values (34, 16, 'image', '/images/animals/cleo_2.jpg');
+insert into media (id, animal_id, type, file_path) values (35, 17, 'image', '/images/animals/bear_1.jpg');
+insert into media (id, animal_id, type, file_path) values (36, 17, 'video', '/videos/animals/bear_swimming.mp4');
+insert into media (id, animal_id, type, file_path) values (37, 18, 'image', '/images/animals/patches_1.jpg');
+insert into media (id, animal_id, type, file_path) values (38, 18, 'image', '/images/animals/patches_2.jpg');
+insert into media (id, animal_id, type, file_path) values (39, 19, 'image', '/images/animals/duke_1.jpg');
+insert into media (id, animal_id, type, file_path) values (40, 19, 'image', '/images/animals/duke_2.jpg');
+insert into media (id, animal_id, type, file_path) values (41, 20, 'image', '/images/animals/misty_1.jpg');
+insert into media (id, animal_id, type, file_path) values (42, 20, 'video', '/videos/animals/misty_cuddling.mp4');
+insert into media (id, animal_id, type, file_path) values (43, 21, 'image', '/images/animals/scout_1.jpg');
+insert into media (id, animal_id, type, file_path) values (44, 21, 'video', '/videos/animals/scout_herding.mp4');
+insert into media (id, animal_id, type, file_path) values (45, 22, 'image', '/images/animals/snowball_1.jpg');
+insert into media (id, animal_id, type, file_path) values (46, 22, 'image', '/images/animals/snowball_2.jpg');
+insert into media (id, animal_id, type, file_path) values (47, 23, 'image', '/images/animals/buster_1.jpg');
+insert into media (id, animal_id, type, file_path) values (48, 23, 'video', '/videos/animals/buster_energy.mp4');
+insert into media (id, animal_id, type, file_path) values (49, 24, 'image', '/images/animals/olive_1.jpg');
+insert into media (id, animal_id, type, file_path) values (50, 24, 'image', '/images/animals/olive_2.jpg');
+insert into media (id, animal_id, type, file_path) values (51, 25, 'image', '/images/animals/titan_1.jpg');
+insert into media (id, animal_id, type, file_path) values (52, 25, 'image', '/images/animals/titan_2.jpg');
+insert into media (id, animal_id, type, file_path) values (53, 26, 'image', '/images/animals/willow_1.jpg');
+insert into media (id, animal_id, type, file_path) values (54, 26, 'image', '/images/animals/willow_2.jpg');
+insert into media (id, animal_id, type, file_path) values (55, 27, 'image', '/images/animals/ace_1.jpg');
+insert into media (id, animal_id, type, file_path) values (56, 27, 'video', '/videos/animals/ace_running.mp4');
+insert into media (id, animal_id, type, file_path) values (57, 28, 'image', '/images/animals/duchess_1.jpg');
+insert into media (id, animal_id, type, file_path) values (58, 28, 'image', '/images/animals/duchess_2.jpg');
+insert into media (id, animal_id, type, file_path) values (59, 29, 'image', '/images/animals/storm_1.jpg');
+insert into media (id, animal_id, type, file_path) values (60, 30, 'image', '/images/animals/pearl_1.jpg');
 commit;
 
--- Insert into user_preference_tags
-insert into user_preference_tags (
-   user_id,
-   tag_id
-) values ( 1,
-           1 );
-insert into user_preference_tags (
-   user_id,
-   tag_id
-) values ( 2,
-           2 );
-insert into user_preference_tags (
-   user_id,
-   tag_id
-) values ( 3,
-           4 );
-insert into user_preference_tags (
-   user_id,
-   tag_id
-) values ( 4,
-           5 );
-
+insert into animal_tags (animal_id, tag_id) values (1, 1);
+insert into animal_tags (animal_id, tag_id) values (1, 6);
+insert into animal_tags (animal_id, tag_id) values (1, 7);
+insert into animal_tags (animal_id, tag_id) values (1, 9);
+insert into animal_tags (animal_id, tag_id) values (1, 10);
+insert into animal_tags (animal_id, tag_id) values (1, 14);
+insert into animal_tags (animal_id, tag_id) values (2, 2);
+insert into animal_tags (animal_id, tag_id) values (2, 3);
+insert into animal_tags (animal_id, tag_id) values (2, 12);
+insert into animal_tags (animal_id, tag_id) values (2, 13);
+insert into animal_tags (animal_id, tag_id) values (3, 4);
+insert into animal_tags (animal_id, tag_id) values (3, 6);
+insert into animal_tags (animal_id, tag_id) values (3, 7);
+insert into animal_tags (animal_id, tag_id) values (3, 11);
+insert into animal_tags (animal_id, tag_id) values (3, 14);
+insert into animal_tags (animal_id, tag_id) values (4, 5);
+insert into animal_tags (animal_id, tag_id) values (4, 12);
+insert into animal_tags (animal_id, tag_id) values (4, 15);
+insert into animal_tags (animal_id, tag_id) values (5, 1);
+insert into animal_tags (animal_id, tag_id) values (5, 4);
+insert into animal_tags (animal_id, tag_id) values (5, 6);
+insert into animal_tags (animal_id, tag_id) values (5, 7);
+insert into animal_tags (animal_id, tag_id) values (5, 9);
+insert into animal_tags (animal_id, tag_id) values (5, 10);
+insert into animal_tags (animal_id, tag_id) values (5, 14);
+insert into animal_tags (animal_id, tag_id) values (6, 1);
+insert into animal_tags (animal_id, tag_id) values (6, 4);
+insert into animal_tags (animal_id, tag_id) values (6, 8);
+insert into animal_tags (animal_id, tag_id) values (6, 11);
+insert into animal_tags (animal_id, tag_id) values (7, 1);
+insert into animal_tags (animal_id, tag_id) values (7, 4);
+insert into animal_tags (animal_id, tag_id) values (7, 9);
+insert into animal_tags (animal_id, tag_id) values (7, 10);
+insert into animal_tags (animal_id, tag_id) values (7, 14);
+insert into animal_tags (animal_id, tag_id) values (8, 1);
+insert into animal_tags (animal_id, tag_id) values (8, 12);
+insert into animal_tags (animal_id, tag_id) values (8, 14);
+insert into animal_tags (animal_id, tag_id) values (9, 1);
+insert into animal_tags (animal_id, tag_id) values (9, 4);
+insert into animal_tags (animal_id, tag_id) values (9, 9);
+insert into animal_tags (animal_id, tag_id) values (9, 10);
+insert into animal_tags (animal_id, tag_id) values (9, 11);
+insert into animal_tags (animal_id, tag_id) values (10, 5);
+insert into animal_tags (animal_id, tag_id) values (10, 12);
+insert into animal_tags (animal_id, tag_id) values (11, 1);
+insert into animal_tags (animal_id, tag_id) values (11, 4);
+insert into animal_tags (animal_id, tag_id) values (11, 7);
+insert into animal_tags (animal_id, tag_id) values (11, 11);
+insert into animal_tags (animal_id, tag_id) values (11, 15);
+insert into animal_tags (animal_id, tag_id) values (12, 2);
+insert into animal_tags (animal_id, tag_id) values (12, 3);
+insert into animal_tags (animal_id, tag_id) values (12, 12);
+insert into animal_tags (animal_id, tag_id) values (12, 13);
+insert into animal_tags (animal_id, tag_id) values (13, 1);
+insert into animal_tags (animal_id, tag_id) values (13, 4);
+insert into animal_tags (animal_id, tag_id) values (13, 9);
+insert into animal_tags (animal_id, tag_id) values (13, 10);
+insert into animal_tags (animal_id, tag_id) values (13, 14);
+insert into animal_tags (animal_id, tag_id) values (14, 1);
+insert into animal_tags (animal_id, tag_id) values (14, 4);
+insert into animal_tags (animal_id, tag_id) values (14, 11);
+insert into animal_tags (animal_id, tag_id) values (15, 1);
+insert into animal_tags (animal_id, tag_id) values (15, 4);
+insert into animal_tags (animal_id, tag_id) values (15, 9);
+insert into animal_tags (animal_id, tag_id) values (15, 10);
+insert into animal_tags (animal_id, tag_id) values (15, 11);
+insert into animal_tags (animal_id, tag_id) values (15, 14);
+insert into animal_tags (animal_id, tag_id) values (16, 1);
+insert into animal_tags (animal_id, tag_id) values (16, 4);
+insert into animal_tags (animal_id, tag_id) values (16, 11);
+insert into animal_tags (animal_id, tag_id) values (17, 1);
+insert into animal_tags (animal_id, tag_id) values (17, 7);
+insert into animal_tags (animal_id, tag_id) values (17, 12);
+insert into animal_tags (animal_id, tag_id) values (17, 14);
+insert into animal_tags (animal_id, tag_id) values (18, 1);
+insert into animal_tags (animal_id, tag_id) values (18, 12);
+insert into animal_tags (animal_id, tag_id) values (19, 1);
+insert into animal_tags (animal_id, tag_id) values (19, 7);
+insert into animal_tags (animal_id, tag_id) values (19, 12);
+insert into animal_tags (animal_id, tag_id) values (19, 14);
+insert into animal_tags (animal_id, tag_id) values (20, 1);
+insert into animal_tags (animal_id, tag_id) values (20, 12);
+insert into animal_tags (animal_id, tag_id) values (20, 15);
+insert into animal_tags (animal_id, tag_id) values (21, 1);
+insert into animal_tags (animal_id, tag_id) values (21, 4);
+insert into animal_tags (animal_id, tag_id) values (21, 11);
+insert into animal_tags (animal_id, tag_id) values (21, 14);
+insert into animal_tags (animal_id, tag_id) values (22, 1);
+insert into animal_tags (animal_id, tag_id) values (22, 12);
+insert into animal_tags (animal_id, tag_id) values (23, 1);
+insert into animal_tags (animal_id, tag_id) values (23, 4);
+insert into animal_tags (animal_id, tag_id) values (23, 11);
+insert into animal_tags (animal_id, tag_id) values (23, 15);
+insert into animal_tags (animal_id, tag_id) values (24, 1);
+insert into animal_tags (animal_id, tag_id) values (24, 4);
+insert into animal_tags (animal_id, tag_id) values (24, 11);
+insert into animal_tags (animal_id, tag_id) values (25, 2);
+insert into animal_tags (animal_id, tag_id) values (25, 3);
+insert into animal_tags (animal_id, tag_id) values (25, 12);
+insert into animal_tags (animal_id, tag_id) values (25, 13);
+insert into animal_tags (animal_id, tag_id) values (25, 14);
+insert into animal_tags (animal_id, tag_id) values (26, 1);
+insert into animal_tags (animal_id, tag_id) values (26, 12);
+insert into animal_tags (animal_id, tag_id) values (26, 14);
+insert into animal_tags (animal_id, tag_id) values (27, 1);
+insert into animal_tags (animal_id, tag_id) values (27, 4);
+insert into animal_tags (animal_id, tag_id) values (27, 11);
+insert into animal_tags (animal_id, tag_id) values (27, 14);
+insert into animal_tags (animal_id, tag_id) values (28, 1);
+insert into animal_tags (animal_id, tag_id) values (28, 12);
+insert into animal_tags (animal_id, tag_id) values (29, 1);
+insert into animal_tags (animal_id, tag_id) values (29, 4);
+insert into animal_tags (animal_id, tag_id) values (29, 11);
+insert into animal_tags (animal_id, tag_id) values (29, 14);
+insert into animal_tags (animal_id, tag_id) values (30, 1);
+insert into animal_tags (animal_id, tag_id) values (30, 12);
 commit;
 
--- Insert into adoption_status_log
-insert into adoption_status_log (
-   id,
-   adoption_id,
-   status,
-   changed_at
-) values ( 1,
-           2,
-           'pending',
-           current_timestamp );
-insert into adoption_status_log (
-   id,
-   adoption_id,
-   status,
-   changed_at
-) values ( 2,
-           2,
-           'completed',
-           current_timestamp );
-insert into adoption_status_log (
-   id,
-   adoption_id,
-   status,
-   changed_at
-) values ( 3,
-           3,
-           'pending',
-           current_timestamp );
-insert into adoption_status_log (
-   id,
-   adoption_id,
-   status,
-   changed_at
-) values ( 4,
-           4,
-           'completed',
-           current_timestamp );
-
+insert into user_preference_tags (user_id, tag_id) values (1, 1);
+insert into user_preference_tags (user_id, tag_id) values (1, 6);
+insert into user_preference_tags (user_id, tag_id) values (1, 7);
+insert into user_preference_tags (user_id, tag_id) values (1, 14);
+insert into user_preference_tags (user_id, tag_id) values (2, 2);
+insert into user_preference_tags (user_id, tag_id) values (2, 12);
+insert into user_preference_tags (user_id, tag_id) values (2, 13);
+insert into user_preference_tags (user_id, tag_id) values (3, 4);
+insert into user_preference_tags (user_id, tag_id) values (3, 11);
+insert into user_preference_tags (user_id, tag_id) values (3, 15);
+insert into user_preference_tags (user_id, tag_id) values (5, 1);
+insert into user_preference_tags (user_id, tag_id) values (5, 7);
+insert into user_preference_tags (user_id, tag_id) values (5, 9);
+insert into user_preference_tags (user_id, tag_id) values (7, 4);
+insert into user_preference_tags (user_id, tag_id) values (7, 6);
+insert into user_preference_tags (user_id, tag_id) values (7, 14);
+insert into user_preference_tags (user_id, tag_id) values (9, 1);
+insert into user_preference_tags (user_id, tag_id) values (9, 11);
+insert into user_preference_tags (user_id, tag_id) values (9, 12);
+insert into user_preference_tags (user_id, tag_id) values (11, 5);
+insert into user_preference_tags (user_id, tag_id) values (11, 12);
+insert into user_preference_tags (user_id, tag_id) values (11, 15);
+insert into user_preference_tags (user_id, tag_id) values (12, 1);
+insert into user_preference_tags (user_id, tag_id) values (12, 8);
+insert into user_preference_tags (user_id, tag_id) values (12, 11);
+insert into user_preference_tags (user_id, tag_id) values (14, 2);
+insert into user_preference_tags (user_id, tag_id) values (14, 3);
+insert into user_preference_tags (user_id, tag_id) values (14, 13);
+insert into user_preference_tags (user_id, tag_id) values (15, 4);
+insert into user_preference_tags (user_id, tag_id) values (15, 6);
+insert into user_preference_tags (user_id, tag_id) values (15, 14);
+insert into user_preference_tags (user_id, tag_id) values (17, 1);
+insert into user_preference_tags (user_id, tag_id) values (17, 7);
+insert into user_preference_tags (user_id, tag_id) values (17, 10);
+insert into user_preference_tags (user_id, tag_id) values (19, 12);
+insert into user_preference_tags (user_id, tag_id) values (19, 15);
+insert into user_preference_tags (user_id, tag_id) values (20, 1);
+insert into user_preference_tags (user_id, tag_id) values (20, 11);
+insert into user_preference_tags (user_id, tag_id) values (21, 4);
+insert into user_preference_tags (user_id, tag_id) values (21, 6);
+insert into user_preference_tags (user_id, tag_id) values (22, 5);
+insert into user_preference_tags (user_id, tag_id) values (22, 12);
+insert into user_preference_tags (user_id, tag_id) values (24, 1);
+insert into user_preference_tags (user_id, tag_id) values (24, 9);
 commit;
 
--- Verify all data was inserted correctly
-select 'users' as table_name,
-       count(*) as record_count
-  from users
-union all
-select 'adoptions',
-       count(*)
-  from adoptions
-union all
-select 'user_preference_tags',
-       count(*)
-  from user_preference_tags
-union all
-select 'adoption_status_log',
-       count(*)
-  from adoption_status_log;
+insert into user_preferences (user_id, preferred_species, preferred_age_range, max_distance, home_type, has_yard, has_other_pets, experience_level, available_time, activity_level, noise_tolerance, budget_range, special_needs_ok) values (1, 'Dog', 'adult', 25, 'house', 1, 0, 'intermediate', 'moderate', 'medium', 'medium', 'medium', 0);
+insert into user_preferences (user_id, preferred_species, preferred_age_range, max_distance, home_type, has_yard, has_other_pets, experience_level, available_time, activity_level, noise_tolerance, budget_range, special_needs_ok) values (3, 'Cat', 'young', 15, 'apartment', 0, 1, 'beginner', 'minimal', 'low', 'low', 'low', 1);
+insert into user_preferences (user_id, preferred_species, preferred_age_range, max_distance, home_type, has_yard, has_other_pets, experience_level, available_time, activity_level, noise_tolerance, budget_range, special_needs_ok) values (5, 'Dog', 'any', 50, 'house', 1, 1, 'expert', 'extensive', 'high', 'high', 'high', 1);
+insert into user_preferences (user_id, preferred_species, preferred_age_range, max_distance, home_type, has_yard, has_other_pets, experience_level, available_time, activity_level, noise_tolerance, budget_range, special_needs_ok) values (7, 'Dog', 'puppy', 30, 'house', 1, 0, 'intermediate', 'extensive', 'high', 'medium', 'medium', 0);
+insert into user_preferences (user_id, preferred_species, preferred_age_range, max_distance, home_type, has_yard, has_other_pets, experience_level, available_time, activity_level, noise_tolerance, budget_range, special_needs_ok) values (9, 'Cat', 'senior', 20, 'apartment', 0, 0, 'intermediate', 'moderate', 'low', 'medium', 'medium', 1);
+insert into user_preferences (user_id, preferred_species, preferred_age_range, max_distance, home_type, has_yard, has_other_pets, experience_level, available_time, activity_level, noise_tolerance, budget_range, special_needs_ok) values (11, 'Cat', 'young', 10, 'apartment', 0, 1, 'beginner', 'minimal', 'low', 'low', 'low', 0);
+insert into user_preferences (user_id, preferred_species, preferred_age_range, max_distance, home_type, has_yard, has_other_pets, experience_level, available_time, activity_level, noise_tolerance, budget_range, special_needs_ok) values (12, 'Dog,Cat', 'any', 75, 'house', 1, 1, 'expert', 'extensive', 'medium', 'high', 'high', 1);
+insert into user_preferences (user_id, preferred_species, preferred_age_range, max_distance, home_type, has_yard, has_other_pets, experience_level, available_time, activity_level, noise_tolerance, budget_range, special_needs_ok) values (14, 'Dog', 'adult', 40, 'house', 1, 1, 'intermediate', 'moderate', 'medium', 'medium', 'medium', 1);
+insert into user_preferences (user_id, preferred_species, preferred_age_range, max_distance, home_type, has_yard, has_other_pets, experience_level, available_time, activity_level, noise_tolerance, budget_range, special_needs_ok) values (15, 'Dog', 'young', 35, 'house', 1, 0, 'intermediate', 'extensive', 'high', 'medium', 'medium', 0);
+insert into user_preferences (user_id, preferred_species, preferred_age_range, max_distance, home_type, has_yard, has_other_pets, experience_level, available_time, activity_level, noise_tolerance, budget_range, special_needs_ok) values (17, 'Cat', 'adult', 25, 'apartment', 0, 0, 'beginner', 'moderate', 'low', 'medium', 'low', 0);
+insert into user_preferences (user_id, preferred_species, preferred_age_range, max_distance, home_type, has_yard, has_other_pets, experience_level, available_time, activity_level, noise_tolerance, budget_range, special_needs_ok) values (19, 'Cat', 'senior', 15, 'house', 0, 1, 'expert', 'minimal', 'low', 'high', 'medium', 1);
+insert into user_preferences (user_id, preferred_species, preferred_age_range, max_distance, home_type, has_yard, has_other_pets, experience_level, available_time, activity_level, noise_tolerance, budget_range, special_needs_ok) values (20, 'Dog,Cat', 'young', 60, 'house', 1, 0, 'intermediate', 'moderate', 'medium', 'medium', 'medium', 0);
+insert into user_preferences (user_id, preferred_species, preferred_age_range, max_distance, home_type, has_yard, has_other_pets, experience_level, available_time, activity_level, noise_tolerance, budget_range, special_needs_ok) values (21, 'Dog', 'puppy', 20, 'apartment', 0, 0, 'beginner', 'moderate', 'medium', 'low', 'low', 0);
+insert into user_preferences (user_id, preferred_species, preferred_age_range, max_distance, home_type, has_yard, has_other_pets, experience_level, available_time, activity_level, noise_tolerance, budget_range, special_needs_ok) values (22, 'Cat', 'adult', 30, 'house', 0, 1, 'intermediate', 'minimal', 'low', 'medium', 'medium', 0);
+insert into user_preferences (user_id, preferred_species, preferred_age_range, max_distance, home_type, has_yard, has_other_pets, experience_level, available_time, activity_level, noise_tolerance, budget_range, special_needs_ok) values (24, 'Dog', 'adult', 45, 'house', 1, 1, 'expert', 'extensive', 'high', 'high', 'high', 1);
+commit;
 
-select *
-  from users;
+insert into conversations (id, participant1_id, participant2_id, animal_id, conversation_type, status, created_at) values (1, 1, 4, 1, 'adoption_inquiry', 'active', current_timestamp - 5);
+insert into conversations (id, participant1_id, participant2_id, animal_id, conversation_type, status, created_at) values (2, 3, 6, 3, 'adoption_inquiry', 'active', current_timestamp - 10);
+insert into conversations (id, participant1_id, participant2_id, animal_id, conversation_type, status, created_at) values (3, 5, 10, 4, 'adoption_inquiry', 'archived', current_timestamp - 15);
+insert into conversations (id, participant1_id, participant2_id, animal_id, conversation_type, status, created_at) values (4, 7, 13, 5, 'general', 'active', current_timestamp - 8);
+insert into conversations (id, participant1_id, participant2_id, animal_id, conversation_type, status, created_at) values (5, 9, 18, 6, 'adoption_inquiry', 'active', current_timestamp - 12);
+insert into conversations (id, participant1_id, participant2_id, animal_id, conversation_type, status, created_at) values (6, 11, 23, 7, 'support', 'active', current_timestamp - 6);
+insert into conversations (id, participant1_id, participant2_id, animal_id, conversation_type, status, created_at) values (7, 12, 4, 8, 'adoption_inquiry', 'active', current_timestamp - 9);
+insert into conversations (id, participant1_id, participant2_id, animal_id, conversation_type, status, created_at) values (8, 14, 6, 9, 'follow_up', 'archived', current_timestamp - 20);
+insert into conversations (id, participant1_id, participant2_id, animal_id, conversation_type, status, created_at) values (9, 15, 10, 10, 'adoption_inquiry', 'active', current_timestamp - 3);
+insert into conversations (id, participant1_id, participant2_id, animal_id, conversation_type, status, created_at) values (10, 17, 13, 11, 'general', 'active', current_timestamp - 7);
+insert into conversations (id, participant1_id, participant2_id, animal_id, conversation_type, status, created_at) values (11, 19, 18, 12, 'adoption_inquiry', 'active', current_timestamp - 11);
+insert into conversations (id, participant1_id, participant2_id, animal_id, conversation_type, status, created_at) values (12, 20, 23, 13, 'adoption_inquiry', 'active', current_timestamp - 4);
+insert into conversations (id, participant1_id, participant2_id, animal_id, conversation_type, status, created_at) values (13, 21, 4, 14, 'support', 'active', current_timestamp - 14);
+insert into conversations (id, participant1_id, participant2_id, animal_id, conversation_type, status, created_at) values (14, 22, 6, 15, 'adoption_inquiry', 'archived', current_timestamp - 18);
+insert into conversations (id, participant1_id, participant2_id, animal_id, conversation_type, status, created_at) values (15, 24, 10, 16, 'adoption_inquiry', 'active', current_timestamp - 2);
+insert into conversations (id, participant1_id, participant2_id, animal_id, conversation_type, status, created_at) values (16, 1, 13, 17, 'general', 'active', current_timestamp - 16);
+insert into conversations (id, participant1_id, participant2_id, animal_id, conversation_type, status, created_at) values (17, 3, 18, 18, 'follow_up', 'active', current_timestamp - 13);
+insert into conversations (id, participant1_id, participant2_id, animal_id, conversation_type, status, created_at) values (18, 5, 23, 19, 'adoption_inquiry', 'active', current_timestamp - 1);
+insert into conversations (id, participant1_id, participant2_id, animal_id, conversation_type, status, created_at) values (19, 7, 4, 20, 'adoption_inquiry', 'active', current_timestamp - 19);
+insert into conversations (id, participant1_id, participant2_id, animal_id, conversation_type, status, created_at) values (20, 9, 6, 22, 'general', 'archived', current_timestamp - 17);
+commit;
+
+insert into messages (id, conversation_id, sender_id, message_text, message_type, is_read, sent_at) values (1, 1, 1, 'Hi, I''m interested in adopting Buddy. Can you tell me more about him?', 'text', 1, current_timestamp - 5);
+insert into messages (id, conversation_id, sender_id, message_text, message_type, is_read, sent_at) values (2, 1, 4, 'Hello! Buddy is a wonderful golden retriever. He''s very friendly and loves fetch.', 'text', 1, current_timestamp - 5);
+insert into messages (id, conversation_id, sender_id, message_text, message_type, is_read, sent_at) values (3, 1, 1, 'That sounds perfect! What are the next steps?', 'text', 0, current_timestamp - 4);
+insert into messages (id, conversation_id, sender_id, message_text, message_type, is_read, sent_at) values (4, 2, 3, 'I''d like to know more about Bella''s exercise needs.', 'text', 1, current_timestamp - 10);
+insert into messages (id, conversation_id, sender_id, message_text, message_type, is_read, sent_at) values (5, 2, 6, 'Bella needs daily exercise but not too intense due to her breed.', 'text', 1, current_timestamp - 9);
+insert into messages (id, conversation_id, sender_id, message_text, message_type, is_read, sent_at) values (6, 2, 3, 'Perfect, that matches what I can provide.', 'text', 0, current_timestamp - 9);
+insert into messages (id, conversation_id, sender_id, message_text, message_type, is_read, sent_at) values (7, 3, 5, 'Is Mittens good with other cats?', 'text', 1, current_timestamp - 15);
+insert into messages (id, conversation_id, sender_id, message_text, message_type, is_read, sent_at) values (8, 3, 10, 'Mittens prefers to be the only cat, but he''s very sweet.', 'text', 1, current_timestamp - 14);
+insert into messages (id, conversation_id, sender_id, message_text, message_type, is_read, sent_at) values (9, 4, 7, 'What kind of food does Max prefer?', 'text', 1, current_timestamp - 8);
+insert into messages (id, conversation_id, sender_id, message_text, message_type, is_read, sent_at) values (10, 4, 13, 'Max does well on high-quality dog food. We can provide feeding guidelines.', 'text', 0, current_timestamp - 8);
+insert into messages (id, conversation_id, sender_id, message_text, message_type, is_read, sent_at) values (11, 5, 9, 'I''m interested in Luna. Is she vocal like most Siamese?', 'text', 1, current_timestamp - 12);
+insert into messages (id, conversation_id, sender_id, message_text, message_type, is_read, sent_at) values (12, 5, 18, 'Yes, Luna is quite vocal but in a charming way. She loves to ''talk''.', 'text', 1, current_timestamp - 11);
+insert into messages (id, conversation_id, sender_id, message_text, message_type, is_read, sent_at) values (13, 5, 9, 'That''s exactly what I''m looking for!', 'text', 0, current_timestamp - 11);
+insert into messages (id, conversation_id, sender_id, message_text, message_type, is_read, sent_at) values (14, 6, 11, 'I need help with the adoption application process.', 'text', 1, current_timestamp - 6);
+insert into messages (id, conversation_id, sender_id, message_text, message_type, is_read, sent_at) values (15, 6, 23, 'I''d be happy to help! What specific questions do you have?', 'text', 1, current_timestamp - 6);
+insert into messages (id, conversation_id, sender_id, message_text, message_type, is_read, sent_at) values (16, 7, 12, 'Princess looks beautiful. How is she with children?', 'text', 1, current_timestamp - 9);
+insert into messages (id, conversation_id, sender_id, message_text, message_type, is_read, sent_at) values (17, 7, 4, 'Princess is very gentle and does well with children of all ages.', 'text', 0, current_timestamp - 8);
+insert into messages (id, conversation_id, sender_id, message_text, message_type, is_read, sent_at) values (18, 8, 14, 'Thank you for the adoption. Charlie is settling in well!', 'text', 1, current_timestamp - 20);
+insert into messages (id, conversation_id, sender_id, message_text, message_type, is_read, sent_at) values (19, 8, 6, 'That''s wonderful to hear! Thanks for the update.', 'text', 1, current_timestamp - 19);
+insert into messages (id, conversation_id, sender_id, message_text, message_type, is_read, sent_at) values (20, 9, 15, 'I''d like to schedule a visit to meet Shadow.', 'text', 1, current_timestamp - 3);
+insert into messages (id, conversation_id, sender_id, message_text, message_type, is_read, sent_at) values (21, 9, 10, 'Absolutely! When would be a good time for you?', 'text', 0, current_timestamp - 3);
+insert into messages (id, conversation_id, sender_id, message_text, message_type, is_read, sent_at) values (22, 10, 17, 'What training does Daisy have?', 'text', 1, current_timestamp - 7);
+insert into messages (id, conversation_id, sender_id, message_text, message_type, is_read, sent_at) values (23, 10, 13, 'Daisy knows basic commands and is very intelligent.', 'text', 1, current_timestamp - 6);
+insert into messages (id, conversation_id, sender_id, message_text, message_type, is_read, sent_at) values (24, 11, 19, 'Is Smokey''s arthritis manageable?', 'text', 1, current_timestamp - 11);
+insert into messages (id, conversation_id, sender_id, message_text, message_type, is_read, sent_at) values (25, 11, 18, 'Yes, with proper medication and gentle exercise, he does very well.', 'text', 1, current_timestamp - 10);
+commit;
+
+select count(*) from address;
+select count(*) from users;
+select count(*) from tags;
+select count(*) from animals;
+select count(*) from animal_metrics;
+select count(*) from adoptions;
+select count(*) from favorites;
+select count(*) from care_schedule;
+select count(*) from care_resources;
+select count(*) from medical_history;
+select count(*) from media;
+select count(*) from animal_tags;
+select count(*) from user_preference_tags;
+select count(*) from user_preferences;
+select count(*) from conversations;
+select count(*) from messages;
+
+select 'Database population completed successfully!' as status from dual;
