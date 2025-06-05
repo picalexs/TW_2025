@@ -1,9 +1,8 @@
 import languageManager from '../languages/language.js';
-//import { setupMobileMenu, createSlideshow, initializePageLanguage } from '../global/global.js';
 import { setupMobileMenu, createSlideshow, initializePageLanguage, checkLoginStatusAndToggleNavButtons } from '../global/global.js';
 import UserService from '../services/userService.js';
 
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = 'http://localhost:8080';
 
 document.addEventListener('DOMContentLoaded', function() {
   initLoginPage();
@@ -39,7 +38,6 @@ async function handleLogin(event) {
   const password = document.getElementById('password').value;
   //const rememberMe = document.querySelector('.form-options input[type="checkbox"]').checked;
   
-  //console.log('Login attempt:', { email, password: '****', rememberMe });
   console.log('Login attempt:', { email, password: '****'});
 
    try {

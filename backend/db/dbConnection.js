@@ -61,13 +61,100 @@ async function executeQuery(query, binds = [], options = {}) {
     const result = await connection.execute(query, binds, options);
     return result;
   } catch (err) {
-    console.error("Error executing query:", err);
-    throw err;
+    const enhancedError = enhanceOracleError(err, query);
+    console.error("Error executing query:", enhancedError);
+    throw enhancedError;
   } finally {
     if (connection) {
       await closeConnection(connection);
     }
   }
+}
+
+function enhanceOracleError(error, query) {
+  if (!error.errorNum) {
+    return error;
+  }
+
+  const enhancedError = Object.assign(error, { 
+    originalQuery: query.substring(0, 200) + (query.length > 200 ? '...' : ''),
+    timestamp: new Date().toISOString()
+  });
+
+  switch (error.errorNum) {
+    case 1:
+      enhancedError.code = "UNIQUE_CONSTRAINT_VIOLATION";
+      enhancedError.status = 409;
+      enhancedError.userMessage = "Record already exists with this unique identifier";
+      break;
+    case 942:
+      enhancedError.code = "TABLE_OR_VIEW_MISSING";
+      enhancedError.status = 500;
+      enhancedError.userMessage = "Database table or view does not exist";
+      break;
+    case 904:
+      enhancedError.code = "INVALID_COLUMN";
+      enhancedError.status = 500;
+      enhancedError.userMessage = "Invalid column name in query";
+      break;
+    case 1400:
+      enhancedError.code = "NULL_CONSTRAINT_VIOLATION";
+      enhancedError.status = 400;
+      enhancedError.userMessage = "Required field cannot be null";
+      break;
+    case 2290:
+      enhancedError.code = "CHECK_CONSTRAINT_VIOLATION";
+      enhancedError.status = 400;
+      enhancedError.userMessage = "Data validation failed for one or more fields";
+      break;
+    case 2291:
+      enhancedError.code = "FOREIGN_KEY_VIOLATION";
+      enhancedError.status = 400;
+      enhancedError.userMessage = "Referenced record does not exist";
+      break;
+    case 2292:
+      enhancedError.code = "CHILD_RECORD_FOUND";
+      enhancedError.status = 409;
+      enhancedError.userMessage = "Cannot delete record - it is referenced by other records";
+      break;
+    case 12899:
+      enhancedError.code = "VALUE_TOO_LARGE";
+      enhancedError.status = 400;
+      enhancedError.userMessage = "Value too large for one or more fields";
+      break;
+    case 1017:
+      enhancedError.code = "INVALID_CREDENTIALS";
+      enhancedError.status = 401;
+      enhancedError.userMessage = "Invalid database credentials";
+      break;
+    case 12541:
+    case 12170:
+      enhancedError.code = "CONNECTION_ERROR";
+      enhancedError.status = 503;
+      enhancedError.userMessage = "Database connection failed";
+      break;
+    case 12514:
+      enhancedError.code = "SERVICE_NOT_FOUND";
+      enhancedError.status = 503;
+      enhancedError.userMessage = "Database service unavailable";
+      break;
+    case 1013:
+      enhancedError.code = "QUERY_TIMEOUT";
+      enhancedError.status = 504;
+      enhancedError.userMessage = "Query execution timed out";
+      break;
+    case 54:
+      enhancedError.code = "RESOURCE_BUSY";
+      enhancedError.status = 429;
+      enhancedError.userMessage = "Resource busy, try again later";
+      break;
+    default:
+      enhancedError.code = "DB_ERROR";
+      enhancedError.status = 500;
+      enhancedError.userMessage = "Database operation failed";
+  }
+
+  return enhancedError;
 }
 
 module.exports = {
@@ -76,5 +163,6 @@ module.exports = {
   getConnection,
   closeConnection,
   closePool,
-  executeQuery
+  executeQuery,
+  enhanceOracleError
 };

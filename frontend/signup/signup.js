@@ -1,5 +1,4 @@
 import { setupMobileMenu, initializePageLanguage } from '../global/global.js';
-import UserService from '../services/userService.js';
 
 document.addEventListener('DOMContentLoaded', function () {
   initSignupPage();
@@ -27,9 +26,8 @@ async function handleSignup(event) {
     alert('Please fill in all fields');
     return;
   }
-
   try {
-    const response = await fetch('http://localhost:3000/api/users/register', { 
+    const response = await fetch('http://localhost:8080/api/users/register', { 
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
