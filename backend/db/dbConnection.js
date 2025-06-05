@@ -21,6 +21,10 @@ async function initialize() {
   }
 }
 
+function getPool() {
+  return oracledb.getPool();
+}
+
 async function getConnection() {
   try {
     const connection = await oracledb.getConnection();
@@ -68,6 +72,7 @@ async function executeQuery(query, binds = [], options = {}) {
 
 module.exports = {
   initialize,
+  getPool,
   getConnection,
   closeConnection,
   closePool,

@@ -4,7 +4,10 @@ const http = require('http');
 const db = require('./db/dbConnection');
 const handleUserRoutes = require('./routes/userRoutes');
 const handlePetRoutes = require('./routes/petRoutes');
+const handleRecommendationRoutes = require('./routes/recommendationRoutes');
 const handleStaticRoutes = require('./routes/staticRoutes');
+const { handleCareScheduleRoutes } = require('./routes/careScheduleRoutes');
+const { handleNotificationRoutes } = require('./routes/notificationRoutes');
 const { sendResponse } = require('./utils/helpers');
 
 const PORT = process.env.API_PORT;
@@ -49,10 +52,16 @@ const server = http.createServer(async (req, res) => {
     
     if (!routeHandled) {
       routeHandled = await handleUserRoutes(req, res);
+    }    if (!routeHandled) {
+      routeHandled = await handlePetRoutes(req, res);
+    }    if (!routeHandled) {
+      routeHandled = await handleRecommendationRoutes(req, res);
+    }    if (!routeHandled) {
+      routeHandled = await handleCareScheduleRoutes(req, res);
     }
 
     if (!routeHandled) {
-      routeHandled = await handlePetRoutes(req, res);
+      routeHandled = await handleNotificationRoutes(req, res);
     }
 
     if (!routeHandled) {

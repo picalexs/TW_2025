@@ -77,16 +77,84 @@ class UserController {
         console.log('Verification email sent:', info.response);
       });
 
-      sendResponse(res, 201, { message: 'User registered successfully. Please check your email for verification.' });
-
-    } catch (error) {
+      sendResponse(res, 201, { message: 'User registered successfully. Please check your email for verification.' });    } catch (error) {
       console.error("Error during user registration:", error);
-      if (error.message.includes('ORA-20001')) {
-        sendResponse(res, 409, { error: 'Conflict', message: 'Username already exists.' });
+      
+      // Enhanced Oracle-specific error handling
+      if (error.errorNum) {
+        switch (error.errorNum) {
+          case 1:
+          case 2290:
+            sendResponse(res, 409, { 
+              error: 'Conflict', 
+              message: 'A unique constraint was violated. Username or email already exists.',
+              code: 'UNIQUE_CONSTRAINT_VIOLATION'
+            });
+            break;
+          case 1400:
+            sendResponse(res, 400, { 
+              error: 'Bad Request', 
+              message: 'Required field cannot be null.',
+              code: 'NULL_CONSTRAINT_VIOLATION'
+            });
+            break;
+          case 2291:
+            sendResponse(res, 400, { 
+              error: 'Bad Request', 
+              message: 'Foreign key constraint violation.',
+              code: 'FOREIGN_KEY_VIOLATION'
+            });
+            break;
+          case 12899:
+            sendResponse(res, 400, { 
+              error: 'Bad Request', 
+              message: 'Value too large for column.',
+              code: 'VALUE_TOO_LARGE'
+            });
+            break;
+          default:
+            sendResponse(res, 500, { 
+              error: "Database Error", 
+              message: `Oracle Error ${error.errorNum}: ${error.message}`,
+              code: 'ORACLE_ERROR'
+            });
+        }
+      } else if (error.message.includes('ORA-20001')) {
+        sendResponse(res, 409, { 
+          error: 'Conflict', 
+          message: 'Username already exists.',
+          code: 'USERNAME_EXISTS'
+        });
       } else if (error.message.includes('ORA-20002')) {
-        sendResponse(res, 409, { error: 'Conflict', message: 'Email address already exists.' });
+        sendResponse(res, 409, { 
+          error: 'Conflict', 
+          message: 'Email address already exists.',
+          code: 'EMAIL_EXISTS'
+        });
+      } else if (error.message.includes('ORA-20003')) {
+        sendResponse(res, 400, { 
+          error: 'Bad Request', 
+          message: 'Invalid email format.',
+          code: 'INVALID_EMAIL'
+        });
+      } else if (error.code === 'ECONNREFUSED') {
+        sendResponse(res, 503, { 
+          error: 'Service Unavailable', 
+          message: 'Database connection failed.',
+          code: 'DB_CONNECTION_ERROR'
+        });
+      } else if (error.code === 'ETIMEDOUT') {
+        sendResponse(res, 504, { 
+          error: 'Gateway Timeout', 
+          message: 'Database operation timed out.',
+          code: 'DB_TIMEOUT'
+        });
       } else {
-        sendResponse(res, 500, { error: "Failed to register user", message: error.message });
+        sendResponse(res, 500, { 
+          error: "Registration Failed", 
+          message: error.message || "An unexpected error occurred during registration.",
+          code: 'REGISTRATION_ERROR'
+        });
       }
     }
   }
@@ -179,11 +247,46 @@ class UserController {
         </div>
     </body>
     </html>
-      `);
-
-    } catch (error) {
+      `);    } catch (error) {
       console.error('Error during email verification:', error);
-      sendResponse(res, 500, { error: 'Server Error', message: 'Server error during email verification.' });
+      
+      // Enhanced Oracle-specific error handling for email verification
+      if (error.errorNum) {
+        switch (error.errorNum) {
+          case 1403:
+            sendResponse(res, 404, { 
+              error: 'Token Not Found', 
+              message: 'Invalid verification token.',
+              code: 'TOKEN_NOT_FOUND'
+            });
+            break;
+          case 1400:
+            sendResponse(res, 400, { 
+              error: 'Bad Request', 
+              message: 'Required verification data is missing.',
+              code: 'MISSING_DATA'
+            });
+            break;
+          default:
+            sendResponse(res, 500, { 
+              error: 'Database Error', 
+              message: `Oracle Error ${error.errorNum}: ${error.message}`,
+              code: 'ORACLE_VERIFICATION_ERROR'
+            });
+        }
+      } else if (error.code === 'ECONNREFUSED') {
+        sendResponse(res, 503, { 
+          error: 'Service Unavailable', 
+          message: 'Database connection failed during verification.',
+          code: 'DB_CONNECTION_ERROR'
+        });
+      } else {
+        sendResponse(res, 500, { 
+          error: 'Server Error', 
+          message: error.message || 'Server error during email verification.',
+          code: 'VERIFICATION_ERROR'
+        });
+      }
     }
   }
 
@@ -266,14 +369,81 @@ class UserController {
                     error: "Authentication failed", 
                     message: authResult.message 
                 });
+            }        } catch (error) {
+            console.error("Error during authentication in UserController:", error);
+            
+            // Enhanced Oracle-specific error handling for authentication
+            if (error.errorNum) {
+                switch (error.errorNum) {
+                    case 1017:
+                        sendResponse(res, 401, { 
+                            success: false,
+                            error: "Authentication failed", 
+                            message: "Invalid credentials provided.",
+                            code: 'INVALID_CREDENTIALS'
+                        });
+                        break;
+                    case 28000:
+                        sendResponse(res, 423, { 
+                            success: false,
+                            error: "Account Locked", 
+                            message: "Account is locked due to multiple failed login attempts.",
+                            code: 'ACCOUNT_LOCKED'
+                        });
+                        break;
+                    case 28001:
+                        sendResponse(res, 401, { 
+                            success: false,
+                            error: "Password Expired", 
+                            message: "Password has expired. Please reset your password.",
+                            code: 'PASSWORD_EXPIRED'
+                        });
+                        break;
+                    case 1403:
+                        sendResponse(res, 401, { 
+                            success: false,
+                            error: "User Not Found", 
+                            message: "No user found with provided credentials.",
+                            code: 'USER_NOT_FOUND'
+                        });
+                        break;
+                    default:
+                        sendResponse(res, 500, { 
+                            success: false,
+                            error: "Database Error", 
+                            message: `Oracle Error ${error.errorNum}: ${error.message}`,
+                            code: 'ORACLE_AUTH_ERROR'
+                        });
+                }
+            } else if (error.code === 'ECONNREFUSED') {
+                sendResponse(res, 503, { 
+                    success: false,
+                    error: "Service Unavailable", 
+                    message: "Database connection failed during authentication.",
+                    code: 'DB_CONNECTION_ERROR'
+                });
+            } else if (error.code === 'ETIMEDOUT') {
+                sendResponse(res, 504, { 
+                    success: false,
+                    error: "Gateway Timeout", 
+                    message: "Authentication request timed out.",
+                    code: 'AUTH_TIMEOUT'
+                });
+            } else if (error.message && error.message.includes('bcrypt')) {
+                sendResponse(res, 500, { 
+                    success: false,
+                    error: "Password Verification Error", 
+                    message: "Error occurred during password verification.",
+                    code: 'PASSWORD_HASH_ERROR'
+                });
+            } else {
+                sendResponse(res, 500, { 
+                    success: false,
+                    error: "Authentication failed", 
+                    message: error.message || "Internal server error during authentication.",
+                    code: 'AUTH_ERROR'
+                });
             }
-        } catch (error) {
-            console.error("Error during authentication in UserController:", error); // Adaugă un log mai specific aici
-            sendResponse(res, 500, { 
-                success: false,
-                error: "Authentication failed", 
-                message: error.message || "Internal server error during authentication." 
-            });
         }
     }
 
