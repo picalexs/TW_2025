@@ -1,4 +1,4 @@
-server/
+# server/
 
 backend/.env
 node_modules/
