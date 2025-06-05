@@ -5,9 +5,7 @@ const path = require("path");
 class petDTO extends abstractDTO {
   constructor() {
     super('animals');
-  }
-
-  mapToEntity(dbRow) {
+  }  mapToEntity(dbRow) {
     let imagePath = dbRow.FILE_PATH;
     
     if (imagePath) {
@@ -26,13 +24,12 @@ class petDTO extends abstractDTO {
       name: dbRow.NAME,
       species: dbRow.SPECIES,
       healthStatus: dbRow.HEALTH_STATUS,
-      description: dbRow.DESCRIPTION,
+      description: dbRow.DESCRIPTION || 'No description available',
       relationWithOthers: dbRow.RELATION_WITH_OTHERS,
       createdAt: dbRow.CREATED_AT,
       imagePath: imagePath
     };
   }
-
   async getAll() {
     const result = await this.executeCustomQuery(
       `SELECT a.*, m.file_path
@@ -42,12 +39,16 @@ class petDTO extends abstractDTO {
          SELECT MIN(id) FROM media WHERE animal_id = a.id
        )`,
       [],
-      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+      { 
+        outFormat: oracledb.OUT_FORMAT_OBJECT,
+        fetchInfo: {
+          "DESCRIPTION": { type: oracledb.STRING }
+        }
+      }
     );
 
     return result.rows.map(row => this.mapToEntity(row));
   }
-
   async getById(id) {
     const result = await this.executeCustomQuery(
       `SELECT a.*, m.file_path
@@ -57,7 +58,12 @@ class petDTO extends abstractDTO {
          SELECT MIN(id) FROM media WHERE animal_id = a.id
        ))`,
       [id],
-      { outFormat: oracledb.OUT_FORMAT_OBJECT }
+      { 
+        outFormat: oracledb.OUT_FORMAT_OBJECT,
+        fetchInfo: {
+          "DESCRIPTION": { type: oracledb.STRING }
+        }
+      }
     );
 
     if (result.rows.length === 0) {
