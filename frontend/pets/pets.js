@@ -68,7 +68,7 @@ function createPetCard(pet) {
         <span class="tag">${speciesText}</span>
         <span class="tag">${healthText}</span>
       </div>
-      <a href="./pet-details.html?id=${pet.id}" class="btn btn-primary">${viewDetailsText}</a>
+      <a href="/frontend/pets/pet-details.html?id=${pet.id}" class="btn btn-primary">${viewDetailsText}</a>
     </div>
   `;
   

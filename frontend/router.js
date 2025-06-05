@@ -21,11 +21,20 @@ export function loadPage(pageId) {
       break;
       
     case 'login':
-      //contentArea.innerHTML = '<h1>Login Page</h1><p>Login form will go here.</p>';
       window.location.href = './login/login.html';
-      break;
-    case 'signup':
+      break;    case 'signup':
       window.location.href = './signup/signup.html';
+      break;
+      
+    case 'pet-details':
+      const urlParams = new URLSearchParams(window.location.search);
+      const petId = urlParams.get('id');
+      
+      if (petId) {
+        window.location.href = './pets/pet-details.html?id=' + petId;
+      } else {
+        window.location.href = './pets/pets.html';
+      }
       break;
     
     default:

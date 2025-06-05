@@ -1,7 +1,3 @@
-/* -------------------------------------------
-  PETS PAGE SPECIFIC STYLES
-------------------------------------------- */
-
 .container {
     max-width: 1200px;
     margin: 2rem auto;
@@ -15,9 +11,6 @@ h1 {
     font-size: 2.5rem;
 }
 
-/* =====================================================
-   SMART RECOMMENDATIONS SECTION
-===================================================== */
 .recommendations-section {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border-radius: 1rem;
@@ -118,9 +111,6 @@ h1 {
     transform: none;
 }
 
-/* =====================================================
-   ADVANCED FILTERS
-===================================================== */
 .filters-container {
     background-color: var(--light-color);
     border-radius: 1rem;
@@ -238,9 +228,6 @@ h1 {
     transform: translateY(-1px);
 }
 
-/* =====================================================
-   RESULTS SUMMARY & VIEW OPTIONS
-===================================================== */
 .results-summary {
     display: flex;
     justify-content: space-between;
@@ -286,9 +273,6 @@ h1 {
     box-shadow: 0 2px 8px rgba(74, 137, 220, 0.3);
 }
 
-/* =====================================================
-   ENHANCED PET CARDS
-===================================================== */
 .pets-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -468,9 +452,6 @@ h1 {
     font-size: 0.75rem;
 }
 
-/* =====================================================
-   LOADING & EMPTY STATES
-===================================================== */
 .loading-spinner {
     display: flex;
     justify-content: center;
@@ -544,9 +525,6 @@ h1 {
     transform: translateY(-2px);
 }
 
-/* =====================================================
-   RESPONSIVE DESIGN
-===================================================== */
 @media (max-width: 768px) {
     .container {
         padding: 0 1rem;
