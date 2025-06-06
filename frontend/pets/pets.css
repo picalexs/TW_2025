@@ -745,3 +745,49 @@ h1 {
         grid-template-columns: 1fr;
     }
 }
+
+/* Section Header with Add Button */
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.add-pet-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(74, 137, 220, 0.2);
+}
+
+.add-pet-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(74, 137, 220, 0.3);
+}
+
+.plus-icon {
+    font-size: 1.2rem;
+    font-weight: bold;
+    line-height: 1;
+}
+
+@media (max-width: 768px) {
+    .section-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .add-pet-button {
+        width: 100%;
+        justify-content: center;
+    }
+}

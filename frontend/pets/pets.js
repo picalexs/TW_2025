@@ -236,6 +236,7 @@ export function initializeAdvancedFilters() {
 export function initializeFilterButtons() {
   const applyBtn = document.getElementById('apply-filters');
   const resetBtn = document.getElementById('reset-filters');
+  const addPetBtn = document.getElementById('add-pet-btn');
   
   if (applyBtn) {
     applyBtn.addEventListener('click', () => {
@@ -256,6 +257,12 @@ export function initializeFilterButtons() {
       });
       
       renderPets(allPets);
+    });
+  }
+
+  if (addPetBtn) {
+    addPetBtn.addEventListener('click', () => {
+      window.location.href = 'add-pet.html';
     });
   }
 }

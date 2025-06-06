@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title data-i18n="addPetPageTitle" data-i18n-fallback="Add New Pet">Add New Pet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../global/global.css">
+    <link rel="stylesheet" href="pets.css">
+    <link rel="stylesheet" href="add-pet.css">
+</head>
+<body>
+    <div id="global-navbar"></div>
+    
+    <main class="add-pet-container">
+        <div class="navigation-header">
+            <a href="pets.html" class="back-link">
+                <span class="back-arrow">←</span>
+                <span data-i18n="backToPets" data-i18n-fallback="Back to Pets">Back to Pets</span>
+            </a>
+        </div>
+
+        <div class="form-container">
+            <div class="form-header">
+                <h1 data-i18n="addNewPet" data-i18n-fallback="Add New Pet">Add New Pet</h1>
+                <p data-i18n="addPetDescription" data-i18n-fallback="Fill out the form below to add a new pet for adoption.">
+                    Fill out the form below to add a new pet for adoption.
+                </p>
+            </div>
+
+            <form id="add-pet-form" class="pet-form">
+                <!-- Basic Information -->
+                <div class="form-section">
+                    <h2 class="section-title" data-i18n="basicInformation" data-i18n-fallback="Basic Information">Basic Information</h2>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="pet-name" class="form-label" data-i18n="petName" data-i18n-fallback="Pet Name">Pet Name *</label>
+                            <input type="text" id="pet-name" name="name" class="form-input" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pet-species" class="form-label" data-i18n="species" data-i18n-fallback="Species">Species *</label>
+                            <select id="pet-species" name="species" class="form-select" required>
+                                <option value="" data-i18n="selectSpecies" data-i18n-fallback="Select Species">Select Species</option>
+                                <option value="dog" data-i18n="dog" data-i18n-fallback="Dog">Dog</option>
+                                <option value="cat" data-i18n="cat" data-i18n-fallback="Cat">Cat</option>
+                                <option value="bird" data-i18n="bird" data-i18n-fallback="Bird">Bird</option>
+                                <option value="rabbit" data-i18n="rabbit" data-i18n-fallback="Rabbit">Rabbit</option>
+                                <option value="other" data-i18n="other" data-i18n-fallback="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pet-breed" class="form-label" data-i18n="breed" data-i18n-fallback="Breed">Breed</label>
+                            <input type="text" id="pet-breed" name="breed" class="form-input" placeholder="e.g., Golden Retriever, Mixed Breed">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pet-age" class="form-label" data-i18n="age" data-i18n-fallback="Age">Age (years)</label>
+                            <input type="number" id="pet-age" name="age" class="form-input" min="0" max="30" step="0.1" placeholder="e.g., 2.5">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pet-gender" class="form-label" data-i18n="gender" data-i18n-fallback="Gender">Gender</label>
+                            <select id="pet-gender" name="gender" class="form-select">
+                                <option value="" data-i18n="selectGender" data-i18n-fallback="Select Gender">Select Gender</option>
+                                <option value="male" data-i18n="male" data-i18n-fallback="Male">Male</option>
+                                <option value="female" data-i18n="female" data-i18n-fallback="Female">Female</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pet-size" class="form-label" data-i18n="sizeCategory" data-i18n-fallback="Size Category">Size Category</label>
+                            <select id="pet-size" name="sizeCategory" class="form-select">
+                                <option value="" data-i18n="selectSize" data-i18n-fallback="Select Size">Select Size</option>
+                                <option value="small" data-i18n="small" data-i18n-fallback="Small">Small</option>
+                                <option value="medium" data-i18n="medium" data-i18n-fallback="Medium">Medium</option>
+                                <option value="large" data-i18n="large" data-i18n-fallback="Large">Large</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pet-weight" class="form-label" data-i18n="weight" data-i18n-fallback="Weight (kg)">Weight (kg)</label>
+                            <input type="number" id="pet-weight" name="weightKg" class="form-input" min="0" max="200" step="0.1" placeholder="e.g., 25.5">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pet-color" class="form-label" data-i18n="color" data-i18n-fallback="Color">Color</label>
+                            <input type="text" id="pet-color" name="color" class="form-input" placeholder="e.g., Brown, Black and White">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Health Information -->
+                <div class="form-section">
+                    <h2 class="section-title" data-i18n="healthInformation" data-i18n-fallback="Health Information">Health Information</h2>
+                    
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="pet-health-status" class="form-label" data-i18n="healthStatus" data-i18n-fallback="Health Status">Health Status</label>
+                            <select id="pet-health-status" name="healthStatus" class="form-select">
+                                <option value="" data-i18n="selectHealthStatus" data-i18n-fallback="Select Health Status">Select Health Status</option>
+                                <option value="excellent" data-i18n="excellent" data-i18n-fallback="Excellent">Excellent</option>
+                                <option value="good" data-i18n="good" data-i18n-fallback="Good">Good</option>
+                                <option value="fair" data-i18n="fair" data-i18n-fallback="Fair">Fair</option>
+                                <option value="special needs" data-i18n="specialNeeds" data-i18n-fallback="Special Needs">Special Needs</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="pet-description" class="form-label" data-i18n="description" data-i18n-fallback="Description">Description</label>
+                            <textarea id="pet-description" name="description" class="form-textarea" rows="4" 
+                                placeholder="Describe the pet's personality, behavior, special needs, etc."></textarea>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="pet-relations" class="form-label" data-i18n="relationWithOthers" data-i18n-fallback="Relationship with Others">Relationship with Others</label>
+                            <textarea id="pet-relations" name="relationWithOthers" class="form-textarea" rows="3" 
+                                placeholder="How does this pet get along with kids, other pets, etc.?"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tags/Characteristics -->
+                <div class="form-section">
+                    <h2 class="section-title" data-i18n="characteristics" data-i18n-fallback="Characteristics">Characteristics</h2>
+                    
+                    <div class="tags-section-header">
+                        <p class="section-description" data-i18n="selectTags" data-i18n-fallback="Select all tags that apply to this pet:">
+                            Select all tags that apply to this pet:
+                        </p>
+                        <button type="button" id="add-tag-btn" class="add-tag-btn">
+                            <span class="plus-icon">+</span>
+                            <span data-i18n="addNewTag" data-i18n-fallback="Add New Tag">Add New Tag</span>
+                        </button>
+                    </div>
+                    
+                    <div class="tags-grid" id="tags-container">
+                        <!-- Tags will be populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Adoption Information -->
+                <div class="form-section">
+                    <h2 class="section-title" data-i18n="adoptionInformation" data-i18n-fallback="Adoption Information">Adoption Information</h2>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="adoption-status" class="form-label" data-i18n="adoptionStatus" data-i18n-fallback="Adoption Status">Adoption Status</label>
+                            <select id="adoption-status" name="adoptionStatus" class="form-select">
+                                <option value="available" data-i18n="available" data-i18n-fallback="Available">Available</option>
+                                <option value="pending" data-i18n="pending" data-i18n-fallback="Pending">Pending</option>
+                                <option value="adopted" data-i18n="adopted" data-i18n-fallback="Adopted">Adopted</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="adoption-fee" class="form-label" data-i18n="adoptionFee" data-i18n-fallback="Adoption Fee ($)">Adoption Fee ($)</label>
+                            <input type="number" id="adoption-fee" name="adoptionFee" class="form-input" min="0" step="0.01" placeholder="e.g., 150.00">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="button" id="cancel-btn" class="btn btn-secondary" data-i18n="cancel" data-i18n-fallback="Cancel">Cancel</button>
+                    <button type="submit" id="submit-btn" class="btn btn-primary" data-i18n="addPet" data-i18n-fallback="Add Pet">
+                        <span class="btn-text">Add Pet</span>
+                        <span class="loading-spinner" style="display: none;"></span>
+                    </button>
+                </div>
+            </form>
+        </div>    </main>
+
+    <!-- New Tag Modal -->
+    <div id="new-tag-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" data-i18n="createNewTag" data-i18n-fallback="Create New Tag">Create New Tag</h3>
+                <button type="button" class="modal-close" id="close-modal-btn">×</button>
+            </div>
+            
+            <form id="new-tag-form" class="modal-form">
+                <div class="form-group">
+                    <label for="new-tag-name" class="form-label" data-i18n="tagName" data-i18n-fallback="Tag Name">Tag Name *</label>
+                    <input type="text" id="new-tag-name" class="form-input" required placeholder="e.g., Loves Swimming">
+                    <div class="error-message" id="tag-name-error"></div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" id="cancel-tag-btn" class="btn btn-secondary" data-i18n="cancel" data-i18n-fallback="Cancel">Cancel</button>
+                    <button type="submit" id="create-tag-btn" class="btn btn-primary" data-i18n="createTag" data-i18n-fallback="Create Tag">
+                        <span class="btn-text">Create Tag</span>
+                        <span class="loading-spinner" style="display: none;"></span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="global-footer"></div>
+    
+    <script type="module" src="../global/global.js"></script>
+    <script type="module" src="../languages/language.js"></script>
+    <script type="module" src="add-pet.js"></script>
+</body>
+</html>
