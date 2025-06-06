@@ -72,20 +72,58 @@ async function executeQuery(query, binds = [], options = {}) {
 }
 
 function enhanceOracleError(error, query) {
-  if (!error.errorNum) {
+  if (!error.errorNum && !error.message?.includes('ORA-')) {
     return error;
   }
 
   const enhancedError = Object.assign(error, { 
-    originalQuery: query.substring(0, 200) + (query.length > 200 ? '...' : ''),
-    timestamp: new Date().toISOString()
+    originalQuery: query ? query.substring(0, 200) + (query.length > 200 ? '...' : '') : 'N/A',
+    timestamp: new Date().toISOString(),
+    isOracleError: true
   });
 
-  switch (error.errorNum) {
+  // Handle application errors (custom triggers)
+  if (error.message?.includes('ORA-20001')) {
+    enhancedError.code = "USERNAME_ALREADY_EXISTS";
+    enhancedError.status = 409;
+    enhancedError.userMessage = "Username is already taken. Please choose a different username.";
+    enhancedError.field = "username";
+    return enhancedError;
+  }
+  
+  if (error.message?.includes('ORA-20002')) {
+    enhancedError.code = "EMAIL_ALREADY_EXISTS";
+    enhancedError.status = 409;
+    enhancedError.userMessage = "Email address is already registered. Please use a different email or try logging in.";
+    enhancedError.field = "email";
+    return enhancedError;
+  }
+
+  if (error.message?.includes('ORA-20003')) {
+    enhancedError.code = "INVALID_EMAIL_FORMAT";
+    enhancedError.status = 400;
+    enhancedError.userMessage = "Please enter a valid email address.";
+    enhancedError.field = "email";
+    return enhancedError;
+  }
+
+  const errorNum = error.errorNum || extractOracleErrorNumber(error.message);
+  
+  switch (errorNum) {
     case 1:
-      enhancedError.code = "UNIQUE_CONSTRAINT_VIOLATION";
+      if (error.message?.includes('UK_USERS_USERNAME')) {
+        enhancedError.code = "USERNAME_ALREADY_EXISTS";
+        enhancedError.userMessage = "Username is already taken. Please choose a different username.";
+        enhancedError.field = "username";
+      } else if (error.message?.includes('UK_USERS_EMAIL') || error.message?.includes('USERS_EMAIL_UK')) {
+        enhancedError.code = "EMAIL_ALREADY_EXISTS";
+        enhancedError.userMessage = "Email address is already registered. Please use a different email or try logging in.";
+        enhancedError.field = "email";
+      } else {
+        enhancedError.code = "UNIQUE_CONSTRAINT_VIOLATION";
+        enhancedError.userMessage = "A record with this information already exists. Please check your input.";
+      }
       enhancedError.status = 409;
-      enhancedError.userMessage = "Record already exists with this unique identifier";
       break;
     case 942:
       enhancedError.code = "TABLE_OR_VIEW_MISSING";
@@ -153,8 +191,13 @@ function enhanceOracleError(error, query) {
       enhancedError.status = 500;
       enhancedError.userMessage = "Database operation failed";
   }
-
   return enhancedError;
+}
+
+function extractOracleErrorNumber(message) {
+  if (!message) return null;
+  const match = message.match(/ORA-(\d+)/);
+  return match ? parseInt(match[1]) : null;
 }
 
 module.exports = {
@@ -164,5 +207,6 @@ module.exports = {
   closeConnection,
   closePool,
   executeQuery,
-  enhanceOracleError
+  enhanceOracleError,
+  extractOracleErrorNumber
 };

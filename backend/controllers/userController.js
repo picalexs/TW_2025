@@ -370,7 +370,6 @@ class UserController {
             }        } catch (error) {
             console.error("Error during authentication in UserController:", error);
             
-            // Enhanced Oracle-specific error handling for authentication
             if (error.errorNum) {
                 switch (error.errorNum) {
                     case 1017:
