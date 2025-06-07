@@ -174,7 +174,6 @@ DECLARE
             'Auto-rejected ' || v_rejected_count || ' pending adoptions for animal ID: ' || p_animal_id
         );
     END handle_auto_rejections;
-
 BEGIN
     IF INSERTING THEN
         v_animal_id := :NEW.animal_id;

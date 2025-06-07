@@ -7,7 +7,7 @@ class AddPetPage {
     this.availableTags = [];
     this.selectedTags = new Set();
     this.tempUserId = 4;
-    this.nextTagId = 16; // Start from 16 since we have 15 predefined tags
+    this.nextTagId = 16;
     this.init();
   }
 
@@ -46,11 +46,14 @@ class AddPetPage {
       console.error('Error loading tags:', error);
       this.availableTags = [];
     }
-  }
-  renderTags() {
+  }  renderTags() {
     const tagsContainer = document.getElementById('tags-container');
-    if (!tagsContainer) return;
+    if (!tagsContainer) {
+      console.error('Tags container not found in DOM');
+      return;
+    }
 
+    console.log('Rendering tags:', this.availableTags);
     tagsContainer.innerHTML = '';
 
     this.availableTags.forEach(tag => {
@@ -77,6 +80,8 @@ class AddPetPage {
 
       tagsContainer.appendChild(tagElement);
     });
+    
+    console.log('Tags rendered successfully, container has', tagsContainer.children.length, 'children');
   }
   initializeEventListeners() {
     const form = document.getElementById('add-pet-form');
@@ -97,7 +102,6 @@ class AddPetPage {
       });
     }
 
-    // New tag modal handlers
     if (addTagBtn) {
       addTagBtn.addEventListener('click', () => this.openNewTagModal());
     }
@@ -114,7 +118,6 @@ class AddPetPage {
       newTagForm.addEventListener('submit', (e) => this.handleNewTagSubmit(e));
     }
 
-    // Close modal when clicking outside
     if (newTagModal) {
       newTagModal.addEventListener('click', (e) => {
         if (e.target === newTagModal) {
