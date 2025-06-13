@@ -131,47 +131,367 @@ async function addTestimonialsSection() {
     return;
   }
   
-  // Create testimonials section
+  // Create testimonials section with placeholders first
   const testimonialsSection = document.createElement('section');
   testimonialsSection.className = 'testimonials-section';
   testimonialsSection.id = 'testimonials';
   
+  // Set initial placeholder structure
+  testimonialsSection.innerHTML = createTestimonialsPlaceholder();
+  dynamicSectionsContainer.appendChild(testimonialsSection);
+  
   try {
-    // Fetch testimonials from API
-    const testimonials = await fetchTestimonials(3);
-    
-    testimonialsSection.innerHTML = `
-      <div class="section-container">
-        <div class="section-header">
-          <h2 class="section-title" data-i18n="testimonials.title">What Our Community Says</h2>
-          <p data-i18n="testimonials.subtitle">Real stories from pet adopters and shelter partners</p>
-        </div>
-        <div class="testimonials-grid">
-          ${testimonials.map(testimonial => createTestimonialHTML(testimonial)).join('')}
-        </div>
-      </div>
-    `;
+    // Fetch all testimonials from API
+    const testimonials = await fetchTestimonials();
+      if (testimonials && testimonials.length > 0) {
+      // Replace placeholder with actual carousel
+      testimonialsSection.innerHTML = createTestimonialsCarousel(testimonials);
+      
+      // Initialize carousel functionality
+      initTestimonialsCarousel();
+      
+      // Update translations
+      if (window.languageManager) {
+        window.languageManager.updateContent();
+      }
+    } else {
+      testimonialsSection.innerHTML = createEmptyTestimonialsState();
+    }
   } catch (error) {
     console.error('Error loading testimonials:', error);
-    testimonialsSection.innerHTML = `
-      <div class="section-container">
-        <div class="section-header">
-          <h2 class="section-title" data-i18n="testimonials.title">What Our Community Says</h2>
-          <p data-i18n="testimonials.subtitle">Real stories from pet adopters and shelter partners</p>
-        </div>
-        <div class="error-message">
-          <p>Unable to load testimonials at this time.</p>
-        </div>
-      </div>
-    `;
+    testimonialsSection.innerHTML = createErrorTestimonialsState();
   }
-  
-  dynamicSectionsContainer.appendChild(testimonialsSection);
 }
 
-async function fetchTestimonials(count = 3) {
+function createTestimonialsPlaceholder() {
+  return `
+    <div class="section-container">
+      <div class="section-header">
+        <h2 class="section-title" data-i18n="testimonials.title">What Our Community Says</h2>
+        <p data-i18n="testimonials.subtitle">Real stories from pet adopters and shelter partners</p>
+      </div>
+      <div class="testimonials-carousel">
+        <div class="testimonials-carousel-wrapper">
+          <div class="testimonials-track">
+            <div class="testimonials-grid">
+              ${createPlaceholderCard()}
+              ${createPlaceholderCard()}
+              ${createPlaceholderCard()}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function createPlaceholderCard() {
+  return `
+    <div class="testimonial-card placeholder">
+      <div class="testimonial-content">
+        <div class="testimonial-rating">
+          <div class="placeholder-stars"></div>
+        </div>
+        <div class="placeholder-content"></div>
+      </div>
+      <div class="testimonial-author">
+        <div class="author-info">
+          <div class="placeholder-author"></div>
+          <div class="placeholder-author" style="width: 50%;"></div>
+          <div class="placeholder-location"></div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function createTestimonialsCarousel(testimonials) {
+  const cardsPerSlide = getCardsPerSlide();
+  const slides = createSlides(testimonials, cardsPerSlide);
+  const totalSlides = slides.length;
+  
+  return `
+    <div class="section-container">
+      <div class="section-header">
+        <h2 class="section-title" data-i18n="testimonials.title">What Our Community Says</h2>
+        <p data-i18n="testimonials.subtitle">Real stories from pet adopters and shelter partners</p>
+      </div>
+      <div class="testimonials-carousel" data-total-slides="${totalSlides}">
+        ${totalSlides > 1 ? `
+          <button class="carousel-arrow carousel-prev" aria-label="Previous testimonials">
+            &lt;
+          </button>
+          <button class="carousel-arrow carousel-next" aria-label="Next testimonials">
+            &gt;
+          </button>
+        ` : ''}
+        <div class="testimonials-carousel-wrapper">
+          <div class="testimonials-track">
+            ${slides.map(slide => `
+              <div class="testimonials-grid">
+                ${slide.map(testimonial => createTestimonialHTML(testimonial)).join('')}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+        ${totalSlides > 1 ? `
+          <div class="carousel-indicators">
+            ${Array.from({ length: totalSlides }, (_, i) => 
+              `<button class="carousel-indicator ${i === 0 ? 'active' : ''}" data-slide="${i}" aria-label="Go to slide ${i + 1}"></button>`
+            ).join('')}
+          </div>
+        ` : ''}
+      </div>
+    </div>
+  `;
+}
+
+function createEmptyTestimonialsState() {
+  return `
+    <div class="section-container">
+      <div class="section-header">
+        <h2 class="section-title" data-i18n="testimonials.title">What Our Community Says</h2>
+        <p data-i18n="testimonials.subtitle">Real stories from pet adopters and shelter partners</p>
+      </div>
+      <div class="no-pets-message">
+        <p>No testimonials available at this time.</p>
+        <p>Be the first to share your adoption story!</p>
+      </div>
+    </div>
+  `;
+}
+
+function createErrorTestimonialsState() {
+  return `
+    <div class="section-container">
+      <div class="section-header">
+        <h2 class="section-title" data-i18n="testimonials.title">What Our Community Says</h2>
+        <p data-i18n="testimonials.subtitle">Real stories from pet adopters and shelter partners</p>
+      </div>
+      <div class="error-message">
+        <p>Unable to load testimonials at this time.</p>
+        <p>Please try refreshing the page.</p>
+      </div>
+    </div>
+  `;
+}
+
+function getCardsPerSlide() {
+  const width = window.innerWidth;
+  if (width <= 768) return 1;
+  if (width <= 1024) return 2;
+  return 3;
+}
+
+function createSlides(testimonials, cardsPerSlide) {
+  const slides = [];
+  for (let i = 0; i < testimonials.length; i += cardsPerSlide) {
+    slides.push(testimonials.slice(i, i + cardsPerSlide));
+  }
+  return slides;
+}
+
+let currentSlide = 0;
+let totalSlides = 0;
+let carouselTrack = null;
+let touchStartX = 0;
+let touchEndX = 0;
+let isDragging = false;
+let startX = 0;
+let currentX = 0;
+
+function initTestimonialsCarousel() {
+  const carousel = document.querySelector('.testimonials-carousel');
+  if (!carousel) return;
+  
+  carouselTrack = carousel.querySelector('.testimonials-track');
+  totalSlides = parseInt(carousel.dataset.totalSlides) || 0;
+  
+  if (totalSlides <= 1) return;
+  
+  const prevBtn = carousel.querySelector('.carousel-prev');
+  const nextBtn = carousel.querySelector('.carousel-next');
+  const indicators = carousel.querySelectorAll('.carousel-indicator');
+  
+  if (prevBtn) prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
+  if (nextBtn) nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
+  
+  indicators.forEach((indicator, index) => {
+    indicator.addEventListener('click', () => goToSlide(index));
+  });
+
+  carousel.addEventListener('touchstart', handleTouchStart, { passive: true });
+  carousel.addEventListener('touchmove', handleTouchMove, { passive: false });
+  carousel.addEventListener('touchend', handleTouchEnd, { passive: true });
+  
+  carousel.addEventListener('mousedown', handleMouseDown);
+  carousel.addEventListener('mousemove', handleMouseMove);
+  carousel.addEventListener('mouseup', handleMouseUp);
+  carousel.addEventListener('mouseleave', handleMouseUp);
+  
+  carousel.addEventListener('keydown', handleKeydown);
+  carousel.setAttribute('tabindex', '0');
+  
+  window.addEventListener('resize', debounce(handleResize, 250));
+  
+  updateCarousel();
+}
+
+function goToSlide(slideIndex) {
+  if (slideIndex < 0) {
+    currentSlide = totalSlides - 1;
+  } else if (slideIndex >= totalSlides) {
+    currentSlide = 0;
+  } else {
+    currentSlide = slideIndex;
+  }
+  updateCarousel();
+}
+
+function updateCarousel() {
+  if (!carouselTrack || totalSlides <= 1) return;
+  
+  const slideWidth = 100;
+  const gapInPercent = calculateGapAsPercentage();
+  
+  const translateX = -currentSlide * (slideWidth + gapInPercent);
+  carouselTrack.style.transform = `translateX(${translateX}%)`;
+  
+  const indicators = document.querySelectorAll('.carousel-indicator');
+  indicators.forEach((indicator, index) => {
+    indicator.classList.toggle('active', index === currentSlide);
+  });
+  
+  const prevBtn = document.querySelector('.carousel-prev');
+  const nextBtn = document.querySelector('.carousel-next');
+  
+  if (prevBtn && nextBtn) {
+    prevBtn.disabled = false;
+    nextBtn.disabled = false;
+  }
+}
+
+function calculateGapAsPercentage() {
+  const container = document.querySelector('.testimonials-carousel-wrapper');
+  if (!container) return 0;
+  
+  const containerWidth = container.offsetWidth;
+  const remInPixels = parseFloat(getComputedStyle(document.documentElement).fontSize);
+  const gapInPixels = 2 * remInPixels;
+  
+  return (gapInPixels / containerWidth) * 100;
+}
+
+function handleTouchStart(e) {
+  touchStartX = e.changedTouches[0].screenX;
+  isDragging = true;
+}
+
+function handleTouchMove(e) {
+  if (!isDragging) return;
+  
+  currentX = e.changedTouches[0].screenX;
+  const diff = Math.abs(currentX - touchStartX);
+  
+  if (diff > 10) {
+    e.preventDefault();
+  }
+}
+
+function handleTouchEnd(e) {
+  if (!isDragging) return;
+  
+  touchEndX = e.changedTouches[0].screenX;
+  isDragging = false;
+  handleSwipe();
+}
+
+function handleMouseDown(e) {
+  if (e.button !== 0) return;
+  
+  startX = e.clientX;
+  isDragging = true;
+  e.preventDefault();
+}
+
+function handleMouseMove(e) {
+  if (!isDragging) return;
+  
+  currentX = e.clientX;
+  e.preventDefault();
+}
+
+function handleMouseUp(e) {
+  if (!isDragging) return;
+  
+  const endX = e.clientX || currentX;
+  isDragging = false;
+  
+  touchStartX = startX;
+  touchEndX = endX;
+  handleSwipe();
+}
+
+function handleSwipe() {
+  const swipeThreshold = 50;
+  const swipeDistance = touchEndX - touchStartX;
+  
+  if (Math.abs(swipeDistance) > swipeThreshold) {
+    if (swipeDistance > 0) {
+      goToSlide(currentSlide - 1);
+    } else {
+      goToSlide(currentSlide + 1);
+    }
+  }
+}
+
+function handleKeydown(e) {
+  switch (e.key) {
+    case 'ArrowLeft':
+      e.preventDefault();
+      goToSlide(currentSlide - 1);
+      break;
+    case 'ArrowRight':
+      e.preventDefault();
+      goToSlide(currentSlide + 1);
+      break;
+    case 'Home':
+      e.preventDefault();
+      goToSlide(0);
+      break;
+    case 'End':
+      e.preventDefault();
+      goToSlide(totalSlides - 1);
+      break;
+  }
+}
+
+function handleResize() {
+  const testimonialsSection = document.getElementById('testimonials');
+  if (testimonialsSection) {
+    const testimonialCards = testimonialsSection.querySelectorAll('.testimonial-card:not(.placeholder)');
+    if (testimonialCards.length > 0) {
+      addTestimonialsSection();
+    }
+  }
+}
+
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+async function fetchTestimonials(count) {
   try {
-    const response = await apiService.get(`/api/testimonials/random`, { count });
+    const endpoint = count ? `/api/testimonials/random?count=${count}` : '/api/testimonials';
+    const response = await apiService.get(endpoint);
     return response;
   } catch (error) {
     console.error('Error fetching testimonials:', error);
@@ -293,7 +613,6 @@ function createUserCardHTML(user) {
     ? `${user.first_name} ${user.last_name}` 
     : user.first_name || user.username;
   
-  // Show role-based description
   const userDescription = user.role === 'shelter' ? 'Shelter' : 'Community Member';
   
   const adoptionCount = user.adoption_count || 0;
