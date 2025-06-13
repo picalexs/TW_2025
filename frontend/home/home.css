@@ -429,12 +429,66 @@ section {
 
 .testimonial-rating {
   margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .stars {
   color: #ffc107;
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   letter-spacing: 0.125rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+.rating-number {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.star {
+  display: inline-block;
+  position: relative;
+}
+
+.star-full {
+  color: #ffc107;
+}
+
+.star-half {
+  position: relative;
+  display: inline-block;
+}
+
+.star-half-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50%;
+  overflow: hidden;
+  color: #ffc107;
+  z-index: 2;
+}
+
+.star-half-empty {
+  color: #e4e4e4;
+  z-index: 1;
+}
+
+.star-half .star-half-inner {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50%;
+  overflow: hidden;
+  color: #ffc107;
+}
+
+.star-empty {
+  color: #e4e4e4;
 }
 
 .testimonial-text {

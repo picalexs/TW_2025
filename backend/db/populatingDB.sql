@@ -598,6 +598,12 @@ insert into testimonials (id, user_id, testimonial_text, rating, location) value
 insert into testimonials (id, user_id, testimonial_text, rating, location) values (4, 6, 'We''ve been partners for 2 years. The platform''s reach and user-friendly interface have revolutionized our adoption process.', 5, 'Denver, CO');
 insert into testimonials (id, user_id, testimonial_text, rating, location) values (5, 20, 'Adopted my rescue cat Max here. The support team guided me through every step. Couldn''t be happier!', 5, 'Miami, FL');
 insert into testimonials (id, user_id, testimonial_text, rating, location) values (6, 10, 'This platform connects us with people who truly care about animals. The quality of adopters has been exceptional.', 5, 'Seattle, WA');
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (7, 3, 'Great experience overall, but the adoption process took a bit longer than expected.', 4, 'Chicago, IL');
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (8, 5, 'Very helpful staff and lots of animals to choose from. Would recommend to friends.', 4, 'Boston, MA');
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (9, 8, 'The platform is easy to use and I found a wonderful dog, but some profiles lacked details.', 4, 'Dallas, TX');
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (10, 12, 'I appreciate the support, but I wish there were more filter options for special needs pets.', 4, 'Phoenix, AZ');
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (11, 17, 'Adoption process was smooth and the team was responsive. Would use again!', 4.5, 'Atlanta, GA');
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (13, 13, 'As a shelter, we appreciate the exposure and ease of communication with adopters.', 4.5, 'Los Angeles, CA');
 commit;
 
 select count(*) from address;

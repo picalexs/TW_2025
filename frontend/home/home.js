@@ -562,14 +562,40 @@ async function fetchTestimonials(count) {
   }
 }
 
+function createStarsHTML(rating) {
+  const numRating = parseFloat(rating) || 5;
+  
+  const fullStars = Math.floor(numRating);
+  const hasHalfStar = (numRating % 1) >= 0.25;
+  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+  
+  let starsHTML = '';
+  
+  for (let i = 0; i < fullStars; i++) {
+    starsHTML += '<span class="star star-full">★</span>';
+  }
+  
+  if (hasHalfStar) {
+    starsHTML += '<span class="star star-half"><span class="star-half-fill">★</span><span class="star-half-empty">★</span></span>';
+  }
+  
+  for (let i = 0; i < emptyStars; i++) {
+    starsHTML += '<span class="star star-empty">☆</span>';
+  }
+  
+  return starsHTML;
+}
+
 function createTestimonialHTML(testimonial) {
-  const stars = '★'.repeat(testimonial.rating) + '☆'.repeat(5 - testimonial.rating);
+  const starsHTML = createStarsHTML(testimonial.rating);
+  const numRating = parseFloat(testimonial.rating) || 5;
   
   return `
     <div class="testimonial-card">
       <div class="testimonial-content">
         <div class="testimonial-rating">
-          <span class="stars">${stars}</span>
+          <div class="stars">${starsHTML}</div>
+          <span class="rating-number">${numRating}/5</span>
         </div>
         <blockquote class="testimonial-text">
           ${testimonial.text}
