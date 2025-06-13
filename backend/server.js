@@ -5,6 +5,7 @@ const db = require('./db/dbConnection');
 const handleUserRoutes = require('./routes/userRoutes');
 const handlePetRoutes = require('./routes/petRoutes');
 const handleRecommendationRoutes = require('./routes/recommendationRoutes');
+const { handleTestimonialRoutes } = require('./routes/testimonialRoutes');
 const handleStaticRoutes = require('./routes/staticRoutes');
 const handleConfigRoutes = require('./routes/configRoutes');
 const { handleNotificationRoutes } = require('./routes/notificationRoutes');
@@ -60,19 +61,21 @@ const server = http.createServer(async (req, res) => {
     if (!routeHandled) {
       routeHandled = await handleStaticRoutes(req, res);
     }
-    
-    if (!routeHandled) {
+      if (!routeHandled) {
       routeHandled = await handleUserRoutes(req, res);
     }
+    
     if (!routeHandled) {
       routeHandled = await handlePetRoutes(req, res);
-    }    if (!routeHandled) {
-      routeHandled = await handleRecommendationRoutes(req, res);
-    }    if (!routeHandled) {
-      routeHandled = await handleCareScheduleRoutes(req, res);
     }
-
+    
     if (!routeHandled) {
+      routeHandled = await handleRecommendationRoutes(req, res);
+    }
+    
+    if (!routeHandled) {
+      routeHandled = await handleTestimonialRoutes(req, res);
+    }    if (!routeHandled) {
       routeHandled = await handleNotificationRoutes(req, res);
     }
 

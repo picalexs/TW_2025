@@ -13,10 +13,12 @@ delete from medical_history;
 delete from care_resources;
 delete from care_schedule;
 delete from animal_metrics;
+delete from testimonials;
 delete from animals;
 delete from users;
 delete from tags;
 delete from address;
+
 commit;
 
 insert into address (id, street, city, country, postal_code, latitude, longitude) values (1, '123 Main St', 'Springfield', 'USA', '12345', 40.7128, -74.0060);
@@ -42,35 +44,35 @@ insert into address (id, street, city, country, postal_code, latitude, longitude
 commit;
 
 insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (1, 'john_doe', 'hashed_pass_john', 'john@example.com', 'John', 'Doe', '555-0101', 1, 1, 'user', '/images/profile/person/man/1.jpg');
-insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (2, 'jane_admin', 'hashed_pass_jane', 'jane@example.com', 'Jane', 'Smith', '555-0102', 1, 2, 'admin', '/images/profile/person/woman/1.jpg');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (2, 'jane_shelter', 'hashed_pass_jane', 'jane@example.com', 'Happy', 'Paws Shelter', '555-0102', 1, 2, 'shelter', '/images/profile/person/shelter/1.jpg');
 insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (3, 'alice_smith', 'hashed_pass_alice', 'alice@example.com', 'Alice', 'Johnson', '555-0103', 1, 3, 'user', '/images/profile/person/woman/2.jpg');
-insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (4, 'bob_williams', 'hashed_pass_bob', 'bob@example.com', 'Bob', 'Williams', '555-0104', 1, 4, 'shelter', '/images/profile/person/man/2.jpg');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (4, 'bob_shelter', 'hashed_pass_bob', 'bob@example.com', 'Safe', 'Haven Shelter', '555-0104', 1, 4, 'shelter', '/images/profile/person/shelter/2.jpg');
 insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (5, 'charlie_brown', 'hashed_pass_charlie', 'charlie@example.com', 'Charlie', 'Brown', '555-0105', 1, 5, 'user', '/images/profile/person/man/3.jpg');
-insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (6, 'diana_shelter', 'hashed_pass_diana', 'diana@example.com', 'Diana', 'Wilson', '555-0106', 1, 6, 'shelter', '/images/profile/person/woman/3.jpg');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (6, 'diana_shelter', 'hashed_pass_diana', 'diana@example.com', 'Fluffy', 'Friends Shelter', '555-0106', 1, 6, 'shelter', '/images/profile/person/shelter/3.jpg');
 insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (7, 'edward_jones', 'hashed_pass_edward', 'edward@example.com', 'Edward', 'Jones', '555-0107', 1, 7, 'user', '/images/profile/person/man/4.jpg');
-insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (8, 'fiona_admin', 'hashed_pass_fiona', 'fiona@example.com', 'Fiona', 'Davis', '555-0108', 1, 8, 'admin', '/images/profile/person/woman/4.jpeg');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (8, 'fiona_user', 'hashed_pass_fiona', 'fiona@example.com', 'Fiona', 'Davis', '555-0108', 1, 8, 'user', '/images/profile/person/woman/4.jpg');
 insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (9, 'george_user', 'hashed_pass_george', 'george@example.com', 'George', 'Miller', '555-0109', 1, 9, 'user', '/images/profile/person/man/5.jpg');
-insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (10, 'helen_shelter', 'hashed_pass_helen', 'helen@example.com', 'Helen', 'Garcia', '555-0110', 1, 10, 'shelter', '/images/profile/person/woman/5.jpg');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (10, 'helen_shelter', 'hashed_pass_helen', 'helen@example.com', 'Paws', 'Rescue Center', '555-0110', 1, 10, 'shelter', '/images/profile/person/shelter/4.jpg');
 insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (11, 'ivan_user', 'hashed_pass_ivan', 'ivan@example.com', 'Ivan', 'Rodriguez', '555-0111', 1, 11, 'user', '/images/profile/person/man/1.jpg');
 insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (12, 'julia_user', 'hashed_pass_julia', 'julia@example.com', 'Julia', 'Martinez', '555-0112', 1, 12, 'user', '/images/profile/person/woman/1.jpg');
-insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (13, 'kevin_shelter', 'hashed_pass_kevin', 'kevin@example.com', 'Kevin', 'Anderson', '555-0113', 1, 13, 'shelter', '/images/profile/person/man/2.jpg');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (13, 'kevin_shelter', 'hashed_pass_kevin', 'kevin@example.com', 'Animal', 'Care Shelter', '555-0113', 1, 13, 'shelter', '/images/profile/person/shelter/5.jpg');
 insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (14, 'linda_user', 'hashed_pass_linda', 'linda@example.com', 'Linda', 'Taylor', '555-0114', 1, 14, 'user', '/images/profile/person/woman/2.jpg');
 insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (15, 'mike_user', 'hashed_pass_mike', 'mike@example.com', 'Mike', 'Thomas', '555-0115', 1, 15, 'user', '/images/profile/person/man/3.jpg');
-insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (16, 'nancy_admin', 'hashed_pass_nancy', 'nancy@example.com', 'Nancy', 'Jackson', '555-0116', 1, 16, 'admin', '/images/profile/person/woman/3.jpg');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (16, 'nancy_user', 'hashed_pass_nancy', 'nancy@example.com', 'Nancy', 'Jackson', '555-0116', 1, 16, 'user', '/images/profile/person/woman/3.jpg');
 insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (17, 'oscar_user', 'hashed_pass_oscar', 'oscar@example.com', 'Oscar', 'White', '555-0117', 1, 17, 'user', '/images/profile/person/man/4.jpg');
-insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (18, 'paula_shelter', 'hashed_pass_paula', 'paula@example.com', 'Paula', 'Harris', '555-0118', 1, 18, 'shelter', '/images/profile/person/woman/4.jpg');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (18, 'paula_shelter', 'hashed_pass_paula', 'paula@example.com', 'Pet', 'Lovers Shelter', '555-0118', 1, 18, 'shelter', '/images/profile/person/shelter/1.jpg');
 insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (19, 'quinn_user', 'hashed_pass_quinn', 'quinn@example.com', 'Quinn', 'Martin', '555-0119', 1, 19, 'user', '/images/profile/person/man/5.jpg');
 insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (20, 'rachel_user', 'hashed_pass_rachel', 'rachel@example.com', 'Rachel', 'Thompson', '555-0120', 1, 20, 'user', '/images/profile/person/woman/5.jpg');
 insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (21, 'steve_user', 'hashed_pass_steve', 'steve@example.com', 'Steve', 'Lee', '555-0121', 0, 1, 'user', '/images/profile/person/man/1.jpg');
 insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (22, 'tina_user', 'hashed_pass_tina', 'tina@example.com', 'Tina', 'Walker', '555-0122', 0, 2, 'user', '/images/profile/person/woman/1.jpg');
-insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (23, 'ursula_shelter', 'hashed_pass_ursula', 'ursula@example.com', 'Ursula', 'Hall', '555-0123', 1, 3, 'shelter', '/images/profile/person/woman/2.jpg');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (23, 'ursula_shelter', 'hashed_pass_ursula', 'ursula@example.com', 'Second', 'Chance Shelter', '555-0123', 1, 3, 'shelter', '/images/profile/person/shelter/2.jpg');
 insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (24, 'victor_user', 'hashed_pass_victor', 'victor@example.com', 'Victor', 'Allen', '555-0124', 1, 4, 'user', '/images/profile/person/man/2.jpg');
-insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (25, 'wendy_admin', 'hashed_pass_wendy', 'wendy@example.com', 'Wendy', 'Young', '555-0125', 1, 5, 'admin', '/images/profile/person/woman/3.jpg');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (25, 'wendy_user', 'hashed_pass_wendy', 'wendy@example.com', 'Wendy', 'Young', '555-0125', 1, 5, 'user', '/images/profile/person/woman/3.jpg');
 insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (26, 'xavier_user', 'hashed_pass_xavier', 'xavier@example.com', 'Xavier', 'Clark', '555-0126', 1, 6, 'user', '/images/profile/person/man/3.jpg');
-insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (27, 'yvonne_shelter', 'hashed_pass_yvonne', 'yvonne@example.com', 'Yvonne', 'Lewis', '555-0127', 1, 7, 'shelter', '/images/profile/person/woman/4.jpeg');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (27, 'yvonne_shelter', 'hashed_pass_yvonne', 'yvonne@example.com', 'Forever', 'Home Shelter', '555-0127', 1, 7, 'shelter', '/images/profile/person/shelter/3.jpg');
 insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (28, 'zach_user', 'hashed_pass_zach', 'zach@example.com', 'Zach', 'Turner', '555-0128', 1, 8, 'user', '/images/profile/person/man/4.jpg');
-insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (29, 'amanda_admin', 'hashed_pass_amanda', 'amanda@example.com', 'Amanda', 'Baker', '555-0129', 1, 9, 'admin', '/images/profile/person/woman/5.jpg');
-insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (30, 'ben_shelter', 'hashed_pass_ben', 'ben@example.com', 'Ben', 'Cooper', '555-0130', 1, 10, 'shelter', '/images/profile/person/man/5.jpg');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (29, 'amanda_shelter', 'hashed_pass_amanda', 'amanda@example.com', 'Hope', 'Animal Shelter', '555-0129', 1, 9, 'shelter', '/images/profile/person/shelter/4.jpg');
+insert into users (id, username, password_hash, email, first_name, last_name, phone, is_verified, address_id, role, profile_picture) values (30, 'ben_shelter', 'hashed_pass_ben', 'ben@example.com', 'Bright', 'Futures Shelter', '555-0130', 1, 10, 'shelter', '/images/profile/person/shelter/5.jpg');
 commit;
 
 insert into tags (id, name) values (1, 'Friendly');
@@ -120,38 +122,6 @@ insert into animals (id, name, species, breed, age, gender, size_category, weigh
 insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (28, 'Duchess', 'Cat', 'Scottish Fold', 4.5, 'female', 'medium', 4.4, 'Silver Tabby', 'Healthy', 'Sweet Scottish Fold with folded ears.', 'available', 240.00, 8, 13, 'Very sweet');
 insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (29, 'Storm', 'Dog', 'Weimaraner', 3.5, 'male', 'large', 33.0, 'Silver Gray', 'Healthy', 'Athletic Weimaraner hunting dog.', 'available', 330.00, 9, 18, 'Athletic');
 insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (30, 'Pearl', 'Cat', 'Birman', 2.0, 'female', 'medium', 4.2, 'Seal Point', 'Healthy', 'Beautiful Birman with blue eyes.', 'available', 260.00, 10, 23, 'Beautiful');
-commit;
-
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (1, 3, 45, 1, null);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (2, 2, 38, 1, 7);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (3, 4, 52, 1, null);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (4, 1, 23, 1, null);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (5, 5, 67, 1, null);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (6, 2, 41, 0, null);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (7, 3, 56, 1, null);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (8, 2, 34, 1, null);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (9, 4, 78, 1, 12);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (10, 1, 29, 1, null);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (11, 3, 48, 1, null);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (12, 2, 33, 1, null);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (13, 2, 44, 1, 18);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (14, 1, 27, 1, null);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (15, 3, 51, 1, null);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (16, 1, 31, 1, null);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (17, 4, 65, 1, 25);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (18, 2, 39, 1, null);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (19, 3, 58, 1, null);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (20, 2, 42, 1, null);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (21, 1, 26, 0, null);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (22, 1, 35, 0, null);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (23, 2, 47, 0, null);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (24, 1, 24, 0, null);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (25, 2, 36, 0, null);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (26, 1, 28, 0, null);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (27, 1, 32, 0, null);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (28, 1, 30, 0, null);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (29, 1, 37, 0, null);
-insert into animal_metrics (animal_id, favorites_count, views_count, adoption_requests_count, avg_time_to_adoption) values (30, 2, 43, 0, null);
 commit;
 
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (1, 1, 1, current_timestamp - 5, null, 'pending');
@@ -621,6 +591,15 @@ insert into messages (id, conversation_id, sender_id, message_text, message_type
 insert into messages (id, conversation_id, sender_id, message_text, message_type, is_read, sent_at) values (25, 11, 18, 'Yes, with proper medication and gentle exercise, he does very well.', 'text', 1, current_timestamp - 10);
 commit;
 
+-- Insert testimonials data
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (1, 1, 'Found my perfect companion through this amazing platform. The process was seamless and the support was incredible!', 5, 'Portland, OR');
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (2, 2, 'This platform has helped us find loving homes for over 200 pets this year. The tools and community are fantastic!', 5, 'Austin, TX');
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (3, 15, 'The detailed profiles and matching system helped me find Luna, who''s been the perfect addition to our family.', 5, 'San Francisco, CA');
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (4, 6, 'We''ve been partners for 2 years. The platform''s reach and user-friendly interface have revolutionized our adoption process.', 5, 'Denver, CO');
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (5, 20, 'Adopted my rescue cat Max here. The support team guided me through every step. Couldn''t be happier!', 5, 'Miami, FL');
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (6, 10, 'This platform connects us with people who truly care about animals. The quality of adopters has been exceptional.', 5, 'Seattle, WA');
+commit;
+
 select count(*) from address;
 select count(*) from users;
 select count(*) from tags;
@@ -637,5 +616,6 @@ select count(*) from user_preference_tags;
 select count(*) from user_preferences;
 select count(*) from conversations;
 select count(*) from messages;
+select count(*) from testimonials;
 
 select 'Database population completed successfully!' as status from dual;

@@ -17,7 +17,10 @@
       "friendly": "Friendly",
       "energetic": "Energetic",
       "shy": "Shy"
-    }
+    }  },
+  "testimonials": {
+    "title": "What Our Community Says", 
+    "subtitle": "Real stories from pet adopters and shelter partners"
   },
   "featuredUsers": {
     "title": "Our Community",

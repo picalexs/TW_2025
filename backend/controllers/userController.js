@@ -466,5 +466,22 @@ class UserController {
       sendResponse(res, 500, { error: "Server Error", message: "Eroare internă a serverului în timpul autentificării." });
     }
   }
+  async getAllUsersWithAdoptions(req, res) {
+    try {
+      console.log("getAllUsersWithAdoptions called");
+      const users = await userModel.getAllWithAdoptionCounts();
+      console.log(`Retrieved ${users.length} users with adoption counts`);
+      sendResponse(res, 200, users);
+    } catch (error) {
+      console.error("Error getting users with adoption counts:", error);
+      console.error("Error details:", {
+        message: error.message,
+        code: error.code,
+        status: error.status,
+        stack: error.stack
+      });
+      sendResponse(res, 500, { error: "Failed to fetch users with adoption data", message: error.message });
+    }
+  }
 }
 module.exports = new UserController();

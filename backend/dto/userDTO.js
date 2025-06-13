@@ -1,6 +1,7 @@
 const abstractDTO = require("./abstractDTO");
 const bcrypt = require("bcrypt");
 const oracledb = require("oracledb");
+const db = require("../db/dbConnection");
 
 class userDTO extends abstractDTO {
   constructor() {
@@ -193,6 +194,60 @@ class userDTO extends abstractDTO {
     } catch (error) {
       console.error("Error during authentication DTO:", error);
       throw error;
+    }
+  }  
+    async getAllWithAdoptionCounts() {
+    console.log("UserDTO.getAllWithAdoptionCounts called");
+    let connection;
+    try {
+      connection = await db.getConnection();
+      
+      const query = `
+        SELECT u.*, 
+               NVL(adoption_stats.adoption_count, 0) as ADOPTION_COUNT
+        FROM users u
+        LEFT JOIN (
+          SELECT user_id, COUNT(*) as adoption_count
+          FROM adoptions 
+          WHERE status = 'completed'
+          GROUP BY user_id
+        ) adoption_stats ON u.id = adoption_stats.user_id
+        ORDER BY u.created_at DESC
+      `;
+
+      console.log("Executing query:", query);
+      const result = await connection.execute(query, [], {
+        outFormat: oracledb.OUT_FORMAT_OBJECT
+      });
+
+      console.log(`Query returned ${result.rows.length} rows`);
+      const mappedUsers = result.rows.map(row => {
+        const mappedUser = this.mapToEntity(row);
+        mappedUser.adoption_count = row.ADOPTION_COUNT || 0;
+        return mappedUser;
+      });
+      
+      console.log(`Mapped ${mappedUsers.length} users`);
+      return mappedUsers;
+    } catch (error) {
+      console.error("Error in UserDTO.getAllWithAdoptionCounts:", error);
+      if (error.code && error.status) {
+        throw error;
+      }
+      
+      throw Object.assign(new Error(`Failed to fetch users with adoption counts: ${error.message}`), {
+        code: error.code || "DB_ERROR",
+        status: error.status || 500,
+        originalError: error
+      });
+    } finally {
+      if (connection) {
+        try {
+          await connection.close();
+        } catch (err) {
+          console.error('Error closing connection:', err);
+        }
+      }
     }
   }
 }

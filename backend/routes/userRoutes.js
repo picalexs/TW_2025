@@ -22,10 +22,15 @@ async function handleUserRoutes(req, res) {
     await userController.verifyEmail(req, res);
     return true;
   }
-
   if (trimmedPath === "api/auth/login" && method === "post") {
     console.log('[UserRoutes] Handling /api/auth/login POST request');
     await userController.authenticateUser(req, res);
+    return true;
+  }
+
+  if (trimmedPath === "api/users/with-adoptions" && method === "get") {
+    console.log('[UserRoutes] Handling /api/users/with-adoptions GET request');
+    await userController.getAllUsersWithAdoptions(req, res);
     return true;
   }
 

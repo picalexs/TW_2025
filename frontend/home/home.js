@@ -2,6 +2,7 @@ import { fetchPets, renderPets, showPetLoadError } from '../pets/pets.js';
 import { setupMobileMenu, initializePageLanguage, checkLoginStatusAndToggleNavButtons } from '../global/global.js';
 import ApiService from '../services/api.js';
 import UserService from '../services/userService.js';
+const apiService = new ApiService();
 
 function initHomePage() {
   initHeroSection();
@@ -11,6 +12,7 @@ function initHomePage() {
   checkLoginStatusAndToggleNavButtons()
   
   loadPets();
+  addTestimonialsSection();
   fetchAndRenderUsers();
   addEventListeners();
 }
@@ -100,7 +102,7 @@ function createManualSlideshow(container) {
 function startSlideRotation(container) {
   const slides = container.querySelectorAll('.hero-slide');
   if (slides.length <= 1) {
-    console.log("Not enough slides for rotation");
+    console.log('Not enough slides for rotation');
     return;
   }
   
@@ -118,6 +120,90 @@ function startSlideRotation(container) {
   });
   
   console.log(`Started slideshow rotation with ${slides.length} slides`);
+}
+
+async function addTestimonialsSection() {
+  // This will be called after the featured pets section is loaded
+  // We'll insert testimonials into the dynamic sections container
+  const dynamicSectionsContainer = document.getElementById('dynamic-sections-container');
+  if (!dynamicSectionsContainer) {
+    console.error("Dynamic sections container not found");
+    return;
+  }
+  
+  // Create testimonials section
+  const testimonialsSection = document.createElement('section');
+  testimonialsSection.className = 'testimonials-section';
+  testimonialsSection.id = 'testimonials';
+  
+  try {
+    // Fetch testimonials from API
+    const testimonials = await fetchTestimonials(3);
+    
+    testimonialsSection.innerHTML = `
+      <div class="section-container">
+        <div class="section-header">
+          <h2 class="section-title" data-i18n="testimonials.title">What Our Community Says</h2>
+          <p data-i18n="testimonials.subtitle">Real stories from pet adopters and shelter partners</p>
+        </div>
+        <div class="testimonials-grid">
+          ${testimonials.map(testimonial => createTestimonialHTML(testimonial)).join('')}
+        </div>
+      </div>
+    `;
+  } catch (error) {
+    console.error('Error loading testimonials:', error);
+    testimonialsSection.innerHTML = `
+      <div class="section-container">
+        <div class="section-header">
+          <h2 class="section-title" data-i18n="testimonials.title">What Our Community Says</h2>
+          <p data-i18n="testimonials.subtitle">Real stories from pet adopters and shelter partners</p>
+        </div>
+        <div class="error-message">
+          <p>Unable to load testimonials at this time.</p>
+        </div>
+      </div>
+    `;
+  }
+  
+  // Add testimonials section to dynamic container (it will appear before users section)
+  dynamicSectionsContainer.appendChild(testimonialsSection);
+  
+  console.log('Testimonials section added to dynamic container');
+}
+
+async function fetchTestimonials(count = 3) {
+  try {
+    const response = await apiService.get(`/api/testimonials/random`, { count });
+    return response;
+  } catch (error) {
+    console.error('Error fetching testimonials:', error);
+    throw error;
+  }
+}
+
+function createTestimonialHTML(testimonial) {
+  const stars = '★'.repeat(testimonial.rating) + '☆'.repeat(5 - testimonial.rating);
+  
+  return `
+    <div class="testimonial-card">
+      <div class="testimonial-content">
+        <div class="testimonial-rating">
+          <span class="stars">${stars}</span>
+        </div>
+        <blockquote class="testimonial-text">
+          "${testimonial.text}"
+        </blockquote>
+      </div>
+      <div class="testimonial-author">
+        <div class="author-info">
+          <h4 class="author-name">${testimonial.userName}</h4>
+          <p class="author-role">${testimonial.userRole === 'shelter' ? 'Partner Shelter' : 'Pet Adopter'}</p>
+          <p class="author-location">${testimonial.location}</p>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 async function loadPets() {
@@ -164,7 +250,7 @@ async function fetchAndRenderUsers() {
   usersSection.id = 'featured-users';
   try {
     const userService = new UserService({ debug: true });
-    const users = await userService.getAllUsers();
+    const users = await userService.getAllUsersWithAdoptions();
     const featuredUsers = users.slice(0, 6);
     
     usersSection.innerHTML = `
@@ -172,8 +258,8 @@ async function fetchAndRenderUsers() {
         <div class="section-header">
           <h2 class="section-title" data-i18n="featuredUsers.title">Our Community</h2>
           <p data-i18n="featuredUsers.subtitle">Meet some of our registered users</p>
-        </div>        
-        <div class="users-grid pets-grid">
+        </div>          
+        <div class="users-grid">
           ${featuredUsers.map(user => createUserCardHTML(user)).join('')}
         </div>
       </div>`;
@@ -206,24 +292,27 @@ function createUserCardHTML(user) {
   } else if (!imagePath.startsWith('http') && !imagePath.startsWith('/server/')) {
     imagePath = `/server/${imagePath}`;
   }
-  
-  const displayName = user.first_name && user.last_name 
+    const displayName = user.first_name && user.last_name 
     ? `${user.first_name} ${user.last_name}` 
     : user.first_name || user.username;
   
-  const joinedDate = user.createdAt 
-    ? new Date(user.createdAt).toLocaleDateString() 
-    : 'Unknown';
+  // Show role-based description
+  const userDescription = user.role === 'shelter' ? 'Shelter' : 'Community Member';
+  
+  const adoptionCount = user.adoption_count || 0;
+  const adoptionText = adoptionCount === 1 ? 'adoption' : 'adoptions';
   
   return `
-    <div class="pet-card" data-user-id="${user.id}">
-      <img src="${imagePath}" alt="${user.username}" class="pet-image" onerror="this.src='../assets/default-profile.jpg'">
-      <div class="pet-info">
-        <h3 class="pet-name">${displayName}</h3>
-        <p class="pet-description">@${user.username}</p>
-        <p><span data-i18n="featuredUsers.joined">Joined</span>: ${joinedDate}</p>
-        <div class="pet-tags">
-          <span class="tag">${user.role || 'User'}</span>
+    <div class="user-card" data-user-id="${user.id}">
+      <img src="${imagePath}" alt="${displayName}" class="user-image" onerror="this.src='../assets/default-profile.jpg'">
+      <div class="user-info">
+        <div class="user-name-section">
+          <h3 class="user-name">${displayName}</h3>
+          <span class="username-tag">@${user.username}</span>
+        </div>
+        <p class="user-description">${userDescription}</p>
+        <div class="user-stats">
+          <span class="adoption-count">${adoptionCount} ${adoptionText}</span>
         </div>
         <a href="#" class="btn btn-outline view-user-btn" data-user-id="${user.id}" data-i18n="featuredUsers.viewProfile">View Profile</a>
       </div>
@@ -250,7 +339,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   
   document.body.classList.add('home-initialized');
-  document.body.classList.add('home-page');
+  document.body.classList.add('home_page');
   ensureDynamicSectionsContainer();
   initHomePage();
 });

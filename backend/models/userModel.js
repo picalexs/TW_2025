@@ -67,6 +67,17 @@ class UserModel extends AbstractModel {
       }
     }
   }
+  async getAllWithAdoptionCounts() {
+    console.log("UserModel.getAllWithAdoptionCounts called");
+    try {
+      const result = await this.dto.getAllWithAdoptionCounts();
+      console.log(`UserModel returned ${result.length} users`);
+      return result;
+    } catch (error) {
+      console.error("Error in UserModel.getAllWithAdoptionCounts:", error);
+      throw error;
+    }
+  }
 }
 
 module.exports = new UserModel();

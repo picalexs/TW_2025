@@ -47,21 +47,22 @@ CREATE OR REPLACE TRIGGER trg_favorites_counter
     FOR EACH ROW
 DECLARE
     v_animal_id NUMBER;
+    v_error_message VARCHAR2(1000);
 BEGIN
     IF INSERTING THEN
         v_animal_id := :NEW.animal_id;
-        UPDATE animal_metrics 
-        SET favorites_count = favorites_count + 1,
-            last_updated = CURRENT_TIMESTAMP
-        WHERE animal_id = v_animal_id;
         
-        IF SQL%ROWCOUNT = 0 THEN
-            INSERT INTO animal_metrics (
-                animal_id, favorites_count, views_count, adoption_requests_count, last_updated
-            ) VALUES (
-                v_animal_id, 1, 0, 0, CURRENT_TIMESTAMP
-            );
-        END IF;
+        MERGE INTO animal_metrics am
+        USING (SELECT :NEW.animal_id as animal_id FROM dual) src
+        ON (am.animal_id = src.animal_id)
+        WHEN MATCHED THEN
+            UPDATE SET 
+                favorites_count = favorites_count + 1,
+                last_updated = CURRENT_TIMESTAMP
+        WHEN NOT MATCHED THEN
+            INSERT (animal_id, favorites_count, views_count, adoption_requests_count, last_updated)
+            VALUES (src.animal_id, 1, 0, 0, CURRENT_TIMESTAMP);
+            
     ELSE
         v_animal_id := :OLD.animal_id;
         UPDATE animal_metrics 
@@ -69,6 +70,28 @@ BEGIN
             last_updated = CURRENT_TIMESTAMP
         WHERE animal_id = v_animal_id;
     END IF;
+EXCEPTION    
+    WHEN DUP_VAL_ON_INDEX THEN
+        IF INSERTING THEN
+            UPDATE animal_metrics 
+            SET favorites_count = favorites_count + 1,
+                last_updated = CURRENT_TIMESTAMP
+            WHERE animal_id = v_animal_id;
+        END IF;
+    WHEN OTHERS THEN
+        v_error_message := SQLERRM;
+        BEGIN
+            INSERT INTO system_logs (
+                log_type, action, details
+            ) VALUES (
+                'error',
+                'favorites_counter_error',
+                'Error updating favorites count for animal ' || v_animal_id || ': ' || v_error_message
+            );
+        EXCEPTION
+            WHEN OTHERS THEN
+                NULL; -- Ignore logging errors
+        END;
 END;
 /
 
@@ -96,48 +119,72 @@ CREATE OR REPLACE TRIGGER trg_animal_metrics_init
     AFTER INSERT ON animals
     FOR EACH ROW
 BEGIN
-    INSERT INTO animal_metrics (
-        animal_id, 
-        favorites_count, 
-        views_count, 
-        adoption_requests_count,
-        last_updated
-    ) VALUES (
-        :NEW.id,
-        0,
-        0,
-        0,
-        CURRENT_TIMESTAMP
-    );
+    MERGE INTO animal_metrics am
+    USING (SELECT :NEW.id as animal_id FROM dual) src
+    ON (am.animal_id = src.animal_id)
+    WHEN NOT MATCHED THEN
+        INSERT (animal_id, favorites_count, views_count, adoption_requests_count, last_updated)
+        VALUES (:NEW.id, 0, 0, 0, CURRENT_TIMESTAMP);
+EXCEPTION
+    WHEN DUP_VAL_ON_INDEX THEN
+        NULL;
 END;
 /
 
 CREATE OR REPLACE TRIGGER trg_adoption_request_counter
     AFTER INSERT ON adoptions
     FOR EACH ROW
+DECLARE
+    v_error_message VARCHAR2(1000);
 BEGIN
-    UPDATE animal_metrics
-    SET adoption_requests_count = adoption_requests_count + 1,
-        last_updated = CURRENT_TIMESTAMP
-    WHERE animal_id = :NEW.animal_id;
+    MERGE INTO animal_metrics am
+    USING (SELECT :NEW.animal_id as animal_id FROM dual) src
+    ON (am.animal_id = src.animal_id)
+    WHEN MATCHED THEN
+        UPDATE SET 
+            adoption_requests_count = adoption_requests_count + 1,
+            last_updated = CURRENT_TIMESTAMP
+    WHEN NOT MATCHED THEN
+        INSERT (animal_id, favorites_count, views_count, adoption_requests_count, last_updated)
+        VALUES (src.animal_id, 0, 0, 1, CURRENT_TIMESTAMP);
+EXCEPTION
+    WHEN DUP_VAL_ON_INDEX THEN
+        UPDATE animal_metrics 
+        SET adoption_requests_count = adoption_requests_count + 1,
+            last_updated = CURRENT_TIMESTAMP
+        WHERE animal_id = :NEW.animal_id;
+    WHEN OTHERS THEN
+        v_error_message := SQLERRM;
+        BEGIN
+            INSERT INTO system_logs (
+                log_type, action, details
+            ) VALUES (
+                'error',
+                'adoption_request_counter_error',
+                'Error updating adoption request count for animal ' || :NEW.animal_id || ': ' || v_error_message
+            );
+        EXCEPTION
+            WHEN OTHERS THEN
+                NULL; -- Ignore logging errors
+        END;
 END;
 /
 
 CREATE OR REPLACE TRIGGER trg_adoption_status_intelligence
-    AFTER INSERT OR UPDATE OR DELETE ON adoptions
-    FOR EACH ROW
-DECLARE
-    v_animal_id NUMBER;
-    v_user_id NUMBER;
-    v_old_status VARCHAR2(50);
-    v_new_status VARCHAR2(50);
-    v_pending_count NUMBER;
-    v_notification_title VARCHAR2(200);
-    v_notification_message CLOB;
-    v_priority_level VARCHAR2(20) := 'normal';
-    v_animal_name VARCHAR2(100);
-    v_adoption_id NUMBER;
-    v_error_message VARCHAR2(1000);
+    FOR INSERT OR UPDATE OR DELETE ON adoptions
+    COMPOUND TRIGGER
+
+    TYPE t_adoption_data IS RECORD (
+        animal_id NUMBER,
+        user_id NUMBER,
+        adoption_id NUMBER,
+        old_status VARCHAR2(50),
+        new_status VARCHAR2(50),
+        operation VARCHAR2(10)
+    );
+    
+    TYPE t_adoption_collection IS TABLE OF t_adoption_data;
+    l_adoptions t_adoption_collection := t_adoption_collection();
     
     PROCEDURE create_notification(
         p_user_id NUMBER,
@@ -145,16 +192,17 @@ DECLARE
         p_title VARCHAR2,
         p_message CLOB,
         p_priority VARCHAR2 DEFAULT 'normal'
-    ) IS    BEGIN
+    ) IS      BEGIN
         INSERT INTO system_notifications (
-            id, user_id, notification_type, title, message, 
+            user_id, notification_type, title, message, 
             priority_level
         ) VALUES (
-            NULL, p_user_id, p_type, p_title, p_message,
+            p_user_id, p_type, p_title, p_message,
             p_priority
         );
     END create_notification;
-      PROCEDURE handle_auto_rejections(p_animal_id NUMBER, p_approved_adoption_id NUMBER, p_animal_name VARCHAR2) IS
+    
+    PROCEDURE handle_auto_rejections(p_animal_id NUMBER, p_approved_adoption_id NUMBER, p_animal_name VARCHAR2) IS
         v_rejected_count NUMBER := 0;
     BEGIN
         FOR pending_adoption IN (
@@ -179,106 +227,161 @@ DECLARE
             
             v_rejected_count := v_rejected_count + 1;
         END LOOP;        
-        INSERT INTO system_logs (
-            id, log_type, action, details
+          INSERT INTO system_logs (
+            log_type, action, details
         ) VALUES (
-            NULL, 'system_event',
+            'system_event',
             'auto_reject_adoptions',
             'Auto-rejected ' || v_rejected_count || ' pending adoptions for animal ID: ' || p_animal_id
         );
     END handle_auto_rejections;
-BEGIN
-    IF INSERTING THEN
-        v_animal_id := :NEW.animal_id;
-        v_user_id := :NEW.user_id;
-        v_new_status := :NEW.status;
-        SELECT name INTO v_animal_name FROM animals WHERE id = v_animal_id;
-        
-        SELECT COUNT(*) INTO v_pending_count
-        FROM adoptions 
-        WHERE user_id = v_user_id 
-        AND status = 'pending';
-        
-        IF v_pending_count > 3 THEN
-            RAISE_APPLICATION_ERROR(-20003, 'User cannot have more than 3 pending adoption requests.');
-        END IF;
-        
-        create_notification(
-            v_user_id,
-            'adoption_submitted',
-            'Adoption Request Submitted',
-            'Your adoption request for ' || v_animal_name || ' has been submitted successfully. We will review it soon.',
-            'normal'
-        );
-        
-    ELSIF UPDATING THEN
-        v_animal_id := :NEW.animal_id;
-        v_user_id := :NEW.user_id;
-        v_old_status := :OLD.status;
-        v_new_status := :NEW.status;
-        v_adoption_id := :NEW.id;
-        
-        IF v_old_status != v_new_status THEN
-            SELECT name INTO v_animal_name FROM animals WHERE id = v_animal_id;
+
+    BEFORE EACH ROW IS
+        v_pending_count NUMBER;
+        v_animal_name VARCHAR2(100);
+    BEGIN
+        IF INSERTING THEN
+            SELECT COUNT(*) INTO v_pending_count
+            FROM adoptions 
+            WHERE user_id = :NEW.user_id 
+            AND status = 'pending';
             
-            CASE v_new_status
-                WHEN 'approved' THEN
-                    v_notification_title := 'Adoption Request Approved!';
-                    v_notification_message := 'Great news! Your adoption request for ' || v_animal_name || ' has been approved.';
-                    v_priority_level := 'high';
-                    handle_auto_rejections(v_animal_id, v_adoption_id, v_animal_name);
-                WHEN 'rejected' THEN
-                    v_notification_title := 'Adoption Request Update';
-                    v_notification_message := 'We regret to inform you that your adoption request for ' || v_animal_name || ' could not be approved at this time.';
-                    v_priority_level := 'normal';
-                WHEN 'completed' THEN
-                    v_notification_title := 'Adoption Completed!';
-                    v_notification_message := 'Congratulations! You have successfully completed the adoption of ' || v_animal_name || '. Welcome to your new family member!';
-                    v_priority_level := 'high';
-                    
-                    UPDATE animals 
-                    SET adoption_status = 'adopted' 
-                    WHERE id = v_animal_id;
-                ELSE
-                    v_notification_title := 'Adoption Status Update';
-                    v_notification_message := 'The status of your adoption request for ' || v_animal_name || ' has been updated to: ' || v_new_status;
-                    v_priority_level := 'normal';
-            END CASE;
-            
-            IF v_notification_title IS NOT NULL THEN
-                create_notification(
-                    v_user_id,
-                    'adoption_update',
-                    v_notification_title,
-                    v_notification_message,
-                    v_priority_level
-                );
+            IF v_pending_count > 3 THEN
+                RAISE_APPLICATION_ERROR(-20003, 'User cannot have more than 3 pending adoption requests.');
             END IF;
+            
+            l_adoptions.EXTEND;
+            l_adoptions(l_adoptions.COUNT).animal_id := :NEW.animal_id;
+            l_adoptions(l_adoptions.COUNT).user_id := :NEW.user_id;
+            l_adoptions(l_adoptions.COUNT).adoption_id := :NEW.id;
+            l_adoptions(l_adoptions.COUNT).new_status := :NEW.status;
+            l_adoptions(l_adoptions.COUNT).operation := 'INSERT';
+            
+        ELSIF UPDATING THEN
+            l_adoptions.EXTEND;
+            l_adoptions(l_adoptions.COUNT).animal_id := :NEW.animal_id;
+            l_adoptions(l_adoptions.COUNT).user_id := :NEW.user_id;
+            l_adoptions(l_adoptions.COUNT).adoption_id := :NEW.id;
+            l_adoptions(l_adoptions.COUNT).old_status := :OLD.status;
+            l_adoptions(l_adoptions.COUNT).new_status := :NEW.status;
+            l_adoptions(l_adoptions.COUNT).operation := 'UPDATE';
+            
+        ELSIF DELETING THEN
+            l_adoptions.EXTEND;
+            l_adoptions(l_adoptions.COUNT).animal_id := :OLD.animal_id;
+            l_adoptions(l_adoptions.COUNT).user_id := :OLD.user_id;
+            l_adoptions(l_adoptions.COUNT).adoption_id := :OLD.id;
+            l_adoptions(l_adoptions.COUNT).operation := 'DELETE';
         END IF;
-          ELSIF DELETING THEN
-        v_animal_id := :OLD.animal_id;
-        v_user_id := :OLD.user_id;        
+    END BEFORE EACH ROW;
 
-        INSERT INTO system_logs (
-            log_type, action, details
-        ) VALUES (
-            'user_action', 'adoption_request_cancelled', 
-            'User ID: ' || v_user_id || ', Animal ID: ' || v_animal_id
-        );
-    END IF;
+    AFTER STATEMENT IS
+        v_animal_name VARCHAR2(100);
+        v_notification_title VARCHAR2(200);
+        v_notification_message CLOB;
+        v_priority_level VARCHAR2(20);
+        v_error_message VARCHAR2(1000);
+    BEGIN
+        FOR i IN 1..l_adoptions.COUNT LOOP
+            BEGIN
+                SELECT name INTO v_animal_name 
+                FROM animals 
+                WHERE id = l_adoptions(i).animal_id;
+                
+                IF l_adoptions(i).operation = 'INSERT' THEN
+                    create_notification(
+                        l_adoptions(i).user_id,
+                        'adoption_submitted',
+                        'Adoption Request Submitted',
+                        'Your adoption request for ' || v_animal_name || ' has been submitted successfully. We will review it soon.',
+                        'normal'
+                    );
+                    
+                ELSIF l_adoptions(i).operation = 'UPDATE' AND 
+                      l_adoptions(i).old_status != l_adoptions(i).new_status THEN
+                    
+                    CASE l_adoptions(i).new_status
+                        WHEN 'approved' THEN
+                            v_notification_title := 'Adoption Request Approved!';
+                            v_notification_message := 'Great news! Your adoption request for ' || v_animal_name || ' has been approved.';
+                            v_priority_level := 'high';
+                            handle_auto_rejections(l_adoptions(i).animal_id, l_adoptions(i).adoption_id, v_animal_name);
+                        WHEN 'rejected' THEN
+                            v_notification_title := 'Adoption Request Update';
+                            v_notification_message := 'We regret to inform you that your adoption request for ' || v_animal_name || ' could not be approved at this time.';
+                            v_priority_level := 'normal';
+                        WHEN 'completed' THEN
+                            v_notification_title := 'Adoption Completed!';
+                            v_notification_message := 'Congratulations! You have successfully completed the adoption of ' || v_animal_name || '. Welcome to your new family member!';
+                            v_priority_level := 'high';
+                            
+                            UPDATE animals 
+                            SET adoption_status = 'adopted' 
+                            WHERE id = l_adoptions(i).animal_id;
+                        ELSE
+                            v_notification_title := 'Adoption Status Update';
+                            v_notification_message := 'The status of your adoption request for ' || v_animal_name || ' has been updated to: ' || l_adoptions(i).new_status;
+                            v_priority_level := 'normal';
+                    END CASE;
+                    
+                    IF v_notification_title IS NOT NULL THEN
+                        create_notification(
+                            l_adoptions(i).user_id,
+                            'adoption_update',
+                            v_notification_title,
+                            v_notification_message,
+                            v_priority_level
+                        );
+                    END IF;
+                    
+                ELSIF l_adoptions(i).operation = 'DELETE' THEN
+                    INSERT INTO system_logs (
+                        log_type, action, details
+                    ) VALUES (
+                        'user_action', 'adoption_request_cancelled', 
+                        'User ID: ' || l_adoptions(i).user_id || ', Animal ID: ' || l_adoptions(i).animal_id
+                    );
+                END IF;
 
-EXCEPTION
-    WHEN OTHERS THEN
-        v_error_message := SQLERRM;
-        INSERT INTO system_logs (
-            id, log_type, action, details
-        ) VALUES (
-            NULL, 'error',
-            'trigger_error_adoption_intelligence',
-            'Error in adoption trigger: ' || v_error_message
-        );
-        RAISE;
-END;
+            EXCEPTION
+                WHEN OTHERS THEN
+                    v_error_message := SQLERRM;
+                    BEGIN
+                        INSERT INTO system_logs (
+                            log_type, action, details
+                        ) VALUES (
+                            'error',
+                            'trigger_error_adoption_intelligence',
+                            'Error processing adoption ' || l_adoptions(i).adoption_id || ': ' || v_error_message
+                        );
+                    EXCEPTION
+                        WHEN OTHERS THEN
+                            NULL;
+                    END;
+            END;
+        END LOOP;
+        
+        l_adoptions.DELETE;
+    EXCEPTION
+        WHEN OTHERS THEN
+            v_error_message := SQLERRM;
+            BEGIN
+                INSERT INTO system_logs (
+                    log_type, action, details
+                ) VALUES (
+                    'error',
+                    'trigger_error_adoption_intelligence_statement',
+                    'Error in adoption trigger statement processing: ' || v_error_message
+                );
+            EXCEPTION
+                WHEN OTHERS THEN
+                    NULL; -- Ignore logging errors
+            END;
+            l_adoptions.DELETE;
+            RAISE;
+    END AFTER STATEMENT;
+
+END trg_adoption_status_intelligence;
 /
 
 CREATE OR REPLACE TRIGGER trg_animal_popularity_tracker
@@ -305,11 +408,11 @@ BEGIN
             v_trend := 'stable';
         END IF;
     END IF;
-      IF v_trend != 'stable' THEN
+      IF v_trend != 'stable' THEN        
         INSERT INTO system_logs (
-            id, log_type, animal_id, action, details
+            log_type, animal_id, action, details
         ) VALUES (
-            NULL, 'system_event',
+            'system_event',
             :NEW.animal_id,
             'popularity_trend_change',
             'Animal popularity trend changed to: ' || v_trend || ' (score: ' || v_popularity_score || ')'
@@ -335,13 +438,12 @@ BEGIN
 
         v_notification_message := 'Care schedule updated for ' || v_animal_name || 
                                   ': ' || :NEW.activity || ' at ' || :NEW.hour ||
-                                  ' (' || :NEW.frequency || ')';
-
+                                  ' (' || :NEW.frequency || ')';        
         IF v_shelter_id IS NOT NULL THEN
             INSERT INTO system_notifications (
-                id, user_id, notification_type, title, message, priority_level
+                user_id, notification_type, title, message, priority_level
             ) VALUES (
-                NULL, v_shelter_id,
+                v_shelter_id,
                 'care_schedule',
                 'Care Schedule Update',
                 v_notification_message,
@@ -351,7 +453,7 @@ BEGIN
 
     EXCEPTION
         WHEN NO_DATA_FOUND THEN
-            NULL;
+            NULL;      
         WHEN OTHERS THEN
             v_error_message := SQLERRM;
             BEGIN
@@ -415,11 +517,11 @@ BEGIN
                 v_session_user := 'unknown';
         END;
         
-        v_session_info := v_session_user || ' from IP: ' || v_ip_address;
-          INSERT INTO system_logs (
-            id, log_type, user_id, action, details
+        v_session_info := v_session_user || ' from IP: ' || v_ip_address;        
+        INSERT INTO system_logs (
+            log_type, user_id, action, details
         ) VALUES (
-            NULL, 'security',
+            'security',
             :NEW.id,
             'user_profile_update',
             'User profile updated: ' || v_changes || ' Session: ' || v_session_info
@@ -449,11 +551,11 @@ BEGIN
         AND created_at < SYSDATE - 30
         AND ROWNUM <= (v_old_count - 100);
         
-        v_cleanup_count := SQL%ROWCOUNT;
-          INSERT INTO system_logs (
-            id, log_type, user_id, action, details
+        v_cleanup_count := SQL%ROWCOUNT;          
+        INSERT INTO system_logs (
+            log_type, user_id, action, details
         ) VALUES (
-            NULL, 'system_event',
+            'system_event',
             v_user_id,
             'notification_cleanup',
             'Cleaned up ' || v_cleanup_count || ' old notifications'

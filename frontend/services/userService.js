@@ -6,9 +6,10 @@ class UserService {
       debug: options.debug || false
     });
     
-    this.debug = options.debug || false;    
+    this.debug = options.debug || false;      
     this.endpoints = {
       getAllUsers: '/api/users',
+      getUsersWithAdoptions: '/api/users/with-adoptions',
       currentUser: '/api/users/me',
       login: '/api/auth/login',
       register: '/api/auth/register',
@@ -28,13 +29,23 @@ class UserService {
       throw error;
     }
   }
-
   async getAllUsers() {
     try {
       return await this.apiService.get(this.endpoints.getAllUsers);
     } catch (error) {
       if (this.debug) {
         console.error('Get all users error:', error);
+      }
+      throw error;
+    }
+  }
+
+  async getAllUsersWithAdoptions() {
+    try {
+      return await this.apiService.get(this.endpoints.getUsersWithAdoptions);
+    } catch (error) {
+      if (this.debug) {
+        console.error('Get users with adoptions error:', error);
       }
       throw error;
     }
