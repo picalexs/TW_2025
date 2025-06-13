@@ -144,6 +144,9 @@ async function addTestimonialsSection() {
     // Fetch all testimonials from API
     const testimonials = await fetchTestimonials();
       if (testimonials && testimonials.length > 0) {
+      // Cache testimonials for resize handling
+      window.currentTestimonials = testimonials;
+      
       // Replace placeholder with actual carousel
       testimonialsSection.innerHTML = createTestimonialsCarousel(testimonials);
       
@@ -468,10 +471,70 @@ function handleKeydown(e) {
 
 function handleResize() {
   const testimonialsSection = document.getElementById('testimonials');
-  if (testimonialsSection) {
-    const testimonialCards = testimonialsSection.querySelectorAll('.testimonial-card:not(.placeholder)');
-    if (testimonialCards.length > 0) {
-      addTestimonialsSection();
+  if (!testimonialsSection) return;
+  
+  const carousel = testimonialsSection.querySelector('.testimonials-carousel');
+  if (!carousel || totalSlides <= 1) return;
+  
+  const newCardsPerSlide = getCardsPerSlide();
+  
+  // Only rebuild if cards per slide actually changed
+  const testimonialsGrid = carousel.querySelector('.testimonials-grid');
+  if (!testimonialsGrid) return;
+  
+  const currentCardsPerSlide = testimonialsGrid.children.length;
+  
+  if (newCardsPerSlide !== currentCardsPerSlide) {
+    // Need to rebuild carousel with different layout
+    // Store current testimonials from cache instead of extracting from DOM
+    const cachedTestimonials = window.currentTestimonials;
+    if (!cachedTestimonials || cachedTestimonials.length === 0) return;
+    
+    const newSlides = createSlides(cachedTestimonials, newCardsPerSlide);
+    const newTotalSlides = newSlides.length;
+    
+    // Reset current slide if needed
+    if (currentSlide >= newTotalSlides) {
+      currentSlide = 0;
+    }
+    
+    totalSlides = newTotalSlides;
+    carousel.setAttribute('data-total-slides', totalSlides);
+    
+    const track = carousel.querySelector('.testimonials-track');
+    if (track) {
+      track.innerHTML = newSlides.map(slide => `
+        <div class="testimonials-grid">
+          ${slide.map(testimonial => createTestimonialHTML(testimonial)).join('')}
+        </div>
+      `).join('');
+    }
+    
+    const indicatorsContainer = carousel.querySelector('.carousel-indicators');
+    if (indicatorsContainer && totalSlides > 1) {
+      indicatorsContainer.innerHTML = Array.from({ length: totalSlides }, (_, i) => 
+        `<button class="carousel-indicator ${i === currentSlide ? 'active' : ''}" data-slide="${i}" aria-label="Go to slide ${i + 1}"></button>`
+      ).join('');
+      
+      indicatorsContainer.querySelectorAll('.carousel-indicator').forEach((indicator, index) => {
+        indicator.addEventListener('click', () => goToSlide(index));
+      });
+    }
+    
+    carouselTrack = track;
+    updateCarousel();
+    
+    // Re-attach event listeners
+    const prevBtn = carousel.querySelector('.carousel-prev');
+    const nextBtn = carousel.querySelector('.carousel-next');
+    
+    if (prevBtn) {
+      prevBtn.replaceWith(prevBtn.cloneNode(true));
+      carousel.querySelector('.carousel-prev').addEventListener('click', () => goToSlide(currentSlide - 1));
+    }
+    if (nextBtn) {
+      nextBtn.replaceWith(nextBtn.cloneNode(true));  
+      carousel.querySelector('.carousel-next').addEventListener('click', () => goToSlide(currentSlide + 1));
     }
   }
 }
