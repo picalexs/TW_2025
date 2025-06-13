@@ -1,3 +1,16 @@
+-- Drop all triggers in your database
+DROP TRIGGER trg_users_before_insert;
+DROP TRIGGER trg_favorites_counter;
+DROP TRIGGER trg_adoption_status_log;
+DROP TRIGGER trg_animal_metrics_init;
+DROP TRIGGER trg_adoption_request_counter;
+DROP TRIGGER trg_adoption_status_intelligence;
+DROP TRIGGER trg_animal_popularity_tracker;
+DROP TRIGGER trg_care_schedule_notifications;
+DROP TRIGGER trg_security_audit;
+DROP TRIGGER trg_notification_cleanup;
+
+
 CREATE OR REPLACE TRIGGER trg_users_before_insert
     BEFORE INSERT ON users
     FOR EACH ROW
@@ -8,7 +21,7 @@ BEGIN
     SELECT COUNT(*)
     INTO v_count_username
     FROM users
-    WHERE UPPER(username) = UPPER(:NEW.username);
+    WHERE UPPER(TRIM(username)) = UPPER(TRIM(:NEW.username));
 
     IF v_count_username > 0 THEN
         RAISE_APPLICATION_ERROR(-20001, 'Username already exists.');
@@ -17,7 +30,7 @@ BEGIN
     SELECT COUNT(*)
     INTO v_count_email
     FROM users
-    WHERE UPPER(email) = UPPER(:NEW.email);
+    WHERE UPPER(TRIM(email)) = UPPER(TRIM(:NEW.email));
 
     IF v_count_email > 0 THEN
         RAISE_APPLICATION_ERROR(-20002, 'Email address already exists.');
