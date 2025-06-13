@@ -166,10 +166,7 @@ async function addTestimonialsSection() {
     `;
   }
   
-  // Add testimonials section to dynamic container (it will appear before users section)
   dynamicSectionsContainer.appendChild(testimonialsSection);
-  
-  console.log('Testimonials section added to dynamic container');
 }
 
 async function fetchTestimonials(count = 3) {
@@ -192,7 +189,7 @@ function createTestimonialHTML(testimonial) {
           <span class="stars">${stars}</span>
         </div>
         <blockquote class="testimonial-text">
-          "${testimonial.text}"
+          ${testimonial.text}
         </blockquote>
       </div>
       <div class="testimonial-author">
