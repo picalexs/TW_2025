@@ -60,7 +60,7 @@ class UserController {
         },
       });
 
-      const verificationLink = `http://localhost:${process.env.API_PORT}/api/users/verify-email?token=${emailToken}`;
+      const verificationLink = `http://${process.env.API_HOST || 'localhost'}:${process.env.API_PORT}/api/users/verify-email?token=${emailToken}`;
       const mailOptions = {
         from: `"Your App" <${process.env.EMAIL_USER}>`,
         to: email,

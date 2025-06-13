@@ -27,7 +27,8 @@ async function handleSignup(event) {
     return;
   }
   try {
-    const response = await fetch('http://localhost:8080/api/users/register', { 
+    const apiBaseUrl = window.APP_CONFIG?.api?.baseURL || 'http://localhost:8080';
+    const response = await fetch(`${apiBaseUrl}/api/users/register`, { 
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

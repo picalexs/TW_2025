@@ -6,20 +6,29 @@ const handleUserRoutes = require('./routes/userRoutes');
 const handlePetRoutes = require('./routes/petRoutes');
 const handleRecommendationRoutes = require('./routes/recommendationRoutes');
 const handleStaticRoutes = require('./routes/staticRoutes');
+const handleConfigRoutes = require('./routes/configRoutes');
 const { handleNotificationRoutes } = require('./routes/notificationRoutes');
 const { sendResponse } = require('./utils/helpers');
 
-const PORT = process.env.API_PORT;
+const PORT = process.env.API_PORT || 8080;
+
+const generateAllowedOrigins = () => {
+  const frontendPorts = process.env.FRONTEND_PORTS ? 
+    process.env.FRONTEND_PORTS.split(',') : ['5500', '5501'];
+
+  const origins = [];
+  frontendPorts.forEach(port => {
+    origins.push(`http://localhost:${port.trim()}`);
+    origins.push(`http://127.0.0.1:${port.trim()}`);
+  });
+  
+  return origins;
+};
 
 const server = http.createServer(async (req, res) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
   
-  const allowedOrigins = [
-    'http://localhost:5500',
-    'http://127.0.0.1:5500',
-    'http://localhost:3000',
-    'http://127.0.0.1:5501'
-  ];
+  const allowedOrigins = generateAllowedOrigins();
   
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
@@ -45,13 +54,17 @@ const server = http.createServer(async (req, res) => {
     });
     return;
   }
-
   try {
-    let routeHandled = await handleStaticRoutes(req, res);
+    let routeHandled = await handleConfigRoutes(req, res);
+    
+    if (!routeHandled) {
+      routeHandled = await handleStaticRoutes(req, res);
+    }
     
     if (!routeHandled) {
       routeHandled = await handleUserRoutes(req, res);
-    }    if (!routeHandled) {
+    }
+    if (!routeHandled) {
       routeHandled = await handlePetRoutes(req, res);
     }    if (!routeHandled) {
       routeHandled = await handleRecommendationRoutes(req, res);
