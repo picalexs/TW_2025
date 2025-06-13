@@ -328,6 +328,47 @@ class petDTO extends abstractDTO {
       );
     }
   }
+
+  async getByShelter(shelterId) {
+    try {
+      if (!shelterId) {
+        throw Object.assign(new Error("Shelter ID is required"), {
+          code: "VALIDATION_ERROR",
+          status: 400,
+        });
+      }
+
+      const result = await this.executeCustomQuery(
+        `SELECT a.*, m.file_path
+         FROM animals a
+         LEFT JOIN media m ON a.id = m.animal_id
+         WHERE a.shelter_id = :shelterId
+         AND (m.id IS NULL OR m.id = (
+           SELECT MIN(id) FROM media WHERE animal_id = a.id
+         ))
+         ORDER BY a.created_at DESC`,
+        [shelterId],
+        {
+          outFormat: oracledb.OUT_FORMAT_OBJECT,
+          fetchInfo: {
+            DESCRIPTION: { type: oracledb.STRING },
+          },
+        }
+      );
+
+      return result.rows.map((row) => this.mapToEntity(row));
+    } catch (error) {
+      throw Object.assign(
+        new Error(`Failed to fetch pets for shelter: ${error.message}`),
+        {
+          code: "DB_ERROR",
+          status: 500,
+          originalError: error,
+        }
+      );
+    }
+  }
+
   async create(petData) {
     try {
       const {

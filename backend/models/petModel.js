@@ -15,6 +15,10 @@ class PetModel extends AbstractModel {
     // ADD validation logic here
     return await this.dto.update(id, petData);
   }
+
+  async getByShelter(shelterId) {
+    return await this.dto.getByShelter(shelterId);
+  }
 }
 
 module.exports = new PetModel();

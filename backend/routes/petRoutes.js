@@ -18,7 +18,13 @@ async function handlePetRoutes(req, res) {
       await petController.createPet(req, res);
     } else {
       sendResponse(res, 405, { error: "Method not allowed" });
-    }
+    }    return true;
+  }
+
+  const shelterPetsMatch = trimmedPath.match(/^(?:\/)?api\/pets\/shelter\/(\d+)\/?$/);
+  if (shelterPetsMatch && method === "get") {
+    const shelterId = parseInt(shelterPetsMatch[1]);
+    await petController.getPetsByShelter(req, res, shelterId);
     return true;
   }
 

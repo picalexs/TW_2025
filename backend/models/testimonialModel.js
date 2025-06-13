@@ -59,6 +59,19 @@ class TestimonialModel extends AbstractModel {
       }
     }
   }
+
+  async getByUser(userId) {
+    let connection;
+    try {
+      connection = await db.getConnection();
+      const testimonials = await this.dto.getByUser(connection, userId);
+      return testimonials;
+    } finally {
+      if (connection) {
+        await connection.close();
+      }
+    }
+  }
 }
 
 module.exports = new TestimonialModel();

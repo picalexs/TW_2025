@@ -17,16 +17,31 @@
       "friendly": "Friendly",
       "energetic": "Energetic",
       "shy": "Shy"
-    }  },
+    }  
+  },
   "testimonials": {
     "title": "What Our Community Says", 
     "subtitle": "Real stories from pet adopters and shelter partners"
-  },
+  },    
   "featuredUsers": {
     "title": "Our Community",
-    "subtitle": "Meet some of our users who have adopted pets",
+    "subtitle": "Meet members of our community who have made a difference through adoption",
     "joined": "Joined",
-    "viewProfile": "View Profile"
+    "viewProfile": "View Profile",
+    "roles": {
+      "shelter": "Shelter Partner",
+      "user": "Community Member"
+    },
+    "adoptionImpact": {
+      "shelter": {
+        "single": "Helped 1 pet find a home",
+        "multiple": "Helped {{count}} pets find homes"
+      },
+      "user": {
+        "single": "Adopted 1 pet",
+        "multiple": "Adopted {{count}} pets"
+      }
+    }
   },
   "about": {
     "title": "About Our Center",
@@ -36,7 +51,7 @@
   },
   "users": {
     "title": "Our Community",
-    "subtitle": "Meet some of our users who have adopted pets",
+    "subtitle": "Meet members of our community who have made a difference through adoption",
     "joined": "Joined",
     "viewProfile": "View Profile"
   },

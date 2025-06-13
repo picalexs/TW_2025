@@ -51,6 +51,17 @@ class UserService {
     }
   }
 
+  async getUserById(userId) {
+    try {
+      return await this.apiService.get(`/api/users/${userId}`);
+    } catch (error) {
+      if (this.debug) {
+        console.error('Get user by ID error:', error);
+      }
+      throw error;
+    }
+  }
+
   async login(email, password) {
     if (!email) throw new Error('Email is required');
     if (!password) throw new Error('Password is required');

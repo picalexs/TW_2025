@@ -75,6 +75,35 @@ class TestimonialDTO extends abstractDTO {
     }
   }
 
+  async getByUser(connection, userId) {
+    try {
+      const query = `
+        SELECT t.id, t.user_id, t.testimonial_text, t.rating, t.location, t.created_at, t.updated_at,
+               u.first_name, u.last_name, u.role as user_role,
+               CASE 
+                 WHEN u.role = 'shelter' THEN u.first_name
+                 ELSE u.first_name || ' ' || u.last_name
+               END as user_name
+        FROM ${this.tableName} t
+        JOIN users u ON t.user_id = u.id
+        WHERE t.user_id = :userId
+        ORDER BY t.created_at DESC
+      `;
+      
+      const result = await connection.execute(query, { userId }, {
+        outFormat: oracledb.OUT_FORMAT_OBJECT,
+        fetchInfo: {
+          TESTIMONIAL_TEXT: { type: oracledb.STRING }
+        }
+      });
+      
+      return result.rows.map(row => this.mapToEntity(row));
+    } catch (error) {
+      console.error("Error in testimonialDTO.getByUser:", error);
+      throw error;
+    }
+  }
+
   async create(connection, testimonialData) {
     try {
       const { user_id, testimonial_text, rating = 5, location } = testimonialData;

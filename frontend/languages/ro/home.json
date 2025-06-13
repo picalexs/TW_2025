@@ -25,9 +25,23 @@
   },
   "featuredUsers": {
     "title": "Comunitatea Noastră",
-    "subtitle": "Întâlnește câțiva dintre utilizatorii noștri care au adoptat animale",
+    "subtitle": "Întâlnește membrii comunității noastre care au făcut o diferență prin adopție",
     "joined": "Înscris",
-    "viewProfile": "Vezi Profilul"
+    "viewProfile": "Vezi Profilul",
+    "roles": {
+      "shelter": "Partener Adăpost",
+      "user": "Membru al Comunității"
+    },
+    "adoptionImpact": {
+      "shelter": {
+        "single": "A ajutat 1 animal să găsească un cămin",
+        "multiple": "A ajutat {{count}} animale să găsească cămine"
+      },
+      "user": {
+        "single": "A adoptat 1 animal",
+        "multiple": "A adoptat {{count}} animale"
+      }
+    }
   },
   "about": {
     "title": "Despre Centrul Nostru",
@@ -37,7 +51,7 @@
   },
   "users": {
     "title": "Comunitatea Noastră",
-    "subtitle": "Întâlnește câțiva dintre utilizatorii noștri care au adoptat animale",
+    "subtitle": "Întâlnește membrii comunității noastre care au făcut o diferență prin adopție",
     "joined": "Înscris",
     "viewProfile": "Vezi Profilul"
   },

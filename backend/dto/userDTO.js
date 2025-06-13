@@ -6,7 +6,8 @@ const db = require("../db/dbConnection");
 class userDTO extends abstractDTO {
   constructor() {
     super("users");
-  }
+  }  
+  
   mapToEntity(dbRow) {
     let imagePath = dbRow.FILE_PATH;
 
@@ -29,9 +30,11 @@ class userDTO extends abstractDTO {
       last_name: dbRow.LAST_NAME,
       phone: dbRow.PHONE,
       role: dbRow.ROLE,
-      profile_picture: dbRow.PROFILE_PICTURE,
-      createdAt: dbRow.CREATED_AT,
+      profile_picture: dbRow.PROFILE_PICTURE,      
+      created_at: dbRow.CREATED_AT,
       imagePath: imagePath,
+      adoption_count: dbRow.ADOPTION_COUNT || 0,
+      pets_helped_count: dbRow.PETS_HELPED_COUNT || 0,
     };
   }
 
@@ -196,6 +199,76 @@ class userDTO extends abstractDTO {
       throw error;
     }
   }  
+  
+  async getById(id) {
+    let connection;
+    try {
+      if (!id) {
+        throw Object.assign(new Error("User ID is required"), {
+          code: "VALIDATION_ERROR",
+          status: 400
+        });
+      }
+
+      connection = await db.getConnection();
+        const query = `
+        SELECT u.*, 
+               NVL(adoption_stats.adoption_count, 0) as ADOPTION_COUNT,
+               NVL(pets_helped_stats.pets_helped_count, 0) as PETS_HELPED_COUNT
+        FROM users u
+        LEFT JOIN (
+          SELECT user_id, COUNT(*) as adoption_count
+          FROM adoptions 
+          WHERE status = 'completed'
+          GROUP BY user_id
+        ) adoption_stats ON u.id = adoption_stats.user_id
+        LEFT JOIN (
+          SELECT a.shelter_id, COUNT(*) as pets_helped_count
+          FROM animals a
+          JOIN adoptions ad ON a.id = ad.animal_id
+          WHERE ad.status = 'completed'
+          GROUP BY a.shelter_id
+        ) pets_helped_stats ON u.id = pets_helped_stats.shelter_id
+        WHERE u.id = :id
+      `;
+
+      const result = await connection.execute(query, [id], {
+        outFormat: oracledb.OUT_FORMAT_OBJECT
+      });
+
+      if (result.rows.length === 0) {
+        throw Object.assign(new Error(`User with id ${id} not found`), {
+          code: "NOT_FOUND",
+          status: 404
+        });
+      }
+      
+      const mappedUser = this.mapToEntity(result.rows[0]);
+      mappedUser.adoption_count = result.rows[0].ADOPTION_COUNT || 0;
+      mappedUser.pets_helped_count = result.rows[0].PETS_HELPED_COUNT || 0;
+      return mappedUser;
+    } catch (error) {
+      console.error("Error in UserDTO.getById:", error);
+      if (error.code && error.status) {
+        throw error;
+      }
+      
+      throw Object.assign(new Error(`Failed to fetch user by ID: ${error.message}`), {
+        code: error.code || "DB_ERROR",
+        status: error.status || 500,
+        originalError: error
+      });
+    } finally {
+      if (connection) {
+        try {
+          await connection.close();
+        } catch (err) {
+          console.error('Error closing connection:', err);
+        }
+      }
+    }
+  }
+
     async getAllWithAdoptionCounts() {
     console.log("UserDTO.getAllWithAdoptionCounts called");
     let connection;

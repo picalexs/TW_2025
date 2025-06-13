@@ -122,6 +122,31 @@ insert into animals (id, name, species, breed, age, gender, size_category, weigh
 insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (28, 'Duchess', 'Cat', 'Scottish Fold', 4.5, 'female', 'medium', 4.4, 'Silver Tabby', 'Healthy', 'Sweet Scottish Fold with folded ears.', 'available', 240.00, 8, 13, 'Very sweet');
 insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (29, 'Storm', 'Dog', 'Weimaraner', 3.5, 'male', 'large', 33.0, 'Silver Gray', 'Healthy', 'Athletic Weimaraner hunting dog.', 'available', 330.00, 9, 18, 'Athletic');
 insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (30, 'Pearl', 'Cat', 'Birman', 2.0, 'female', 'medium', 4.2, 'Seal Point', 'Healthy', 'Beautiful Birman with blue eyes.', 'available', 260.00, 10, 23, 'Beautiful');
+
+-- Additional animals given for adoption by shelters
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (31, 'Apollo', 'Dog', 'German Shepherd', 4.0, 'male', 'large', 38.0, 'Black and Tan', 'Healthy', 'Well-trained police dog looking for retirement home.', 'adopted', 400.00, 11, 4, 'Excellent guard dog');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (32, 'Mia', 'Cat', 'Bengal', 2.5, 'female', 'medium', 4.8, 'Spotted Brown', 'Healthy', 'Active Bengal cat with beautiful markings.', 'adopted', 350.00, 12, 6, 'Very active and playful');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (33, 'Zeus', 'Dog', 'Boxer', 3.0, 'male', 'large', 30.0, 'Fawn', 'Healthy', 'Energetic boxer who loves to play and run.', 'adopted', 320.00, 13, 10, 'Great with kids');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (34, 'Ruby', 'Cat', 'Ragdoll', 1.0, 'female', 'medium', 3.2, 'Blue Point', 'Healthy', 'Sweet ragdoll kitten with calm temperament.', 'adopted', 280.00, 14, 13, 'Very calm and affectionate');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (35, 'Hercules', 'Dog', 'Pitbull', 5.0, 'male', 'large', 28.0, 'Brindle', 'Healthy', 'Gentle pitbull with a loving nature.', 'adopted', 250.00, 15, 18, 'Loves people');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (36, 'Sasha', 'Cat', 'Russian Blue', 3.5, 'female', 'medium', 4.5, 'Blue-Gray', 'Healthy', 'Elegant Russian Blue with striking green eyes.', 'adopted', 300.00, 16, 23, 'Independent but affectionate');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (37, 'Bruno', 'Dog', 'Bulldog', 4.0, 'male', 'medium', 25.0, 'White and Brown', 'Healthy', 'Friendly bulldog with lots of personality.', 'adopted', 380.00, 17, 4, 'Very friendly');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (38, 'Nala', 'Cat', 'Maine Coon', 2.0, 'female', 'large', 5.5, 'Brown Tabby', 'Healthy', 'Young Maine Coon with gentle personality.', 'adopted', 320.00, 18, 6, 'Gentle and playful');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (39, 'Atlas', 'Dog', 'Great Dane', 6.0, 'male', 'large', 65.0, 'Blue', 'Healthy', 'Gentle giant Great Dane looking for spacious home.', 'adopted', 450.00, 19, 10, 'Gentle giant');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (40, 'Lily', 'Cat', 'Siamese', 4.0, 'female', 'medium', 4.0, 'Seal Point', 'Healthy', 'Talkative Siamese cat who loves attention.', 'adopted', 275.00, 20, 13, 'Very vocal and social');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (41, 'Ranger', 'Dog', 'Australian Cattle Dog', 2.5, 'male', 'medium', 22.0, 'Blue Heeler', 'Healthy', 'High-energy herding dog perfect for active families.', 'adopted', 300.00, 1, 18, 'High energy, needs exercise');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (42, 'Coco', 'Cat', 'Persian', 5.0, 'female', 'medium', 4.3, 'Chocolate', 'Healthy', 'Beautiful chocolate Persian with long fur.', 'adopted', 350.00, 2, 23, 'Calm and regal');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (43, 'Tank', 'Dog', 'Rottweiler', 7.0, 'male', 'large', 50.0, 'Black and Tan', 'Healthy', 'Senior Rottweiler with calm and protective nature.', 'adopted', 200.00, 3, 4, 'Protective but gentle');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (44, 'Luna2', 'Cat', 'British Shorthair', 1.5, 'female', 'medium', 3.5, 'Silver', 'Healthy', 'Young British Shorthair with round features.', 'adopted', 290.00, 4, 6, 'Calm and sweet');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (45, 'Cooper', 'Dog', 'Labrador Mix', 3.5, 'male', 'large', 28.0, 'Yellow', 'Healthy', 'Friendly lab mix perfect for families.', 'adopted', 250.00, 5, 10, 'Great family dog');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (46, 'Smoky', 'Cat', 'Scottish Fold', 6.0, 'male', 'medium', 5.0, 'Gray', 'Needs medication', 'Senior Scottish Fold with mild kidney issues.', 'adopted', 150.00, 6, 13, 'Needs special diet');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (47, 'Zara', 'Dog', 'Husky', 4.0, 'female', 'large', 26.0, 'Gray and White', 'Healthy', 'Beautiful husky who loves winter activities.', 'adopted', 350.00, 7, 18, 'Needs lots of exercise');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (48, 'Midnight', 'Cat', 'Bombay', 3.0, 'male', 'medium', 4.1, 'Black', 'Healthy', 'Sleek black Bombay cat with golden eyes.', 'adopted', 275.00, 8, 23, 'Sleek and elegant');
+
+commit;
+
+update animals set adoption_status = 'adopted' where id in (1, 5, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48);
+
 commit;
 
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (1, 1, 1, current_timestamp - 5, null, 'pending');
@@ -144,6 +169,46 @@ insert into adoptions (id, user_id, animal_id, request_date, adoption_date, stat
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (18, 3, 17, current_timestamp - 18, current_timestamp - 11, 'completed');
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (19, 7, 19, current_timestamp - 19, null, 'approved');
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (20, 9, 20, current_timestamp - 20, null, 'pending');
+
+-- Additional adoptions to create users with multiple adoptions
+-- User 1 (john_doe) - multiple adoptions
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (21, 1, 31, current_timestamp - 25, current_timestamp - 18, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (22, 1, 37, current_timestamp - 30, current_timestamp - 23, 'completed');
+
+-- User 3 (alice_smith) - multiple adoptions  
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (23, 3, 32, current_timestamp - 28, current_timestamp - 21, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (24, 3, 38, current_timestamp - 35, current_timestamp - 28, 'completed');
+
+-- User 7 (edward_jones) - multiple adoptions
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (25, 7, 33, current_timestamp - 40, current_timestamp - 33, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (26, 7, 39, current_timestamp - 45, current_timestamp - 38, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (27, 7, 45, current_timestamp - 50, current_timestamp - 43, 'completed');
+
+-- User 9 (george_user) - multiple adoptions
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (28, 9, 34, current_timestamp - 32, current_timestamp - 25, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (29, 9, 40, current_timestamp - 37, current_timestamp - 30, 'completed');
+
+-- User 12 (julia_user) - multiple adoptions
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (30, 12, 35, current_timestamp - 42, current_timestamp - 35, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (31, 12, 41, current_timestamp - 47, current_timestamp - 40, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (32, 12, 47, current_timestamp - 52, current_timestamp - 45, 'completed');
+
+-- User 14 (linda_user) - multiple adoptions
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (33, 14, 36, current_timestamp - 27, current_timestamp - 20, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (34, 14, 42, current_timestamp - 34, current_timestamp - 27, 'completed');
+
+-- User 17 (oscar_user) - multiple adoptions
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (35, 17, 43, current_timestamp - 39, current_timestamp - 32, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (36, 17, 48, current_timestamp - 44, current_timestamp - 37, 'completed');
+
+-- User 19 (quinn_user) - multiple adoptions
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (37, 19, 44, current_timestamp - 29, current_timestamp - 22, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (38, 19, 46, current_timestamp - 36, current_timestamp - 29, 'completed');
+
+-- User 24 (victor_user) - multiple adoptions (need new animals since 31 and 32 already adopted)
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (39, 24, 1, current_timestamp - 41, current_timestamp - 34, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (40, 25, 5, current_timestamp - 46, current_timestamp - 39, 'completed');
+
 commit;
 
 insert into favorites (user_id, animal_id, favorited_at) values (1, 2, current_timestamp - 10);
@@ -477,6 +542,51 @@ insert into animal_tags (animal_id, tag_id) values (29, 11);
 insert into animal_tags (animal_id, tag_id) values (29, 14);
 insert into animal_tags (animal_id, tag_id) values (30, 1);
 insert into animal_tags (animal_id, tag_id) values (30, 12);
+insert into animal_tags (animal_id, tag_id) values (31, 1);
+insert into animal_tags (animal_id, tag_id) values (31, 4);
+insert into animal_tags (animal_id, tag_id) values (31, 10);
+insert into animal_tags (animal_id, tag_id) values (31, 14);
+insert into animal_tags (animal_id, tag_id) values (32, 4);
+insert into animal_tags (animal_id, tag_id) values (32, 11);
+insert into animal_tags (animal_id, tag_id) values (33, 1);
+insert into animal_tags (animal_id, tag_id) values (33, 4);
+insert into animal_tags (animal_id, tag_id) values (33, 7);
+insert into animal_tags (animal_id, tag_id) values (33, 14);
+insert into animal_tags (animal_id, tag_id) values (34, 1);
+insert into animal_tags (animal_id, tag_id) values (34, 12);
+insert into animal_tags (animal_id, tag_id) values (35, 1);
+insert into animal_tags (animal_id, tag_id) values (35, 7);
+insert into animal_tags (animal_id, tag_id) values (36, 1);
+insert into animal_tags (animal_id, tag_id) values (36, 12);
+insert into animal_tags (animal_id, tag_id) values (37, 1);
+insert into animal_tags (animal_id, tag_id) values (37, 7);
+insert into animal_tags (animal_id, tag_id) values (38, 1);
+insert into animal_tags (animal_id, tag_id) values (38, 11);
+insert into animal_tags (animal_id, tag_id) values (38, 14);
+insert into animal_tags (animal_id, tag_id) values (39, 1);
+insert into animal_tags (animal_id, tag_id) values (39, 12);
+insert into animal_tags (animal_id, tag_id) values (39, 14);
+insert into animal_tags (animal_id, tag_id) values (40, 1);
+insert into animal_tags (animal_id, tag_id) values (40, 4);
+insert into animal_tags (animal_id, tag_id) values (41, 4);
+insert into animal_tags (animal_id, tag_id) values (41, 10);
+insert into animal_tags (animal_id, tag_id) values (42, 1);
+insert into animal_tags (animal_id, tag_id) values (42, 12);
+insert into animal_tags (animal_id, tag_id) values (43, 1);
+insert into animal_tags (animal_id, tag_id) values (43, 2);
+insert into animal_tags (animal_id, tag_id) values (43, 14);
+insert into animal_tags (animal_id, tag_id) values (44, 1);
+insert into animal_tags (animal_id, tag_id) values (44, 12);
+insert into animal_tags (animal_id, tag_id) values (45, 1);
+insert into animal_tags (animal_id, tag_id) values (45, 7);
+insert into animal_tags (animal_id, tag_id) values (45, 10);
+insert into animal_tags (animal_id, tag_id) values (46, 2);
+insert into animal_tags (animal_id, tag_id) values (46, 3);
+insert into animal_tags (animal_id, tag_id) values (47, 4);
+insert into animal_tags (animal_id, tag_id) values (47, 14);
+insert into animal_tags (animal_id, tag_id) values (48, 1);
+insert into animal_tags (animal_id, tag_id) values (48, 12);
+
 commit;
 
 insert into user_preference_tags (user_id, tag_id) values (1, 1);

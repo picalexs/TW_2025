@@ -88,6 +88,16 @@ class TestimonialController {
       sendResponse(res, 500, { error: "Failed to delete testimonial", message: error.message });
     }
   }
+
+  async getTestimonialsByUser(req, res, userId) {
+    try {
+      const testimonials = await testimonialModel.getByUser(userId);
+      sendResponse(res, 200, testimonials);
+    } catch (error) {
+      console.error(`Error getting testimonials for user ${userId}:`, error);
+      sendResponse(res, 500, { error: "Failed to fetch testimonials", message: error.message });
+    }
+  }
 }
 
 module.exports = new TestimonialController();

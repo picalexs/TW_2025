@@ -48,6 +48,14 @@ async function handleTestimonialRoutes(req, res) {
     return true;
   }
 
+  const userTestimonialsMatch = trimmedPath.match(/^api\/testimonials\/user\/(\d+)$/);
+  if (userTestimonialsMatch && method === "get") {
+    console.log('[TestimonialRoutes] Handling /api/testimonials/user/:userId GET request');
+    const userId = parseInt(userTestimonialsMatch[1]);
+    await testimonialController.getTestimonialsByUser(req, res, userId);
+    return true;
+  }
+
   return false;
 }
 

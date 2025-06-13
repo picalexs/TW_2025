@@ -65,6 +65,16 @@ class PetController {
       sendResponse(res, 500, { error: "Failed to delete pet", message: error.message });
     }
   }
+
+  async getPetsByShelter(req, res, shelterId) {
+    try {
+      const pets = await petModel.getByShelter(shelterId);
+      sendResponse(res, 200, pets);
+    } catch (error) {
+      console.error(`Error getting pets by shelter ID ${shelterId}:`, error);
+      sendResponse(res, 500, { error: "Failed to fetch pets by shelter", message: error.message });
+    }
+  }
 }
 
 module.exports = new PetController();

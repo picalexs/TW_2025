@@ -15,6 +15,11 @@ function initHomePage() {
   addTestimonialsSection();
   fetchAndRenderUsers();
   addEventListeners();
+  
+  document.addEventListener('languageChanged', () => {
+    console.log('Language changed, re-rendering user cards');
+    fetchAndRenderUsers();
+  });
 }
 
 function ensureDynamicSectionsContainer() {
@@ -123,37 +128,26 @@ function startSlideRotation(container) {
 }
 
 async function addTestimonialsSection() {
-  // This will be called after the featured pets section is loaded
-  // We'll insert testimonials into the dynamic sections container
   const dynamicSectionsContainer = document.getElementById('dynamic-sections-container');
   if (!dynamicSectionsContainer) {
     console.error("Dynamic sections container not found");
     return;
   }
   
-  // Create testimonials section with placeholders first
   const testimonialsSection = document.createElement('section');
   testimonialsSection.className = 'testimonials-section';
   testimonialsSection.id = 'testimonials';
   
-  // Set initial placeholder structure
   testimonialsSection.innerHTML = createTestimonialsPlaceholder();
   dynamicSectionsContainer.appendChild(testimonialsSection);
   
   try {
-    // Fetch all testimonials from API
     const testimonials = await fetchTestimonials();
       if (testimonials && testimonials.length > 0) {
-      // Cache testimonials for resize handling
       window.currentTestimonials = testimonials;
-      
-      // Replace placeholder with actual carousel
       testimonialsSection.innerHTML = createTestimonialsCarousel(testimonials);
-      
-      // Initialize carousel functionality
       initTestimonialsCarousel();
       
-      // Update translations
       if (window.languageManager) {
         window.languageManager.updateContent();
       }
@@ -478,22 +472,18 @@ function handleResize() {
   
   const newCardsPerSlide = getCardsPerSlide();
   
-  // Only rebuild if cards per slide actually changed
   const testimonialsGrid = carousel.querySelector('.testimonials-grid');
   if (!testimonialsGrid) return;
   
   const currentCardsPerSlide = testimonialsGrid.children.length;
   
   if (newCardsPerSlide !== currentCardsPerSlide) {
-    // Need to rebuild carousel with different layout
-    // Store current testimonials from cache instead of extracting from DOM
     const cachedTestimonials = window.currentTestimonials;
     if (!cachedTestimonials || cachedTestimonials.length === 0) return;
     
     const newSlides = createSlides(cachedTestimonials, newCardsPerSlide);
     const newTotalSlides = newSlides.length;
     
-    // Reset current slide if needed
     if (currentSlide >= newTotalSlides) {
       currentSlide = 0;
     }
@@ -656,19 +646,60 @@ async function fetchAndRenderUsers() {
   usersSection.id = 'featured-users';
   try {
     const userService = new UserService({ debug: true });
-    const users = await userService.getAllUsersWithAdoptions();
-    const featuredUsers = users.slice(0, 6);
+    const allUsers = await userService.getAllUsersWithAdoptions();
     
-    usersSection.innerHTML = `
-      <div class="section-container">
-        <div class="section-header">
-          <h2 class="section-title" data-i18n="featuredUsers.title">Our Community</h2>
-          <p data-i18n="featuredUsers.subtitle">Meet some of our registered users</p>
-        </div>          
-        <div class="users-grid">
-          ${featuredUsers.map(user => createUserCardHTML(user)).join('')}
-        </div>
-      </div>`;
+    const usersWithAdoptions = allUsers.filter(user => 
+      user.adoption_count && user.adoption_count > 0
+    );
+    
+    console.log(`Found ${usersWithAdoptions.length} users with adoptions out of ${allUsers.length} total users`);
+    
+    // Shuffle users randomly
+    const shuffledUsers = [...usersWithAdoptions].sort(() => Math.random() - 0.5);
+    
+    // Calculate how many users to show based on complete rows (max 4 per row)
+    const maxUsersPerRow = 4;
+    const availableUsers = shuffledUsers.length;
+    
+    let usersToShow;
+    if (availableUsers >= maxUsersPerRow * 2) {
+      // If we have enough for 2 full rows, show 8 users
+      usersToShow = maxUsersPerRow * 2;
+    } else if (availableUsers >= maxUsersPerRow) {
+      // If we have enough for 1 full row, show 4 users
+      usersToShow = maxUsersPerRow;
+    } else {
+      // If we don't have enough for a full row, don't show any
+      usersToShow = 0;
+    }
+    
+    const featuredUsers = shuffledUsers.slice(0, usersToShow);
+    
+    console.log(`Showing ${featuredUsers.length} users in complete rows (${Math.floor(featuredUsers.length / maxUsersPerRow)} full rows)`);
+    
+    if (featuredUsers.length === 0) {
+      usersSection.innerHTML = `
+        <div class="section-container">
+          <div class="section-header">
+            <h2 class="section-title" data-i18n="featuredUsers.title">Our Community</h2>
+            <p data-i18n="featuredUsers.subtitle">Meet members of our community who have made a difference through adoption</p>
+          </div>          
+          <div class="users-grid">
+            <p style="grid-column: 1 / -1; text-align: center; color: #666; font-style: italic;">Not enough community members with adoptions to display complete rows. Check back later!</p>
+          </div>
+        </div>`;
+    } else {
+      usersSection.innerHTML = `
+        <div class="section-container">
+          <div class="section-header">
+            <h2 class="section-title" data-i18n="featuredUsers.title">Our Community</h2>
+            <p data-i18n="featuredUsers.subtitle">Meet members of our community who have made a difference through adoption</p>
+          </div>          
+          <div class="users-grid">
+            ${featuredUsers.map(user => createUserCardHTML(user)).join('')}
+          </div>
+        </div>`;
+    }
     
     dynamicSectionsContainer.appendChild(usersSection);
     
@@ -679,7 +710,7 @@ async function fetchAndRenderUsers() {
       <div class="section-container">
         <div class="section-header">
           <h2 class="section-title" data-i18n="featuredUsers.title">Our Community</h2>
-          <p>Error loading users: ${error.message}</p>
+          <p>Error loading community members: ${error.message}</p>
         </div>
       </div>
     `;
@@ -698,14 +729,45 @@ function createUserCardHTML(user) {
   } else if (!imagePath.startsWith('http') && !imagePath.startsWith('/server/')) {
     imagePath = `/server/${imagePath}`;
   }
-    const displayName = user.first_name && user.last_name 
+  
+  const displayName = user.first_name && user.last_name 
     ? `${user.first_name} ${user.last_name}` 
     : user.first_name || user.username;
   
-  const userDescription = user.role === 'shelter' ? 'Shelter' : 'Community Member';
-  
   const adoptionCount = user.adoption_count || 0;
-  const adoptionText = adoptionCount === 1 ? 'adoption' : 'adoptions';
+  
+  const roleKey = user.role === 'shelter' ? 'shelter' : 'user';
+  let userDescription = '';
+  let adoptionImpact = '';
+  
+  if (window.languageManager && window.languageManager.translate) {
+    userDescription = window.languageManager.translate(`featuredUsers.roles.${roleKey}`, 
+      user.role === 'shelter' ? 'Shelter Partner' : 'Community Member');
+    
+    const impactKey = adoptionCount === 1 ? 'single' : 'multiple';
+    const translationKey = `featuredUsers.adoptionImpact.${roleKey}.${impactKey}`;
+    
+    if (adoptionCount === 1) {
+      adoptionImpact = window.languageManager.translate(translationKey,
+        user.role === 'shelter' ? 'Helped 1 pet find a home' : 'Adopted 1 pet');
+    } else {
+      let template = window.languageManager.translate(translationKey,
+        user.role === 'shelter' ? `Helped ${adoptionCount} pets find homes` : `Adopted ${adoptionCount} pets`);
+      adoptionImpact = template.replace('{{count}}', adoptionCount);
+    }
+  } else {
+    if (user.role === 'shelter') {
+      userDescription = 'Shelter Partner';
+      adoptionImpact = adoptionCount === 1 
+        ? 'Helped 1 pet find a home' 
+        : `Helped ${adoptionCount} pets find homes`;
+    } else {
+      userDescription = 'Community Member';
+      adoptionImpact = adoptionCount === 1 
+        ? 'Adopted 1 pet' 
+        : `Adopted ${adoptionCount} pets`;
+    }
+  }
   
   return `
     <div class="user-card" data-user-id="${user.id}">
@@ -717,7 +779,7 @@ function createUserCardHTML(user) {
         </div>
         <p class="user-description">${userDescription}</p>
         <div class="user-stats">
-          <span class="adoption-count">${adoptionCount} ${adoptionText}</span>
+          <span class="adoption-impact">${adoptionImpact}</span>
         </div>
         <a href="#" class="btn btn-outline view-user-btn" data-user-id="${user.id}" data-i18n="featuredUsers.viewProfile">View Profile</a>
       </div>
@@ -731,6 +793,7 @@ function addEventListeners() {
       event.preventDefault();
       const userId = event.currentTarget.getAttribute('data-user-id');
       console.log(`Viewing user details for user ID: ${userId}`);
+      window.location.href = `../profile/profile.html?id=${userId}`;
     });
   });
 }
