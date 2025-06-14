@@ -1,8 +1,10 @@
 import { fetchPets, renderPets, showPetLoadError } from '../pets/pets.js';
-import { setupMobileMenu, initializePageLanguage, checkLoginStatusAndToggleNavButtons } from '../global/global.js';
+import { setupMobileMenu, initializePageLanguage, checkLoginStatusAndToggleNavButtons, navigateToProfile } from '../global/global.js';
 import ApiService from '../services/api.js';
 import UserService from '../services/userService.js';
 const apiService = new ApiService();
+
+window.navigateToProfile = navigateToProfile;
 
 function initHomePage() {
   initHeroSection();
@@ -591,11 +593,14 @@ function createTestimonialHTML(testimonial) {
           ${testimonial.text}
         </blockquote>
       </div>
-      <div class="testimonial-author">
+      <div class="testimonial-author" data-user-id="${testimonial.userId}" onclick="window.navigateToProfile(${testimonial.userId})">
         <div class="author-info">
           <h4 class="author-name">${testimonial.userName}</h4>
           <p class="author-role">${testimonial.userRole === 'shelter' ? 'Partner Shelter' : 'Pet Adopter'}</p>
           <p class="author-location">${testimonial.location}</p>
+        </div>
+        <div class="profile-link-hint">
+          <span class="link-text">View Profile →</span>
         </div>
       </div>
     </div>

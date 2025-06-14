@@ -328,6 +328,13 @@
   color: #666;
 }
 
+.review-location {
+  font-size: 0.875rem;
+  color: #666;
+  margin: 0.5rem 0 0 0;
+  font-style: italic;
+}
+
 .no-reviews {
   text-align: center;
   color: #666;
@@ -618,4 +625,12 @@
   .pets-grid {
     grid-template-columns: 1fr;
   }
+}
+
+.testimonial-author-info:hover {
+  background-color: rgba(74, 144, 226, 0.05);
+}
+
+.testimonial-author-info:hover .profile-link-hint {
+  opacity: 1;
 }

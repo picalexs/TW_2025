@@ -288,19 +288,16 @@ class userDTO extends abstractDTO {
         ORDER BY u.created_at DESC
       `;
 
-      console.log("Executing query:", query);
       const result = await connection.execute(query, [], {
         outFormat: oracledb.OUT_FORMAT_OBJECT
       });
 
-      console.log(`Query returned ${result.rows.length} rows`);
       const mappedUsers = result.rows.map(row => {
         const mappedUser = this.mapToEntity(row);
         mappedUser.adoption_count = row.ADOPTION_COUNT || 0;
         return mappedUser;
       });
       
-      console.log(`Mapped ${mappedUsers.length} users`);
       return mappedUsers;
     } catch (error) {
       console.error("Error in UserDTO.getAllWithAdoptionCounts:", error);
