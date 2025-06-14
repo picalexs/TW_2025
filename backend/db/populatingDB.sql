@@ -14,6 +14,7 @@ delete from care_resources;
 delete from care_schedule;
 delete from animal_metrics;
 delete from testimonials;
+delete from owner_reviews;
 delete from animals;
 delete from users;
 delete from tags;
@@ -716,6 +717,15 @@ insert into testimonials (id, user_id, testimonial_text, rating, location) value
 insert into testimonials (id, user_id, testimonial_text, rating, location) values (13, 13, 'As a shelter, we appreciate the exposure and ease of communication with adopters.', 4.5, 'Los Angeles, CA');
 commit;
 
+-- Insert owner reviews data
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (1, 2, 4, 2, 5, 'Safe Haven Shelter was amazing! The staff was knowledgeable and caring. Whiskers came to us healthy and well-socialized.', 5, 5, 5, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (2, 7, 10, 5, 4, 'Great experience overall. Charlie was exactly as described and the adoption process was smooth.', 4, 5, 4, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (3, 21, 4, 14, 5, 'Exceptional care and attention to detail. The shelter provided comprehensive information about Luna and ongoing support.', 5, 5, 5, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (4, 3, 6, 18, 4, 'Good communication throughout the process. Shadow was well-cared for and healthy.', 4, 4, 4, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (5, 1, 18, 21, 5, 'Outstanding shelter with caring staff. Bella came with detailed health records and training information.', 5, 5, 5, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (6, 7, 6, 19, 4, 'Professional and responsive. The adoption process was thorough and fair.', 4, 4, 4, 1);
+commit;
+
 select count(*) from address;
 select count(*) from users;
 select count(*) from tags;
@@ -733,5 +743,6 @@ select count(*) from user_preferences;
 select count(*) from conversations;
 select count(*) from messages;
 select count(*) from testimonials;
+select count(*) from owner_reviews;
 
 select 'Database population completed successfully!' as status from dual;

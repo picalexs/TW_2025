@@ -6,6 +6,7 @@ const handleUserRoutes = require('./routes/userRoutes');
 const handlePetRoutes = require('./routes/petRoutes');
 const handleRecommendationRoutes = require('./routes/recommendationRoutes');
 const { handleTestimonialRoutes } = require('./routes/testimonialRoutes');
+const { handleOwnerReviewRoutes } = require('./routes/ownerReviewRoutes');
 const handleStaticRoutes = require('./routes/staticRoutes');
 const handleConfigRoutes = require('./routes/configRoutes');
 const { handleNotificationRoutes } = require('./routes/notificationRoutes');
@@ -72,10 +73,15 @@ const server = http.createServer(async (req, res) => {
     if (!routeHandled) {
       routeHandled = await handleRecommendationRoutes(req, res);
     }
+      if (!routeHandled) {
+      routeHandled = await handleTestimonialRoutes(req, res);
+    }
     
     if (!routeHandled) {
-      routeHandled = await handleTestimonialRoutes(req, res);
-    }    if (!routeHandled) {
+      routeHandled = await handleOwnerReviewRoutes(req, res);
+    }
+    
+    if (!routeHandled) {
       routeHandled = await handleNotificationRoutes(req, res);
     }
 
