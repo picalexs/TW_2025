@@ -31,6 +31,7 @@ class TestimonialDTO extends abstractDTO {
                END as user_name
         FROM ${this.tableName} t
         JOIN users u ON t.user_id = u.id
+        WHERE t.rating > 3.5
         ORDER BY t.created_at DESC
       `;
         const result = await connection.execute(query, [], {
@@ -46,6 +47,7 @@ class TestimonialDTO extends abstractDTO {
       throw error;
     }
   }
+  
   async getRandom(connection, limit = 3) {
     try {
       const query = `
@@ -58,6 +60,7 @@ class TestimonialDTO extends abstractDTO {
                  END as user_name
           FROM ${this.tableName} t
           JOIN users u ON t.user_id = u.id
+          WHERE t.rating > 3.5
           ORDER BY DBMS_RANDOM.VALUE
         ) WHERE ROWNUM <= :limit
       `;

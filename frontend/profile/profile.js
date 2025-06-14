@@ -85,7 +85,6 @@ class ProfilePage {
   }
 
   renderOverviewSection(user) {
-    // Member since
     const memberSince = document.getElementById('member-since');
     if (user.created_at) {
       const date = new Date(user.created_at);
@@ -238,6 +237,18 @@ class ProfilePage {
         rating: 5,
         text: "Amazing dedication to animal welfare. This person really cares about finding the right homes for pets.",
         date: "2024-09-30"
+      },
+      {
+        author: "John Smith",
+        rating: 3,
+        text: "Average experience. Could have been more responsive.",
+        date: "2024-08-15"
+      },
+      {
+        author: "Lisa Brown",
+        rating: 2,
+        text: "Had some issues with communication during the process.",
+        date: "2024-07-10"
       }
     ];
     
