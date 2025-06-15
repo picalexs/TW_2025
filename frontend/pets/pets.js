@@ -51,39 +51,14 @@ function updateResultsCount(count) {
   }
 }
 
-function createPetCard(pet) {  const card = document.createElement('div');
-  card.className = 'pet-card';
+function createPetCard(pet) {
+  const card = window.CardRenderer.createPetCard(pet, {
+    format: 'element',
+    variant: 'default',
+    clickAction: 'navigate'
+  });
+  
   card.setAttribute('data-pet-id', pet.id);
-
-  const imagePath = window.ImagePathHandler.processPetImagePath(pet.imagePath);
-  
-  const description = pet.description && pet.description.length > 100 
-    ? pet.description.substring(0, 100) + '...' 
-    : pet.description || 'No description available';
-  
-  const lm = window.languageManager;
-  const speciesText = pet.species ? 
-    (lm?.translate(`species.${pet.species.toLowerCase()}`, pet.species)) : 
-    lm?.translate('petInfo.species', 'Unknown');
-    
-  const healthText = pet.healthStatus ? 
-    (lm?.translate(`healthStatus.${pet.healthStatus.toLowerCase().replace(/\s+/g, '')}`, pet.healthStatus)) : 
-    lm?.translate('petInfo.healthStatus', 'Status unknown');
-    
-  const viewDetailsText = lm?.translate('viewDetails', 'View Details');
-  
-  card.innerHTML = `
-    <img src="${imagePath}" alt="${pet.name}" class="pet-image" onerror="this.src='../assets/default-pet-profile.jpg'">
-    <div class="pet-info">
-      <h3 class="pet-name">${pet.name}</h3>
-      <p class="pet-description">${description}</p>
-      <div class="pet-tags">
-        <span class="tag">${speciesText}</span>
-        <span class="tag">${healthText}</span>
-      </div>
-      <a href="/frontend/pets/pet-details.html?id=${pet.id}" class="btn btn-primary">${viewDetailsText}</a>
-    </div>
-  `;
   
   return card;
 }

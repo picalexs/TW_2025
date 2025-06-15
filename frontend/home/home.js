@@ -125,8 +125,6 @@ function startSlideRotation(container) {
   window.addEventListener('beforeunload', () => {
     clearInterval(interval);
   });
-  
-  console.log(`Started slideshow rotation with ${slides.length} slides`);
 }
 
 async function addTestimonialsSection() {
@@ -579,32 +577,12 @@ function createStarsHTML(rating) {
 }
 
 function createTestimonialHTML(testimonial) {
-  const starsHTML = createStarsHTML(testimonial.rating);
-  const numRating = parseFloat(testimonial.rating) || 5;
-  
-  return `
-    <div class="testimonial-card">
-      <div class="testimonial-content">
-        <div class="testimonial-rating">
-          <div class="stars">${starsHTML}</div>
-          <span class="rating-number">${numRating}/5</span>
-        </div>
-        <blockquote class="testimonial-text">
-          ${testimonial.text}
-        </blockquote>
-      </div>
-      <div class="testimonial-author" data-user-id="${testimonial.userId}" onclick="window.navigateToProfile(${testimonial.userId})">
-        <div class="author-info">
-          <h4 class="author-name">${testimonial.userName}</h4>
-          <p class="author-role">${testimonial.userRole === 'shelter' ? 'Partner Shelter' : 'Pet Adopter'}</p>
-          <p class="author-location">${testimonial.location}</p>
-        </div>
-        <div class="profile-link-hint">
-          <span class="link-text">View Profile →</span>
-        </div>
-      </div>
-    </div>
-  `;
+  return window.CardRenderer.createTestimonialCard(testimonial, {
+    format: 'html',
+    variant: 'default',
+    showAuthor: true,
+    clickAction: 'navigate'
+  });
 }
 
 async function loadPets() {
@@ -630,8 +608,6 @@ async function loadPets() {
       `;
       return;
     }
-    
-    console.log(`Successfully fetched ${pets.length} pets`);
     renderPets(pets, 'pets-grid');
   } catch (error) {
     console.error("Error in loadPets:", error);
@@ -657,30 +633,21 @@ async function fetchAndRenderUsers() {
       user.adoption_count && user.adoption_count > 0
     );
     
-    console.log(`Found ${usersWithAdoptions.length} users with adoptions out of ${allUsers.length} total users`);
-    
-    // Shuffle users randomly
     const shuffledUsers = [...usersWithAdoptions].sort(() => Math.random() - 0.5);
     
-    // Calculate how many users to show based on complete rows (max 4 per row)
     const maxUsersPerRow = 4;
     const availableUsers = shuffledUsers.length;
     
     let usersToShow;
     if (availableUsers >= maxUsersPerRow * 2) {
-      // If we have enough for 2 full rows, show 8 users
       usersToShow = maxUsersPerRow * 2;
     } else if (availableUsers >= maxUsersPerRow) {
-      // If we have enough for 1 full row, show 4 users
       usersToShow = maxUsersPerRow;
     } else {
-      // If we don't have enough for a full row, don't show any
       usersToShow = 0;
     }
     
     const featuredUsers = shuffledUsers.slice(0, usersToShow);
-    
-    console.log(`Showing ${featuredUsers.length} users in complete rows (${Math.floor(featuredUsers.length / maxUsersPerRow)} full rows)`);
     
     if (featuredUsers.length === 0) {
       usersSection.innerHTML = `
@@ -728,63 +695,12 @@ async function fetchAndRenderUsers() {
 }
 
 function createUserCardHTML(user) {
-  const imagePath = window.ImagePathHandler.processUserImagePath(user.imagePath || user.profile_picture);
-  
-  const displayName = user.first_name && user.last_name 
-    ? `${user.first_name} ${user.last_name}` 
-    : user.first_name || user.username;
-  
-  const adoptionCount = user.adoption_count || 0;
-  
-  const roleKey = user.role === 'shelter' ? 'shelter' : 'user';
-  let userDescription = '';
-  let adoptionImpact = '';
-  
-  if (window.languageManager && window.languageManager.translate) {
-    userDescription = window.languageManager.translate(`featuredUsers.roles.${roleKey}`, 
-      user.role === 'shelter' ? 'Shelter Partner' : 'Community Member');
-    
-    const impactKey = adoptionCount === 1 ? 'single' : 'multiple';
-    const translationKey = `featuredUsers.adoptionImpact.${roleKey}.${impactKey}`;
-    
-    if (adoptionCount === 1) {
-      adoptionImpact = window.languageManager.translate(translationKey,
-        user.role === 'shelter' ? 'Helped 1 pet find a home' : 'Adopted 1 pet');
-    } else {
-      let template = window.languageManager.translate(translationKey,
-        user.role === 'shelter' ? `Helped ${adoptionCount} pets find homes` : `Adopted ${adoptionCount} pets`);
-      adoptionImpact = template.replace('{{count}}', adoptionCount);
-    }
-  } else {
-    if (user.role === 'shelter') {
-      userDescription = 'Shelter Partner';
-      adoptionImpact = adoptionCount === 1 
-        ? 'Helped 1 pet find a home' 
-        : `Helped ${adoptionCount} pets find homes`;
-    } else {
-      userDescription = 'Community Member';
-      adoptionImpact = adoptionCount === 1 
-        ? 'Adopted 1 pet' 
-        : `Adopted ${adoptionCount} pets`;
-    }
-  }
-  
-  return `
-    <div class="user-card" data-user-id="${user.id}">
-      <img src="${imagePath}" alt="${displayName}" class="user-image" onerror="this.src='../assets/default-user-profile.jpg'">
-      <div class="user-info">
-        <div class="user-name-section">
-          <h3 class="user-name">${displayName}</h3>
-          <span class="username-tag">@${user.username}</span>
-        </div>
-        <p class="user-description">${userDescription}</p>
-        <div class="user-stats">
-          <span class="adoption-impact">${adoptionImpact}</span>
-        </div>
-        <a href="#" class="btn btn-outline view-user-btn" data-user-id="${user.id}" data-i18n="featuredUsers.viewProfile">View Profile</a>
-      </div>
-    </div>
-  `;
+  return window.CardRenderer.createUserCard(user, {
+    format: 'html',
+    variant: 'featured',
+    showStats: true,
+    clickAction: 'navigate'
+  });
 }
 
 function addEventListeners() {

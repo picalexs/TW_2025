@@ -216,40 +216,12 @@ class ProfilePage {
   }
 
   createTestimonialHTML(testimonial) {
-    const date = new Date(testimonial.created_at || Date.now()).toLocaleDateString();
-    const rating = testimonial.rating || 5;
-    const stars = '★'.repeat(rating) + '☆'.repeat(5 - rating);
-    
-    const authorName = testimonial.userFirstName && testimonial.userLastName 
-      ? `${testimonial.userFirstName} ${testimonial.userLastName}` 
-      : testimonial.userName || 'Anonymous';
-    const authorRole = testimonial.userRole === 'shelter' ? 'Partner Shelter' : 'Pet Adopter';
-    const isClickable = testimonial.userId && testimonial.userId !== this.currentUserId;
-    
-    return `
-      <div class="review-card">
-        <div class="review-header">
-          <div class="review-rating">
-            <span class="stars">${stars}</span>
-            <span class="rating-number">${rating}/5</span>
-          </div>
-          <span class="review-date">${date}</span>
-        </div>
-        <p class="review-text">${testimonial.testimonial_text}</p>
-        ${testimonial.location ? `<p class="review-location">${testimonial.location}</p>` : ''}
-        ${isClickable ? `
-          <div class="testimonial-author-info" data-user-id="${testimonial.userId}" onclick="window.navigateToProfile(${testimonial.userId})" style="cursor: pointer; padding: 1rem 0; border-top: 1px solid #e9ecef; margin-top: 1rem; transition: background-color 0.3s ease;">
-            <div class="author-info">
-              <h4 class="author-name" style="margin: 0 0 0.25rem 0; font-size: 1rem; color: var(--primary-color);">${authorName}</h4>
-              <p class="author-role" style="margin: 0; font-size: 0.875rem; color: #666; font-weight: 500;">${authorRole}</p>
-            </div>
-            <div class="profile-link-hint" style="text-align: right; margin-top: 0.5rem; opacity: 0.7; transition: opacity 0.3s ease;">
-              <span class="link-text" style="font-size: 0.8rem; color: var(--primary-color); font-weight: 500;">View Profile →</span>
-            </div>
-          </div>
-        ` : ''}
-      </div>
-    `;
+    return window.CardRenderer.createTestimonialCard(testimonial, {
+      format: 'html',
+      variant: 'profile',
+      showAuthor: testimonial.userId && testimonial.userId !== this.currentUserId,
+      clickAction: 'navigate'
+    });
   }
 
   createOwnerReviewHTML(review) {
@@ -373,19 +345,11 @@ class ProfilePage {
   }
 
   createPetCardHTML(pet) {
-    const imagePath = window.ImagePathHandler.processPetImagePath(pet.imagePath || pet.media?.[0]?.filePath);
-    
-    return `
-      <div class="pet-card" onclick="window.location.href='../pets/pet-details.html?id=${pet.id}'">
-        <img src="${imagePath}" alt="${pet.name}" class="pet-image" onerror="this.src='../assets/default-pet-profile.jpg'">
-        <div class="pet-info">
-          <h4 class="pet-name">${pet.name}</h4>
-          <p class="pet-breed">${pet.breed} • ${pet.species}</p>
-          <p class="pet-age">${pet.age} years old</p>
-          <span class="pet-status ${pet.adoptionStatus}">${this.capitalizeFirst(pet.adoptionStatus || 'available')}</span>
-        </div>
-      </div>
-    `;
+    return window.CardRenderer.createPetCard(pet, {
+      format: 'html',
+      variant: 'profile',
+      clickAction: 'navigate'
+    });
   }
 
   capitalizeFirst(str) {
