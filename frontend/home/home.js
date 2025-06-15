@@ -728,11 +728,9 @@ async function fetchAndRenderUsers() {
 }
 
 function createUserCardHTML(user) {
-  let imagePath = user.profile_picture;
-  if (!imagePath) {
-    imagePath = '../assets/default-profile.jpg';
-  } else if (!imagePath.startsWith('http') && !imagePath.startsWith('/server/')) {
-    imagePath = `/server/${imagePath}`;
+  let imagePath = user.profile_picture || user.imagePath;
+  if (!imagePath.startsWith('http') && !imagePath.startsWith('/server/')) {
+    imagePath = '../assets/default-user-profile.jpg';
   }
   
   const displayName = user.first_name && user.last_name 
@@ -776,7 +774,7 @@ function createUserCardHTML(user) {
   
   return `
     <div class="user-card" data-user-id="${user.id}">
-      <img src="${imagePath}" alt="${displayName}" class="user-image" onerror="this.src='../assets/default-profile.jpg'">
+      <img src="${imagePath}" alt="${displayName}" class="user-image" onerror="this.src='../assets/default-user-profile.jpg'">
       <div class="user-info">
         <div class="user-name-section">
           <h3 class="user-name">${displayName}</h3>

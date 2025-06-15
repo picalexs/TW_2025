@@ -100,6 +100,22 @@ class PetService {
       throw error;
     }
   }
+
+  async getPetsByShelter(shelterId) {
+    if (!shelterId) {
+      throw new Error('Shelter ID is required');
+    }
+    
+    try {
+      if (this.debug) console.log(`Fetching pets for shelter ID: ${shelterId}`);
+      return await this.apiService.get(`/api/pets/shelter/${shelterId}`);
+    } catch (error) {
+      if (this.debug) {
+        console.error(`Error fetching pets for shelter ID ${shelterId}:`, error);
+      }
+      throw error;
+    }
+  }
   
   async runDiagnostics() {
     const results = {

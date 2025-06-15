@@ -1,43 +1,58 @@
 const OwnerReviewController = require('../controllers/ownerReviewController');
 const { sendResponse, getRequestBody } = require('../utils/helpers');
+const url = require('url');
 
 const ownerReviewController = new OwnerReviewController();
 
 async function handleOwnerReviewRoutes(req, res) {
-  const url = req.url;
+  const parsedUrl = url.parse(req.url, true);
+  const path = parsedUrl.pathname;
+  const trimmedPath = path.replace(/^\/+|\/+$/g, "");
   const method = req.method.toLowerCase();
+  
+  console.log(`Processing owner review route: ${trimmedPath}, method: ${method}`);
 
-  if (method === 'get' && url.match(/^\/api\/owner-reviews\/owner\/\d+$/)) {
-    const ownerId = url.split('/').pop();
+  if (method === 'get' && trimmedPath.match(/^api\/owner-reviews\/owner\/\d+$/)) {
+    console.log('[OwnerReviewRoutes] Handling /api/owner-reviews/owner/:id GET request');
+    const ownerId = trimmedPath.split('/').pop();
     req.params = { ownerId };
-    return await ownerReviewController.getReviewsForOwner(req, res);
+    await ownerReviewController.getReviewsForOwner(req, res);
+    return true;
   }
 
-  if (method === 'get' && url.match(/^\/api\/owner-reviews\/user\/\d+$/)) {
-    const userId = url.split('/').pop();
+  if (method === 'get' && trimmedPath.match(/^api\/owner-reviews\/user\/\d+$/)) {
+    console.log('[OwnerReviewRoutes] Handling /api/owner-reviews/user/:id GET request');
+    const userId = trimmedPath.split('/').pop();
     req.params = { userId };
-    return await ownerReviewController.getReviewsByUser(req, res);
+    await ownerReviewController.getReviewsByUser(req, res);
+    return true;
   }
 
-  if (method === 'get' && url.match(/^\/api\/owner-reviews\/adoption\/\d+$/)) {
-    const adoptionId = url.split('/').pop();
+  if (method === 'get' && trimmedPath.match(/^api\/owner-reviews\/adoption\/\d+$/)) {
+    console.log('[OwnerReviewRoutes] Handling /api/owner-reviews/adoption/:id GET request');
+    const adoptionId = trimmedPath.split('/').pop();
     req.params = { adoptionId };
-    return await ownerReviewController.getReviewByAdoption(req, res);
+    await ownerReviewController.getReviewByAdoption(req, res);
+    return true;
   }
 
-  if (method === 'get' && url.match(/^\/api\/owner-reviews\/can-review\/\d+\/\d+$/)) {
-    const parts = url.split('/');
+  if (method === 'get' && trimmedPath.match(/^api\/owner-reviews\/can-review\/\d+\/\d+$/)) {
+    console.log('[OwnerReviewRoutes] Handling /api/owner-reviews/can-review/:userId/:adoptionId GET request');
+    const parts = trimmedPath.split('/');
     const adoptionId = parts.pop();
     const userId = parts.pop();
     req.params = { userId, adoptionId };
-    return await ownerReviewController.checkCanReview(req, res);
+    await ownerReviewController.checkCanReview(req, res);
+    return true;
   }
 
-  if (method === 'post' && url === '/api/owner-reviews') {
+  if (method === 'post' && trimmedPath === 'api/owner-reviews') {
+    console.log('[OwnerReviewRoutes] Handling /api/owner-reviews POST request');
     try {
       const body = await getRequestBody(req);
       req.body = body;
-      return await ownerReviewController.createReview(req, res);
+      await ownerReviewController.createReview(req, res);
+      return true;
     } catch (error) {
       sendResponse(res, 400, { 
         success: false, 
@@ -48,13 +63,15 @@ async function handleOwnerReviewRoutes(req, res) {
     }
   }
 
-  if (method === 'put' && url.match(/^\/api\/owner-reviews\/\d+$/)) {
+  if (method === 'put' && trimmedPath.match(/^api\/owner-reviews\/\d+$/)) {
+    console.log('[OwnerReviewRoutes] Handling /api/owner-reviews/:id PUT request');
     try {
-      const reviewId = url.split('/').pop();
+      const reviewId = trimmedPath.split('/').pop();
       const body = await getRequestBody(req);
       req.params = { reviewId };
       req.body = body;
-      return await ownerReviewController.updateReview(req, res);
+      await ownerReviewController.updateReview(req, res);
+      return true;
     } catch (error) {
       sendResponse(res, 400, { 
         success: false, 

@@ -3,36 +3,36 @@ const AbstractDTO = require('./abstractDTO');
 class OwnerReviewDTO extends AbstractDTO {
     constructor() {
         super();
-    }
-
+    }    
+    
     toEntity(data) {
         return {
-            id: data.id,
-            reviewer_id: data.reviewer_id,
-            reviewed_owner_id: data.reviewed_owner_id,
-            adoption_id: data.adoption_id,
-            rating: data.rating,
-            review_text: data.review_text,
-            communication_rating: data.communication_rating,
-            pet_condition_rating: data.pet_condition_rating,
-            process_rating: data.process_rating,
-            would_recommend: Boolean(data.would_recommend),
-            created_at: data.created_at,
-            updated_at: data.updated_at,
+            id: data.ID || data.id,
+            reviewer_id: data.REVIEWER_ID || data.reviewer_id,
+            reviewed_owner_id: data.REVIEWED_OWNER_ID || data.reviewed_owner_id,
+            adoption_id: data.ADOPTION_ID || data.adoption_id,
+            rating: data.RATING || data.rating,
+            review_text: data.REVIEW_TEXT || data.review_text,
+            communication_rating: data.COMMUNICATION_RATING || data.communication_rating,
+            pet_condition_rating: data.PET_CONDITION_RATING || data.pet_condition_rating,
+            process_rating: data.PROCESS_RATING || data.process_rating,
+            would_recommend: Boolean(data.WOULD_RECOMMEND || data.would_recommend),
+            created_at: data.CREATED_AT || data.created_at,
+            updated_at: data.UPDATED_AT || data.updated_at,
 
             // Additional fields
-            reviewer_first_name: data.reviewer_first_name,
-            reviewer_last_name: data.reviewer_last_name,
-            reviewer_profile_picture: data.reviewer_profile_picture,
-            reviewer_username: data.reviewer_username,
-            reviewed_owner_first_name: data.reviewed_owner_first_name,
-            reviewed_owner_last_name: data.reviewed_owner_last_name,
-            reviewed_owner_profile_picture: data.reviewed_owner_profile_picture,
-            reviewed_owner_username: data.reviewed_owner_username,
-            reviewed_owner_role: data.reviewed_owner_role,
-            animal_id: data.animal_id,
-            animal_name: data.animal_name,
-            animal_species: data.animal_species
+            reviewer_first_name: data.REVIEWER_FIRST_NAME || data.reviewer_first_name,
+            reviewer_last_name: data.REVIEWER_LAST_NAME || data.reviewer_last_name,
+            reviewer_profile_picture: data.REVIEWER_PROFILE_PICTURE || data.reviewer_profile_picture,
+            reviewer_username: data.REVIEWER_USERNAME || data.reviewer_username,
+            reviewed_owner_first_name: data.REVIEWED_OWNER_FIRST_NAME || data.reviewed_owner_first_name,
+            reviewed_owner_last_name: data.REVIEWED_OWNER_LAST_NAME || data.reviewed_owner_last_name,
+            reviewed_owner_profile_picture: data.REVIEWED_OWNER_PROFILE_PICTURE || data.reviewed_owner_profile_picture,
+            reviewed_owner_username: data.REVIEWED_OWNER_USERNAME || data.reviewed_owner_username,
+            reviewed_owner_role: data.REVIEWED_OWNER_ROLE || data.reviewed_owner_role,
+            animal_id: data.ANIMAL_ID || data.animal_id,
+            animal_name: data.ANIMAL_NAME || data.animal_name,
+            animal_species: data.ANIMAL_SPECIES || data.animal_species
         };
     }
 

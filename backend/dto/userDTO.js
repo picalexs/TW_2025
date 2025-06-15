@@ -1,25 +1,25 @@
 const abstractDTO = require("./abstractDTO");
 const bcrypt = require("bcrypt");
 const oracledb = require("oracledb");
-const db = require("../db/dbConnection");
+const { executeQuery, getConnection, closeConnection } = require("../db/dbConnection");
 
 class userDTO extends abstractDTO {
   constructor() {
     super("users");
   }  
-  
   mapToEntity(dbRow) {
-    let imagePath = dbRow.FILE_PATH;
+    let imagePath = dbRow.PROFILE_PICTURE;
 
     if (imagePath) {
-      if (imagePath.startsWith("/")) {
-        imagePath = imagePath.substring(1);
-      }
-      if (!imagePath.startsWith("http")) {
+      if (imagePath.startsWith("http")) {
+      } else {
+        if (imagePath.startsWith("/")) {
+          imagePath = imagePath.substring(1);
+        }
         imagePath = `/server/${imagePath}`;
       }
     } else {
-      imagePath = "/server/images/profile/default-person-profile.jpg";
+      imagePath = "../assets/default-user-profile.jpg";
     }
 
     return {
@@ -201,7 +201,6 @@ class userDTO extends abstractDTO {
   }  
   
   async getById(id) {
-    let connection;
     try {
       if (!id) {
         throw Object.assign(new Error("User ID is required"), {
@@ -210,8 +209,7 @@ class userDTO extends abstractDTO {
         });
       }
 
-      connection = await db.getConnection();
-        const query = `
+      const query = `
         SELECT u.*, 
                NVL(adoption_stats.adoption_count, 0) as ADOPTION_COUNT,
                NVL(pets_helped_stats.pets_helped_count, 0) as PETS_HELPED_COUNT
@@ -232,7 +230,7 @@ class userDTO extends abstractDTO {
         WHERE u.id = :id
       `;
 
-      const result = await connection.execute(query, [id], {
+      const result = await executeQuery(query, { id }, {
         outFormat: oracledb.OUT_FORMAT_OBJECT
       });
 
@@ -258,23 +256,12 @@ class userDTO extends abstractDTO {
         status: error.status || 500,
         originalError: error
       });
-    } finally {
-      if (connection) {
-        try {
-          await connection.close();
-        } catch (err) {
-          console.error('Error closing connection:', err);
-        }
-      }
     }
   }
 
-    async getAllWithAdoptionCounts() {
+  async getAllWithAdoptionCounts() {
     console.log("UserDTO.getAllWithAdoptionCounts called");
-    let connection;
     try {
-      connection = await db.getConnection();
-      
       const query = `
         SELECT u.*, 
                NVL(adoption_stats.adoption_count, 0) as ADOPTION_COUNT
@@ -288,7 +275,7 @@ class userDTO extends abstractDTO {
         ORDER BY u.created_at DESC
       `;
 
-      const result = await connection.execute(query, [], {
+      const result = await executeQuery(query, [], {
         outFormat: oracledb.OUT_FORMAT_OBJECT
       });
 
@@ -310,14 +297,6 @@ class userDTO extends abstractDTO {
         status: error.status || 500,
         originalError: error
       });
-    } finally {
-      if (connection) {
-        try {
-          await connection.close();
-        } catch (err) {
-          console.error('Error closing connection:', err);
-        }
-      }
     }
   }
 }

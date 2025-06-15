@@ -10,14 +10,15 @@ class petDTO extends abstractDTO {
     let imagePath = dbRow.FILE_PATH;
 
     if (imagePath) {
-      if (imagePath.startsWith("/")) {
-        imagePath = imagePath.substring(1);
-      }
-      if (!imagePath.startsWith("http")) {
+      if (imagePath.startsWith("http")) {
+      } else {
+        if (imagePath.startsWith("/")) {
+          imagePath = imagePath.substring(1);
+        }
         imagePath = `/server/${imagePath}`;
       }
     } else {
-      imagePath = "/server/images/profile/default-pet-profile.jpg";
+      imagePath = "../assets/default-pet-profile.jpg";
     }
 
     return {

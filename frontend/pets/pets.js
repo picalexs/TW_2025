@@ -55,12 +55,10 @@ function createPetCard(pet) {
   const card = document.createElement('div');
   card.className = 'pet-card';
   card.setAttribute('data-pet-id', pet.id);
-  
   let imagePath = pet.imagePath;
-  if (!imagePath) {
+  
+  if (!imagePath.startsWith('http') && !imagePath.startsWith('/server/')) {
     imagePath = '../assets/default-pet-profile.jpg';
-  } else if (!imagePath.startsWith('http') && !imagePath.startsWith('/server/')) {
-    imagePath = `/server/${imagePath}`;
   }
   
   const description = pet.description && pet.description.length > 100 

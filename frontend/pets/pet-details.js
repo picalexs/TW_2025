@@ -86,7 +86,13 @@ class PetDetailsPage {
       
       images.forEach((media, index) => {
         const thumbnail = document.createElement('img');
-        thumbnail.src = media.filePath.startsWith('http') ? media.filePath : `/server/${media.filePath}`;
+        let imagePath = media.filePath;
+        
+        if (!imagePath.startsWith('http') && !imagePath.startsWith('/server/')) {
+          imagePath = '../assets/default-pet-profile.jpg';
+        }
+        
+        thumbnail.src = imagePath;
         thumbnail.alt = `${pet.name} photo ${index + 1}`;
         thumbnail.className = `thumbnail ${index === 0 ? 'active' : ''}`;
         thumbnail.addEventListener('click', () => this.switchMainImage(media.filePath, index));
@@ -97,7 +103,11 @@ class PetDetailsPage {
 
   switchMainImage(imagePath, index) {
     const mainImage = document.getElementById('main-pet-image');
-    mainImage.src = imagePath.startsWith('http') ? imagePath : `/server/${imagePath}`;
+    if (!imagePath || (!imagePath.startsWith('http') && !imagePath.startsWith('/server/'))) {
+      imagePath = '../assets/default-pet-profile.jpg';
+    }
+    
+    mainImage.src = imagePath;
     
     document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
       thumb.classList.toggle('active', i === index);

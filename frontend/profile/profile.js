@@ -1,5 +1,6 @@
 import UserService from '../services/userService.js';
 import PetService from '../services/petService.js';
+import { OwnerReviewService } from '../services/ownerReviewService.js';
 import { setupMobileMenu, initializePageLanguage, checkLoginStatusAndToggleNavButtons, navigateToProfile } from '../global/global.js';
 
 window.navigateToProfile = navigateToProfile;
@@ -8,6 +9,7 @@ class ProfilePage {
   constructor() {
     this.userService = new UserService({ debug: true });
     this.petService = new PetService();
+    this.ownerReviewService = new OwnerReviewService();
     this.currentUser = null;
     this.currentUserId = null;
     this.init();
@@ -60,14 +62,14 @@ class ProfilePage {
   }
 
   renderProfileHeader(user) {
-    // Set profile image
     const profileImage = document.getElementById('profile-image');
-    let imagePath = user.profile_picture;
-    if (!imagePath) {
-      imagePath = '../assets/default-profile.jpg';
+    let imagePath = user.profile_picture || user.imagePath;
+    
+    if (!imagePath.startsWith('http') && !imagePath.startsWith('/server/') && imagePath.startsWith('../assets/')) {
     } else if (!imagePath.startsWith('http') && !imagePath.startsWith('/server/')) {
-      imagePath = `/server/${imagePath}`;
+      imagePath = '../assets/default-user-profile.jpg';
     }
+    
     profileImage.src = imagePath;
     profileImage.alt = this.getDisplayName(user);
 
@@ -103,33 +105,33 @@ class ProfilePage {
       const reviewsContainer = document.getElementById('reviews-container');
       reviewsContainer.innerHTML = '<div class="loading-spinner"></div>';
       
-      try {
-        const response = await fetch(`/api/testimonials/user/${userId}`);
-        if (response.ok) {
-          const testimonials = await response.json();
-          if (testimonials && testimonials.length > 0) {
-            reviewsContainer.innerHTML = testimonials.map(testimonial => this.createTestimonialHTML(testimonial)).join('');
-          } else {
-            reviewsContainer.innerHTML = `
-              <div class="no-reviews">
-                <p data-i18n="noReviews" data-i18n-fallback="No testimonials available for this user yet.">No testimonials available for this user yet.</p>
-              </div>
-            `;
-          }
-        } else {
-          this.renderSampleReviews(reviewsContainer, userId);
-        }
-      } catch (fetchError) {
-        this.renderSampleReviews(reviewsContainer, userId);
+      const ownerReviewsData = await this.ownerReviewService.getReviewsForOwner(userId);
+        
+      if (ownerReviewsData && ownerReviewsData.reviews && ownerReviewsData.reviews.length > 0) {
+        const reviewsHTML = ownerReviewsData.reviews.map(review => this.createOwnerReviewHTML(review)).join('');
+        const statsHTML = this.createReviewStatsHTML(ownerReviewsData.statistics);
+          
+        reviewsContainer.innerHTML = `
+          ${statsHTML}
+          <div class="reviews-list">
+            ${reviewsHTML}
+          </div>
+        `;
+      } else {
+        this.renderNoReviews(reviewsContainer);
       }
     } catch (error) {
-      console.error('Error loading reviews:', error);
-      document.getElementById('reviews-container').innerHTML = `
-        <div class="no-reviews">
-          <p>Error loading reviews</p>
-        </div>
-      `;
+      console.error('Error loading owner reviews:', error);
+      this.renderNoReviews(document.getElementById('reviews-container'));
     }
+  }
+
+  renderNoReviews(container) {
+    container.innerHTML = `
+      <div class="no-reviews" style="text-align: center; padding: 2rem; background: #f8f9fa; border-radius: 8px; margin: 1rem 0;">
+        <p style="color: #888; margin: 0;">This user hasn't received any reviews from adopters yet.</p>
+      </div>
+    `;
   }
 
   renderSampleReviews(container, userId) {
@@ -151,14 +153,11 @@ class ProfilePage {
     try {
       const petsContainer = document.getElementById('pets-container');
       petsContainer.innerHTML = '<div class="loading-spinner"></div>';
-      
-      if (this.currentUser.role === 'shelter') {
+        if (this.currentUser.role === 'shelter') {
         try {
-          const response = await fetch(`/api/pets/shelter/${userId}`);
-          if (response.ok) {
-            const allPets = await response.json();
-            const availablePets = allPets.filter(pet => pet.adoptionStatus === 'available');
-            
+          const allPets = await this.petService.getPetsByShelter(userId);
+          if (allPets && allPets.length > 0) {
+            const availablePets = allPets.filter(pet => pet.adoptionStatus === 'available');            
             if (availablePets && availablePets.length > 0) {
               petsContainer.innerHTML = `
                 <div class="pets-grid">
@@ -172,12 +171,6 @@ class ProfilePage {
                 </div>
               `;
             }
-          } else {
-            petsContainer.innerHTML = `
-              <div class="no-pets">
-                <p data-i18n="noPetsAvailable" data-i18n-fallback="No pets currently available for adoption from this shelter.">No pets currently available for adoption from this shelter.</p>
-              </div>
-            `;
           }
         } catch (fetchError) {
           console.error('Error fetching shelter pets:', fetchError);
@@ -314,14 +307,135 @@ class ProfilePage {
       </div>
     `;
   }
+  createOwnerReviewHTML(review) {
+    let date = 'Unknown date';
+    if (review.created_at) {
+      try {
+        const dateObj = new Date(review.created_at);
+        if (!isNaN(dateObj.getTime())) {
+          date = dateObj.toLocaleDateString();
+        }
+      } catch (e) {
+        console.warn('Error parsing review date:', review.created_at);
+      }
+    }
+    
+    const rating = review.rating || 5;
+    const stars = '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rating));
+    
+    const reviewerFirstName = review.reviewer?.first_name || '';
+    const reviewerLastName = review.reviewer?.last_name || '';
+    const reviewerName = reviewerFirstName && reviewerLastName 
+      ? `${reviewerFirstName} ${reviewerLastName}` 
+      : (reviewerFirstName || reviewerLastName || 'Anonymous');
+    
+    const isClickable = review.reviewer?.id && review.reviewer.id !== parseInt(this.currentUserId);
+    
+    const detailedRatings = [];
+    if (review.communication_rating) {
+      detailedRatings.push(`Communication: ${'★'.repeat(Math.floor(review.communication_rating))}${'☆'.repeat(5 - Math.floor(review.communication_rating))}`);
+    }
+    if (review.pet_condition_rating) {
+      detailedRatings.push(`Pet Condition: ${'★'.repeat(Math.floor(review.pet_condition_rating))}${'☆'.repeat(5 - Math.floor(review.pet_condition_rating))}`);
+    }
+    if (review.process_rating) {
+      detailedRatings.push(`Process: ${'★'.repeat(Math.floor(review.process_rating))}${'☆'.repeat(5 - Math.floor(review.process_rating))}`);
+    }
+    
+    const animalName = review.animal?.name || 'Unknown pet';
+    const animalSpecies = review.animal?.species || 'Unknown species';
+    
+    return `
+      <div class="review-card owner-review">
+        <div class="review-header">
+          <div class="review-rating">
+            <span class="stars">${stars}</span>
+            <span class="rating-number">${rating}/5</span>
+            ${review.would_recommend ? '<span class="recommendation-badge">Recommended</span>' : ''}
+          </div>
+          <span class="review-date">${date}</span>
+        </div>
+        ${review.review_text ? `<p class="review-text">${review.review_text}</p>` : ''}
+        ${detailedRatings.length > 0 ? `
+          <div class="detailed-ratings">
+            ${detailedRatings.map(rating => `<div class="rating-item">${rating}</div>`).join('')}
+          </div>
+        ` : ''}
+        <div class="adoption-context">
+          <span class="adoption-info">Adoption: ${animalName} (${animalSpecies})</span>
+        </div>
+        ${isClickable ? `
+          <div class="review-author-info" data-user-id="${review.reviewer.id}" onclick="window.navigateToProfile(${review.reviewer.id})" style="cursor: pointer; padding: 1rem 0; border-top: 1px solid #e9ecef; margin-top: 1rem; transition: background-color 0.3s ease;">
+            <div class="author-info">
+              <h4 class="author-name" style="margin: 0 0 0.25rem 0; font-size: 1rem; color: var(--primary-color);">${reviewerName}</h4>
+              <p class="author-role" style="margin: 0; font-size: 0.875rem; color: #666; font-weight: 500;">Pet Adopter</p>
+            </div>
+            <div class="profile-link-hint" style="text-align: right; margin-top: 0.5rem; opacity: 0.7; transition: opacity 0.3s ease;">
+              <span class="link-text" style="font-size: 0.8rem; color: var(--primary-color); font-weight: 500;">View Profile →</span>
+            </div>
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }
 
+  createReviewStatsHTML(statistics) {
+    if (!statistics || statistics.total_reviews === 0) {
+      return '';
+    }
+
+    const avgRating = parseFloat(statistics.average_rating) || 0;
+    const stars = '★'.repeat(Math.floor(avgRating)) + (avgRating % 1 >= 0.5 ? '☆' : '') + '☆'.repeat(5 - Math.ceil(avgRating));
+    
+    return `
+      <div class="review-statistics">
+        <div class="stats-header">
+          <h4>Review Summary</h4>
+          <div class="overall-rating">
+            <span class="stats-stars">${stars}</span>
+            <span class="stats-rating">${avgRating.toFixed(1)}/5</span>
+            <span class="stats-count">(${statistics.total_reviews} review${statistics.total_reviews !== 1 ? 's' : ''})</span>
+          </div>
+        </div>
+        <div class="stats-details">
+          ${statistics.average_communication ? `
+            <div class="stat-detail">
+              <span class="stat-label">Communication:</span>
+              <span class="stat-value">${parseFloat(statistics.average_communication).toFixed(1)}/5</span>
+            </div>
+          ` : ''}
+          ${statistics.average_pet_condition ? `
+            <div class="stat-detail">
+              <span class="stat-label">Pet Condition:</span>
+              <span class="stat-value">${parseFloat(statistics.average_pet_condition).toFixed(1)}/5</span>
+            </div>
+          ` : ''}
+          ${statistics.average_process ? `
+            <div class="stat-detail">
+              <span class="stat-label">Process:</span>
+              <span class="stat-value">${parseFloat(statistics.average_process).toFixed(1)}/5</span>
+            </div>
+          ` : ''}
+          ${statistics.recommendation_percentage !== undefined ? `
+            <div class="stat-detail">
+              <span class="stat-label">Would Recommend:</span>
+              <span class="stat-value">${statistics.recommendation_percentage}%</span>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+    `;
+  }   
+  
   createPetCardHTML(pet) {
-    const imagePath = pet.imagePath || pet.media?.[0]?.filePath || '../assets/default-pet-profile.jpg';
-    const imageUrl = imagePath.startsWith('http') ? imagePath : `/server/${imagePath}`;
+    let imagePath = pet.imagePath || pet.media?.[0]?.filePath;
+    if (!imagePath.startsWith('http') && !imagePath.startsWith('/server/')) {
+      imagePath = '../assets/default-pet-profile.jpg';
+    }
     
     return `
       <div class="pet-card" onclick="window.location.href='../pets/pet-details.html?id=${pet.id}'">
-        <img src="${imageUrl}" alt="${pet.name}" class="pet-image" onerror="this.src='../assets/default-pet-profile.jpg'">
+        <img src="${imagePath}" alt="${pet.name}" class="pet-image" onerror="this.src='../assets/default-pet-profile.jpg'">
         <div class="pet-info">
           <h4 class="pet-name">${pet.name}</h4>
           <p class="pet-breed">${pet.breed} • ${pet.species}</p>

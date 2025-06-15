@@ -9,7 +9,6 @@ async function handlePetRoutes(req, res) {
   const method = req.method.toLowerCase();
   
   console.log(`Processing pet route: ${trimmedPath}, method: ${method}`);
-
   if (trimmedPath === "api/pets" || trimmedPath === "api/pets/" || 
       trimmedPath === "/api/pets" || trimmedPath === "/api/pets/") {
     if (method === "get") {
@@ -18,17 +17,18 @@ async function handlePetRoutes(req, res) {
       await petController.createPet(req, res);
     } else {
       sendResponse(res, 405, { error: "Method not allowed" });
-    }    return true;
+    }
+    return true;
   }
-
-  const shelterPetsMatch = trimmedPath.match(/^(?:\/)?api\/pets\/shelter\/(\d+)\/?$/);
+  const shelterPetsMatch = trimmedPath.match(/^api\/pets\/shelter\/(\d+)$/);
   if (shelterPetsMatch && method === "get") {
     const shelterId = parseInt(shelterPetsMatch[1]);
+    console.log(`Matched shelter pets route for shelter ID: ${shelterId}`);
     await petController.getPetsByShelter(req, res, shelterId);
     return true;
   }
 
-  const petIdMatch = trimmedPath.match(/^(?:\/)?api\/pets\/(\d+)\/?$/);
+  const petIdMatch = trimmedPath.match(/^api\/pets\/(\d+)$/);
   if (petIdMatch) {
     const id = parseInt(petIdMatch[1]);
     if (method === "get") {

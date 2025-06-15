@@ -332,7 +332,6 @@ function initBasicFunctionality() {
     if (window.languageManager) {
         window.languageManager.updateContent();
     }
-    console.log("Basic initialization complete");
 }
 
 document.addEventListener('DOMContentLoaded', () => {

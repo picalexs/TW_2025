@@ -59,8 +59,6 @@ class LanguageManager {
       }
 
       this.translations = { ...globalTranslations, ...pageTranslations };
-      console.log('Translations loaded:', this.translations);
-      console.log('Fallback translations loaded:', this.fallbackTranslations);
 
       this.updateContent();
       document.dispatchEvent(this.languageChangedEvent);
@@ -86,7 +84,6 @@ class LanguageManager {
       if (value && value[key] !== undefined) {
         value = value[key];
       } else {
-        // Not found in current language, try fallback translations
         let fallbackValue = this.fallbackTranslations;
         let foundInFallback = true;
         
@@ -128,7 +125,6 @@ class LanguageManager {
   }
 
   updateContent() {
-    console.log('Updating content with translations');
     document.querySelectorAll('[data-i18n]').forEach(element => {
       const key = element.getAttribute('data-i18n');
       const fallback = element.getAttribute('data-i18n-fallback') || element.textContent || key;
