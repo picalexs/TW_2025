@@ -728,10 +728,7 @@ async function fetchAndRenderUsers() {
 }
 
 function createUserCardHTML(user) {
-  let imagePath = user.profile_picture || user.imagePath;
-  if (!imagePath.startsWith('http') && !imagePath.startsWith('/server/')) {
-    imagePath = '../assets/default-user-profile.jpg';
-  }
+  const imagePath = window.ImagePathHandler.processUserImagePath(user.imagePath || user.profile_picture);
   
   const displayName = user.first_name && user.last_name 
     ? `${user.first_name} ${user.last_name}` 

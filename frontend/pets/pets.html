@@ -157,7 +157,11 @@
             <div class="loading-spinner" data-i18n="loading" data-i18n-fallback="Loading pets..."></div>
         </div>
     </main>
-      <div id="global-footer"></div> <script type="module">
+    <div id="global-footer"></div>
+
+    <script src="../config.js"></script>
+    <script src="../utils/imagePathHandler.js"></script>
+    <script type="module">
         import { fetchPets, renderPets, showPetLoadError, initializeViewToggle, initializeAdvancedFilters, initializeFilterButtons } from './pets.js';
         import '../global/global.js'; 
         import languageManager from '../languages/language.js';

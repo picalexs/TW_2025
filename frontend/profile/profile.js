@@ -23,7 +23,9 @@ class ProfilePage {
       if (!userId) {
         this.showError('No user ID provided');
         return;
-      }      this.currentUserId = userId;
+      }      
+      
+      this.currentUserId = userId;
       await this.loadUserProfile(userId);
       this.initEventListeners();
 
@@ -36,7 +38,6 @@ class ProfilePage {
   async loadUserProfile(userId) {
     try {
       this.showLoading();
-      
       const user = await this.userService.getUserById(userId);
       
       if (!user) {
@@ -53,6 +54,7 @@ class ProfilePage {
       this.showError('Failed to load user profile');
     }
   }
+
   renderUserProfile(user) {
     document.title = `${this.getDisplayName(user)} - Profile`;
     this.renderProfileHeader(user);
@@ -63,12 +65,7 @@ class ProfilePage {
 
   renderProfileHeader(user) {
     const profileImage = document.getElementById('profile-image');
-    let imagePath = user.profile_picture || user.imagePath;
-    
-    if (!imagePath.startsWith('http') && !imagePath.startsWith('/server/') && imagePath.startsWith('../assets/')) {
-    } else if (!imagePath.startsWith('http') && !imagePath.startsWith('/server/')) {
-      imagePath = '../assets/default-user-profile.jpg';
-    }
+    const imagePath = window.ImagePathHandler.processUserImagePath(user.imagePath || user.profile_picture);
     
     profileImage.src = imagePath;
     profileImage.alt = this.getDisplayName(user);
@@ -133,21 +130,6 @@ class ProfilePage {
       </div>
     `;
   }
-
-  renderSampleReviews(container, userId) {
-    const hasReviews = (parseInt(userId) % 3) === 0;
-    
-    if (hasReviews) {
-      const sampleReviews = this.generateSampleReviews();
-      container.innerHTML = sampleReviews.map(review => this.createReviewHTML(review)).join('');
-    } else {
-      container.innerHTML = `
-        <div class="no-reviews">
-          <p data-i18n="noReviews" data-i18n-fallback="No testimonials available for this user yet.">No testimonials available for this user yet.</p>
-        </div>
-      `;
-    }
-  }  
   
   async loadAndRenderPets(userId) {
     try {
@@ -211,44 +193,6 @@ class ProfilePage {
     }
   }
 
-  generateSampleReviews() {
-    const sampleReviews = [
-      {
-        author: "Sarah Johnson",
-        rating: 5,
-        text: "Great experience working with this member of our community. Very responsive and caring towards the animals.",
-        date: "2024-11-15"
-      },
-      {
-        author: "Mike Chen",
-        rating: 4,
-        text: "Professional and helpful throughout the adoption process. Would recommend to others.",
-        date: "2024-10-22"
-      },
-      {
-        author: "Emma Wilson",
-        rating: 5,
-        text: "Amazing dedication to animal welfare. This person really cares about finding the right homes for pets.",
-        date: "2024-09-30"
-      },
-      {
-        author: "John Smith",
-        rating: 3,
-        text: "Average experience. Could have been more responsive.",
-        date: "2024-08-15"
-      },
-      {
-        author: "Lisa Brown",
-        rating: 2,
-        text: "Had some issues with communication during the process.",
-        date: "2024-07-10"
-      }
-    ];
-    
-    const numReviews = Math.floor(Math.random() * 3) + 1;
-    return sampleReviews.slice(0, numReviews);
-  }
-
   createReviewHTML(review) {
     const stars = '★'.repeat(review.rating) + '☆'.repeat(5 - review.rating);
     const reviewDate = new Date(review.date).toLocaleDateString('en-US', {
@@ -307,6 +251,7 @@ class ProfilePage {
       </div>
     `;
   }
+
   createOwnerReviewHTML(review) {
     let date = 'Unknown date';
     if (review.created_at) {
@@ -425,13 +370,10 @@ class ProfilePage {
         </div>
       </div>
     `;
-  }   
-  
+  }
+
   createPetCardHTML(pet) {
-    let imagePath = pet.imagePath || pet.media?.[0]?.filePath;
-    if (!imagePath.startsWith('http') && !imagePath.startsWith('/server/')) {
-      imagePath = '../assets/default-pet-profile.jpg';
-    }
+    const imagePath = window.ImagePathHandler.processPetImagePath(pet.imagePath || pet.media?.[0]?.filePath);
     
     return `
       <div class="pet-card" onclick="window.location.href='../pets/pet-details.html?id=${pet.id}'">

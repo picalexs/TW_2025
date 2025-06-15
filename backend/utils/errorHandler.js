@@ -1,12 +1,7 @@
 const { sendResponse } = require('./helpers');
 
-/**
- * Comprehensive error handler for Oracle database and general application errors
- */
 class ErrorHandler {
-    /**
-     * Handle Oracle database errors with specific error codes
-     */
+    
     static handleOracleError(error, res, operation = 'database operation') {
         console.error(`Oracle Error during ${operation}:`, error);
 
@@ -171,13 +166,9 @@ class ErrorHandler {
         }
     }
 
-    /**
-     * Handle application-specific errors
-     */
     static handleApplicationError(error, res, operation = 'application operation') {
         console.error(`Application Error during ${operation}:`, error);
 
-        // Handle specific application error messages
         if (error.message) {
             if (error.message.includes('ORA-20001')) {
                 return sendResponse(res, 409, {
@@ -243,9 +234,6 @@ class ErrorHandler {
         return this.handleGenericError(error, res, operation);
     }
 
-    /**
-     * Handle network and connection errors
-     */
     static handleConnectionError(error, res, operation = 'connection operation') {
         console.error(`Connection Error during ${operation}:`, error);
 
@@ -291,9 +279,6 @@ class ErrorHandler {
         }
     }
 
-    /**
-     * Handle generic errors
-     */
     static handleGenericError(error, res, operation = 'operation') {
         console.error(`Generic Error during ${operation}:`, error);
 
@@ -306,17 +291,12 @@ class ErrorHandler {
         });
     }
 
-    /**
-     * Main error handler that routes to appropriate sub-handlers
-     */
     static handleError(error, res, operation = 'operation') {
-        // Check if response has already been sent
         if (res.headersSent) {
             console.error('Response already sent, cannot handle error:', error);
             return;
         }
 
-        // Route to appropriate error handler
         if (error.errorNum) {
             return this.handleOracleError(error, res, operation);
         } else if (error.code && ['ECONNREFUSED', 'ETIMEDOUT', 'ENOTFOUND', 'ECONNRESET'].includes(error.code)) {
@@ -328,9 +308,6 @@ class ErrorHandler {
         }
     }
 
-    /**
-     * Validation error handler
-     */
     static handleValidationError(validationErrors, res, operation = 'validation') {
         return sendResponse(res, 400, {
             success: false,
@@ -342,9 +319,6 @@ class ErrorHandler {
         });
     }
 
-    /**
-     * Authorization error handler
-     */
     static handleAuthorizationError(res, message = 'Access denied', operation = 'authorization') {
         return sendResponse(res, 403, {
             success: false,
@@ -355,9 +329,6 @@ class ErrorHandler {
         });
     }
 
-    /**
-     * Rate limiting error handler
-     */
     static handleRateLimitError(res, operation = 'rate limiting') {
         return sendResponse(res, 429, {
             success: false,

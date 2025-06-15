@@ -51,15 +51,11 @@ function updateResultsCount(count) {
   }
 }
 
-function createPetCard(pet) {
-  const card = document.createElement('div');
+function createPetCard(pet) {  const card = document.createElement('div');
   card.className = 'pet-card';
   card.setAttribute('data-pet-id', pet.id);
-  let imagePath = pet.imagePath;
-  
-  if (!imagePath.startsWith('http') && !imagePath.startsWith('/server/')) {
-    imagePath = '../assets/default-pet-profile.jpg';
-  }
+
+  const imagePath = window.ImagePathHandler.processPetImagePath(pet.imagePath);
   
   const description = pet.description && pet.description.length > 100 
     ? pet.description.substring(0, 100) + '...' 

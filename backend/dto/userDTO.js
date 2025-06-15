@@ -2,26 +2,14 @@ const abstractDTO = require("./abstractDTO");
 const bcrypt = require("bcrypt");
 const oracledb = require("oracledb");
 const { executeQuery, getConnection, closeConnection } = require("../db/dbConnection");
+const ImagePathHandler = require("../utils/imagePathHandler");
 
 class userDTO extends abstractDTO {
   constructor() {
     super("users");
-  }  
+  }
+
   mapToEntity(dbRow) {
-    let imagePath = dbRow.PROFILE_PICTURE;
-
-    if (imagePath) {
-      if (imagePath.startsWith("http")) {
-      } else {
-        if (imagePath.startsWith("/")) {
-          imagePath = imagePath.substring(1);
-        }
-        imagePath = `/server/${imagePath}`;
-      }
-    } else {
-      imagePath = "../assets/default-user-profile.jpg";
-    }
-
     return {
       id: dbRow.ID,
       username: dbRow.USERNAME,
@@ -32,7 +20,7 @@ class userDTO extends abstractDTO {
       role: dbRow.ROLE,
       profile_picture: dbRow.PROFILE_PICTURE,      
       created_at: dbRow.CREATED_AT,
-      imagePath: imagePath,
+      imagePath: ImagePathHandler.processUserImagePath(dbRow.PROFILE_PICTURE),
       adoption_count: dbRow.ADOPTION_COUNT || 0,
       pets_helped_count: dbRow.PETS_HELPED_COUNT || 0,
     };

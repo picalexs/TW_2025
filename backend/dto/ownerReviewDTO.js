@@ -1,9 +1,10 @@
 const AbstractDTO = require('./abstractDTO');
+const ImagePathHandler = require("../utils/imagePathHandler");
 
 class OwnerReviewDTO extends AbstractDTO {
     constructor() {
         super();
-    }    
+    }
     
     toEntity(data) {
         return {
@@ -58,7 +59,7 @@ class OwnerReviewDTO extends AbstractDTO {
                 id: entity.reviewer_id,
                 first_name: entity.reviewer_first_name,
                 last_name: entity.reviewer_last_name,
-                profile_picture: entity.reviewer_profile_picture,
+                profile_picture: ImagePathHandler.processUserImagePath(entity.reviewer_profile_picture),
                 username: entity.reviewer_username
             },
             animal: {
@@ -84,7 +85,7 @@ class OwnerReviewDTO extends AbstractDTO {
                 id: entity.reviewed_owner_id,
                 first_name: entity.reviewed_owner_first_name,
                 last_name: entity.reviewed_owner_last_name,
-                profile_picture: entity.reviewed_owner_profile_picture,
+                profile_picture: ImagePathHandler.processUserImagePath(entity.reviewed_owner_profile_picture),
                 username: entity.reviewed_owner_username,
                 role: entity.reviewed_owner_role
             },

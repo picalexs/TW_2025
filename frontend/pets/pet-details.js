@@ -57,11 +57,13 @@ class PetDetailsPage {
     this.renderBehaviorTab(pet);
     this.renderLocationTab(pet);
     this.renderAdoptionTab(pet);
-  }
-
+  }  
+  
   renderPetHeader(pet) {
     const mainImage = document.getElementById('main-pet-image');
-    mainImage.src = pet.imagePath || '../assets/default-pet-profile.jpg';
+    const imagePath = window.ImagePathHandler.processPetImagePath(pet.imagePath);
+    
+    mainImage.src = imagePath;
     mainImage.alt = pet.name;
 
     this.renderImageGallery(pet);
@@ -83,14 +85,9 @@ class PetDetailsPage {
 
     if (pet.media && pet.media.length > 0) {
       const images = pet.media.filter(media => media.type === 'image' || !media.type);
-      
       images.forEach((media, index) => {
         const thumbnail = document.createElement('img');
-        let imagePath = media.filePath;
-        
-        if (!imagePath.startsWith('http') && !imagePath.startsWith('/server/')) {
-          imagePath = '../assets/default-pet-profile.jpg';
-        }
+        const imagePath = window.ImagePathHandler.processPetImagePath(media.filePath);
         
         thumbnail.src = imagePath;
         thumbnail.alt = `${pet.name} photo ${index + 1}`;
@@ -99,15 +96,13 @@ class PetDetailsPage {
         thumbnailsContainer.appendChild(thumbnail);
       });
     }
-  }
-
+  }  
+  
   switchMainImage(imagePath, index) {
     const mainImage = document.getElementById('main-pet-image');
-    if (!imagePath || (!imagePath.startsWith('http') && !imagePath.startsWith('/server/'))) {
-      imagePath = '../assets/default-pet-profile.jpg';
-    }
+    const processedPath = window.ImagePathHandler.processPetImagePath(imagePath);
     
-    mainImage.src = imagePath;
+    mainImage.src = processedPath;
     
     document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
       thumb.classList.toggle('active', i === index);
@@ -237,10 +232,9 @@ class PetDetailsPage {
 
   renderShelterInfo(shelter) {
     const container = document.getElementById('shelter-info');
-    
-    if (shelter && (shelter.firstName || shelter.email)) {
+      if (shelter && (shelter.firstName || shelter.email)) {
       const name = [shelter.firstName, shelter.lastName].filter(Boolean).join(' ') || 'Shelter Contact';
-      const profilePic = shelter.profilePicture || '/server/images/profile/default-user-profile.jpg';
+      const profilePic = window.ImagePathHandler.processUserImagePath(shelter.profilePicture);
       
       container.innerHTML = `
         <div class="shelter-contact">
