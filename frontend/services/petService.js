@@ -1,11 +1,10 @@
 import ApiService, { ApiError } from './api.js';
 
-class PetService {
-  constructor(options = {}) {
+class PetService {  constructor(options = {}) {
     this.apiService = options.apiService || new ApiService(options.baseURL, {
       debug: options.debug || false,
-      timeout: options.timeout || 30000,
-      retryCount: options.retryCount || 1
+      timeout: 0,
+      retryCount: options.retryCount || 999
     });
     
     this.debug = options.debug || false;
@@ -24,13 +23,8 @@ class PetService {
       if (this.debug) console.log('Fetching all pets...');
       return await this.apiService.get(this.endpoints.base);
     } catch (error) {
-      if (this._isCriticalNetworkError(error)) {
-        console.warn('Network error while fetching pets, returning empty array');
-        return [];
-      }
-      
       if (this.debug) {
-        console.error('Error fetching pets:', error);
+        console.error('Error fetching pets, will retry:', error);
       }
       
       throw error;

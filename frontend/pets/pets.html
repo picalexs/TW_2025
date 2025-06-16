@@ -152,9 +152,43 @@
                 </button>
             </div>
         </div>
-        
-        <div id="pets-grid" class="pets-grid">
-            <div class="loading-spinner" data-i18n="loading" data-i18n-fallback="Loading pets..."></div>
+          <div id="pets-grid" class="pets-grid">
+            <div class="pet-card placeholder card-placeholder">
+                <div class="placeholder-content"></div>
+                <div class="placeholder-content"></div>
+                <div class="placeholder-content"></div>
+                <div class="placeholder-content"></div>
+            </div>
+            <div class="pet-card placeholder card-placeholder">
+                <div class="placeholder-content"></div>
+                <div class="placeholder-content"></div>
+                <div class="placeholder-content"></div>
+                <div class="placeholder-content"></div>
+            </div>
+            <div class="pet-card placeholder card-placeholder">
+                <div class="placeholder-content"></div>
+                <div class="placeholder-content"></div>
+                <div class="placeholder-content"></div>
+                <div class="placeholder-content"></div>
+            </div>
+            <div class="pet-card placeholder card-placeholder">
+                <div class="placeholder-content"></div>
+                <div class="placeholder-content"></div>
+                <div class="placeholder-content"></div>
+                <div class="placeholder-content"></div>
+            </div>
+            <div class="pet-card placeholder card-placeholder">
+                <div class="placeholder-content"></div>
+                <div class="placeholder-content"></div>
+                <div class="placeholder-content"></div>
+                <div class="placeholder-content"></div>
+            </div>
+            <div class="pet-card placeholder card-placeholder">
+                <div class="placeholder-content"></div>
+                <div class="placeholder-content"></div>
+                <div class="placeholder-content"></div>
+                <div class="placeholder-content"></div>
+            </div>
         </div>
     </main>
     <div id="global-footer"></div>
@@ -165,18 +199,30 @@
     <script type="module">
         import { fetchPets, renderPets, showPetLoadError, initializeViewToggle, initializeAdvancedFilters, initializeFilterButtons } from './pets.js';
         import '../global/global.js'; 
-        import languageManager from '../languages/language.js';
-        
-        document.addEventListener('DOMContentLoaded', async () => {
+        import languageManager from '../languages/language.js';        document.addEventListener('DOMContentLoaded', async () => {
             try {
                 initializeViewToggle();
                 initializeAdvancedFilters();
                 initializeFilterButtons();
                 
-                const pets = await fetchPets();
-                renderPets(pets);
+                const loadPetsWithRetry = async () => {
+                    try {
+                        const pets = await fetchPets();
+                        if (pets && pets.length > 0) {
+                            renderPets(pets);
+                        } else {
+                            console.log("No pets received, retrying in 3 seconds...");
+                            setTimeout(loadPetsWithRetry, 3000);
+                        }
+                    } catch (error) {
+                        console.log("Failed to load pets, retrying in 3 seconds...", error);
+                        setTimeout(loadPetsWithRetry, 3000);
+                    }
+                };
+                
+                loadPetsWithRetry();
             } catch (error) {
-                showPetLoadError(error);
+                console.error("Error during page initialization:", error);
             }
         });
     </script>

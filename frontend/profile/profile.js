@@ -100,7 +100,10 @@ class ProfilePage {
   async loadAndRenderReviews(userId) {
     try {
       const reviewsContainer = document.getElementById('reviews-container');
-      reviewsContainer.innerHTML = '<div class="loading-spinner"></div>';
+      reviewsContainer.innerHTML =
+        CardRenderer.createPlaceholderCard('review') +
+        CardRenderer.createPlaceholderCard('review') +
+        CardRenderer.createPlaceholderCard('review');
       
       const ownerReviewsData = await this.ownerReviewService.getReviewsForOwner(userId);
         
@@ -134,8 +137,11 @@ class ProfilePage {
   async loadAndRenderPets(userId) {
     try {
       const petsContainer = document.getElementById('pets-container');
-      petsContainer.innerHTML = '<div class="loading-spinner"></div>';
-        if (this.currentUser.role === 'shelter') {
+      petsContainer.innerHTML =
+        CardRenderer.createPlaceholderCard('pet') +
+        CardRenderer.createPlaceholderCard('pet') +
+        CardRenderer.createPlaceholderCard('pet');
+      if (this.currentUser.role === 'shelter') {
         try {
           const allPets = await this.petService.getPetsByShelter(userId);
           if (allPets && allPets.length > 0) {

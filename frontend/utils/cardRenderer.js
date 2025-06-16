@@ -146,6 +146,49 @@ class CardRenderer {
     return format === 'element' ? this._createElementFromHTML(cardHTML) : cardHTML;
   }
 
+  static createPlaceholderCard(type = 'review') {
+    let content = '';
+    switch(type) {
+      case 'pet':
+        content = `
+          <div class="pet-card placeholder card-placeholder">
+            <div class="placeholder-content"></div>
+            <div class="placeholder-content"></div>
+            <div class="placeholder-content"></div>
+            <div class="placeholder-content"></div>
+          </div>
+        `;
+        break;
+      case 'user':
+        content = `
+          <div class="user-card placeholder card-placeholder">
+            <div class="placeholder-author"></div>
+            <div class="placeholder-content"></div>
+            <div class="placeholder-location"></div>
+          </div>
+        `;
+        break;
+      case 'testimonial':
+        content = `
+          <div class="testimonial-card placeholder card-placeholder">
+            <div class="placeholder-stars"></div>
+            <div class="placeholder-content"></div>
+            <div class="placeholder-author"></div>
+          </div>
+        `;
+        break;
+      default:
+        content = `
+          <div class="review-card placeholder card-placeholder">
+            <div class="placeholder-stars"></div>
+            <div class="placeholder-content"></div>
+            <div class="placeholder-author"></div>
+          </div>
+        `;
+    }
+    return content;
+  }
+
   _formatDescription(description, showFull = false) {
     if (!description || description === 'undefined' || description === 'null') return 'No description available';
     if (showFull || description.length <= 100) return description;

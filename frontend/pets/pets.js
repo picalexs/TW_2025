@@ -22,20 +22,18 @@ export function renderPets(pets, containerId = 'pets-grid') {
     return;
   }
 
-  container.innerHTML = '';
-  
-  if (!pets || pets.length === 0) {
-    const noResultsMessage = window.languageManager?.translate('noResults', 'No pets available for adoption at this time.');
-    container.innerHTML = `<div class="no-pets-message">${noResultsMessage}</div>`;
-    return;
+  // Only clear and render if we actually have pets
+  if (pets && pets.length > 0) {
+    container.innerHTML = '';
+    
+    pets.forEach(pet => {
+      const petCard = createPetCard(pet);
+      container.appendChild(petCard);
+    });
+    
+    updateResultsCount(pets.length);
   }
-
-  pets.forEach(pet => {
-    const petCard = createPetCard(pet);
-    container.appendChild(petCard);
-  });
-  
-  updateResultsCount(pets.length);
+  // If no pets, keep existing placeholders
 }
 
 function updateResultsCount(count) {
@@ -59,6 +57,7 @@ function createPetCard(pet) {
   });
   
   card.setAttribute('data-pet-id', pet.id);
+  card.classList.add('loaded');
   
   return card;
 }
@@ -233,6 +232,23 @@ export function initializeFilterButtons() {
     addPetBtn.addEventListener('click', () => {
       window.location.href = 'add-pet.html';
     });
+  }
+}
+
+export function showPetPlaceholders(containerId = 'pets-grid', count = 6) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  
+  const existingPlaceholders = container.querySelectorAll('.card-placeholder');
+  if (existingPlaceholders.length >= count) {
+    return;
+  }
+  
+  container.innerHTML = '';
+  for (let i = 0; i < count; i++) {
+    const placeholder = document.createElement('div');
+    placeholder.innerHTML = window.CardRenderer.createPlaceholderCard('pet');
+    container.appendChild(placeholder.firstChild || placeholder);
   }
 }
 

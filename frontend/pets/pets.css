@@ -62,8 +62,8 @@ h1 {
 }
 
 .recommendation-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
     background: rgba(255, 255, 255, 0.15);
 }
 
@@ -307,9 +307,9 @@ h1 {
     border-radius: 1rem;
     overflow: hidden;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-    transition: all 0.3s ease;
     border: 1px solid rgba(0, 0, 0, 0.05);
     position: relative;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .pet-card::before {
@@ -324,24 +324,12 @@ h1 {
     transition: opacity 0.3s ease;
 }
 
-.pet-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-}
-
-.pet-card:hover::before {
-    opacity: 1;
-}
-
 .pet-image {
     width: 100%;
     height: 200px;
     object-fit: cover;
-    transition: transform 0.3s ease;
-}
-
-.pet-card:hover .pet-image {
-    transform: scale(1.05);
+    border-radius: 1rem 1rem 0 0;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .pet-info {
@@ -780,14 +768,9 @@ h1 {
     line-height: 1;
 }
 
-@media (max-width: 768px) {
-    .section-header {
-        flex-direction: column;
-        text-align: center;
-    }
-    
-    .add-pet-button {
-        width: 100%;
-        justify-content: center;
-    }
+.pets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
 }

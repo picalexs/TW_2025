@@ -1,4 +1,4 @@
-import { fetchPets, renderPets, showPetLoadError } from '../pets/pets.js';
+import { fetchPets, renderPets, showPetLoadError, showPetPlaceholders } from '../pets/pets.js';
 import { setupMobileMenu, initializePageLanguage, checkLoginStatusAndToggleNavButtons, navigateToProfile } from '../global/global.js';
 import ApiService from '../services/api.js';
 import UserService from '../services/userService.js';
@@ -22,28 +22,6 @@ function initHomePage() {
     console.log('Language changed, re-rendering user cards');
     fetchAndRenderUsers();
   });
-}
-
-function ensureDynamicSectionsContainer() {
-  let container = document.getElementById('dynamic-sections-container');
-  if (!container) {
-    container = document.createElement('div');
-    container.id = 'dynamic-sections-container';
-    container.style.order = '2';
-    
-    const contentContainer = document.getElementById('content-container');
-    if (contentContainer) {
-      const heroSection = document.querySelector('.hero');
-      if (heroSection && heroSection.parentNode === contentContainer) {
-        contentContainer.insertBefore(container, heroSection.nextSibling);
-      } else {
-        contentContainer.appendChild(container);
-      }
-    } else {
-      console.error('Content container not found');
-      document.body.appendChild(container);
-    }
-  }
 }
 
 function initHeroSection() {
@@ -128,78 +106,38 @@ function startSlideRotation(container) {
 }
 
 async function addTestimonialsSection() {
-  const dynamicSectionsContainer = document.getElementById('dynamic-sections-container');
-  if (!dynamicSectionsContainer) {
-    console.error("Dynamic sections container not found");
+  const testimonialsSection = document.getElementById('testimonials');
+  if (!testimonialsSection) {
+    console.error("Testimonials section not found in HTML");
     return;
   }
   
-  const testimonialsSection = document.createElement('section');
-  testimonialsSection.className = 'testimonials-section';
-  testimonialsSection.id = 'testimonials';
-  
-  testimonialsSection.innerHTML = createTestimonialsPlaceholder();
-  dynamicSectionsContainer.appendChild(testimonialsSection);
-  
-  try {
-    const testimonials = await fetchTestimonials();
+  const loadTestimonialsWithRetry = async () => {
+    try {
+      const testimonials = await fetchTestimonials();
       if (testimonials && testimonials.length > 0) {
-      window.currentTestimonials = testimonials;
-      testimonialsSection.innerHTML = createTestimonialsCarousel(testimonials);
-      initTestimonialsCarousel();
-      
-      if (window.languageManager) {
-        window.languageManager.updateContent();
+        window.currentTestimonials = testimonials;
+        testimonialsSection.innerHTML = createTestimonialsCarousel(testimonials);
+        initTestimonialsCarousel();
+        
+        if (window.languageManager) {
+          window.languageManager.updateContent();
+        }
+      } else {
+        console.log("No testimonials received, retrying in 5 seconds...");
+        setTimeout(() => loadTestimonialsWithRetry(), 5000);
       }
-    } else {
-      testimonialsSection.innerHTML = createEmptyTestimonialsState();
+    } catch (error) {
+      console.log("Failed to load testimonials, retrying in 5 seconds...", error);
+      setTimeout(() => loadTestimonialsWithRetry(), 5000);
     }
-  } catch (error) {
-    console.error('Error loading testimonials:', error);
-    testimonialsSection.innerHTML = createErrorTestimonialsState();
-  }
-}
-
-function createTestimonialsPlaceholder() {
-  return `
-    <div class="section-container">
-      <div class="section-header">
-        <h2 class="section-title" data-i18n="testimonials.title">What Our Community Says</h2>
-        <p data-i18n="testimonials.subtitle">Real stories from pet adopters and shelter partners</p>
-      </div>
-      <div class="testimonials-carousel">
-        <div class="testimonials-carousel-wrapper">
-          <div class="testimonials-track">
-            <div class="testimonials-grid">
-              ${createPlaceholderCard()}
-              ${createPlaceholderCard()}
-              ${createPlaceholderCard()}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
+  };
+  
+  loadTestimonialsWithRetry();
 }
 
 function createPlaceholderCard() {
-  return `
-    <div class="testimonial-card placeholder">
-      <div class="testimonial-content">
-        <div class="testimonial-rating">
-          <div class="placeholder-stars"></div>
-        </div>
-        <div class="placeholder-content"></div>
-      </div>
-      <div class="testimonial-author">
-        <div class="author-info">
-          <div class="placeholder-author"></div>
-          <div class="placeholder-author" style="width: 50%;"></div>
-          <div class="placeholder-location"></div>
-        </div>
-      </div>
-    </div>
-  `;
+  return window.CardRenderer.createPlaceholderCard('testimonial');
 }
 
 function createTestimonialsCarousel(testimonials) {
@@ -514,7 +452,6 @@ function handleResize() {
     carouselTrack = track;
     updateCarousel();
     
-    // Re-attach event listeners
     const prevBtn = carousel.querySelector('.carousel-prev');
     const nextBtn = carousel.querySelector('.carousel-next');
     
@@ -592,115 +529,91 @@ async function loadPets() {
     return;
   }
   
-  petsGrid.innerHTML = '<div class="loading-spinner">Loading pets...</div>';
-  
-  try {
-    console.log("Fetching pets data from API service...");
-    const pets = await fetchPets();
-    
-    if (!pets || pets.length === 0) {
-      console.warn("No pets received from API");
-      petsGrid.innerHTML = `
-        <div class="no-pets-message">
-          <p>No pets available for adoption at this time.</p>
-          <p>Please check back later!</p>
-        </div>
-      `;
-      return;
+  const loadPetsWithRetry = async () => {
+    try {
+      console.log("Fetching pets data from API service...");
+      const pets = await fetchPets();
+      if (pets && pets.length > 0) {
+        renderPets(pets, 'pets-grid');
+      } else {
+        console.log("No pets received, retrying in 5 seconds...");
+        setTimeout(() => loadPetsWithRetry(), 5000);
+      }
+    } catch (error) {
+      console.log("Failed to load pets, retrying in 5 seconds...", error);
+      setTimeout(() => loadPetsWithRetry(), 5000);
     }
-    renderPets(pets, 'pets-grid');
-  } catch (error) {
-    console.error("Error in loadPets:", error);
-    showPetLoadError(error, 'pets-grid');
-  }
+  };
+  
+  loadPetsWithRetry();
 }
 
 async function fetchAndRenderUsers() {
-  const dynamicSectionsContainer = document.getElementById('dynamic-sections-container');
-  if (!dynamicSectionsContainer) {
-    console.error("Dynamic sections container not found");
+  const usersSection = document.getElementById('featured-users');
+  if (!usersSection) {
+    console.error("Featured users section not found in HTML");
     return;
   }
   
-  const usersSection = document.createElement('section');
-  usersSection.className = 'featured-users';
-  usersSection.id = 'featured-users';
-  try {
-    const userService = new UserService({ debug: true });
-    const allUsers = await userService.getAllUsersWithAdoptions();
-    
-    const usersWithAdoptions = allUsers.filter(user => 
-      user.adoption_count && user.adoption_count > 0
-    );
-    
-    const shuffledUsers = [...usersWithAdoptions].sort(() => Math.random() - 0.5);
-    
-    const maxUsersPerRow = 4;
-    const availableUsers = shuffledUsers.length;
-    
-    let usersToShow;
-    if (availableUsers >= maxUsersPerRow * 2) {
-      usersToShow = maxUsersPerRow * 2;
-    } else if (availableUsers >= maxUsersPerRow) {
-      usersToShow = maxUsersPerRow;
-    } else {
-      usersToShow = 0;
+  // Keep trying to load users without timeout
+  const loadUsersWithRetry = async () => {
+    try {
+      const userService = new UserService({ debug: true });
+      const allUsers = await userService.getAllUsersWithAdoptions();
+      
+      const usersWithAdoptions = allUsers.filter(user => 
+        user.adoption_count && user.adoption_count > 0
+      );
+      
+      if (usersWithAdoptions.length > 0) {
+        const shuffledUsers = [...usersWithAdoptions].sort(() => Math.random() - 0.5);
+        
+        const maxUsersPerRow = 4;
+        const availableUsers = shuffledUsers.length;
+        
+        let usersToShow;
+        if (availableUsers >= maxUsersPerRow * 2) {
+          usersToShow = maxUsersPerRow * 2;
+        } else if (availableUsers >= maxUsersPerRow) {
+          usersToShow = maxUsersPerRow;
+        } else {
+          usersToShow = availableUsers;
+        }
+        
+        const featuredUsers = shuffledUsers.slice(0, usersToShow);
+        const usersGrid = usersSection.querySelector('.users-grid');
+        if (usersGrid) {
+          usersGrid.innerHTML = '';
+          
+          featuredUsers.forEach(user => {
+            const userCard = window.CardRenderer.createUserCard(user, {
+              format: 'element',
+              variant: 'featured',
+              showStats: true,
+              clickAction: 'navigate'
+            });
+            
+            // Mark as loaded card for smooth animation
+            userCard.classList.add('loaded');
+            usersGrid.appendChild(userCard);
+          });
+        }
+        
+        addEventListeners();
+        
+        if (window.languageManager) {
+          window.languageManager.updateContent();
+        }
+      } else {
+        console.log("No users with adoptions found, retrying in 5 seconds...");
+        setTimeout(() => loadUsersWithRetry(), 5000);
+      }
+    } catch (error) {
+      console.log("Failed to load users, retrying in 5 seconds...", error);
+      setTimeout(() => loadUsersWithRetry(), 5000);
     }
-    
-    const featuredUsers = shuffledUsers.slice(0, usersToShow);
-    
-    if (featuredUsers.length === 0) {
-      usersSection.innerHTML = `
-        <div class="section-container">
-          <div class="section-header">
-            <h2 class="section-title" data-i18n="featuredUsers.title">Our Community</h2>
-            <p data-i18n="featuredUsers.subtitle">Meet members of our community who have made a difference through adoption</p>
-          </div>          
-          <div class="users-grid">
-            <p style="grid-column: 1 / -1; text-align: center; color: #666; font-style: italic;">Not enough community members with adoptions to display complete rows. Check back later!</p>
-          </div>
-        </div>`;
-    } else {
-      usersSection.innerHTML = `
-        <div class="section-container">
-          <div class="section-header">
-            <h2 class="section-title" data-i18n="featuredUsers.title">Our Community</h2>
-            <p data-i18n="featuredUsers.subtitle">Meet members of our community who have made a difference through adoption</p>
-          </div>          
-          <div class="users-grid">
-            ${featuredUsers.map(user => createUserCardHTML(user)).join('')}
-          </div>
-        </div>`;
-    }
-    
-    dynamicSectionsContainer.appendChild(usersSection);
-    
-    addEventListeners();
-  } catch (error) {
-    console.error('Error fetching users:', error);
-    usersSection.innerHTML = `
-      <div class="section-container">
-        <div class="section-header">
-          <h2 class="section-title" data-i18n="featuredUsers.title">Our Community</h2>
-          <p>Error loading community members: ${error.message}</p>
-        </div>
-      </div>
-    `;
-    dynamicSectionsContainer.appendChild(usersSection);
-  }
-  
-  if (window.languageManager) {
-    window.languageManager.updateContent();
-  }
-}
-
-function createUserCardHTML(user) {
-  return window.CardRenderer.createUserCard(user, {
-    format: 'html',
-    variant: 'featured',
-    showStats: true,
-    clickAction: 'navigate'
-  });
+  };
+    loadUsersWithRetry();
 }
 
 function addEventListeners() {
@@ -724,6 +637,5 @@ document.addEventListener('DOMContentLoaded', () => {
   
   document.body.classList.add('home-initialized');
   document.body.classList.add('home_page');
-  ensureDynamicSectionsContainer();
   initHomePage();
 });

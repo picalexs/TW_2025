@@ -275,7 +275,7 @@ header {
 /* -------------------------------------------
   CARDS & GRID LAYOUTS
 ------------------------------------------- */
-.pets-grid {
+.pets-grid, .users-grid, .testimonials-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 2rem;
@@ -286,17 +286,14 @@ header {
     border-radius: 0.5rem;
     overflow: hidden;
     box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease;
-}
-
-.pet-card:hover {
-    transform: translateY(-0.313rem);
+    transition: all 0.3s ease;
 }
 
 .pet-image {
     height: 12.5rem;
     width: 100%;
     object-fit: cover;
+    border-radius: 1rem 1rem 0 0;
 }
 
 .pet-info {
@@ -523,6 +520,151 @@ footer {
 .mobile-language-option .flag-icon {
     font-size: 1.25rem;
     margin-right: 0.5rem;
+}
+
+/* -------------------------------------------
+  CARD PLACEHOLDER STYLES
+------------------------------------------- */
+.card-placeholder, .testimonial-card.placeholder, .review-card.placeholder, .pet-card.placeholder, .user-card.placeholder {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  min-height: 200px;
+  min-width: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 1rem;
+  margin: 0.5rem;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* Removed complex sweep and shimmer effects - keeping it simple */
+
+.card-placeholder .placeholder-content,
+.card-placeholder .placeholder-author,
+.card-placeholder .placeholder-location,
+.card-placeholder .placeholder-stars {
+  background: linear-gradient(90deg, #e0e0e0, #f0f0f0, #e0e0e0);
+  background-size: 200% 100%;
+  border-radius: 8px;
+  margin: 0.5rem 0;
+  min-height: 16px;
+  min-width: 60px;
+  animation: simpleShimmer 2s infinite ease-in-out;
+}
+
+.pet-card.placeholder .placeholder-content:nth-child(1) {
+  width: 90%;
+  height: 120px;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  background: linear-gradient(90deg, #d0d0d0, #e0e0e0, #d0d0d0);
+  background-size: 200% 100%;
+}
+
+.pet-card.placeholder .placeholder-content:nth-child(2) {
+  width: 80%;
+  height: 20px;
+  margin-bottom: 0.5rem;
+}
+
+.pet-card.placeholder .placeholder-content:nth-child(3) {
+  width: 60%;
+  height: 16px;
+  margin-bottom: 0.75rem;
+}
+
+.pet-card.placeholder .placeholder-content:nth-child(4) {
+  width: 40%;
+  height: 14px;
+}
+
+.card-placeholder .placeholder-stars {
+  width: 100px;
+  height: 18px;
+}
+.card-placeholder .placeholder-author {
+  width: 70%;
+  height: 16px;
+}
+.card-placeholder .placeholder-location {
+  width: 50%;
+  height: 12px;
+}
+
+@keyframes simpleShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.pet-card, .user-card, .testimonial-card, .review-card,
+.pet-card.placeholder, .user-card.placeholder, .testimonial-card.placeholder, .review-card.placeholder {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  
+  animation: cardFadeIn 0.8s ease-out forwards;
+}
+
+.pet-card.loaded, .user-card.loaded, .testimonial-card.loaded, .review-card.loaded {
+  animation-delay: 0s !important;
+  animation-duration: 0.5s;
+}
+
+.pet-card:nth-child(1), .user-card:nth-child(1), .testimonial-card:nth-child(1), .review-card:nth-child(1) { animation-delay: 0.1s; }
+.pet-card:nth-child(2), .user-card:nth-child(2), .testimonial-card:nth-child(2), .review-card:nth-child(2) { animation-delay: 0.2s; }
+.pet-card:nth-child(3), .user-card:nth-child(3), .testimonial-card:nth-child(3), .review-card:nth-child(3) { animation-delay: 0.3s; }
+.pet-card:nth-child(4), .user-card:nth-child(4), .testimonial-card:nth-child(4), .review-card:nth-child(4) { animation-delay: 0.4s; }
+.pet-card:nth-child(5), .user-card:nth-child(5), .testimonial-card:nth-child(5), .review-card:nth-child(5) { animation-delay: 0.5s; }
+.pet-card:nth-child(6), .user-card:nth-child(6), .testimonial-card:nth-child(6), .review-card:nth-child(6) { animation-delay: 0.6s; }
+
+.pet-card.loaded:nth-child(1), .user-card.loaded:nth-child(1), .testimonial-card.loaded:nth-child(1), .review-card.loaded:nth-child(1) { animation-delay: 0.05s; }
+.pet-card.loaded:nth-child(2), .user-card.loaded:nth-child(2), .testimonial-card.loaded:nth-child(2), .review-card.loaded:nth-child(2) { animation-delay: 0.1s; }
+.pet-card.loaded:nth-child(3), .user-card.loaded:nth-child(3), .testimonial-card.loaded:nth-child(3), .review-card.loaded:nth-child(3) { animation-delay: 0.15s; }
+.pet-card.loaded:nth-child(4), .user-card.loaded:nth-child(4), .testimonial-card.loaded:nth-child(4), .review-card.loaded:nth-child(4) { animation-delay: 0.2s; }
+.pet-card.loaded:nth-child(5), .user-card.loaded:nth-child(5), .testimonial-card.loaded:nth-child(5), .review-card.loaded:nth-child(5) { animation-delay: 0.25s; }
+.pet-card.loaded:nth-child(6), .user-card.loaded:nth-child(6), .testimonial-card.loaded:nth-child(6), .review-card.loaded:nth-child(6) { animation-delay: 0.3s; }
+
+.pet-card:hover, .user-card:hover, .testimonial-card:hover, .review-card:hover,
+.pet-card.placeholder:hover, .user-card.placeholder:hover, 
+.testimonial-card.placeholder:hover, .review-card.placeholder:hover {
+  transform: translateY(-4px) scale(1.02) !important;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15) !important;
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+}
+
+.pet-card:hover::before {
+  opacity: 1;
+}
+
+.pet-card:hover .pet-image,
+.user-card:hover .user-image {
+  transform: scale(1.05) !important;
+}
+
+@keyframes cardFadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.pet-image, .user-image {
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+  will-change: transform;
+}
+
+.loading-spinner {
+  display: none;
 }
 
 /* -------------------------------------------
