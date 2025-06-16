@@ -145,7 +145,7 @@ section {
   FEATURED PETS SECTION
 ------------------------------------------- */
 .featured-pets {
-  order: 3 !important;
+  order: 4 !important;
   position: relative;
   z-index: 5;
   background-color: var(--light-color);
@@ -158,7 +158,7 @@ section {
   FEATURED USERS SECTION
 ------------------------------------------- */
 .featured-users {
-  order: 2;
+  order: 3;
   position: relative;
   z-index: 5;
   background-color: var(--light-color);
@@ -363,6 +363,7 @@ section {
   TESTIMONIALS SECTION
 ------------------------------------------- */
 .testimonials-section {
+  order: 2;
   padding: 4rem 0;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   margin: 2rem 0;
