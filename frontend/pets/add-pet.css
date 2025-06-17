@@ -29,12 +29,12 @@
 }
 
 .form-container {
-    background: white;
-    border-radius: 12px;
+    background: white;    
+    border-radius: 0.75rem;
     padding: 3rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.1);
     border: 1px solid #e9ecef;
-    max-width: 1200px;
+    max-width: 75rem;
     margin: 0 auto;
 }
 
@@ -550,7 +550,6 @@
     display: block;
 }
 
-/* Responsive Design */
 @media (max-width: 768px) {
     .add-pet-container {
         padding: 1rem;

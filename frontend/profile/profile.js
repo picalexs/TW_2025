@@ -177,6 +177,7 @@ class ProfilePage {
             if (availablePets && availablePets.length > 0) {
               this.currentAvailablePets = availablePets;
               petsContainer.innerHTML = this.renderPetsList(availablePets);
+              this.initPetsCarousel();
             } else {
               petsContainer.innerHTML = this.createEmptyPetsState();
             }
@@ -251,15 +252,32 @@ class ProfilePage {
         <p>Error loading pets</p>
       </div>
     `;
-  }
+  }  
+  
   renderPetsList(pets) {
-    const petsHTML = pets.map((pet) => this.createPetCardHTML(pet)).join("");
+    if (!pets || pets.length === 0) {
+      return `
+        <div class="pets-grid">
+          <div class="no-pets">
+            <p>No pets currently listed by this shelter.</p>
+          </div>
+        </div>
+      `;    
+    }
 
-    return `
-      <div class="pets-grid">
-        ${petsHTML}      </div>
-    `;
+    return window.CarouselHelpers.generatePetsCarouselHTML(
+      pets,
+      (pet) => this.createPetCardHTML(pet),
+      () => this.getPetsCardsPerSlide()
+    );
   }
+
+  getPetsCardsPerSlide() {
+    const width = window.innerWidth;
+    if (width <= 768) return 1;
+    if (width <= 1024) return 2;
+    return 3;  }
+
   createReviewHTML(review) {
     const stars = "★".repeat(review.rating) + "☆".repeat(5 - review.rating);
     const reviewDate = new Date(review.date).toLocaleDateString("en-US", {
@@ -314,7 +332,7 @@ class ProfilePage {
     const detailedRatings = [];
     if (review.communication_rating) {
       detailedRatings.push(
-        `<span class="rating-category">Communication: <span class="rating-stars">${"★".repeat(
+        `<span class="rating-category"><span class="rating-category-label">Communication:</span> <span class="rating-stars">${"★".repeat(
           Math.floor(review.communication_rating)
         )}${"☆".repeat(
           5 - Math.floor(review.communication_rating)
@@ -356,7 +374,7 @@ class ProfilePage {
         <div class="review-header">
           <div class="review-rating">
             <span class="stars">${stars}</span>
-            <span class="rating-number">${rating}/5</span>
+            <span class="rating-number" style="white-space:nowrap">${rating % 1 === 0 ? parseInt(rating) : rating}/5</span>
             ${
               review.would_recommend
                 ? '<span class="recommendation-badge">Recommended</span>'
@@ -417,7 +435,7 @@ class ProfilePage {
     if (statistics.average_communication) {
       statsItems.push({
         label: "Communication:",
-        value: `${parseFloat(statistics.average_communication).toFixed(1)}/5`
+        value: `${parseFloat(statistics.average_communication) % 1 === 0 ? parseInt(statistics.average_communication) : parseFloat(statistics.average_communication).toFixed(1)}/5`
       });
     }
     
@@ -445,7 +463,7 @@ class ProfilePage {
     const statsHTML = statsItems.map(item => 
       `<div class="stat-detail">
         <span class="stat-label">${item.label}</span>
-        <span class="stat-value">${item.value}</span>
+        <span class="stat-value" style="white-space:nowrap">${item.value}</span>
       </div>`
     ).join("");
 
@@ -827,7 +845,38 @@ class ProfilePage {
       this.currentFilters.petConditionRating > 0 ||
       this.currentFilters.processRating > 0;
 
-    indicator.style.display = hasActiveFilters ? 'inline' : 'none';
+    indicator.style.display = hasActiveFilters ? 'inline' : 'none';  }
+
+  /**
+   * Pets Carousel Implementation
+   * 
+   * This now uses the unified carousel utility (../utils/carousel.js) which provides:
+   * - Consistent behavior between testimonials (home page) and pets (profile page)
+   * - Touch, mouse, and keyboard navigation
+   * - Responsive breakpoints
+   * - Automatic slide management
+   * - Accessibility features
+   * 
+   * The carousel is initialized via initPetsCarousel() and uses CarouselHelpers
+   * to generate the HTML structure and configuration.
+   */
+  petsCarousel = null;
+  initPetsCarousel() {
+    if (this.petsCarousel) {
+      this.petsCarousel.destroy();
+    }
+    
+    const config = window.CarouselHelpers.createPetsCarouselConfig('.pets-carousel');
+    
+    config.onSlideChange = (currentSlide, previousSlide, carousel) => {
+      console.log(`Pets carousel moved from slide ${previousSlide} to ${currentSlide}`);
+    };
+    
+    config.onInit = (carousel) => {
+      console.log('Pets carousel initialized successfully');
+    };
+    
+    this.petsCarousel = new window.Carousel(config);
   }
 }
 

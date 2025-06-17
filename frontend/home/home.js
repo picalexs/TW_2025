@@ -141,44 +141,10 @@ function createPlaceholderCard() {
 }
 
 function createTestimonialsCarousel(testimonials) {
-  const cardsPerSlide = getCardsPerSlide();
-  const slides = createSlides(testimonials, cardsPerSlide);
-  const totalSlides = slides.length;
-  
-  return `
-    <div class="section-container">
-      <div class="section-header">
-        <h2 class="section-title" data-i18n="testimonials.title">What Our Community Says</h2>
-        <p data-i18n="testimonials.subtitle">Real stories from pet adopters and shelter partners</p>
-      </div>
-      <div class="testimonials-carousel" data-total-slides="${totalSlides}">
-        ${totalSlides > 1 ? `
-          <button class="carousel-arrow carousel-prev" aria-label="Previous testimonials">
-            &lt;
-          </button>
-          <button class="carousel-arrow carousel-next" aria-label="Next testimonials">
-            &gt;
-          </button>
-        ` : ''}
-        <div class="testimonials-carousel-wrapper">
-          <div class="testimonials-track">
-            ${slides.map(slide => `
-              <div class="testimonials-grid">
-                ${slide.map(testimonial => createTestimonialHTML(testimonial)).join('')}
-              </div>
-            `).join('')}
-          </div>
-        </div>
-        ${totalSlides > 1 ? `
-          <div class="carousel-indicators">
-            ${Array.from({ length: totalSlides }, (_, i) => 
-              `<button class="carousel-indicator ${i === 0 ? 'active' : ''}" data-slide="${i}" aria-label="Go to slide ${i + 1}"></button>`
-            ).join('')}
-          </div>
-        ` : ''}
-      </div>
-    </div>
-  `;
+  return window.CarouselHelpers.generateTestimonialsCarouselHTML(
+    testimonials,
+    createTestimonialHTML
+  );
 }
 
 function createEmptyTestimonialsState() {
@@ -212,271 +178,38 @@ function createErrorTestimonialsState() {
 }
 
 function getCardsPerSlide() {
-  const width = window.innerWidth;
-  if (width <= 768) return 1;
-  if (width <= 1024) return 2;
-  return 3;
+  return window.CarouselHelpers.getResponsiveItemsPerSlide();
 }
 
 function createSlides(testimonials, cardsPerSlide) {
-  const slides = [];
-  for (let i = 0; i < testimonials.length; i += cardsPerSlide) {
-    slides.push(testimonials.slice(i, i + cardsPerSlide));
-  }
-  return slides;
+  return window.CarouselHelpers.createCarouselSlides(testimonials, () => cardsPerSlide);
 }
 
-let currentSlide = 0;
-let totalSlides = 0;
-let carouselTrack = null;
-let touchStartX = 0;
-let touchEndX = 0;
-let isDragging = false;
-let startX = 0;
-let currentX = 0;
+let testimonialsCarousel = null;
 
 function initTestimonialsCarousel() {
-  const carousel = document.querySelector('.testimonials-carousel');
-  if (!carousel) return;
-  
-  carouselTrack = carousel.querySelector('.testimonials-track');
-  totalSlides = parseInt(carousel.dataset.totalSlides) || 0;
-  
-  if (totalSlides <= 1) return;
-  
-  const prevBtn = carousel.querySelector('.carousel-prev');
-  const nextBtn = carousel.querySelector('.carousel-next');
-  const indicators = carousel.querySelectorAll('.carousel-indicator');
-  
-  if (prevBtn) prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
-  if (nextBtn) nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
-  
-  indicators.forEach((indicator, index) => {
-    indicator.addEventListener('click', () => goToSlide(index));
-  });
-
-  carousel.addEventListener('touchstart', handleTouchStart, { passive: true });
-  carousel.addEventListener('touchmove', handleTouchMove, { passive: false });
-  carousel.addEventListener('touchend', handleTouchEnd, { passive: true });
-  
-  carousel.addEventListener('mousedown', handleMouseDown);
-  carousel.addEventListener('mousemove', handleMouseMove);
-  carousel.addEventListener('mouseup', handleMouseUp);
-  carousel.addEventListener('mouseleave', handleMouseUp);
-  
-  carousel.addEventListener('keydown', handleKeydown);
-  carousel.setAttribute('tabindex', '0');
-  
-  window.addEventListener('resize', debounce(handleResize, 250));
-  
-  updateCarousel();
-}
-
-function goToSlide(slideIndex) {
-  if (slideIndex < 0) {
-    currentSlide = totalSlides - 1;
-  } else if (slideIndex >= totalSlides) {
-    currentSlide = 0;
-  } else {
-    currentSlide = slideIndex;
+  if (testimonialsCarousel) {
+    testimonialsCarousel.destroy();
   }
-  updateCarousel();
-}
-
-function updateCarousel() {
-  if (!carouselTrack || totalSlides <= 1) return;
   
-  const slideWidth = 100;
-  const gapInPercent = calculateGapAsPercentage();
+  const config = window.CarouselHelpers.createTestimonialsCarouselConfig('.testimonials-carousel');
   
-  const translateX = -currentSlide * (slideWidth + gapInPercent);
-  carouselTrack.style.transform = `translateX(${translateX}%)`;
-  
-  const indicators = document.querySelectorAll('.carousel-indicator');
-  indicators.forEach((indicator, index) => {
-    indicator.classList.toggle('active', index === currentSlide);
-  });
-  
-  const prevBtn = document.querySelector('.carousel-prev');
-  const nextBtn = document.querySelector('.carousel-next');
-  
-  if (prevBtn && nextBtn) {
-    prevBtn.disabled = false;
-    nextBtn.disabled = false;
-  }
-}
-
-function calculateGapAsPercentage() {
-  const container = document.querySelector('.testimonials-carousel-wrapper');
-  if (!container) return 0;
-  
-  const containerWidth = container.offsetWidth;
-  const remInPixels = parseFloat(getComputedStyle(document.documentElement).fontSize);
-  const gapInPixels = 2 * remInPixels;
-  
-  return (gapInPixels / containerWidth) * 100;
-}
-
-function handleTouchStart(e) {
-  touchStartX = e.changedTouches[0].screenX;
-  isDragging = true;
-}
-
-function handleTouchMove(e) {
-  if (!isDragging) return;
-  
-  currentX = e.changedTouches[0].screenX;
-  const diff = Math.abs(currentX - touchStartX);
-  
-  if (diff > 10) {
-    e.preventDefault();
-  }
-}
-
-function handleTouchEnd(e) {
-  if (!isDragging) return;
-  
-  touchEndX = e.changedTouches[0].screenX;
-  isDragging = false;
-  handleSwipe();
-}
-
-function handleMouseDown(e) {
-  if (e.button !== 0) return;
-  
-  startX = e.clientX;
-  isDragging = true;
-  e.preventDefault();
-}
-
-function handleMouseMove(e) {
-  if (!isDragging) return;
-  
-  currentX = e.clientX;
-  e.preventDefault();
-}
-
-function handleMouseUp(e) {
-  if (!isDragging) return;
-  
-  const endX = e.clientX || currentX;
-  isDragging = false;
-  
-  touchStartX = startX;
-  touchEndX = endX;
-  handleSwipe();
-}
-
-function handleSwipe() {
-  const swipeThreshold = 50;
-  const swipeDistance = touchEndX - touchStartX;
-  
-  if (Math.abs(swipeDistance) > swipeThreshold) {
-    if (swipeDistance > 0) {
-      goToSlide(currentSlide - 1);
-    } else {
-      goToSlide(currentSlide + 1);
-    }
-  }
-}
-
-function handleKeydown(e) {
-  switch (e.key) {
-    case 'ArrowLeft':
-      e.preventDefault();
-      goToSlide(currentSlide - 1);
-      break;
-    case 'ArrowRight':
-      e.preventDefault();
-      goToSlide(currentSlide + 1);
-      break;
-    case 'Home':
-      e.preventDefault();
-      goToSlide(0);
-      break;
-    case 'End':
-      e.preventDefault();
-      goToSlide(totalSlides - 1);
-      break;
-  }
-}
-
-function handleResize() {
-  const testimonialsSection = document.getElementById('testimonials');
-  if (!testimonialsSection) return;
-  
-  const carousel = testimonialsSection.querySelector('.testimonials-carousel');
-  if (!carousel || totalSlides <= 1) return;
-  
-  const newCardsPerSlide = getCardsPerSlide();
-  
-  const testimonialsGrid = carousel.querySelector('.testimonials-grid');
-  if (!testimonialsGrid) return;
-  
-  const currentCardsPerSlide = testimonialsGrid.children.length;
-  
-  if (newCardsPerSlide !== currentCardsPerSlide) {
-    const cachedTestimonials = window.currentTestimonials;
-    if (!cachedTestimonials || cachedTestimonials.length === 0) return;
-    
-    const newSlides = createSlides(cachedTestimonials, newCardsPerSlide);
-    const newTotalSlides = newSlides.length;
-    
-    if (currentSlide >= newTotalSlides) {
-      currentSlide = 0;
-    }
-    
-    totalSlides = newTotalSlides;
-    carousel.setAttribute('data-total-slides', totalSlides);
-    
-    const track = carousel.querySelector('.testimonials-track');
-    if (track) {
-      track.innerHTML = newSlides.map(slide => `
-        <div class="testimonials-grid">
-          ${slide.map(testimonial => createTestimonialHTML(testimonial)).join('')}
-        </div>
-      `).join('');
-    }
-    
-    const indicatorsContainer = carousel.querySelector('.carousel-indicators');
-    if (indicatorsContainer && totalSlides > 1) {
-      indicatorsContainer.innerHTML = Array.from({ length: totalSlides }, (_, i) => 
-        `<button class="carousel-indicator ${i === currentSlide ? 'active' : ''}" data-slide="${i}" aria-label="Go to slide ${i + 1}"></button>`
-      ).join('');
-      
-      indicatorsContainer.querySelectorAll('.carousel-indicator').forEach((indicator, index) => {
-        indicator.addEventListener('click', () => goToSlide(index));
-      });
-    }
-    
-    carouselTrack = track;
-    updateCarousel();
-    
-    const prevBtn = carousel.querySelector('.carousel-prev');
-    const nextBtn = carousel.querySelector('.carousel-next');
-    
-    if (prevBtn) {
-      prevBtn.replaceWith(prevBtn.cloneNode(true));
-      carousel.querySelector('.carousel-prev').addEventListener('click', () => goToSlide(currentSlide - 1));
-    }
-    if (nextBtn) {
-      nextBtn.replaceWith(nextBtn.cloneNode(true));  
-      carousel.querySelector('.carousel-next').addEventListener('click', () => goToSlide(currentSlide + 1));
-    }
-  }
-}
-
-function debounce(func, wait) {
-  let timeout;
-  return function executedFunction(...args) {
-    const later = () => {
-      clearTimeout(timeout);
-      func(...args);
-    };
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
+  config.onSlideChange = (currentSlide, previousSlide, carousel) => {
+    console.log(`Testimonials carousel moved from slide ${previousSlide} to ${currentSlide}`);
   };
+  
+  config.onInit = (carousel) => {
+    console.log('Testimonials carousel initialized successfully');
+  };
+  
+  testimonialsCarousel = new window.Carousel(config);
 }
+
+window.addEventListener('beforeunload', () => {
+  if (testimonialsCarousel) {
+    testimonialsCarousel.destroy();
+  }
+});
 
 async function fetchTestimonials(count) {
   try {

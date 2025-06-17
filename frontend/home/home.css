@@ -323,7 +323,7 @@ section {
   padding: 0.75rem;
 }
 
-@media (max-width: 48em) {
+@media (max-width: 768px) {
   .users-grid {
     grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
     gap: 1.5rem;
@@ -338,7 +338,7 @@ section {
   }
 }
 
-@media (max-width: 36em) {
+@media (max-width: 576px) {
   .users-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
@@ -349,7 +349,7 @@ section {
   }
 }
 
-@media (max-width: 26em) {
+@media (max-width: 416px) {
   .hero-title {
     font-size: 2rem;
   }
@@ -587,101 +587,18 @@ section {
   margin-top: 2rem;
 }
 
-.carousel-arrow {
-  background: #6c757d;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 3rem;
-  height: 3rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 1.25rem;
-  opacity: 0.7;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  position: absolute;
-  top: calc(50% - 1.5rem);
-  transform: translateY(-50%);
-  z-index: 10;
-}
-
-.carousel-prev {
-  left: -4vw;
-}
-
-.carousel-next {
-  right: -4vw;
-}
-
+/* Testimonials section hover behavior */
 .testimonials-section:hover .carousel-arrow {
   opacity: 1;
 }
 
-.carousel-arrow:hover {
-  background: var(--primary-color);
-  transform: translateY(-50%) scale(1.1);
-}
-
-.carousel-arrow:active {
-  transform: translateY(-50%) scale(0.95);
-}
-
-.carousel-arrow:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-  transform: translateY(-50%);
-}
-
-.carousel-arrow:disabled:hover {
-  background: #6c757d;
-}
-
+/* Testimonials-specific carousel indicators positioning */
 .carousel-indicators {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  position: relative;
-  z-index: 1;
   margin-top: 2.5rem;
 }
 
-.carousel-indicator {
-  width: 0.75rem;
-  height: 0.75rem;
-  border-radius: 50%;
-  background: #6c757d;
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  opacity: 0.5;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.carousel-indicator.active {
-  background: var(--primary-color);
-  opacity: 1;
-  transform: scale(1.2);
-}
-
-.carousel-indicator:hover {
-  opacity: 0.8;
-}
-
-.carousel-indicator:active {
-  transform: scale(1.1);
-}
-
 @media (hover: none) and (pointer: coarse) {
-  .carousel-arrow {
-    opacity: 1;
-    width: 2.75rem;
-    height: 2.75rem;
-  }
-  
+  /* Mobile-specific adjustments for testimonials indicators */
   .carousel-indicator {
     width: 1rem;
     height: 1rem;
@@ -752,7 +669,7 @@ section {
   }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 576px) {
   .testimonials-section {
     padding: 2rem 0;
   }
