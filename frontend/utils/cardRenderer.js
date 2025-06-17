@@ -151,11 +151,7 @@ class CardRenderer {
     switch(type) {
       case 'pet':
         content = `
-          <div class="pet-card placeholder card-placeholder">
-            <div class="placeholder-content"></div>
-            <div class="placeholder-content"></div>
-            <div class="placeholder-content"></div>
-            <div class="placeholder-content"></div>
+          <div class="pet-card pet-placeholder-simple">
           </div>
         `;
         break;

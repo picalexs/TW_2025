@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title data-i18n="profilePageTitle" data-i18n-fallback="User Profile"></title>
@@ -7,20 +8,23 @@
     <link rel="stylesheet" href="../global/global.css">
     <link rel="stylesheet" href="profile.css">
 </head>
+
 <body>
     <div id="global-navbar"></div>
-    
+
     <main class="profile-container">
         <div id="loading-state" class="loading-container">
             <div class="loading-spinner"></div>
-            <p data-i18n="loadingProfile" data-i18n-fallback="Loading profile...">Loading profile...</p>
+            <p data-i18n="loadingProfile" data-i18n-fallback="Loading profile..."></p>
         </div>
 
         <div id="error-state" class="error-container" style="display: none;">
             <div class="error-message">
-                <h2 data-i18n="errorTitle" data-i18n-fallback="Profile Not Found">Profile Not Found</h2>
-                <p data-i18n="errorMessage" data-i18n-fallback="Sorry, we couldn't find the profile you're looking for.">Sorry, we couldn't find the profile you're looking for.</p>
-                <a href="../home/home.html" class="btn btn-primary" data-i18n="backToHome" data-i18n-fallback="Back to Home">Back to Home</a>
+                <h2 data-i18n="errorTitle" data-i18n-fallback="Profile Not Found"></h2>
+                <p data-i18n="errorMessage"
+                    data-i18n-fallback="Sorry, we couldn't find the profile you're looking for."></p>
+                <a href="../home/home.html" class="btn btn-primary" data-i18n="backToHome"
+                    data-i18n-fallback="Back to Home"></a>
             </div>
         </div>
 
@@ -28,7 +32,7 @@
             <div class="navigation-header">
                 <a href="../home/home.html" class="back-link">
                     <span class="back-arrow">←</span>
-                    <span data-i18n="backToHome" data-i18n-fallback="Back to Home">Back to Home</span>
+                    <span data-i18n="backToHome" data-i18n-fallback="Back to Home"></span>
                 </a>
             </div>
 
@@ -40,43 +44,49 @@
                             <span id="user-role" class="role-badge"></span>
                         </div>
                     </div>
-                    
+
                     <div class="profile-basic-info">
                         <h1 id="user-name" class="profile-name"></h1>
-                        <p id="username" class="username"></p>                        <div class="profile-stats">
-                            <div class="stat-item">
-                                <span class="stat-number" id="adoption-count">0</span>
-                                <span class="stat-label" data-i18n="adoptions" data-i18n-fallback="Adoptions">Adoptions</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-number" id="pets-helped">0</span>
-                                <span class="stat-label" data-i18n="petsHelped" data-i18n-fallback="Pets Helped">Pets Helped</span>
-                            </div>
-                        </div>
+                        <p id="username" class="username"></p>
                         
-                        <div class="profile-actions">
-                            <button id="contact-user-btn" class="btn btn-primary" data-i18n="contactUser" data-i18n-fallback="Contact User">Contact User</button>
+                        <div class="profile-stats-actions">                            
+                            <div class="profile-stats">
+                                <div class="stat-item" data-scroll-target="pets-section" role="button" tabindex="0" aria-label="Click to view available pets">
+                                    <span class="stat-number" id="adoption-count">0</span>
+                                    <span class="stat-label" data-i18n="adoptions"
+                                        data-i18n-fallback="Adoptions"></span>
+                                </div>
+                                <div class="stat-item" data-scroll-target="reviews-section" role="button" tabindex="0" aria-label="Click to view reviews and testimonials">
+                                    <span class="stat-number" id="pets-helped">0</span>
+                                    <span class="stat-label" data-i18n="petsHelped" data-i18n-fallback="Pets Helped"></span>
+                                </div>
+                            </div>
+
+                            <div class="profile-actions">
+                                <button id="contact-user-btn" class="btn btn-primary" data-i18n="contactUser"
+                                    data-i18n-fallback="Contact User"></button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </section>            <section class="profile-details">
+            </section>
+            <section class="profile-details">
                 <div class="detail-section">
-                    <h3 data-i18n="aboutUser" data-i18n-fallback="About This User">About This User</h3>
+                    <h3 data-i18n="aboutUser" data-i18n-fallback="About This User"></h3>
                     <div class="user-info-grid">
                         <div class="info-card">
-                            <h4 data-i18n="memberSince" data-i18n-fallback="Member Since">Member Since</h4>
+                            <h4 data-i18n="memberSince" data-i18n-fallback="Member Since"></h4>
                             <p id="member-since" class="info-value"></p>
                         </div>
                     </div>
                 </div>
-
-                <div class="detail-section">
-                    <h3 data-i18n="userReviews" data-i18n-fallback="Reviews & Testimonials">Reviews & Testimonials</h3>
+                <div class="detail-section" id="reviews-section">
+                    <h3 data-i18n="userReviews" data-i18n-fallback="Reviews & Testimonials"></h3>
                     <div id="reviews-container" class="reviews-container"></div>
                 </div>
 
-                <div class="detail-section">
-                    <h3 data-i18n="userPets" data-i18n-fallback="Available Pets">Available Pets</h3>
+                <div class="detail-section" id="pets-section">
+                    <h3 data-i18n="userPets" data-i18n-fallback="Available Pets"></h3>
                     <div id="pets-container" class="pets-grid"></div>
                 </div>
             </section>
@@ -86,37 +96,40 @@
     <div id="contact-modal" class="modal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 data-i18n="contactUser" data-i18n-fallback="Contact User">Contact User</h3>
+                <h3 data-i18n="contactUser" data-i18n-fallback="Contact User"></h3>
                 <button class="modal-close">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="contact-form">
                     <div class="form-group">
-                        <label data-i18n="yourName" data-i18n-fallback="Your Name">Your Name:</label>
+                        <label data-i18n="yourName" data-i18n-fallback="Your Name"></label>
                         <input type="text" id="contact-name" required>
                     </div>
                     <div class="form-group">
-                        <label data-i18n="yourEmail" data-i18n-fallback="Your Email">Your Email:</label>
+                        <label data-i18n="yourEmail" data-i18n-fallback="Your Email"></label>
                         <input type="email" id="contact-email" required>
                     </div>
                     <div class="form-group">
-                        <label data-i18n="message" data-i18n-fallback="Message">Message:</label>
+                        <label data-i18n="message" data-i18n-fallback="Message"></label>
                         <textarea id="contact-message" rows="4" required></textarea>
                     </div>
                     <div class="form-actions">
-                        <button type="button" class="btn btn-secondary modal-close" data-i18n="cancel" data-i18n-fallback="Cancel">Cancel</button>
-                        <button type="submit" class="btn btn-primary" data-i18n="sendMessage" data-i18n-fallback="Send Message">Send Message</button>
+                        <button type="button" class="btn btn-secondary modal-close" data-i18n="cancel"
+                            data-i18n-fallback="Cancel"></button>
+                        <button type="submit" class="btn btn-primary" data-i18n="sendMessage"
+                            data-i18n-fallback="Send Message"></button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
     <div id="global-footer"></div>
-    
+
     <script src="../utils/imagePathHandler.js"></script>
     <script src="../utils/cardRenderer.js"></script>
     <script type="module" src="../global/global.js"></script>
     <script type="module" src="../languages/language.js"></script>
     <script type="module" src="profile.js"></script>
 </body>
+
 </html>
