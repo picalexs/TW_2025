@@ -439,6 +439,7 @@ section {
 .star {
   display: inline-block;
   position: relative;
+  font-size: inherit;
 }
 
 .star-full {
@@ -448,30 +449,18 @@ section {
 .star-half {
   position: relative;
   display: inline-block;
-}
-
-.star-half-fill {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 50%;
-  overflow: hidden;
-  color: #ffc107;
-  z-index: 2;
-}
-
-.star-half-empty {
   color: #e4e4e4;
-  z-index: 1;
 }
 
-.star-half .star-half-inner {
+.star-half::before {
+  content: '★';
   position: absolute;
   left: 0;
   top: 0;
   width: 50%;
   overflow: hidden;
   color: #ffc107;
+  z-index: 1;
 }
 
 .star-empty {

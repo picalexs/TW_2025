@@ -302,13 +302,13 @@ class CardRenderer {
     
     let starsHTML = '';
     for (let i = 0; i < fullStars; i++) {
-      starsHTML += '<span class="star full">★</span>';
+      starsHTML += '<span class="star star-full">★</span>';
     }
     if (halfStar) {
-      starsHTML += '<span class="star half">⭐</span>';
+      starsHTML += '<span class="star star-half">★</span>';
     }
     for (let i = 0; i < emptyStars; i++) {
-      starsHTML += '<span class="star empty">☆</span>';
+      starsHTML += '<span class="star star-empty">☆</span>';
     }
     
     return starsHTML;

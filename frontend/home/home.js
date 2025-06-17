@@ -226,7 +226,7 @@ function createStarsHTML(rating) {
   const numRating = parseFloat(rating) || 5;
   
   const fullStars = Math.floor(numRating);
-  const hasHalfStar = (numRating % 1) >= 0.25;
+  const hasHalfStar = (numRating % 1) >= 0.5;
   const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
   
   let starsHTML = '';
@@ -236,7 +236,7 @@ function createStarsHTML(rating) {
   }
   
   if (hasHalfStar) {
-    starsHTML += '<span class="star star-half"><span class="star-half-fill">★</span><span class="star-half-empty">★</span></span>';
+    starsHTML += '<span class="star star-half">★</span>';
   }
   
   for (let i = 0; i < emptyStars; i++) {

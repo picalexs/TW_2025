@@ -223,11 +223,12 @@
   border-radius: 1.25rem;
   box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.1);
   border: 0.0625rem solid rgba(255, 255, 255, 0.2);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .detail-section {  padding: 2.5rem;
   border-bottom: 0.0625rem solid rgba(0, 0, 0, 0.05);
+  overflow: visible;
 }
 
 .detail-section:last-child {
@@ -358,21 +359,30 @@
 #pets-section {
   width: 100%;
   overflow: visible;
-  margin: 2rem 0;
-  padding: 1rem 0;
+  margin: 3rem 0;
+  padding: 2rem 0;
   display: block;
   visibility: visible;
+  background: linear-gradient(135deg, #fafbfc 0%, #f8f9fa 100%);
+  border-radius: 1rem;
+  border: 1px solid rgba(74, 137, 220, 0.1);
+}
+
+#pets-section h3 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--primary-color);
+  font-size: 1.75rem;
+  font-weight: 600;
 }
 
 #pets-container {
-  min-height: 100px;
-  background: rgba(0, 0, 255, 0.05);
-  border: 1px dashed #ccc;
   position: relative;
+  overflow: visible;
 }
 
 #pets-container:empty::after {
-  content: "Pets container is empty";
+  content: "No pets available";
   position: absolute;
   top: 50%;
   left: 50%;
@@ -388,53 +398,58 @@
   margin: 1rem 0;
   display: block;
   visibility: visible;
-  min-height: 50px;
 }
 
+/* -------------------------------------------
+  PETS CAROUSEL - TESTIMONIAL STYLE
+------------------------------------------- */
 .pets-carousel {
   position: relative;
-  width: 100%;
+  max-width: 100%;
   margin: 2rem auto 0 auto;
   overflow: visible;
-  padding: 0 4rem;
+  padding: 0 8vw;
 }
 
 .pets-carousel-wrapper {
   position: relative;
   overflow-x: hidden;
   overflow-y: visible;
-  margin: 0 -5rem;
+  margin: 0 -9vw;
   padding: 1.5rem;
 }
 
 .pets-track {
   display: flex;
-  width: 100%;
   transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  gap: 2rem;
 }
 
 .pets-row {
   display: flex;
   gap: 2rem;
-  width: 100%;
   min-width: 100%;
-  flex: 0 0 100%;
 }
 
 .pet-card {
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  background: white;
   border-radius: 1rem;
+  padding: 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border: 1px solid rgba(74, 137, 220, 0.1);
+  flex: 0 0 calc(33.333% - 1.33rem);
+  min-width: 300px;
   overflow: hidden;
-  box-shadow: 0 0.375rem 1.25rem rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-  flex: 1 1 calc(33.333% - 1.34rem);
-  min-width: 280px;
-  max-width: calc(33.333% - 1.34rem);
-  height: 420px;
-  display: flex;
-  flex-direction: column;
-  border: 0.0625rem solid rgba(0, 0, 0, 0.05);
-  cursor: pointer;
+}
+
+.pet-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 0.625rem 2rem rgba(0, 0, 0, 0.15);
+}
+
+.pet-card:hover .pet-image {
+  transform: scale(1.05);
 }
 
 .pet-image {
@@ -442,44 +457,86 @@
   height: 200px;
   object-fit: cover;
   object-position: center;
-  flex-shrink: 0;
-  background-color: #f8f9fa;
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .pet-info {
   padding: 1.5rem;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
 }
 
-.pet-name {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: var(--text-color);
-  margin-bottom: 0.75rem;
+/* Global carousel arrows positioning for pets */
+.pets-carousel .carousel-prev {
+  left: -4vw;
 }
 
-.pet-breed, .pet-age {
-  color: #666;
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
-  font-weight: 500;
+.pets-carousel .carousel-next {
+  right: -4vw;
 }
 
-.pet-status {
-  display: inline-block;  padding: 0.4rem 0.8rem;
-  border-radius: 1.25rem;
-  font-size: 0.8rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.03125rem;
+/* Testimonials-style carousel indicators positioning */
+.pets-carousel .carousel-indicators {
+  margin-top: 2.5rem;
 }
 
-.pet-status.available {
-  background: #d4edda;
-  color: #155724;
+/* Responsive testimonial-style breakpoints for pets carousel */
+@media (max-width: 1200px) {
+  .pets-carousel {
+    padding: 0 6vw;
+  }
+  .pets-carousel .carousel-prev {
+    left: -3.5vw;
+  }
+  .pets-carousel .carousel-next {
+    right: -3.5vw;
+  }
+  .pets-carousel .carousel-arrow {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .pet-card {
+    flex: 0 0 calc(50% - 1rem);
+    min-width: 17.5rem;
+  }
+  .pets-carousel {
+    padding: 0 5vw;
+  }
+  .pets-carousel .carousel-prev {
+    left: -3vw;
+  }
+  .pets-carousel .carousel-next {
+    right: -3vw;
+  }
+  .pets-carousel .carousel-arrow {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .pet-card {
+    flex: 0 0 auto;
+    max-width: 28rem;
+    min-width: 15.625rem;
+    width: 100%;
+  }
+  .pets-carousel {
+    padding: 0 4vw;
+  }
+  .pets-carousel .carousel-prev {
+    left: -2.5vw;
+  }
+  .pets-carousel .carousel-next {
+    right: -2.5vw;
+  }
+  .pets-carousel .carousel-arrow {
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 1rem;  }
 }
 
 .pet-status.adopted {
@@ -651,25 +708,28 @@
 .rating-category {
   display: flex;
   align-items: center;
-  gap: 0.5em;
-  font-size: 0.85em;
+  gap: 0.25rem;
+  font-size: 0.75rem;
   color: #555;
   font-weight: 500;
   flex-wrap: nowrap;
-  min-width: 8em;
-  white-space: nowrap;
-  flex-shrink: 0;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
 }
 
-.rating-category-label {
+.rating-category span:first-child {
   white-space: nowrap;
-  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex: 1;
 }
 
 .rating-stars {
-  font-size: 1.3rem;
+  font-size: 1rem;
   color: #ffc107;
-  letter-spacing: 0.1rem;
+  letter-spacing: 0.05rem;
 }
 
 .rating-item {
@@ -1087,15 +1147,23 @@
   .detail-section {
     padding: 1.5rem;
   }
-    .pets-carousel {
-    padding: 0 1rem;
+  .pets-carousel {
+    padding: 0 2rem;
+    min-height: 380px;
   }
   
   .pets-carousel .carousel-prev {
-    left: -0.5rem;
+    left: -1.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1rem;
   }
-    .pets-carousel .carousel-next {
-    right: -0.5rem;
+  
+  .pets-carousel .carousel-next {
+    right: -1.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1rem;
   }
     .pet-card {
     flex: 1 1 calc(50% - 1rem);
@@ -1152,40 +1220,109 @@
   }
 }
 
+@media (max-width: 1200px) {
+  .pets-carousel {
+    padding: 0 6vw;
+  }
+  .pets-carousel .carousel-prev {
+    left: -3.5vw;
+  }
+  .pets-carousel .carousel-next {
+    right: -3.5vw;
+  }
+  .carousel-arrow {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.1rem;
+  }
+}
+
 @media (max-width: 1024px) {
+  .pets-carousel {
+    padding: 0 5vw;
+  }
+  .pets-carousel .carousel-prev {
+    left: -3vw;
+  }
+  .pets-carousel .carousel-next {
+    right: -3vw;
+  }
   .pet-card {
-    flex: 1 1 calc(50% - 1rem);
+    flex: 0 0 calc(50% - 1rem);
     max-width: calc(50% - 1rem);
-    min-width: 280px;
+    min-width: 17.5rem;
   }
 }
 
 @media (max-width: 768px) {
   .pets-carousel {
-    padding: 0 2rem;
+    padding: 0 4vw;
+  }
+  .pets-carousel .carousel-prev {
+    left: -2.5vw;
+  }
+  .pets-carousel .carousel-next {
+    right: -2.5vw;
+  }
+  .carousel-arrow {
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 1rem;
+  }  .pet-card {
+    flex: 0 0 auto;
+    max-width: 28rem;
+    min-width: 15.625rem;
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .pets-carousel {
+    padding: 0 3vw;
+  }
+  .pets-carousel .carousel-prev {
+    left: -2vw;
+  }
+  .pets-carousel .carousel-next {
+    right: -2vw;
+  }
+  .carousel-arrow {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.9rem;
+  }
+  .pet-card {
+    flex: 0 0 auto;
+    max-width: 24rem;
+    min-width: 12.5rem;
+    width: 100%;
+  }
+}
+  
+  .pets-carousel-wrapper {
+    margin: 0;
+    min-height: 340px;
+    padding: 1rem 0.5rem;
+  }
+  
+  .pets-row {
+    gap: 0.75rem;
   }
   
   .pet-card {
     flex: 1 1 100%;
     max-width: 100%;
     min-width: 220px;
-  }
-}
-
-@media (max-width: 480px) {
-  .pets-carousel {
-    padding: 0 1rem;
-  }
-  
-  .pet-card {
-    flex: 1 1 100%;
-    max-width: 100%;
-    min-width: 200px;
-    height: 360px;
+    height: 320px;
   }
   
   .pet-image {
-    height: 160px;
+    height: 140px;
+  }
+    /* Reset margins on small mobile */
+  .pets-row .pet-card:nth-child(2),
+  .pets-row .pet-card:nth-child(3) {
+    margin-right: 0;
   }
 }
 
@@ -1621,11 +1758,20 @@
 
 /* Pets-specific carousel positioning */
 .pets-carousel .carousel-prev {
-  left: -3rem;
+  left: -4vw;
+  z-index: 15;
 }
 
 .pets-carousel .carousel-next {
-  right: -3rem;
+  right: -4vw;
+  z-index: 15;
+}
+
+.pets-carousel .carousel-indicators {
+  position: relative;
+  z-index: 15;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
 }
 
 .pets-grid:hover .carousel-arrow {
@@ -1635,4 +1781,107 @@
 #pets-section.detail-section {
   padding: 2.5rem;
   border-bottom: 0.0625rem solid rgba(0, 0, 0, 0.05);
+}
+
+/* Enhanced pet card animations and hover effects */
+.pet-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 0.625rem 2rem rgba(0, 0, 0, 0.15);
+}
+
+.pet-card:hover .pet-image {
+  transform: scale(1.05);
+}
+
+/* Staggered animation for pets loading */
+.pets-row .pet-card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.pets-row .pet-card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.pets-row .pet-card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.pets-row .pet-card:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+.pets-row .pet-card:nth-child(5) {
+  animation-delay: 0.5s;
+}
+
+.pets-row .pet-card:nth-child(6) {
+  animation-delay: 0.6s;
+}
+
+/* Carousel hover behavior for better UX */
+.pets-carousel {
+  transition: all 0.3s ease;
+}
+
+.pets-carousel:hover .carousel-arrow {
+  opacity: 1;
+  visibility: visible;
+}
+
+.pets-carousel .carousel-arrow {
+  opacity: 0.8;
+  visibility: visible;
+  transition: all 0.3s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .pets-carousel .carousel-arrow {
+    opacity: 0.6;
+  }
+  
+  .pets-carousel:hover .carousel-arrow {
+    opacity: 1;
+  }
+}
+
+/* Mobile: always show arrows with reduced opacity */
+@media (hover: none) and (pointer: coarse) {
+  .pets-carousel .carousel-arrow {
+    opacity: 0.8;
+  }
+  
+  .pets-carousel .carousel-arrow:active {
+    opacity: 1;
+    transform: translateY(-50%) scale(0.95);
+  }
+}
+
+/* Global fix to prevent carousel element clipping */
+.profile-container,
+.profile-details,
+.detail-section {
+  overflow: visible !important;
+}
+
+/* Ensure proper z-index stacking for carousel elements */
+.pets-carousel .carousel-arrow {
+  z-index: 20 !important;
+}
+
+.pets-carousel .carousel-indicators {
+  z-index: 20 !important;
+}
+
+.pets-carousel .carousel-indicator {
+  z-index: 21 !important;
+}
+
+/* Debug aid - add a subtle outline to verify arrow positioning (remove in production) */
+.pets-carousel .carousel-arrow {
+  outline: 1px solid rgba(255, 0, 0, 0.1);
+}
+
+/* Remove any transform that might interfere with arrow positioning */
+.pets-carousel {
+  transform: none !important;
 }
