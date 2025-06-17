@@ -135,20 +135,6 @@ h1 {
     font-size: 1.3rem;
 }
 
-.btn-link {
-    background: none;
-    border: none;
-    color: var(--primary-color);
-    text-decoration: underline;
-    cursor: pointer;
-    font-size: 0.9rem;
-    padding: 0;
-}
-
-.btn-link:hover {
-    color: var(--secondary-color);
-}
-
 .filters-row {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

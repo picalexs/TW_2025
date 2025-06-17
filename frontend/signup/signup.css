@@ -91,21 +91,6 @@ body.signup-page .mobile-auth {
 /* -------------------------------------------
   BUTTONS & LINKS
 ------------------------------------------- */
-.btn-submit {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: var(--primary-color);
-  border: none;
-  border-radius: 6px;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.btn-submit:hover {
-  background-color: var(--secondary-color);
-}
 
 .redirect-link {
   text-align: center;
@@ -138,33 +123,6 @@ body.signup-page .mobile-auth {
   border: none;
   border-top: 1px solid rgba(255, 255, 255, 0.3);
   margin: 0 10px;
-}
-
-/* Google login button */
-.btn-google-login {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  width: 100%;
-  padding: 0.75rem;
-  background-color: rgba(255, 255, 255, 0.9);
-  color: #444;
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.btn-google-login:hover {
-  background-color: rgba(255, 255, 255, 1);
-}
-
-.btn-google-login img {
-  width: 20px;
-  height: 20px;
 }
 
 .forgot-password {

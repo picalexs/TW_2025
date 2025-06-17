@@ -423,7 +423,7 @@ class CardRenderer {
       }
     }
     
-    return `<a href="#" class="btn btn-outline view-user-btn" data-user-id="${user.id || ''}">${viewProfileText}</a>`;
+    return `<a href="#" class="btn btn-outline-primary view-user-btn" data-user-id="${user.id || ''}">${viewProfileText}</a>`;
   }
 
   _getClickHandler(clickAction, type, id) {
