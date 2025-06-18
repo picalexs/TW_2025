@@ -28,13 +28,15 @@ document.addEventListener('DOMContentLoaded', function() {
   
   navbarService.fetchGlobalComponents()
     .then(html => {
-      const { header, footer } = navbarService.parseGlobalComponents(html);
-
+      const { header, footer } = navbarService.parseGlobalComponents(html);      
       if (header) {
         if (headerComponent) {
           headerComponent.innerHTML = header.outerHTML;
         } else if (navbarContainer) {
-          navbarContainer.innerHTML = '';
+          const skeleton = navbarContainer.querySelector('.navbar-skeleton');
+          if (skeleton) {
+            skeleton.remove();
+          }
           navbarContainer.appendChild(header.cloneNode(true));
         }
       }
@@ -62,9 +64,19 @@ document.addEventListener('DOMContentLoaded', function() {
       console.error('Error loading navigation components:', error);
       const errorMessage = '<div class="error-loading">Failed to load navigation. Please try refreshing the page.</div>';
       
-      if (headerComponent) headerComponent.innerHTML = errorMessage;
-      if (navbarContainer) navbarContainer.innerHTML = errorMessage;
-      if (footerComponent) footerComponent.innerHTML = errorMessage;
-      if (footerContainer) footerContainer.innerHTML = errorMessage;
+      if (headerComponent) {
+        headerComponent.innerHTML = errorMessage;
+      }
+      if (navbarContainer) {
+        const skeleton = navbarContainer.querySelector('.navbar-skeleton');
+        if (skeleton) skeleton.remove();
+        navbarContainer.innerHTML = errorMessage;
+      }
+      if (footerComponent) {
+        footerComponent.innerHTML = errorMessage;
+      }
+      if (footerContainer) {
+        footerContainer.innerHTML = errorMessage;
+      }
     });
 });
