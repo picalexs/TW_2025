@@ -79,8 +79,10 @@ async function getMinifiedPath(filePath) {
 }
 
 async function handleFrontendRoutes(req, res) {
-  if (req.url === '/') {
-    req.url = '/index.html';
+    if (req.url === '/') {
+    res.writeHead(302, { 'Location': '/home/home.html' });
+    res.end();
+    return true;
   }
   
   if (req.url.startsWith('/api/')) {
