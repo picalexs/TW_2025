@@ -1,58 +1,56 @@
 # TW_2025 Web Project
 
-A Node.js web application with automated build system for CSS/JS minification and development workflow.
+A modern web application with optimized build pipeline and performance optimizations.
 
 ## Quick Start
 
 ### Development
 ```bash
-# Start development server with live file watching
 npm run dev
 ```
+- Starts development server on http://localhost:8080
+- Watches for file changes and auto-minifies CSS/JS
+- Auto-bundles critical JavaScript files
+- Serves original files for easier debugging
 
 ### Production
 ```bash
-# Build for production (minify all files)
-npm run build:production
-
-# Start production server
 npm start
 ```
-
-## Available Scripts
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Development server + file watcher |
-| `npm run dev:server` | Development server only |
-| `npm start` | Production server |
-| `npm run build` | Build all CSS/JS files |
-| `npm run build:css` | Build CSS files only |
-| `npm run build:js` | Build JS files only |
-| `npm run build:production` | Full production build with reporting |
-| `npm run clean` | Clean all minified files |
+- Builds and minifies all CSS/JS files
+- Creates optimized JavaScript bundles
+- Starts production server with minified assets
+- Optimized for performance and caching
 
 ## How It Works
 
-- **Development**: Serves original files, auto-minifies on save
-- **Production**: Serves minified files with compression
-- **File Watching**: Automatically minifies CSS/JS when files change
+- **Development**: Serves original files, auto-minifies on save, creates bundles
+- **Production**: Builds everything, then serves minified files with compression
+- **File Watching**: Automatically minifies CSS/JS and updates bundles when files change
 - **Parallel Processing**: Uses worker threads for fast builds
+- **Smart Bundling**: Critical JavaScript files are bundled for performance
 
 ## Project Structure
 
 ```
-frontend/           # Frontend files
-├── *.css          # Original stylesheets
-├── *.min.css      # Minified stylesheets (auto-generated)
-├── *.js           # Original scripts
-└── *.min.js       # Minified scripts (auto-generated)
-
-backend/           # Backend server
-scripts/           # Build scripts
-├── build.js       # Universal build script
-└── dev.js         # Development environment
+├── backend/           # Server-side code
+├── frontend/          # Client-side code
+│   ├── bundles/       # Generated JS bundles (auto-created)
+│   ├── *.css          # Original stylesheets
+│   ├── *.min.css      # Minified stylesheets (auto-generated)
+│   ├── *.js           # Original scripts
+│   └── *.min.js       # Minified scripts (auto-generated)
+└── scripts/           # Build scripts
 ```
+
+## Technologies
+
+- **Backend**: Node.js, Oracle Database
+- **Frontend**: Vanilla JavaScript, CSS3, HTML5
+- **Build Tools**: Terser, CleanCSS, Chokidar
+- **Optimization**: Brotli/Gzip compression, JavaScript bundling
+
+---
 
 ## Dependencies
 

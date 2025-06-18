@@ -190,15 +190,19 @@
                 <div class="placeholder-content"></div>
             </div>
         </div>
-    </main>
+    </main>    
     <div id="global-footer"></div>
-    <script src="../config.min.js"></script>
-    <script src="../utils/imagePathHandler.min.js"></script>
-    <script src="../utils/cardRenderer.min.js"></script>
+    
+    <!-- Optimized script loading for better performance -->
+    <script src="../config.min.js" defer></script>
+    <script src="../utils/imagePathHandler.min.js" defer></script>
+    <script src="../utils/cardRenderer.min.js" defer></script>
     <script type="module">
         import { fetchPets, renderPets, showPetLoadError, initializeViewToggle, initializeAdvancedFilters, initializeFilterButtons } from './pets.min.js';
         import '../global/global.min.js'; 
-        import languageManager from '../languages/language.min.js';document.addEventListener('DOMContentLoaded', async () => {
+        import languageManager from '../languages/language.min.js';
+
+        document.addEventListener('DOMContentLoaded', async () => {
             try {
                 initializeViewToggle();
                 initializeAdvancedFilters();

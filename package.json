@@ -4,16 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node backend/server.js",
     "dev": "node scripts/dev.js",
-    "dev:server": "set NODE_ENV=development&& node backend/server.js",
-    "build": "node scripts/build.js",
-    "build:css": "node scripts/build.js css",
-    "build:js": "node scripts/build.js js",
-    "build:production": "set NODE_ENV=production&& node scripts/build.js production",
-    "clean": "node scripts/build.js clean",
-    "clean:minified": "powershell -Command \"Get-ChildItem -Path 'frontend' -Recurse -Filter '*.min.*' | Remove-Item -Force\""
+    "start": "set NODE_ENV=production&& node scripts/build.js production && node backend/server.js"
   },
   "keywords": [],
   "author": "",

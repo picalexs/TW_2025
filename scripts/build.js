@@ -292,8 +292,8 @@ async function main() {
       case 'clean':
         await cleanMinifiedFiles();
         break;
-        
-      case 'production':
+
+    case 'production':
         console.log('🏗️  Starting production build...\n');
         await cleanMinifiedFiles();
         
@@ -301,6 +301,15 @@ async function main() {
           minifyFiles('css', ['.css']),
           minifyFiles('js', ['.js'])
         ]);
+        
+        console.log('🎯 Creating optimized bundles...');
+        try {
+          const JavaScriptBundler = require('./bundle-critical.js');
+          const bundler = new JavaScriptBundler();
+          await bundler.run();
+        } catch (error) {
+          console.warn('⚠️  Bundling failed:', error.message);
+        }
         
         await generateBuildReport();
         
@@ -320,6 +329,14 @@ async function main() {
           minifyFiles('css', ['.css']),
           minifyFiles('js', ['.js'])
         ]);
+        
+        try {
+          const JavaScriptBundler = require('./bundle-critical.js');
+          const bundler = new JavaScriptBundler();
+          await bundler.run();
+        } catch (error) {
+          console.warn('⚠️  Bundling failed:', error.message);
+        }
         
         const duration = Date.now() - startTime;
         console.log(`🎉 Build completed in ${duration}ms`);

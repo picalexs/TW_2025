@@ -17,9 +17,9 @@ class LanguageManager {
       const page = window.location.pathname.split('/').pop().replace('.html', '');
       const basePath = window.location.pathname.includes('/home/') ? '../' : '../';
       
-      const globalPath = `${basePath}languages/${this.currentLanguage}/global.min.json`;
+      const globalPath = `${basePath}languages/${this.currentLanguage}/global.json`;
       const pagePath = `${basePath}languages/${this.currentLanguage}/${page}.json`;
-      const fallbackGlobalPath = `${basePath}languages/en/global.min.json`;
+      const fallbackGlobalPath = `${basePath}languages/en/global.json`;
       const fallbackPagePath = `${basePath}languages/en/${page}.json`;
 
       console.log(`Loading translations from:\n  Global: ${globalPath}\n  Page: ${pagePath}`);

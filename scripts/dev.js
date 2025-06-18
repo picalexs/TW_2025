@@ -17,6 +17,38 @@ function log(message, color = colors.reset) {
   console.log(`${color}[${timestamp}] ${message}${colors.reset}`);
 }
 
+async function runCommand(command, args, options = {}) {
+  return new Promise((resolve, reject) => {
+    const childProcess = spawn(command, args, {
+      shell: true,
+      stdio: options.silent ? 'pipe' : 'inherit',
+      cwd: path.join(__dirname, '..'),
+      ...options
+    });
+    
+    childProcess.on('close', (code) => {
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(new Error(`Command failed with exit code ${code}`));
+      }
+    });
+    
+    childProcess.on('error', reject);
+  });
+}
+
+async function initialBuild() {
+  log('🔨 Running initial build and bundling...', colors.yellow);
+  try {
+    await runCommand('node', ['scripts/build.js'], { silent: true });
+    await runCommand('node', ['scripts/bundle-critical.js'], { silent: true });
+    log('✅ Initial build completed', colors.green);
+  } catch (error) {
+    log(`⚠️  Initial build failed: ${error.message}`, colors.red);
+  }
+}
+
 function startServer() {
   log('🚀 Starting development server...', colors.green);
   
@@ -117,6 +149,13 @@ function startWatcher() {
         log(`❌ Error processing ${path.basename(filePath)}: ${error.message}`, colors.red);
       }
     }
+    
+    try {
+      await runCommand('node', ['scripts/bundle-critical.js'], { silent: true });
+      log('🎯 Updated critical bundles', colors.cyan);
+    } catch (error) {
+      log(`⚠️  Bundle update failed: ${error.message}`, colors.red);
+    }
   };
   
   watcher.on('change', (filePath) => {
@@ -162,6 +201,8 @@ async function main() {
   try {
     log('🎯 Starting development environment...', colors.bright);
     
+    await initialBuild();
+    
     const server = startServer();
     const watcher = startWatcher();
     
@@ -169,7 +210,7 @@ async function main() {
     
     log('🎉 Development environment ready!', colors.green);
     log('   - Server running on http://localhost:8080', colors.green);
-    log('   - File watcher active for live minification', colors.green);
+    log('   - File watcher active for live minification & bundling', colors.green);
     log('   - Press Ctrl+C to stop', colors.yellow);
     
   } catch (error) {
