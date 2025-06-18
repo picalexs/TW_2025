@@ -45,9 +45,10 @@ async function handleLogin(event) {
       const response = await userService.login(email, password);
 
     if (response.success) {
-      localStorage.setItem('isLoggedIn', 'true');      
+      localStorage.setItem('isLoggedIn', 'true');
+
       showMessage('Login successful! Redirecting...', 'success');
-      window.location.href = '/home/home.html';
+      window.location.href = '../home/home.html';
     } else {
       showMessage(`Login failed: ${response.message || 'Invalid credentials.'}`, 'error');
     }
