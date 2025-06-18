@@ -34,28 +34,30 @@ const compressResponse = (data, acceptEncoding) => {
     return { data, encoding: null };
   }
 
-  if (Buffer.byteLength(data) < 1024) {
-    return { data, encoding: null };
+  const bufferData = Buffer.isBuffer(data) ? data : Buffer.from(data);
+  
+  if (bufferData.length < 512) {
+    return { data: bufferData, encoding: null };
   }
 
   if (acceptEncoding.includes('br')) {
     return { 
-      data: zlib.brotliCompressSync(data), 
+      data: zlib.brotliCompressSync(bufferData), 
       encoding: 'br' 
     };
   } else if (acceptEncoding.includes('gzip')) {
     return { 
-      data: zlib.gzipSync(data), 
+      data: zlib.gzipSync(bufferData), 
       encoding: 'gzip' 
     };
   } else if (acceptEncoding.includes('deflate')) {
     return { 
-      data: zlib.deflateSync(data), 
+      data: zlib.deflateSync(bufferData), 
       encoding: 'deflate' 
     };
   }
 
-  return { data, encoding: null };
+  return { data: bufferData, encoding: null };
 };
 
 const sendCompressedResponse = (res, statusCode, data, contentType = 'application/json') => {
@@ -74,6 +76,7 @@ const sendCompressedResponse = (res, statusCode, data, contentType = 'applicatio
   
   if (encoding) {
     res.setHeader('Content-Encoding', encoding);
+    console.log(`API Response compressed with ${encoding} (${Buffer.byteLength(responseData)} -> ${compressedData.length} bytes)`);
   }
   
   res.setHeader('Content-Length', Buffer.byteLength(compressedData));

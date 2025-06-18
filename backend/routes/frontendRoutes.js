@@ -21,37 +21,39 @@ function getContentType(filePath) {
   return contentTypes[ext] || 'application/octet-stream';
 }
 
-// Check if file type should be compressed
 function shouldCompress(filePath) {
   const ext = path.extname(filePath).toLowerCase();
   const compressibleTypes = ['.html', '.css', '.js', '.json', '.txt', '.svg'];
   return compressibleTypes.includes(ext);
 }
 
-// Compress frontend file content
 function compressFrontendFile(data, acceptEncoding) {
-  if (!acceptEncoding || Buffer.byteLength(data) < 1024) {
+  const dataSize = Buffer.isBuffer(data) ? data.length : Buffer.byteLength(data);
+  
+  if (!acceptEncoding || dataSize < 512) {
     return { data, encoding: null };
   }
 
+  const bufferData = Buffer.isBuffer(data) ? data : Buffer.from(data);
+
   if (acceptEncoding.includes('br')) {
     return { 
-      data: zlib.brotliCompressSync(data), 
+      data: zlib.brotliCompressSync(bufferData), 
       encoding: 'br' 
     };
   } else if (acceptEncoding.includes('gzip')) {
     return { 
-      data: zlib.gzipSync(data), 
+      data: zlib.gzipSync(bufferData), 
       encoding: 'gzip' 
     };
   } else if (acceptEncoding.includes('deflate')) {
     return { 
-      data: zlib.deflateSync(data), 
+      data: zlib.deflateSync(bufferData), 
       encoding: 'deflate' 
     };
   }
 
-  return { data, encoding: null };
+  return { data: bufferData, encoding: null };
 }
 
 async function getMinifiedPath(filePath) {
@@ -132,9 +134,9 @@ async function handleFrontendRoutes(req, res) {
       const minifiedPath = await getMinifiedPath(filePath);
       filePath = minifiedPath;
     }
-    
-    const fileContent = await fs.readFile(filePath);
+      const fileContent = await fs.readFile(filePath);
     const contentType = getContentType(filePath);
+    
     if (shouldCompress(filePath)) {
       const acceptEncoding = req.headers['accept-encoding'] || '';
       const { data: compressedData, encoding } = compressFrontendFile(fileContent, acceptEncoding);
@@ -150,6 +152,7 @@ async function handleFrontendRoutes(req, res) {
       
       if (encoding) {
         headers['Content-Encoding'] = encoding;
+        console.log(`Serving ${path.basename(filePath)} with ${encoding} compression (${fileContent.length} -> ${compressedData.length} bytes)`);
       }
       
       headers['Content-Length'] = Buffer.byteLength(compressedData);

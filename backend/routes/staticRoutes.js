@@ -30,28 +30,32 @@ function shouldCompress(filePath) {
 }
 
 function compressStaticFile(data, acceptEncoding) {
-  if (!acceptEncoding || Buffer.byteLength(data) < 1024) {
+  const dataSize = Buffer.isBuffer(data) ? data.length : Buffer.byteLength(data);
+  
+  if (!acceptEncoding || dataSize < 512) {
     return { data, encoding: null };
   }
 
+  const bufferData = Buffer.isBuffer(data) ? data : Buffer.from(data);
+
   if (acceptEncoding.includes('br')) {
     return { 
-      data: zlib.brotliCompressSync(data), 
+      data: zlib.brotliCompressSync(bufferData), 
       encoding: 'br' 
     };
   } else if (acceptEncoding.includes('gzip')) {
     return { 
-      data: zlib.gzipSync(data), 
+      data: zlib.gzipSync(bufferData), 
       encoding: 'gzip' 
     };
   } else if (acceptEncoding.includes('deflate')) {
     return { 
-      data: zlib.deflateSync(data), 
+      data: zlib.deflateSync(bufferData), 
       encoding: 'deflate' 
     };
   }
 
-  return { data, encoding: null };
+  return { data: bufferData, encoding: null };
 }
 
 async function handleStaticRoutes(req, res) {
@@ -92,10 +96,10 @@ async function handleStaticRoutes(req, res) {
       if (shouldCompress(filePath)) {
         const acceptEncoding = req.headers['accept-encoding'] || '';
         const { data: compressedData, encoding } = compressStaticFile(fileContent, acceptEncoding);
-        
-        const headers = { 'Content-Type': contentType };
+          const headers = { 'Content-Type': contentType };
         if (encoding) {
           headers['Content-Encoding'] = encoding;
+          console.log(`Static file compressed with ${encoding} (${fileContent.length} -> ${compressedData.length} bytes): ${path.basename(filePath)}`);
         }
         headers['Content-Length'] = Buffer.byteLength(compressedData);
         

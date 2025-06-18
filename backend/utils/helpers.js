@@ -1,3 +1,36 @@
+const zlib = require('zlib');
+
+function compressResponse(data, acceptEncoding) {
+  if (!acceptEncoding) {
+    return { data, encoding: null };
+  }
+
+  const bufferData = Buffer.isBuffer(data) ? data : Buffer.from(data);
+  
+  if (bufferData.length < 512) {
+    return { data: bufferData, encoding: null };
+  }
+
+  if (acceptEncoding.includes('br')) {
+    return { 
+      data: zlib.brotliCompressSync(bufferData), 
+      encoding: 'br' 
+    };
+  } else if (acceptEncoding.includes('gzip')) {
+    return { 
+      data: zlib.gzipSync(bufferData), 
+      encoding: 'gzip' 
+    };
+  } else if (acceptEncoding.includes('deflate')) {
+    return { 
+      data: zlib.deflateSync(bufferData), 
+      encoding: 'deflate' 
+    };
+  }
+
+  return { data: bufferData, encoding: null };
+}
+
 async function collectRequestData(req) {
   return new Promise((resolve, reject) => {
     const body = [];
@@ -24,12 +57,14 @@ function sendResponse(res, statusCode, data) {
     return;
   }
 
-  res.writeHead(statusCode, {
+  const acceptEncoding = res.req ? res.req.headers['accept-encoding'] : '';
+
+  const headers = {
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
-  });
+  };
 
   let responseBody;
   try {
@@ -57,10 +92,22 @@ function sendResponse(res, statusCode, data) {
     };
     responseBody = JSON.stringify(safeError);
   }
-  res.end(responseBody);
+
+  const { data: compressedData, encoding } = compressResponse(responseBody, acceptEncoding);
+  
+  if (encoding) {
+    headers['Content-Encoding'] = encoding;
+    console.log(`API Response compressed with ${encoding} (${Buffer.byteLength(responseBody)} -> ${compressedData.length} bytes)`);
+  }
+  
+  headers['Content-Length'] = Buffer.byteLength(compressedData);
+  
+  res.writeHead(statusCode, headers);
+  res.end(compressedData);
 }
 
 module.exports = {
   collectRequestData,
-  sendResponse
+  sendResponse,
+  compressResponse
 };
