@@ -6,7 +6,7 @@ import {
   initializePageLanguage,
   checkLoginStatusAndToggleNavButtons,
   navigateToProfile,
-} from "../global/global.js";
+} from "../global/global.min.js";
 
 window.navigateToProfile = navigateToProfile;
 
@@ -847,19 +847,6 @@ class ProfilePage {
 
     indicator.style.display = hasActiveFilters ? 'inline' : 'none';  }
 
-  /**
-   * Pets Carousel Implementation
-   * 
-   * This now uses the unified carousel utility (../utils/carousel.js) which provides:
-   * - Consistent behavior between testimonials (home page) and pets (profile page)
-   * - Touch, mouse, and keyboard navigation
-   * - Responsive breakpoints
-   * - Automatic slide management
-   * - Accessibility features
-   * 
-   * The carousel is initialized via initPetsCarousel() and uses CarouselHelpers
-   * to generate the HTML structure and configuration.
-   */
   petsCarousel = null;
   initPetsCarousel() {
     if (this.petsCarousel) {

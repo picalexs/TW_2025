@@ -335,7 +335,7 @@ function initBasicFunctionality() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('global.js: DOMContentLoaded fired.');
+    console.log('global.min.js: DOMContentLoaded fired.');
     const navbarContainer = document.getElementById('global-navbar');
     const footerContainer = document.getElementById('global-footer');
 
@@ -350,7 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (navbarContainer || footerContainer) {
-      console.log('global.js: Attempting to fetch global.html...');
+      console.log('global.min.js: Attempting to fetch global.html...');
         fetch('../global/global.html')
             .then(res => {
                 if (!res.ok) {

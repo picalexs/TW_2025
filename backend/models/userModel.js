@@ -68,7 +68,6 @@ class UserModel extends AbstractModel {
     }
   }
   async getAllWithAdoptionCounts() {
-    console.log("UserModel.getAllWithAdoptionCounts called");
     try {
       const result = await this.dto.getAllWithAdoptionCounts();
       console.log(`UserModel returned ${result.length} users`);

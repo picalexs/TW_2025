@@ -468,9 +468,7 @@ class UserController {
   }
   async getAllUsersWithAdoptions(req, res) {
     try {
-      console.log("getAllUsersWithAdoptions called");
       const users = await userModel.getAllWithAdoptionCounts();
-      console.log(`Retrieved ${users.length} users with adoption counts`);
       sendResponse(res, 200, users);
     } catch (error) {
       console.error("Error getting users with adoption counts:", error);

@@ -248,7 +248,6 @@ class userDTO extends abstractDTO {
   }
 
   async getAllWithAdoptionCounts() {
-    console.log("UserDTO.getAllWithAdoptionCounts called");
     try {
       const query = `
         SELECT u.*, 

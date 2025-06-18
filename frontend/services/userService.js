@@ -1,4 +1,4 @@
-import ApiService, { ApiError } from './api.js';
+import ApiService, { ApiError } from './api.min.js';
 
 class UserService {
   constructor(options = {}) {

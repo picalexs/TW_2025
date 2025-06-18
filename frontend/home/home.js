@@ -1,6 +1,6 @@
 import { fetchPets, renderPets, showPetLoadError, showPetPlaceholders } from '../pets/pets.js';
-import { setupMobileMenu, initializePageLanguage, checkLoginStatusAndToggleNavButtons, navigateToProfile } from '../global/global.js';
-import ApiService from '../services/api.js';
+import { setupMobileMenu, initializePageLanguage, checkLoginStatusAndToggleNavButtons, navigateToProfile } from '../global/global.min.js';
+import ApiService from '../services/api.min.js';
 import UserService from '../services/userService.js';
 const apiService = new ApiService();
 

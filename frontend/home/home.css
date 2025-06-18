@@ -23,7 +23,10 @@ main {
   flex-direction: column;
   margin-top: 0;
   background: var(--light-color);
-  min-height: 60vh;
+  min-height: 100vh;
+  contain: layout style;
+  will-change: transform;
+  overflow-anchor: none;
 }
 
 section {
@@ -31,6 +34,9 @@ section {
   margin: 0;
   padding: 5vh 0;
   width: 100%;
+  contain: layout style;
+  min-height: 50vh;
+  isolation: isolate;
 }
 
 #dynamic-sections-container {
@@ -114,16 +120,31 @@ section {
   max-width: 80%;
   padding: 2rem;
   width: 100%;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  contain: layout style;
 }
 
 .hero-title {
-  font-size: 4.5rem;
+  font-size: 6rem;
   margin-bottom: 1.5rem;
   text-shadow: 0.125rem 0.125rem 0.25rem rgba(0, 0, 0, 0.5);
   color: white;
   position: relative;
   z-index: 41;
   font-weight: 700;
+  font-display: swap;
+  line-height: 1.1;
+  min-height: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  max-width: 80rem;
 }
 
 .hero-subtitle {
@@ -131,8 +152,22 @@ section {
   margin-bottom: 2rem;
   text-shadow: 0.0625rem 0.0625rem 0.125rem rgba(0, 0, 0, 0.5);
   color: white;
-  position: relative;
-  z-index: 41;
+  min-height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  max-width: 60rem;
+}
+
+.hero-content .btn {
+  min-width: 200px;
+  min-height: 50px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
 }
 
 .hero .btn {
@@ -152,6 +187,8 @@ section {
   padding: 3rem 0;
   margin: 0;
   width: 100%;
+  min-height: 600px;
+  contain: layout style;
 }
 
 /* -------------------------------------------
@@ -165,6 +202,8 @@ section {
   padding: 3rem 0;
   margin: 0;
   width: 100%;
+  min-height: 600px;
+  contain: layout style;
 }
 
 .featured-users .section-header {
@@ -237,6 +276,8 @@ section {
   grid-template-columns: repeat(auto-fit, minmax(18.75rem, 1fr));
   gap: 2rem;
   margin-top: 2rem;
+  min-height: 400px;
+  contain: layout style;
 }
 
 @media (min-width: 1400px) {
@@ -254,6 +295,9 @@ section {
   overflow: hidden;
   border: 0.0625rem solid var(--border-color);
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  min-height: 350px;
+  contain: layout style;
+  will-change: transform;
 }
 
 .user-image {
@@ -263,6 +307,11 @@ section {
   object-position: center;
   border-bottom: 0.0625rem solid var(--border-color);
   transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  width: 100%;
+  height: auto;
+  contain: layout;
 }
 
 .user-info {
@@ -352,10 +401,17 @@ section {
 @media (max-width: 416px) {
   .hero-title {
     font-size: 2rem;
+    min-height: 2.5rem;
   }
 
   .hero-content {
     padding: 1rem;
+    min-height: 300px;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.2rem;
+    min-height: 1.8rem;
   }
 }
 
@@ -369,6 +425,8 @@ section {
   margin: 2rem 0;
   position: relative;
   overflow: visible;
+  min-height: 600px;
+  contain: layout style;
 }
 
 .testimonials-carousel {
@@ -377,6 +435,8 @@ section {
   margin: 2rem auto 0 auto;
   overflow: visible;
   padding: 0 8vw;
+  min-height: 400px;
+  contain: layout;
 }
 
 .testimonials-carousel-wrapper {
@@ -408,6 +468,9 @@ section {
   border: 1px solid rgba(74, 137, 220, 0.1);
   flex: 0 0 calc(33.333% - 1.33rem);
   min-width: 300px;
+  min-height: 350px;
+  contain: layout style;
+  will-change: transform;
 }
 
 .testimonial-content {
@@ -706,4 +769,27 @@ section {
     flex: 0 0 calc(100% - 2rem);
     min-width: 15.625rem;
   }
+}
+
+.user-card,
+.pet-card,
+.testimonial-card {
+  min-height: 350px;
+  contain: layout style;
+  will-change: transform;
+}
+
+.user-image,
+.pet-image {
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  width: 100%;
+  height: auto;
+  contain: layout;
+}
+
+.pets-grid,
+.users-grid {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 400px;
 }

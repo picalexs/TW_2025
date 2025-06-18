@@ -1,5 +1,6 @@
 const fs = require('fs').promises;
 const path = require('path');
+const zlib = require('zlib');
 const { sendResponse } = require('../utils/helpers');
 
 const contentTypes = {
@@ -20,6 +21,37 @@ const contentTypes = {
 function getContentType(filePath) {
   const ext = path.extname(filePath).toLowerCase();
   return contentTypes[ext] || 'application/octet-stream';
+}
+
+function shouldCompress(filePath) {
+  const ext = path.extname(filePath).toLowerCase();
+  const compressibleTypes = ['.html', '.css', '.js', '.json', '.txt', '.svg'];
+  return compressibleTypes.includes(ext);
+}
+
+function compressStaticFile(data, acceptEncoding) {
+  if (!acceptEncoding || Buffer.byteLength(data) < 1024) {
+    return { data, encoding: null };
+  }
+
+  if (acceptEncoding.includes('br')) {
+    return { 
+      data: zlib.brotliCompressSync(data), 
+      encoding: 'br' 
+    };
+  } else if (acceptEncoding.includes('gzip')) {
+    return { 
+      data: zlib.gzipSync(data), 
+      encoding: 'gzip' 
+    };
+  } else if (acceptEncoding.includes('deflate')) {
+    return { 
+      data: zlib.deflateSync(data), 
+      encoding: 'deflate' 
+    };
+  }
+
+  return { data, encoding: null };
 }
 
 async function handleStaticRoutes(req, res) {
@@ -53,10 +85,30 @@ async function handleStaticRoutes(req, res) {
         sendResponse(res, 404, { error: 'File not found' });
         return true;
       }
-      
+        
       const fileContent = await fs.readFile(filePath);
-      res.writeHead(200, { 'Content-Type': getContentType(filePath) });
-      res.end(fileContent);
+      const contentType = getContentType(filePath);
+      
+      if (shouldCompress(filePath)) {
+        const acceptEncoding = req.headers['accept-encoding'] || '';
+        const { data: compressedData, encoding } = compressStaticFile(fileContent, acceptEncoding);
+        
+        const headers = { 'Content-Type': contentType };
+        if (encoding) {
+          headers['Content-Encoding'] = encoding;
+        }
+        headers['Content-Length'] = Buffer.byteLength(compressedData);
+        
+        res.writeHead(200, headers);
+        res.end(compressedData);
+      } else {
+        res.writeHead(200, { 
+          'Content-Type': contentType,
+          'Content-Length': fileContent.length
+        });
+        res.end(fileContent);
+      }
+      
       return true;
     } catch (error) {
       console.error('Error serving static file:', error);

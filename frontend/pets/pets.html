@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title data-i18n="pageTitle" data-i18n-fallback="Available Pets"></title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../global/global.css">
-    <link rel="stylesheet" href="pets.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <link rel="stylesheet" href="../global/global.min.css">
+    <link rel="stylesheet" href="pets.min.css">
 </head>
 <body>
     <div id="global-navbar"></div>    
@@ -192,14 +192,13 @@
         </div>
     </main>
     <div id="global-footer"></div>
-    
-    <script src="../config.js"></script>
-    <script src="../utils/imagePathHandler.js"></script>
-    <script src="../utils/cardRenderer.js"></script>
+    <script src="../config.min.js"></script>
+    <script src="../utils/imagePathHandler.min.js"></script>
+    <script src="../utils/cardRenderer.min.js"></script>
     <script type="module">
-        import { fetchPets, renderPets, showPetLoadError, initializeViewToggle, initializeAdvancedFilters, initializeFilterButtons } from './pets.js';
-        import '../global/global.js'; 
-        import languageManager from '../languages/language.js';        document.addEventListener('DOMContentLoaded', async () => {
+        import { fetchPets, renderPets, showPetLoadError, initializeViewToggle, initializeAdvancedFilters, initializeFilterButtons } from './pets.min.js';
+        import '../global/global.min.js'; 
+        import languageManager from '../languages/language.min.js';document.addEventListener('DOMContentLoaded', async () => {
             try {
                 initializeViewToggle();
                 initializeAdvancedFilters();

@@ -1,4 +1,4 @@
-import ApiService from './api.js';
+import ApiService from './api.min.js';
 
 export class OwnerReviewService {
     constructor() {

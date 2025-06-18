@@ -37,11 +37,26 @@ body {
 
 main, #content-container {
     flex: 1 0 auto;
+    min-height: 100vh;
+    contain: layout style;
 }
 
 /* -------------------------------------------
   HEADER & NAVIGATION
 ------------------------------------------- */
+#global-navbar {
+    min-height: 4.5rem;
+    background-color: var(--light-color);
+    box-shadow: 0 0.125rem 0.313rem rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+#global-navbar:not(:empty) {
+    min-height: auto;
+}
+
 header {
     background-color: var(--light-color);
     box-shadow: 0 0.125rem 0.313rem rgba(0, 0, 0, 0.1);
@@ -227,6 +242,10 @@ header {
     text-align: center;
     vertical-align: middle;
     user-select: none;
+    min-height: 2.5rem;
+    min-width: fit-content;
+    box-sizing: border-box;
+    white-space: nowrap;
 }
 
 .btn:hover {
@@ -770,6 +789,8 @@ a:focus-visible,
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 2rem;
+    contain: layout style;
+    min-height: 400px;
 }
 
 .pet-card {
@@ -1156,6 +1177,47 @@ footer {
 
 .loading-spinner {
   display: none;
+}
+
+.card-placeholder,
+.placeholder {
+  min-height: 400px;
+  contain: layout style;
+  will-change: transform;
+}
+
+.pet-card.placeholder,
+.testimonial-card.placeholder,
+.user-card.placeholder {
+  aspect-ratio: 1 / 1.3;
+  min-height: 400px;
+  contain: layout;
+}
+
+.placeholder-content,
+.placeholder-author,
+.placeholder-location,
+.placeholder-stars {
+  contain: layout style;
+  will-change: opacity;
+  transform: translateZ(0);
+}
+
+body {
+  font-display: swap;
+}
+
+img {
+  width: 100%;
+  height: auto;
+  contain: layout;
+}
+
+.pet-image,
+.user-image {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  contain: layout;
 }
 
 /* -------------------------------------------
