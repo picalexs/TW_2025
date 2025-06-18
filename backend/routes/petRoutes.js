@@ -5,10 +5,9 @@ const { sendResponse, collectRequestData } = require("../utils/helpers");
 async function handlePetRoutes(req, res) {
   const parsedUrl = url.parse(req.url, true);
   const path = parsedUrl.pathname;
-  const trimmedPath = path.replace(/^\/+|\/+$/g, "");
+  const trimmedPath = path.replace(/^\/+|\/+$/g, "");  
   const method = req.method.toLowerCase();
   
-  console.log(`Processing pet route: ${trimmedPath}, method: ${method}`);
   if (trimmedPath === "api/pets" || trimmedPath === "api/pets/" || 
       trimmedPath === "/api/pets" || trimmedPath === "/api/pets/") {
     if (method === "get") {

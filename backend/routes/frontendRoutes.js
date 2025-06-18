@@ -60,21 +60,17 @@ async function getMinifiedPath(filePath) {
   const ext = path.extname(filePath);
   const baseName = path.basename(filePath, ext);
   const dirName = path.dirname(filePath);
-  
+
   if (ext === '.css' || ext === '.js') {
     if (isDevelopment) {
-      console.log(`Development mode: using original ${path.basename(filePath)}`);
       return filePath;
     }
     
     const minifiedPath = path.join(dirName, `${baseName}.min${ext}`);
-    
     try {
       await fs.access(minifiedPath);
-      console.log(`Production mode: using minified version ${path.basename(minifiedPath)}`);
       return minifiedPath;
     } catch {
-      console.log(`Minified version not found, falling back to original: ${path.basename(filePath)}`);
       return filePath;
     }
   }
@@ -152,7 +148,6 @@ async function handleFrontendRoutes(req, res) {
       
       if (encoding) {
         headers['Content-Encoding'] = encoding;
-        console.log(`Serving ${path.basename(filePath)} with ${encoding} compression`);
       }
       
       headers['Content-Length'] = Buffer.byteLength(compressedData);

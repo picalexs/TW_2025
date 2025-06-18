@@ -6,10 +6,8 @@ async function handleUserRoutes(req, res) {
   let routeHandled = false;
   const parsedUrl = url.parse(req.url, true);
   const path = parsedUrl.pathname;
-  const trimmedPath = path.replace(/^\/+|\/+$/g, "");
+  const trimmedPath = path.replace(/^\/+|\/+$/g, "");  
   const method = req.method.toLowerCase();
-
-  console.log(`Processing user route: ${trimmedPath}, method: ${method}`);
 
   if (trimmedPath === "api/users/register" && method === "post") {
     console.log('[UserRoutes] Handling /api/users/register POST request');

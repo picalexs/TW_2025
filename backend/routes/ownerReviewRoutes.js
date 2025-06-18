@@ -7,10 +7,8 @@ const ownerReviewController = new OwnerReviewController();
 async function handleOwnerReviewRoutes(req, res) {
   const parsedUrl = url.parse(req.url, true);
   const path = parsedUrl.pathname;
-  const trimmedPath = path.replace(/^\/+|\/+$/g, "");
+  const trimmedPath = path.replace(/^\/+|\/+$/g, "");  
   const method = req.method.toLowerCase();
-  
-  console.log(`Processing owner review route: ${trimmedPath}, method: ${method}`);
 
   if (method === 'get' && trimmedPath.match(/^api\/owner-reviews\/owner\/\d+$/)) {
     console.log('[OwnerReviewRoutes] Handling /api/owner-reviews/owner/:id GET request');

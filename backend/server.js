@@ -82,8 +82,6 @@ const sendCompressedResponse = (res, statusCode, data, contentType = 'applicatio
 };
 
 const server = http.createServer(async (req, res) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
-  
   res.req = req;
   
   const allowedOrigins = generateAllowedOrigins();

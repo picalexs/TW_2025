@@ -5,10 +5,8 @@ const { sendResponse } = require("../utils/helpers");
 async function handleNotificationRoutes(req, res) {
   const parsedUrl = url.parse(req.url, true);
   const path = parsedUrl.pathname;
-  const trimmedPath = path.replace(/^\/+|\/+$/g, "");
+  const trimmedPath = path.replace(/^\/+|\/+$/g, "");  
   const method = req.method.toLowerCase();
-
-  console.log(`Processing notification route: ${trimmedPath}, method: ${method}`);
 
   // Create notification
   if (trimmedPath === "api/notifications" && method === "post") {

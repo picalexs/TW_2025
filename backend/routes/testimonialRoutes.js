@@ -5,9 +5,8 @@ const { sendResponse } = require("../utils/helpers");
 async function handleTestimonialRoutes(req, res) {
   const parsedUrl = url.parse(req.url, true);
   const path = parsedUrl.pathname;
-  const trimmedPath = path.replace(/^\/+|\/+$/g, "");
+  const trimmedPath = path.replace(/^\/+|\/+$/g, "");  
   const method = req.method.toLowerCase();
-  console.log(`Processing testimonial route: ${trimmedPath}, method: ${method}`);
 
   if (trimmedPath === "api/testimonials" && method === "get") {
     console.log('[TestimonialRoutes] Handling /api/testimonials GET request');
