@@ -59,9 +59,6 @@ class NotificationController {
         }
     }
 
-    /**
-     * Get notifications for a user
-     */
     async getUserNotifications(req, res, userId) {
         let connection;
         try {
@@ -141,15 +138,12 @@ class NotificationController {
         }
     }
 
-    /**
-     * Send care reminder notifications
-     */
+
     async sendCareReminders(req, res) {
         let connection;
         try {
             connection = await getPool().getConnection();
 
-            // Get upcoming care tasks
             const upcomingTasks = await connection.execute(
                 `SELECT cs.*, a.name as pet_name, a.user_id, u.username, u.email
                 FROM care_schedule cs

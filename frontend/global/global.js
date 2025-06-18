@@ -1,4 +1,3 @@
-// frontend/global/global.js
 import languageManager from '../languages/language.js';
 
 export let isLoggedIn = false;
@@ -7,13 +6,11 @@ function checkLoginStatusAndToggleNavButtons() {
     isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     console.log('User login status:', isLoggedIn);
 
-    // Get the containers for logged out/in states
     const authButtonsLoggedOut = document.getElementById('auth-buttons-logged-out');
     const authButtonsLoggedIn = document.getElementById('auth-buttons-logged-in'); // This div should exist and be hidden by default
     const mobileAuthLoggedOut = document.getElementById('mobile-auth-logged-out');
     const mobileAuthLoggedIn = document.getElementById('mobile-auth-logged-in'); // This div should exist and be hidden by default
 
-    // Get the individual buttons/links (for event listeners)
     const logoutButton = document.querySelector('.nav-logout-btn');
     const mobileLogoutLink = document.querySelector('.mobile-nav-logout');
 
@@ -23,23 +20,23 @@ function checkLoginStatusAndToggleNavButtons() {
         if (mobileAuthLoggedOut) mobileAuthLoggedOut.style.display = 'none';
 
         // Show logout containers
-        if (authButtonsLoggedIn) authButtonsLoggedIn.style.display = 'flex'; // Use 'flex' if it's a flex container
-        if (mobileAuthLoggedIn) mobileAuthLoggedIn.style.display = 'block'; // Use 'block' or 'flex'
+        if (authButtonsLoggedIn) authButtonsLoggedIn.style.display = 'flex';
+        if (mobileAuthLoggedIn) mobileAuthLoggedIn.style.display = 'block';
 
         // Ensure logout button/link event listener is set up
-        if (logoutButton && !logoutButton.dataset.listenerAttached) { // Prevent multiple listeners
+        if (logoutButton && !logoutButton.dataset.listenerAttached) {
             logoutButton.addEventListener('click', handleLogout);
             logoutButton.dataset.listenerAttached = 'true';
         }
-        if (mobileLogoutLink && !mobileLogoutLink.dataset.listenerAttached) { // Prevent multiple listeners
+        if (mobileLogoutLink && !mobileLogoutLink.dataset.listenerAttached) {
             mobileLogoutLink.addEventListener('click', handleLogout);
             mobileLogoutLink.dataset.listenerAttached = 'true';
         }
 
     } else {
         // Show login/signup containers
-        if (authButtonsLoggedOut) authButtonsLoggedOut.style.display = 'flex'; // Use 'flex'
-        if (mobileAuthLoggedOut) mobileAuthLoggedOut.style.display = 'block'; // Use 'block' or 'flex'
+        if (authButtonsLoggedOut) authButtonsLoggedOut.style.display = 'flex';
+        if (mobileAuthLoggedOut) mobileAuthLoggedOut.style.display = 'block';
 
         // Hide logout containers
         if (authButtonsLoggedIn) authButtonsLoggedIn.style.display = 'none';
@@ -50,11 +47,11 @@ function checkLoginStatusAndToggleNavButtons() {
 function handleLogout(event) {
     event.preventDefault();
     localStorage.removeItem('isLoggedIn');
-    // localStorage.removeItem('userData'); // Keep this if you store user data
+    // localStorage.removeItem('userData');
     isLoggedIn = false;
     console.log('User logged out. Updating UI and redirecting...');
-    checkLoginStatusAndToggleNavButtons(); // Update UI immediately
-    window.location.href = '../home/home.html'; // Redirect to home
+    checkLoginStatusAndToggleNavButtons();
+    window.location.href = '../home/home.html';
 }
 
 function setupLanguageDropdown() {
@@ -206,7 +203,6 @@ function setupMobileMenu() {
     }
 }
 
-// ... (createSlideshow, initSlideshow, initializePageLanguage remain unchanged) ...
 function createSlideshow(options = {}) {
     const defaults = {
         containerSelector: '.hero-slideshow, .login-slideshow',
@@ -236,14 +232,12 @@ function createSlideshow(options = {}) {
     slideshowContainers.forEach(container => {
         console.log(`Setting up slideshow for container:`, container);
 
-        // Clear existing slides to prevent duplicates if function is called multiple times
         Array.from(container.children).forEach(child => {
             if (child.classList.contains(settings.slideClass)) {
                 child.remove();
             }
         });
 
-        // Add initial slide if none exist, or if images array is not empty
         if (settings.images.length > 0) {
             const defaultSlide = document.createElement('div');
             defaultSlide.className = settings.slideClass + ' active';
@@ -251,8 +245,6 @@ function createSlideshow(options = {}) {
             container.appendChild(defaultSlide);
         }
 
-
-        // Preload and append other slides
         settings.images.slice(1).forEach((imageUrl) => {
             const img = new Image();
             img.src = imageUrl;
@@ -262,9 +254,6 @@ function createSlideshow(options = {}) {
                 slide.className = settings.slideClass;
                 slide.style.backgroundImage = `linear-gradient(${settings.overlay}, ${settings.overlay}), url('${imageUrl}')`;
                 container.appendChild(slide);
-
-                // If this is the second slide added and the first one was the default, activate it
-                // This logic is a bit complex, simpler to let rotation handle activation
             };
             img.onerror = () => {
                 console.warn(`Could not load slide image: ${imageUrl}`);
@@ -281,7 +270,6 @@ function createSlideshow(options = {}) {
             slides[currentSlide].classList.add('active');
         };
 
-        // Clear previous interval if exists, then set new one
         if (container.slideshowIntervalId) {
             clearInterval(container.slideshowIntervalId);
         }
@@ -298,8 +286,6 @@ function initSlideshow(options = {}) {
         return;
     }
 
-    // This part essentially duplicates createSlideshow if both are called.
-    // Let's ensure createSlideshow is used and initSlideshow just configures it.
     createSlideshow({
         containerSelector: options.containerSelector || '.hero-slideshow',
         slideClass: 'hero-slide',
@@ -338,20 +324,18 @@ function initializePageLanguage() {
 
 function initBasicFunctionality() {
     console.log("Initializing basic functionality (language, menu, slideshow, login status)");
-    // The elements should be in the DOM by now, so directly call the setup functions
     setupLanguageDropdown();
     setupMobileMenu();
-    initSlideshow(); // Or createSlideshow() if you prefer a fresh setup always
+    initSlideshow();
     checkLoginStatusAndToggleNavButtons();
 
     if (window.languageManager) {
         window.languageManager.updateContent();
     }
-    console.log("Basic initialization complete");
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('global.js: DOMContentLoaded fired.');
+    console.log('global.min.js: DOMContentLoaded fired.');
     const navbarContainer = document.getElementById('global-navbar');
     const footerContainer = document.getElementById('global-footer');
 
@@ -365,10 +349,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.setAttribute('data-page', 'signupPage');
     }
 
-    // This is the primary place to fetch and inject global.html
     if (navbarContainer || footerContainer) {
-      console.log('global.js: Attempting to fetch global.html...');
-        fetch('../global/global.html') // Ensure this path is correct!
+      console.log('global.min.js: Attempting to fetch global.html...');
+        fetch('../global/global.html')
             .then(res => {
                 if (!res.ok) {
                     throw new Error(`Failed to load global.html: ${res.status} ${res.statusText}`);
@@ -383,30 +366,45 @@ document.addEventListener('DOMContentLoaded', () => {
                 const footer = tempDiv.querySelector('footer');
 
                 if (header && navbarContainer) {
-                    navbarContainer.innerHTML = ''; // Clear existing content
+                    navbarContainer.innerHTML = '';
                     navbarContainer.appendChild(header);
                 }
 
                 if (footer && footerContainer) {
-                    footerContainer.innerHTML = ''; // Clear existing content
+                    footerContainer.innerHTML = '';
                     footerContainer.appendChild(footer);
                 }
-
-                // After injection, call initBasicFunctionality to set up events and states
                 initBasicFunctionality();
             })
             .catch(err => {
                 console.error('Error fetching or injecting global components:', err);
-                // Display error message to user
                 const errorMessage = '<div class="error-loading" style="color: red; text-align: center; padding: 20px;">Failed to load navigation. Please try refreshing the page.</div>';
                 if (navbarContainer) navbarContainer.innerHTML = errorMessage;
                 if (footerContainer) footerContainer.innerHTML = errorMessage;
             });
     } else {
-        // If no global-navbar or global-footer containers, run basic functionality directly
-        // This is for pages that might not need global HTML injection but still need functionality.
         initBasicFunctionality();
     }
 });
+
+export function navigateToProfile(userId) {
+  if (!userId) {
+    console.error('No user ID provided for profile navigation');
+    return;
+  }
+  
+  const currentPath = window.location.pathname;
+  let profilePath;
+  
+  if (currentPath.includes('/profile/')) {
+    profilePath = `profile.html?id=${userId}`;
+  } else if (currentPath.includes('/home/') || currentPath.includes('/pets/') || currentPath.includes('/login/') || currentPath.includes('/signup/')) {
+    profilePath = `../profile/profile.html?id=${userId}`;
+  } else {
+    profilePath = `profile/profile.html?id=${userId}`;
+  }
+  
+  window.location.href = profilePath;
+}
 
 export { setupLanguageDropdown, setupMobileMenu, initSlideshow, createSlideshow, initializePageLanguage, checkLoginStatusAndToggleNavButtons };

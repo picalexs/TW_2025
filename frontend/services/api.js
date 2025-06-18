@@ -26,11 +26,10 @@ class ApiService {
       'Content-Type': 'application/json',
       ...options.headers
     };
-    
-    this.debug = options.debug ?? features.enableDebugLogging ?? false;
-    this.timeout = options.timeout ?? timeouts.default ?? 30000;
-    this.retryCount = options.retryCount ?? retry.maxRetries ?? 2;
-    this.retryDelay = options.retryDelay ?? retry.initialDelay ?? 1000;
+      this.debug = options.debug ?? features.enableDebugLogging ?? false;
+    this.timeout = options.timeout ?? timeouts.default ?? 0; // No timeout - wait indefinitely
+    this.retryCount = options.retryCount ?? retry.maxRetries ?? 999; // Keep retrying
+    this.retryDelay = options.retryDelay ?? retry.initialDelay ?? 2000;
     
     this.pendingRequests = new Map();
     if (this.debug) {
@@ -204,9 +203,11 @@ class ApiService {
     if (attempt > 0 && this.debug) {
       this._log(`Retry ${attempt}/${maxRetries}: ${options.method || 'GET'} ${url}`);
     }
-    
-    try {
-      const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+      let timeoutId;
+      if (timeoutMs > 0) {
+        timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+      }
       
       if (this.debug && attempt === 0) {
         this._log(`${options.method || 'GET'} ${url}`);
@@ -218,7 +219,7 @@ class ApiService {
         signal: controller.signal
       });
       
-      clearTimeout(timeoutId);
+      if (timeoutId) clearTimeout(timeoutId);
       this.pendingRequests.delete(requestId);
       
       if (!response.ok) {

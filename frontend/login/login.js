@@ -1,5 +1,5 @@
 import languageManager from '../languages/language.js';
-import { setupMobileMenu, createSlideshow, initializePageLanguage, checkLoginStatusAndToggleNavButtons } from '../global/global.js';
+import { setupMobileMenu, createSlideshow, initializePageLanguage, checkLoginStatusAndToggleNavButtons } from '../global/global.min.js';
 import UserService from '../services/userService.js';
 
 const API_BASE_URL = window.APP_CONFIG?.api?.baseURL || 'http://localhost:8080';
@@ -45,10 +45,9 @@ async function handleLogin(event) {
       const response = await userService.login(email, password);
 
     if (response.success) {
-      localStorage.setItem('isLoggedIn', 'true');
-
+      localStorage.setItem('isLoggedIn', 'true');      
       showMessage('Login successful! Redirecting...', 'success');
-      window.location.href = '../home/home.html';
+      window.location.href = '/home/home.html';
     } else {
       showMessage(`Login failed: ${response.message || 'Invalid credentials.'}`, 'error');
     }
@@ -56,9 +55,6 @@ async function handleLogin(event) {
     console.error("Error during login API call:", error);
     showMessage(`Login failed: ${error.message || 'An unexpected error occurred.'}`, 'error');
   }
-  // setTimeout(() => {
-  //   window.location.href = '../home/home.html';
-  // }, 1000);
 }
 
 function showMessage(message, type = 'info') {

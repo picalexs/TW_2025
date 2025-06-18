@@ -1,5 +1,5 @@
 import PetService from '../services/petService.js';
-import { setupMobileMenu, initializePageLanguage, checkLoginStatusAndToggleNavButtons } from '../global/global.js';
+import { setupMobileMenu, initializePageLanguage, checkLoginStatusAndToggleNavButtons } from '../global/global.min.js';
 
 class AddPetPage {
   constructor() {

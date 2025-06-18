@@ -15,10 +15,8 @@ async function handleRecommendationRoutes(req, res) {
     const parsedUrl = url.parse(req.url, true);
     const path = parsedUrl.pathname;
     const trimmedPath = path.replace(/^\/+|\/+$/g, "");
-    const method = req.method.toLowerCase();
+    const method = req.method.toLowerCase();    
     const query = parsedUrl.query;
-    
-    console.log(`Processing recommendation route: ${trimmedPath}, method: ${method}`);
 
     try {
         // GET /api/recommendations/pets/:userId - Get intelligent pet recommendations

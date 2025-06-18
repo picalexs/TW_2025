@@ -14,7 +14,7 @@ body.signup-page .mobile-auth {
 
 .signup-background {
   flex: 1 0 auto;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 10, 20, 0.6)), url('../assets/pet-hero-bg.jpg');
+  background-image: linear-gradient(rgba(var(--dark-color-rgb), 0.6), rgba(var(--primary-color-rgb), 0.6)), url('../assets/pet-hero-bg.jpg');
   background-repeat: no-repeat;
   background-position: center center;
   background-attachment: fixed;
@@ -30,19 +30,17 @@ body.signup-page .mobile-auth {
   justify-content: center;
   align-items: center;
   padding: 4rem 1rem;
-  min-height: calc(100vh - 80px);
+  min-height: calc(100vh - 5rem);
 }
 
 .signup-box {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-radius: 12px;
+  background: rgba(var(--light-color-rgb), 0.15);  backdrop-filter: blur(0.75rem);
+  -webkit-backdrop-filter: blur(0.75rem);
+  border-radius: 0.75rem;
   padding: 2rem;
-  width: 100%;
-  max-width: 400px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-  color: white;
+  width: 100%;  max-width: 25rem;
+  box-shadow: 0 0.5rem 1.5rem rgba(var(--dark-color-rgb), 0.3);
+  color: var(--background-color);
 }
 
 .signup-box h2 {
@@ -68,44 +66,28 @@ body.signup-page .mobile-auth {
   width: 100%;
   padding: 0.65rem;
   border: none;
-  border-radius: 6px;
-  background-color: rgba(255, 255, 255, 0.2);
-  color: white;
+  border-radius: 0.375rem;  background-color: rgba(var(--light-color-rgb), 0.2);
+  color: var(--text-light);
 }
 
 .form-group input::placeholder {
-  color: #ddd;
+  color: var(--text-muted);
 }
 
 .form-group input:focus {
   outline: none;
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: rgba(var(--light-color-rgb), 0.3);
 }
 
 .form-options {
   font-size: 0.85rem;
   margin-bottom: 1.2rem;
-  color: white;
+  color: var(--background-color);
 }
 
 /* -------------------------------------------
   BUTTONS & LINKS
 ------------------------------------------- */
-.btn-submit {
-  width: 100%;
-  padding: 0.75rem;
-  background-color: var(--primary-color);
-  border: none;
-  border-radius: 6px;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.btn-submit:hover {
-  background-color: var(--secondary-color);
-}
 
 .redirect-link {
   text-align: center;
@@ -114,7 +96,7 @@ body.signup-page .mobile-auth {
 }
 
 .redirect-link a {
-  color: #a5d3ff;
+  color: var(--info-color);
   text-decoration: none;
 }
 
@@ -122,13 +104,12 @@ body.signup-page .mobile-auth {
   text-decoration: underline;
 }
 
-/* Divider OR */
 .signup-divider {
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 1.5rem 0;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(var(--light-color-rgb), 0.6);
   font-weight: 500;
   font-size: 0.85rem;
 }
@@ -136,35 +117,8 @@ body.signup-page .mobile-auth {
 .signup-divider hr {
   flex: 1;
   border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.3);
-  margin: 0 10px;
-}
-
-/* Google login button */
-.btn-google-login {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  width: 100%;
-  padding: 0.75rem;
-  background-color: rgba(255, 255, 255, 0.9);
-  color: #444;
-  border: none;
-  border-radius: 6px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.btn-google-login:hover {
-  background-color: rgba(255, 255, 255, 1);
-}
-
-.btn-google-login img {
-  width: 20px;
-  height: 20px;
+  border-top: 1px solid rgba(var(--light-color-rgb), 0.3);
+  margin: 0 0.625rem;
 }
 
 .forgot-password {
@@ -174,7 +128,7 @@ body.signup-page .mobile-auth {
 }
 
 .forgot-password a {
-  color: #a5d3ff;
+  color: var(--info-color);
   text-decoration: none;
 }
 

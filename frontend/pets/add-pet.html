@@ -3,13 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <title data-i18n="addPetPageTitle" data-i18n-fallback="Add New Pet">Add New Pet</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../global/global.css">
-    <link rel="stylesheet" href="pets.css">
-    <link rel="stylesheet" href="add-pet.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <link rel="stylesheet" href="../global/global.min.css">
+    <link rel="stylesheet" href="pets.min.css">
+    <link rel="stylesheet" href="add-pet.min.css">
 </head>
 <body>
-    <div id="global-navbar"></div>
+    <div id="global-navbar">
+      <div class="navbar-skeleton">
+        <div class="skeleton-logo"></div>
+        <div class="skeleton-nav">
+          <div class="skeleton-nav-item"></div>
+          <div class="skeleton-nav-item"></div>
+          <div class="skeleton-nav-item"></div>
+        </div>
+        <div class="skeleton-auth">
+          <div class="skeleton-auth-btn"></div>
+          <div class="skeleton-auth-btn"></div>
+        </div>
+      </div>
+    </div>
     
     <main class="add-pet-container">
         <div class="navigation-header">
@@ -86,7 +99,7 @@
 
                         <div class="form-group">
                             <label for="pet-color" class="form-label" data-i18n="color" data-i18n-fallback="Color">Color</label>
-                            <input type="text" id="pet-color" name="color" class="form-input" placeholder="e.g., Brown, Black and White">
+                            <input type="text" id="pet-color" name="color" class="form-input" placeholder="e.g., Brown, Black and var(--background-color)">
                         </div>
                     </div>
                 </div>
@@ -199,9 +212,8 @@
     </div>
 
     <div id="global-footer"></div>
-    
-    <script type="module" src="../global/global.js"></script>
-    <script type="module" src="../languages/language.js"></script>
-    <script type="module" src="add-pet.js"></script>
+      <script type="module" src="../global/global.min.js"></script>
+    <script type="module" src="../languages/language.min.js"></script>
+    <script type="module" src="add-pet.min.js"></script>
 </body>
 </html>

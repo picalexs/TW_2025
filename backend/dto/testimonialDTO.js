@@ -1,10 +1,12 @@
 const abstractDTO = require("./abstractDTO");
+const { executeQuery } = require('../db/dbConnection');
 const oracledb = require('oracledb');
 
 class TestimonialDTO extends abstractDTO {
   constructor() {
     super("testimonials");
   }
+  
   mapToEntity(dbRow) {
     return {
       id: dbRow.ID,
@@ -20,6 +22,7 @@ class TestimonialDTO extends abstractDTO {
       userLastName: dbRow.LAST_NAME
     };
   }
+  
   async getAll(connection) {
     try {
       const query = `
@@ -31,9 +34,11 @@ class TestimonialDTO extends abstractDTO {
                END as user_name
         FROM ${this.tableName} t
         JOIN users u ON t.user_id = u.id
+        WHERE t.rating > 3.5
         ORDER BY t.created_at DESC
       `;
-        const result = await connection.execute(query, [], {
+      
+      const result = await executeQuery(query, [], {
         outFormat: oracledb.OUT_FORMAT_OBJECT,
         fetchInfo: {
           TESTIMONIAL_TEXT: { type: oracledb.STRING }
@@ -46,6 +51,7 @@ class TestimonialDTO extends abstractDTO {
       throw error;
     }
   }
+    
   async getRandom(connection, limit = 3) {
     try {
       const query = `
@@ -58,10 +64,12 @@ class TestimonialDTO extends abstractDTO {
                  END as user_name
           FROM ${this.tableName} t
           JOIN users u ON t.user_id = u.id
+          WHERE t.rating > 3.5
           ORDER BY DBMS_RANDOM.VALUE
         ) WHERE ROWNUM <= :limit
       `;
-        const result = await connection.execute(query, { limit }, {
+      
+      const result = await executeQuery(query, { limit }, {
         outFormat: oracledb.OUT_FORMAT_OBJECT,
         fetchInfo: {
           TESTIMONIAL_TEXT: { type: oracledb.STRING }
@@ -90,7 +98,7 @@ class TestimonialDTO extends abstractDTO {
         ORDER BY t.created_at DESC
       `;
       
-      const result = await connection.execute(query, { userId }, {
+      const result = await executeQuery(query, { userId }, {
         outFormat: oracledb.OUT_FORMAT_OBJECT,
         fetchInfo: {
           TESTIMONIAL_TEXT: { type: oracledb.STRING }
@@ -127,10 +135,10 @@ class TestimonialDTO extends abstractDTO {
         testimonial_text,
         rating,
         location,
-        id: { dir: connection.BIND_OUT, type: connection.NUMBER }
+        id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER }
       };
 
-      const result = await connection.execute(query, binds);
+      const result = await executeQuery(query, binds);
       
       if (result.outBinds && result.outBinds.id && result.outBinds.id[0]) {
         return { id: result.outBinds.id[0], ...testimonialData };
@@ -177,7 +185,7 @@ class TestimonialDTO extends abstractDTO {
         WHERE id = :id
       `;
 
-      const result = await connection.execute(query, binds);
+      const result = await executeQuery(query, binds);
       
       if (result.rowsAffected === 0) {
         throw new Error("Testimonial not found or not updated");
@@ -185,7 +193,8 @@ class TestimonialDTO extends abstractDTO {
 
       return { success: true, rowsAffected: result.rowsAffected };
     } catch (error) {
-      console.error("Error in testimonialDTO.update:", error);      throw error;
+      console.error("Error in testimonialDTO.update:", error);
+      throw error;
     }
   }
 }

@@ -22,20 +22,18 @@ export function renderPets(pets, containerId = 'pets-grid') {
     return;
   }
 
-  container.innerHTML = '';
-  
-  if (!pets || pets.length === 0) {
-    const noResultsMessage = window.languageManager?.translate('noResults', 'No pets available for adoption at this time.');
-    container.innerHTML = `<div class="no-pets-message">${noResultsMessage}</div>`;
-    return;
+  // Only clear and render if we actually have pets
+  if (pets && pets.length > 0) {
+    container.innerHTML = '';
+    
+    pets.forEach(pet => {
+      const petCard = createPetCard(pet);
+      container.appendChild(petCard);
+    });
+    
+    updateResultsCount(pets.length);
   }
-
-  pets.forEach(pet => {
-    const petCard = createPetCard(pet);
-    container.appendChild(petCard);
-  });
-  
-  updateResultsCount(pets.length);
+  // If no pets, keep existing placeholders
 }
 
 function updateResultsCount(count) {
@@ -52,44 +50,14 @@ function updateResultsCount(count) {
 }
 
 function createPetCard(pet) {
-  const card = document.createElement('div');
-  card.className = 'pet-card';
+  const card = window.CardRenderer.createPetCard(pet, {
+    format: 'element',
+    variant: 'default',
+    clickAction: 'navigate'
+  });
+  
   card.setAttribute('data-pet-id', pet.id);
-  
-  let imagePath = pet.imagePath;
-  if (!imagePath) {
-    imagePath = '../assets/default-pet-profile.jpg';
-  } else if (!imagePath.startsWith('http') && !imagePath.startsWith('/server/')) {
-    imagePath = `/server/${imagePath}`;
-  }
-  
-  const description = pet.description && pet.description.length > 100 
-    ? pet.description.substring(0, 100) + '...' 
-    : pet.description || 'No description available';
-  
-  const lm = window.languageManager;
-  const speciesText = pet.species ? 
-    (lm?.translate(`species.${pet.species.toLowerCase()}`, pet.species)) : 
-    lm?.translate('petInfo.species', 'Unknown');
-    
-  const healthText = pet.healthStatus ? 
-    (lm?.translate(`healthStatus.${pet.healthStatus.toLowerCase().replace(/\s+/g, '')}`, pet.healthStatus)) : 
-    lm?.translate('petInfo.healthStatus', 'Status unknown');
-    
-  const viewDetailsText = lm?.translate('viewDetails', 'View Details');
-  
-  card.innerHTML = `
-    <img src="${imagePath}" alt="${pet.name}" class="pet-image" onerror="this.src='../assets/default-pet-profile.jpg'">
-    <div class="pet-info">
-      <h3 class="pet-name">${pet.name}</h3>
-      <p class="pet-description">${description}</p>
-      <div class="pet-tags">
-        <span class="tag">${speciesText}</span>
-        <span class="tag">${healthText}</span>
-      </div>
-      <a href="/frontend/pets/pet-details.html?id=${pet.id}" class="btn btn-primary">${viewDetailsText}</a>
-    </div>
-  `;
+  card.classList.add('loaded');
   
   return card;
 }
@@ -264,6 +232,23 @@ export function initializeFilterButtons() {
     addPetBtn.addEventListener('click', () => {
       window.location.href = 'add-pet.html';
     });
+  }
+}
+
+export function showPetPlaceholders(containerId = 'pets-grid', count = 6) {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  
+  const existingPlaceholders = container.querySelectorAll('.card-placeholder');
+  if (existingPlaceholders.length >= count) {
+    return;
+  }
+  
+  container.innerHTML = '';
+  for (let i = 0; i < count; i++) {
+    const placeholder = document.createElement('div');
+    placeholder.innerHTML = window.CardRenderer.createPlaceholderCard('pet');
+    container.appendChild(placeholder.firstChild || placeholder);
   }
 }
 

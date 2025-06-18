@@ -1,14 +1,17 @@
 require("dotenv").config();
 
 const http = require('http');
+const zlib = require('zlib');
 const db = require('./db/dbConnection');
 const handleUserRoutes = require('./routes/userRoutes');
 const handlePetRoutes = require('./routes/petRoutes');
 const handleRecommendationRoutes = require('./routes/recommendationRoutes');
 const { handleTestimonialRoutes } = require('./routes/testimonialRoutes');
+const { handleOwnerReviewRoutes } = require('./routes/ownerReviewRoutes');
 const handleStaticRoutes = require('./routes/staticRoutes');
 const handleConfigRoutes = require('./routes/configRoutes');
 const { handleNotificationRoutes } = require('./routes/notificationRoutes');
+const handleFrontendRoutes = require('./routes/frontendRoutes');
 const { sendResponse } = require('./utils/helpers');
 
 const PORT = process.env.API_PORT || 8080;
@@ -26,8 +29,63 @@ const generateAllowedOrigins = () => {
   return origins;
 };
 
+const compressResponse = (data, acceptEncoding) => {
+  if (!acceptEncoding) {
+    return { data, encoding: null };
+  }
+
+  const bufferData = Buffer.isBuffer(data) ? data : Buffer.from(data);
+  
+  if (bufferData.length < 512) {
+    return { data: bufferData, encoding: null };
+  }
+
+  if (acceptEncoding.includes('br')) {
+    return { 
+      data: zlib.brotliCompressSync(bufferData), 
+      encoding: 'br' 
+    };
+  } else if (acceptEncoding.includes('gzip')) {
+    return { 
+      data: zlib.gzipSync(bufferData), 
+      encoding: 'gzip' 
+    };
+  } else if (acceptEncoding.includes('deflate')) {
+    return { 
+      data: zlib.deflateSync(bufferData), 
+      encoding: 'deflate' 
+    };
+  }
+
+  return { data: bufferData, encoding: null };
+};
+
+const sendCompressedResponse = (res, statusCode, data, contentType = 'application/json') => {
+  let responseData;
+  
+  if (typeof data === 'object' && contentType === 'application/json') {
+    responseData = JSON.stringify(data);
+  } else {
+    responseData = data;
+  }
+
+  const acceptEncoding = res.req ? res.req.headers['accept-encoding'] : '';
+  const { data: compressedData, encoding } = compressResponse(responseData, acceptEncoding);
+
+  res.setHeader('Content-Type', contentType);
+  
+  if (encoding) {
+    res.setHeader('Content-Encoding', encoding);
+    console.log(`API Response compressed with ${encoding} (${Buffer.byteLength(responseData)} -> ${compressedData.length} bytes)`);
+  }
+  
+  res.setHeader('Content-Length', Buffer.byteLength(compressedData));
+  res.writeHead(statusCode);
+  res.end(compressedData);
+};
+
 const server = http.createServer(async (req, res) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  res.req = req;
   
   const allowedOrigins = generateAllowedOrigins();
   
@@ -47,7 +105,7 @@ const server = http.createServer(async (req, res) => {
   }
 
   if (req.url === '/api/status' && req.method.toLowerCase() === 'get') {
-    sendResponse(res, 200, { 
+    sendCompressedResponse(res, 200, { 
       status: 'ok', 
       message: 'API server is running',
       version: '1.0.0',
@@ -72,16 +130,25 @@ const server = http.createServer(async (req, res) => {
     if (!routeHandled) {
       routeHandled = await handleRecommendationRoutes(req, res);
     }
+      if (!routeHandled) {
+      routeHandled = await handleTestimonialRoutes(req, res);
+    }
     
     if (!routeHandled) {
-      routeHandled = await handleTestimonialRoutes(req, res);
-    }    if (!routeHandled) {
+      routeHandled = await handleOwnerReviewRoutes(req, res);
+    }
+    
+    if (!routeHandled) {
       routeHandled = await handleNotificationRoutes(req, res);
     }
 
     if (!routeHandled) {
+      routeHandled = await handleFrontendRoutes(req, res);
+    }
+
+    if (!routeHandled) {
       console.log(`Route not found: ${req.url}`);
-      sendResponse(res, 404, { 
+      sendCompressedResponse(res, 404, { 
         error: "Route not found",
         path: req.url,
         method: req.method
@@ -89,7 +156,7 @@ const server = http.createServer(async (req, res) => {
     }
   } catch (error) {
     console.error("Server error:", error);
-    sendResponse(res, 500, {
+    sendCompressedResponse(res, 500, {
       error: "Internal server error",
       message: error.message || "Unknown server error",
     });

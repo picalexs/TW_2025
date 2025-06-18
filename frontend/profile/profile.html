@@ -1,26 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title data-i18n="profilePageTitle" data-i18n-fallback="User Profile"></title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../global/global.css">
-    <link rel="stylesheet" href="profile.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
+    <link rel="stylesheet" href="../global/global.min.css">
+    <link rel="stylesheet" href="profile.min.css">
 </head>
+
 <body>
-    <div id="global-navbar"></div>
-    
+    <div id="global-navbar">
+      <div class="navbar-skeleton">
+        <div class="skeleton-logo"></div>
+        <div class="skeleton-nav">
+          <div class="skeleton-nav-item"></div>
+          <div class="skeleton-nav-item"></div>
+          <div class="skeleton-nav-item"></div>
+        </div>
+        <div class="skeleton-auth">
+          <div class="skeleton-auth-btn"></div>
+          <div class="skeleton-auth-btn"></div>
+        </div>
+      </div>
+    </div>
+
     <main class="profile-container">
         <div id="loading-state" class="loading-container">
             <div class="loading-spinner"></div>
-            <p data-i18n="loadingProfile" data-i18n-fallback="Loading profile...">Loading profile...</p>
+            <p data-i18n="loadingProfile" data-i18n-fallback="Loading profile..."></p>
         </div>
 
         <div id="error-state" class="error-container" style="display: none;">
             <div class="error-message">
-                <h2 data-i18n="errorTitle" data-i18n-fallback="Profile Not Found">Profile Not Found</h2>
-                <p data-i18n="errorMessage" data-i18n-fallback="Sorry, we couldn't find the profile you're looking for.">Sorry, we couldn't find the profile you're looking for.</p>
-                <a href="../home/home.html" class="btn btn-primary" data-i18n="backToHome" data-i18n-fallback="Back to Home">Back to Home</a>
+                <h2 data-i18n="errorTitle" data-i18n-fallback="Profile Not Found"></h2>
+                <p data-i18n="errorMessage"
+                    data-i18n-fallback="Sorry, we couldn't find the profile you're looking for."></p>
+                <a href="../home/home.html" class="btn btn-primary" data-i18n="backToHome"
+                    data-i18n-fallback="Back to Home"></a>
             </div>
         </div>
 
@@ -28,7 +45,7 @@
             <div class="navigation-header">
                 <a href="../home/home.html" class="back-link">
                     <span class="back-arrow">←</span>
-                    <span data-i18n="backToHome" data-i18n-fallback="Back to Home">Back to Home</span>
+                    <span data-i18n="backToHome" data-i18n-fallback="Back to Home"></span>
                 </a>
             </div>
 
@@ -40,43 +57,56 @@
                             <span id="user-role" class="role-badge"></span>
                         </div>
                     </div>
-                    
+
                     <div class="profile-basic-info">
                         <h1 id="user-name" class="profile-name"></h1>
-                        <p id="username" class="username"></p>                        <div class="profile-stats">
-                            <div class="stat-item">
-                                <span class="stat-number" id="adoption-count">0</span>
-                                <span class="stat-label" data-i18n="adoptions" data-i18n-fallback="Adoptions">Adoptions</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-number" id="pets-helped">0</span>
-                                <span class="stat-label" data-i18n="petsHelped" data-i18n-fallback="Pets Helped">Pets Helped</span>
-                            </div>
-                        </div>
+                        <p id="username" class="username"></p>
                         
-                        <div class="profile-actions">
-                            <button id="contact-user-btn" class="btn btn-primary" data-i18n="contactUser" data-i18n-fallback="Contact User">Contact User</button>
+                        <div class="profile-stats-actions">                            
+                            <div class="profile-stats">
+                                <div class="stat-item" data-scroll-target="pets-section" role="button" tabindex="0" aria-label="Click to view available pets">
+                                    <span class="stat-number" id="adoption-count">0</span>
+                                    <span class="stat-label" data-i18n="adoptions"
+                                        data-i18n-fallback="Adoptions"></span>
+                                </div>
+                                <div class="stat-item" data-scroll-target="reviews-section" role="button" tabindex="0" aria-label="Click to view reviews and testimonials">
+                                    <span class="stat-number" id="pets-helped">0</span>
+                                    <span class="stat-label" data-i18n="petsHelped" data-i18n-fallback="Pets Helped"></span>
+                                </div>
+                            </div>
+
+                            <div class="profile-actions">
+                                <button id="contact-user-btn" class="btn btn-primary" data-i18n="contactUser"
+                                    data-i18n-fallback="Contact User"></button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </section>            <section class="profile-details">
+            </section>
+            <section class="profile-details">
                 <div class="detail-section">
-                    <h3 data-i18n="aboutUser" data-i18n-fallback="About This User">About This User</h3>
+                    <h3 data-i18n="aboutUser" data-i18n-fallback="About This User"></h3>
                     <div class="user-info-grid">
                         <div class="info-card">
-                            <h4 data-i18n="memberSince" data-i18n-fallback="Member Since">Member Since</h4>
+                            <h4 data-i18n="memberSince" data-i18n-fallback="Member Since"></h4>
                             <p id="member-since" class="info-value"></p>
                         </div>
                     </div>
-                </div>
-
-                <div class="detail-section">
-                    <h3 data-i18n="userReviews" data-i18n-fallback="Reviews & Testimonials">Reviews & Testimonials</h3>
+                </div>                
+                <div class="detail-section" id="reviews-section">
+                    <div class="section-header-with-filter">
+                        <h3 data-i18n="userReviews" data-i18n-fallback="Reviews & Testimonials"></h3>                        
+                        <button id="filter-reviews-btn" class="btn btn-primary filter-btn" data-i18n="filterReviews" data-i18n-fallback="Filter Reviews">
+                            <span class="filter-icon">⚙</span>
+                            Filter
+                            <span id="active-filters-indicator" class="filter-indicator" style="display: none;">●</span>
+                        </button>
+                    </div>
                     <div id="reviews-container" class="reviews-container"></div>
                 </div>
 
-                <div class="detail-section">
-                    <h3 data-i18n="userPets" data-i18n-fallback="Available Pets">Available Pets</h3>
+                <div class="detail-section" id="pets-section">
+                    <h3 data-i18n="userPets" data-i18n-fallback="Available Pets"></h3>
                     <div id="pets-container" class="pets-grid"></div>
                 </div>
             </section>
@@ -86,36 +116,148 @@
     <div id="contact-modal" class="modal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 data-i18n="contactUser" data-i18n-fallback="Contact User">Contact User</h3>
+                <h3 data-i18n="contactUser" data-i18n-fallback="Contact User"></h3>
                 <button class="modal-close">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="contact-form">
                     <div class="form-group">
-                        <label data-i18n="yourName" data-i18n-fallback="Your Name">Your Name:</label>
+                        <label data-i18n="yourName" data-i18n-fallback="Your Name"></label>
                         <input type="text" id="contact-name" required>
                     </div>
                     <div class="form-group">
-                        <label data-i18n="yourEmail" data-i18n-fallback="Your Email">Your Email:</label>
+                        <label data-i18n="yourEmail" data-i18n-fallback="Your Email"></label>
                         <input type="email" id="contact-email" required>
                     </div>
                     <div class="form-group">
-                        <label data-i18n="message" data-i18n-fallback="Message">Message:</label>
+                        <label data-i18n="message" data-i18n-fallback="Message"></label>
                         <textarea id="contact-message" rows="4" required></textarea>
                     </div>
                     <div class="form-actions">
-                        <button type="button" class="btn btn-secondary modal-close" data-i18n="cancel" data-i18n-fallback="Cancel">Cancel</button>
-                        <button type="submit" class="btn btn-primary" data-i18n="sendMessage" data-i18n-fallback="Send Message">Send Message</button>
+                        <button type="button" class="btn btn-secondary modal-close" data-i18n="cancel"
+                            data-i18n-fallback="Cancel"></button>
+                        <button type="submit" class="btn btn-primary" data-i18n="sendMessage"
+                            data-i18n-fallback="Send Message"></button>
+                    </div>
+                </form>
+            </div>        
+        </div>
+    </div>
+
+    <!-- Reviews Filter Modal -->
+    <div id="reviews-filter-modal" class="modal" style="display: none;">
+        <div class="modal-content filter-modal-content">
+            <div class="modal-header">
+                <h3 data-i18n="filterReviews" data-i18n-fallback="Filter Reviews"></h3>
+                <button class="modal-close">&times;</button>
+            </div>            
+            <div class="modal-body">
+                <form id="reviews-filter-form">                    
+                    <div class="filter-sections-grid">
+                        <div class="filter-section">
+                            <h4 data-i18n="sortBy" data-i18n-fallback="Sort By"></h4>
+                            <div class="form-group">
+                                <select id="sort-by" class="form-select">
+                                    <option value="date-desc" data-i18n="sortDateNewest" data-i18n-fallback="Date (Newest First)"></option>
+                                    <option value="date-asc" data-i18n="sortDateOldest" data-i18n-fallback="Date (Oldest First)"></option>
+                                    <option value="rating-desc" data-i18n="sortRatingHighest" data-i18n-fallback="Rating (Highest First)"></option>
+                                    <option value="rating-asc" data-i18n="sortRatingLowest" data-i18n-fallback="Rating (Lowest First)"></option>
+                                </select>
+                            </div>
+                        </div>                        
+                        <div class="filter-section">
+                            <h4 data-i18n="filterByRating" data-i18n-fallback="Filter by Rating"></h4>
+                            <div class="form-group">
+                                <select id="min-rating" class="form-select">
+                                    <option value="0" data-i18n="anyRating" data-i18n-fallback="Any Rating"></option>
+                                    <option value="1">1★</option>
+                                    <option value="2">2★</option>
+                                    <option value="3">3★</option>
+                                    <option value="4">4★</option>
+                                    <option value="5">5★</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="filter-section">
+                            <h4 data-i18n="filterByRecommendation" data-i18n-fallback="Filter by Recommendation"></h4>
+                            <div class="form-group">
+                                <select id="recommendation-filter" class="form-select">
+                                    <option value="all" data-i18n="allReviews" data-i18n-fallback="All Reviews"></option>
+                                    <option value="recommended" data-i18n="recommendedOnly" data-i18n-fallback="Recommended Only"></option>
+                                    <option value="not-recommended" data-i18n="notRecommendedOnly" data-i18n-fallback="Not Recommended Only"></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="filter-section">
+                            <h4 data-i18n="filterByAnimalType" data-i18n-fallback="Filter by Animal Type"></h4>
+                            <div class="form-group">
+                                <select id="animal-type-filter" class="form-select">
+                                    <option value="all" data-i18n="allAnimals" data-i18n-fallback="All Animals"></option>
+                                    <option value="dog" data-i18n="dogsOnly" data-i18n-fallback="Dogs Only"></option>
+                                    <option value="cat" data-i18n="catsOnly" data-i18n-fallback="Cats Only"></option>
+                                    <option value="other" data-i18n="otherAnimals" data-i18n-fallback="Other Animals"></option>
+                                </select>
+                            </div>
+                        </div>
+
+                    <div class="filter-section detailed-ratings-section">
+                        <h4 data-i18n="filterByDetailedRatings" data-i18n-fallback="Filter by Detailed Ratings"></h4>
+                        <div class="detailed-ratings-grid">
+                            <div class="form-group">
+                                <label data-i18n="minCommunicationRating" data-i18n-fallback="Communication"></label>
+                                <select id="communication-rating" class="form-select">
+                                    <option value="0" data-i18n="anyRating" data-i18n-fallback="Any"></option>
+                                    <option value="1">1★</option>
+                                    <option value="2">2★</option>
+                                    <option value="3">3★</option>
+                                    <option value="4">4★</option>
+                                    <option value="5">5★</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label data-i18n="minPetConditionRating" data-i18n-fallback="Pet Condition"></label>
+                                <select id="pet-condition-rating" class="form-select">
+                                    <option value="0" data-i18n="anyRating" data-i18n-fallback="Any"></option>
+                                    <option value="1">1★</option>
+                                    <option value="2">2★</option>
+                                    <option value="3">3★</option>
+                                    <option value="4">4★</option>
+                                    <option value="5">5★</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label data-i18n="minProcessRating" data-i18n-fallback="Process"></label>
+                                <select id="process-rating" class="form-select">
+                                    <option value="0" data-i18n="anyRating" data-i18n-fallback="Any"></option>
+                                    <option value="1">1★</option>
+                                    <option value="2">2★</option>
+                                    <option value="3">3★</option>
+                                    <option value="4">4★</option>
+                                    <option value="5">5★</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    </div>                    
+                    <div class="form-actions">
+                        <button type="button" id="reset-filters-btn" class="btn btn-outline-secondary" data-i18n="resetFilters" data-i18n-fallback="Reset Filters"></button>
+                        <button type="button" class="btn btn-outline-danger modal-close cancel-btn" data-i18n="cancel" data-i18n-fallback="Cancel"></button>
+                        <button type="submit" class="btn btn-primary" data-i18n="applyFilters" data-i18n-fallback="Apply Filters"></button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
     
-    <div id="global-footer"></div>
-    
-    <script type="module" src="../global/global.js"></script>
+    <div id="global-footer"></div>    
+    <script src="../utils/imagePathHandler.js"></script>
+    <script src="../utils/cardRenderer.js"></script>
+    <script src="../utils/carousel.js"></script>
+    <script type="module" src="../global/global.min.js"></script>
     <script type="module" src="../languages/language.js"></script>
     <script type="module" src="profile.js"></script>
 </body>
+
 </html>

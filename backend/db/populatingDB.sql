@@ -14,6 +14,7 @@ delete from care_resources;
 delete from care_schedule;
 delete from animal_metrics;
 delete from testimonials;
+delete from owner_reviews;
 delete from animals;
 delete from users;
 delete from tags;
@@ -142,10 +143,24 @@ insert into animals (id, name, species, breed, age, gender, size_category, weigh
 insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (46, 'Smoky', 'Cat', 'Scottish Fold', 6.0, 'male', 'medium', 5.0, 'Gray', 'Needs medication', 'Senior Scottish Fold with mild kidney issues.', 'adopted', 150.00, 6, 13, 'Needs special diet');
 insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (47, 'Zara', 'Dog', 'Husky', 4.0, 'female', 'large', 26.0, 'Gray and White', 'Healthy', 'Beautiful husky who loves winter activities.', 'adopted', 350.00, 7, 18, 'Needs lots of exercise');
 insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (48, 'Midnight', 'Cat', 'Bombay', 3.0, 'male', 'medium', 4.1, 'Black', 'Healthy', 'Sleek black Bombay cat with golden eyes.', 'adopted', 275.00, 8, 23, 'Sleek and elegant');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (49, 'Echo', 'Dog', 'Border Collie', 2.0, 'female', 'medium', 18.0, 'Black and White', 'Healthy', 'Intelligent Border Collie who loves agility training.', 'adopted', 320.00, 9, 4, 'Extremely intelligent');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (50, 'Whisper', 'Cat', 'Munchkin', 3.0, 'female', 'small', 3.0, 'Calico', 'Healthy', 'Adorable munchkin cat with short legs.', 'adopted', 400.00, 10, 6, 'Playful and cute');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (51, 'Blaze', 'Dog', 'Australian Shepherd', 4.0, 'male', 'large', 25.0, 'Red Merle', 'Healthy', 'Energetic Australian Shepherd perfect for active families.', 'adopted', 350.00, 11, 10, 'Needs lots of exercise');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (52, 'Misty', 'Cat', 'Turkish Angora', 2.5, 'female', 'medium', 4.0, 'White', 'Healthy', 'Elegant Turkish Angora with silky fur.', 'adopted', 380.00, 12, 13, 'Graceful and elegant');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (53, 'Phoenix', 'Dog', 'German Shorthaired Pointer', 3.0, 'male', 'large', 27.0, 'Liver and White', 'Healthy', 'Athletic hunting dog who loves outdoor activities.', 'adopted', 370.00, 13, 18, 'Athletic and energetic');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (54, 'Velvet', 'Cat', 'Sphynx', 1.5, 'female', 'medium', 3.8, 'Pink', 'Healthy', 'Hairless Sphynx cat with warm personality.', 'adopted', 500.00, 14, 23, 'Warm and affectionate');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (55, 'Rex', 'Dog', 'American Bulldog', 5.0, 'male', 'large', 35.0, 'White', 'Healthy', 'Strong American Bulldog with gentle nature.', 'adopted', 300.00, 15, 4, 'Strong but gentle');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (56, 'Nova', 'Cat', 'Oriental Shorthair', 2.0, 'female', 'medium', 3.5, 'Chocolate', 'Healthy', 'Sleek Oriental Shorthair with striking features.', 'adopted', 420.00, 16, 6, 'Sleek and striking');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (57, 'Thor', 'Dog', 'Bernese Mountain Dog', 6.0, 'male', 'large', 45.0, 'Black, Brown and White', 'Healthy', 'Gentle giant Bernese Mountain Dog.', 'adopted', 450.00, 17, 10, 'Gentle giant');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (58, 'Stella', 'Cat', 'Somali', 3.5, 'female', 'medium', 4.2, 'Ruddy', 'Healthy', 'Active Somali cat with fox-like tail.', 'adopted', 390.00, 18, 13, 'Active and playful');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (59, 'Diesel', 'Dog', 'Doberman', 4.5, 'male', 'large', 32.0, 'Black and Tan', 'Healthy', 'Alert Doberman with protective instincts.', 'adopted', 400.00, 19, 18, 'Protective and loyal');
+insert into animals (id, name, species, breed, age, gender, size_category, weight_kg, color, health_status, description, adoption_status, adoption_fee, address_id, shelter_id, relation_with_others) values (60, 'Angel', 'Cat', 'Exotic Shorthair', 4.0, 'female', 'medium', 4.5, 'Silver', 'Healthy', 'Sweet Exotic Shorthair with flat face.', 'adopted', 450.00, 20, 23, 'Sweet and calm');
 
 commit;
 
-update animals set adoption_status = 'adopted' where id in (1, 5, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48);
+update animals set adoption_status = 'adopted' where id in (
+    1, 2, 3, 5, 6, 7, 8, 9, 13, 17, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60
+);
 
 commit;
 
@@ -169,45 +184,43 @@ insert into adoptions (id, user_id, animal_id, request_date, adoption_date, stat
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (18, 3, 17, current_timestamp - 18, current_timestamp - 11, 'completed');
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (19, 7, 19, current_timestamp - 19, null, 'approved');
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (20, 9, 20, current_timestamp - 20, null, 'pending');
-
--- Additional adoptions to create users with multiple adoptions
--- User 1 (john_doe) - multiple adoptions
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (21, 1, 31, current_timestamp - 25, current_timestamp - 18, 'completed');
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (22, 1, 37, current_timestamp - 30, current_timestamp - 23, 'completed');
-
--- User 3 (alice_smith) - multiple adoptions  
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (23, 3, 32, current_timestamp - 28, current_timestamp - 21, 'completed');
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (24, 3, 38, current_timestamp - 35, current_timestamp - 28, 'completed');
-
--- User 7 (edward_jones) - multiple adoptions
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (25, 7, 33, current_timestamp - 40, current_timestamp - 33, 'completed');
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (26, 7, 39, current_timestamp - 45, current_timestamp - 38, 'completed');
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (27, 7, 45, current_timestamp - 50, current_timestamp - 43, 'completed');
-
--- User 9 (george_user) - multiple adoptions
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (28, 9, 34, current_timestamp - 32, current_timestamp - 25, 'completed');
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (29, 9, 40, current_timestamp - 37, current_timestamp - 30, 'completed');
-
--- User 12 (julia_user) - multiple adoptions
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (30, 12, 35, current_timestamp - 42, current_timestamp - 35, 'completed');
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (31, 12, 41, current_timestamp - 47, current_timestamp - 40, 'completed');
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (32, 12, 47, current_timestamp - 52, current_timestamp - 45, 'completed');
-
--- User 14 (linda_user) - multiple adoptions
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (33, 14, 36, current_timestamp - 27, current_timestamp - 20, 'completed');
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (34, 14, 42, current_timestamp - 34, current_timestamp - 27, 'completed');
-
--- User 17 (oscar_user) - multiple adoptions
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (35, 17, 43, current_timestamp - 39, current_timestamp - 32, 'completed');
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (36, 17, 48, current_timestamp - 44, current_timestamp - 37, 'completed');
-
--- User 19 (quinn_user) - multiple adoptions
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (37, 19, 44, current_timestamp - 29, current_timestamp - 22, 'completed');
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (38, 19, 46, current_timestamp - 36, current_timestamp - 29, 'completed');
-
--- User 24 (victor_user) - multiple adoptions (need new animals since 31 and 32 already adopted)
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (39, 24, 1, current_timestamp - 41, current_timestamp - 34, 'completed');
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (40, 25, 5, current_timestamp - 46, current_timestamp - 39, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (41, 1, 49, current_timestamp - 55, current_timestamp - 48, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (42, 3, 50, current_timestamp - 60, current_timestamp - 53, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (43, 5, 51, current_timestamp - 65, current_timestamp - 58, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (44, 7, 52, current_timestamp - 70, current_timestamp - 63, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (45, 9, 53, current_timestamp - 75, current_timestamp - 68, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (46, 11, 54, current_timestamp - 80, current_timestamp - 73, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (47, 12, 55, current_timestamp - 85, current_timestamp - 78, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (48, 14, 56, current_timestamp - 90, current_timestamp - 83, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (49, 15, 57, current_timestamp - 95, current_timestamp - 88, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (50, 17, 58, current_timestamp - 100, current_timestamp - 93, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (51, 19, 59, current_timestamp - 105, current_timestamp - 98, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (52, 20, 60, current_timestamp - 110, current_timestamp - 103, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (53, 21, 2, current_timestamp - 115, current_timestamp - 108, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (54, 22, 3, current_timestamp - 120, current_timestamp - 113, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (55, 23, 6, current_timestamp - 125, current_timestamp - 118, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (56, 24, 7, current_timestamp - 130, current_timestamp - 123, 'completed');
+insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (57, 25, 8, current_timestamp - 135, current_timestamp - 128, 'completed');
 
 commit;
 
@@ -714,6 +727,65 @@ insert into testimonials (id, user_id, testimonial_text, rating, location) value
 insert into testimonials (id, user_id, testimonial_text, rating, location) values (10, 12, 'I appreciate the support, but I wish there were more filter options for special needs pets.', 4, 'Phoenix, AZ');
 insert into testimonials (id, user_id, testimonial_text, rating, location) values (11, 17, 'Adoption process was smooth and the team was responsive. Would use again!', 4.5, 'Atlanta, GA');
 insert into testimonials (id, user_id, testimonial_text, rating, location) values (13, 13, 'As a shelter, we appreciate the exposure and ease of communication with adopters.', 4.5, 'Los Angeles, CA');
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (14, 7, 'I''ve adopted three pets through this platform and each experience was better than the last. The matching system really works!', 5, 'Phoenix, AZ');
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (15, 9, 'Two wonderful adoptions through this site. The shelters are well-vetted and the pets are healthy and well-cared for.', 5, 'Nashville, TN');
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (16, 12, 'Three successful adoptions! The platform makes it easy to find the right match for your family.', 5, 'Orlando, FL');
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (17, 14, 'The detailed profiles and health information helped me make informed decisions. Two great pets found here!', 4.5, 'Charlotte, NC');
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (18, 17, 'Excellent communication with shelters and comprehensive pet information. Highly recommended!', 4.5, 'San Antonio, TX');
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (19, 19, 'Found two amazing pets through this platform. The adoption process was smooth both times.', 5, 'Indianapolis, IN');
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (20, 21, 'Great platform for finding pets. The shelter was professional and the pet came exactly as described.', 4, 'Columbus, OH');
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (21, 22, 'The matching system suggested the perfect pet for our lifestyle. Very impressed with the technology!', 4.5, 'Fort Worth, TX');
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (22, 23, 'Easy to use platform with reliable shelters. Our new pet is healthy and well-socialized.', 4, 'San Francisco, CA');
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (23, 24, 'Multiple successful adoptions through this site. The quality of care from shelters is consistently high.', 5, 'Jacksonville, FL');
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (24, 25, 'Found our family pet through this amazing platform. The support and guidance were exceptional.', 4.5, 'Austin, TX');
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (25, 4, 'As Safe Haven Shelter, we''ve placed over 100 pets through this platform. The adopter quality is outstanding!', 5, 'Denver, CO');
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (26, 6, 'Fluffy Friends Shelter has had amazing success with this platform. Great tools for showcasing our pets.', 5, 'Seattle, WA');
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (27, 10, 'Paws Rescue Center loves working with this platform. The adopters are pre-screened and genuinely caring.', 5, 'Portland, OR');
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (28, 18, 'Pet Lovers Shelter has found homes for countless pets through this site. Couldn''t be happier with the service!', 5, 'Las Vegas, NV');
+insert into testimonials (id, user_id, testimonial_text, rating, location) values (29, 23, 'Forever Friends Shelter appreciates the platform''s dedication to animal welfare. Excellent partner!', 4.5, 'Memphis, TN');
+commit;
+
+-- Insert owner reviews data
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (1, 2, 4, 2, 5, 'Safe Haven Shelter was amazing! The staff was knowledgeable and caring. Whiskers came to us healthy and well-socialized.', 5, 5, 5, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (2, 7, 10, 5, 4, 'Great experience overall. Charlie was exactly as described and the adoption process was smooth.', 4, 5, 4, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (3, 21, 4, 14, 5, 'Exceptional care and attention to detail. The shelter provided comprehensive information about Luna and ongoing support.', 5, 5, 5, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (4, 3, 6, 18, 4, 'Good communication throughout the process. Shadow was well-cared for and healthy.', 4, 4, 4, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (5, 1, 18, 21, 5, 'Outstanding shelter with caring staff. Bella came with detailed health records and training information.', 5, 5, 5, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (6, 7, 6, 19, 4, 'Professional and responsive. The adoption process was thorough and fair.', 4, 4, 4, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (7, 1, 4, 22, 5, 'Another excellent experience with Safe Haven Shelter. Bruno was well-trained and healthy.', 5, 5, 5, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (8, 3, 6, 23, 4, 'Fluffy Friends Shelter provided great support. Mia was everything they described and more.', 4, 5, 4, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (9, 3, 6, 24, 5, 'Second time adopting from Fluffy Friends and they continue to exceed expectations. Nala is wonderful!', 5, 5, 5, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (10, 7, 10, 25, 4, 'Paws Rescue Center was great to work with. Zeus came well-socialized and healthy.', 4, 4, 4, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (11, 7, 10, 26, 5, 'Atlas was an amazing addition to our family. The shelter provided excellent aftercare support.', 5, 5, 5, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (12, 7, 10, 27, 4, 'Third adoption from Paws Rescue Center. Cooper is a great family dog. Consistent quality!', 4, 5, 4, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (13, 9, 13, 28, 5, 'Animal Friends Shelter provided exceptional care. Ruby came with detailed medical records.', 5, 5, 5, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (14, 9, 13, 29, 4, 'Lily was a great match for our family. The adoption process was smooth and professional.', 4, 4, 4, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (15, 12, 18, 30, 5, 'Pet Lovers Shelter has amazing staff. Hercules is gentle and well-trained.', 5, 5, 5, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (16, 12, 18, 31, 4, 'Ranger came with lots of training. Great communication throughout the process.', 4, 5, 4, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (17, 12, 18, 32, 5, 'Third time with Pet Lovers Shelter. Zara is beautiful and healthy. Highly recommend!', 5, 5, 5, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (18, 14, 23, 33, 4, 'Forever Friends Shelter was professional. Sasha came well-socialized and healthy.', 4, 4, 4, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (19, 14, 23, 34, 5, 'Coco is absolutely perfect! The shelter provided excellent support and guidance.', 5, 5, 5, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (20, 17, 4, 35, 4, 'Safe Haven Shelter continues to provide excellent service. Tank is a gentle giant.', 4, 4, 4, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (21, 17, 23, 36, 5, 'Midnight came from Forever Friends Shelter in perfect condition. Great aftercare support.', 5, 5, 5, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (22, 19, 6, 37, 4, 'Luna2 is adorable! Fluffy Friends Shelter provided great care and information.', 4, 5, 4, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (23, 19, 13, 38, 5, 'Smoky came with special care instructions. Animal Friends Shelter was very thorough.', 5, 4, 5, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (24, 1, 4, 41, 5, 'Fourth adoption from Safe Haven Shelter! Echo is incredibly smart and well-trained.', 5, 5, 5, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (25, 3, 6, 42, 4, 'Third time with Fluffy Friends Shelter. Whisper is adorable and came well-cared for.', 4, 5, 4, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (26, 5, 10, 43, 5, 'Blaze is exactly what we were looking for. Paws Rescue Center matched us perfectly!', 5, 5, 5, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (27, 7, 13, 44, 4, 'Misty is elegant and beautiful. Animal Friends Shelter provided excellent care.', 4, 4, 4, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (28, 9, 18, 45, 5, 'Phoenix is athletic and energetic as described. Pet Lovers Shelter was fantastic!', 5, 5, 5, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (29, 11, 23, 46, 4, 'Velvet has such a warm personality! Forever Friends Shelter was very helpful.', 4, 4, 4, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (30, 12, 4, 47, 5, 'Rex is strong but gentle as promised. Safe Haven Shelter continues to excel!', 5, 5, 5, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (31, 14, 6, 48, 4, 'Nova is sleek and striking. Third adoption from Fluffy Friends - always reliable!', 4, 5, 4, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (32, 15, 10, 49, 5, 'Thor is a gentle giant just as described. Paws Rescue Center provided excellent support.', 5, 5, 5, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (33, 17, 13, 50, 4, 'Stella is active and playful. Animal Friends Shelter was very professional throughout.', 4, 4, 4, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (34, 19, 18, 51, 5, 'Diesel is protective and loyal. Pet Lovers Shelter matched us perfectly with our needs.', 5, 5, 5, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (35, 20, 23, 52, 4, 'Angel is sweet and calm. Forever Friends Shelter provided great care and support.', 4, 4, 4, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (36, 21, 6, 53, 5, 'Another excellent adoption from Fluffy Friends Shelter. Whiskers is calm and loving.', 5, 5, 5, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (37, 22, 10, 54, 4, 'Bella from Paws Rescue Center is energetic and fun. Great communication throughout.', 4, 4, 4, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (38, 23, 23, 55, 5, 'Luna from Forever Friends Shelter is vocal and social as promised. Excellent service!', 5, 5, 5, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (39, 24, 4, 56, 4, 'Rocky is a good guard dog. Safe Haven Shelter provided thorough training information.', 4, 4, 4, 1);
+insert into owner_reviews (id, reviewer_id, reviewed_owner_id, adoption_id, rating, review_text, communication_rating, pet_condition_rating, process_rating, would_recommend) values (40, 25, 6, 57, 5, 'Princess is a gentle giant as described. Fluffy Friends Shelter was amazing to work with!', 5, 5, 5, 1);
 commit;
 
 select count(*) from address;
@@ -733,5 +805,6 @@ select count(*) from user_preferences;
 select count(*) from conversations;
 select count(*) from messages;
 select count(*) from testimonials;
+select count(*) from owner_reviews;
 
 select 'Database population completed successfully!' as status from dual;

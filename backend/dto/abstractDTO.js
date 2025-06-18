@@ -1,4 +1,4 @@
-const db = require("../db/dbConnection");
+const { executeQuery } = require("../db/dbConnection");
 const oracledb = require("oracledb");
 
 class abstractDTO {
@@ -16,9 +16,7 @@ class abstractDTO {
 
       if (orderBy) {
         query += ` ORDER BY ${orderBy}`;
-      }
-
-      const result = await db.executeQuery(query, [], {
+      }      const result = await executeQuery(query, [], {
         outFormat: oracledb.OUT_FORMAT_OBJECT
       });
 
@@ -43,10 +41,9 @@ class abstractDTO {
           status: 400
         });
       }
-      
-      const result = await db.executeQuery(
+      const result = await executeQuery(
         `SELECT * FROM ${this.tableName} WHERE ${this.primaryKey} = :id`,
-        [id],
+        { id },
         { outFormat: oracledb.OUT_FORMAT_OBJECT }
       );
 
@@ -74,6 +71,7 @@ class abstractDTO {
   async create(entityData) {
     throw new Error("create method must be implemented by subclass");
   }
+  
   async update(id, entityData) {
     try {
       if (!id) {
@@ -110,7 +108,7 @@ class abstractDTO {
 
       const query = `UPDATE ${this.tableName} SET ${updates.join(", ")} WHERE ${this.primaryKey} = :id`;
 
-      await db.executeQuery(query, binds, { autoCommit: true });
+      await executeQuery(query, binds, { autoCommit: true });
       return this.getById(id);
     } catch (error) {
       if (error.code && error.status) {
@@ -172,8 +170,7 @@ class abstractDTO {
           status: 404
         });
       }
-
-      await db.executeQuery(
+      await executeQuery(
         `DELETE FROM ${this.tableName} WHERE ${this.primaryKey} = :id`,
         [id],
         { autoCommit: true }
@@ -203,7 +200,7 @@ class abstractDTO {
   async executeCustomQuery(query, params = [], options = {}) {
     try {
       const defaultOptions = { outFormat: oracledb.OUT_FORMAT_OBJECT, ...options };
-      return await db.executeQuery(query, params, defaultOptions);
+      return await executeQuery(query, params, defaultOptions);
     } catch (error) {
       throw Object.assign(error, {
         entityName: this.tableName,

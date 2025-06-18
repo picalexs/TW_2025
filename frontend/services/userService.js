@@ -1,4 +1,4 @@
-import ApiService, { ApiError } from './api.js';
+import ApiService, { ApiError } from './api.min.js';
 
 class UserService {
   constructor(options = {}) {
@@ -23,7 +23,6 @@ class UserService {
       return await this.apiService.get(this.endpoints.currentUser);
     } catch (error) {
       if (error instanceof ApiError && error.details && error.details.status === 401) {
-        // Clear invalid auth state
         this.logout();
       }
       throw error;

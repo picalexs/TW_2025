@@ -1,5 +1,5 @@
 import PetService from '../services/petService.js';
-import { setupMobileMenu, createSlideshow, initializePageLanguage, checkLoginStatusAndToggleNavButtons } from '../global/global.js';
+import { setupMobileMenu, createSlideshow, initializePageLanguage, checkLoginStatusAndToggleNavButtons } from '../global/global.min.js';
 
 class PetDetailsPage {
   constructor() {
@@ -57,11 +57,13 @@ class PetDetailsPage {
     this.renderBehaviorTab(pet);
     this.renderLocationTab(pet);
     this.renderAdoptionTab(pet);
-  }
-
+  }  
+  
   renderPetHeader(pet) {
     const mainImage = document.getElementById('main-pet-image');
-    mainImage.src = pet.imagePath || '../assets/default-pet-profile.jpg';
+    const imagePath = window.ImagePathHandler.processPetImagePath(pet.imagePath);
+    
+    mainImage.src = imagePath;
     mainImage.alt = pet.name;
 
     this.renderImageGallery(pet);
@@ -83,21 +85,24 @@ class PetDetailsPage {
 
     if (pet.media && pet.media.length > 0) {
       const images = pet.media.filter(media => media.type === 'image' || !media.type);
-      
       images.forEach((media, index) => {
         const thumbnail = document.createElement('img');
-        thumbnail.src = media.filePath.startsWith('http') ? media.filePath : `/server/${media.filePath}`;
+        const imagePath = window.ImagePathHandler.processPetImagePath(media.filePath);
+        
+        thumbnail.src = imagePath;
         thumbnail.alt = `${pet.name} photo ${index + 1}`;
         thumbnail.className = `thumbnail ${index === 0 ? 'active' : ''}`;
         thumbnail.addEventListener('click', () => this.switchMainImage(media.filePath, index));
         thumbnailsContainer.appendChild(thumbnail);
       });
     }
-  }
-
+  }  
+  
   switchMainImage(imagePath, index) {
     const mainImage = document.getElementById('main-pet-image');
-    mainImage.src = imagePath.startsWith('http') ? imagePath : `/server/${imagePath}`;
+    const processedPath = window.ImagePathHandler.processPetImagePath(imagePath);
+    
+    mainImage.src = processedPath;
     
     document.querySelectorAll('.thumbnail').forEach((thumb, i) => {
       thumb.classList.toggle('active', i === index);
@@ -227,10 +232,9 @@ class PetDetailsPage {
 
   renderShelterInfo(shelter) {
     const container = document.getElementById('shelter-info');
-    
-    if (shelter && (shelter.firstName || shelter.email)) {
+      if (shelter && (shelter.firstName || shelter.email)) {
       const name = [shelter.firstName, shelter.lastName].filter(Boolean).join(' ') || 'Shelter Contact';
-      const profilePic = shelter.profilePicture || '/server/images/profile/default-user-profile.jpg';
+      const profilePic = window.ImagePathHandler.processUserImagePath(shelter.profilePicture);
       
       container.innerHTML = `
         <div class="shelter-contact">

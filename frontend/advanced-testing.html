@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advanced Pet Adoption System - Testing Interface</title>
-    <script src="config.js"></script>
+    <script src="config.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -14,8 +14,8 @@
 
         body {
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #333;
+            background: linear-gradient(135deg, var(--info-color) 0%, #764ba2 100%);
+            color: var(--primary-color);
             line-height: 1.6;
         }
 
@@ -36,14 +36,14 @@
         }
 
         .header h1 {
-            color: #667eea;
+            color: var(--info-color);
             text-align: center;
             margin-bottom: 10px;
         }
 
         .header p {
             text-align: center;
-            color: #666;
+            color: var(--secondary-color);
         }
 
         .feature-grid {
@@ -63,10 +63,10 @@
         }
 
         .feature-card h3 {
-            color: #667eea;
+            color: var(--info-color);
             margin-bottom: 15px;
             padding-bottom: 10px;
-            border-bottom: 2px solid #eee;
+            border-bottom: 2px solid var(--border-color);
         }
 
         .form-group {
@@ -95,12 +95,12 @@
         .form-group select:focus,
         .form-group textarea:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--info-color);
         }
 
         .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: linear-gradient(135deg, var(--info-color) 0%, #764ba2 100%);
+            color: var(--background-color);
             padding: 12px 25px;
             border: none;
             border-radius: 8px;
@@ -139,15 +139,15 @@
         }
 
         .result-container h4 {
-            color: #667eea;
+            color: var(--info-color);
             margin-bottom: 15px;
         }
 
         .result-content {
-            background: #f8f9fa;
+            background: var(--background-color);
             padding: 15px;
             border-radius: 8px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid var(--info-color);
             white-space: pre-wrap;
             font-family: 'Courier New', monospace;
             font-size: 12px;
@@ -185,22 +185,22 @@
         }
 
         .analytics-card {
-            background: #f8f9fa;
+            background: var(--background-color);
             padding: 15px;
             border-radius: 8px;
             text-align: center;
-            border: 2px solid #eee;
+            border: 2px solid var(--border-color);
         }
 
         .analytics-card h5 {
-            color: #667eea;
+            color: var(--info-color);
             margin-bottom: 5px;
         }
 
         .analytics-card .value {
             font-size: 24px;
             font-weight: bold;
-            color: #333;
+            color: var(--primary-color)
         }
     </style>
 </head>

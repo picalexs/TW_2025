@@ -1,4 +1,4 @@
-import { setupMobileMenu, initializePageLanguage } from '../global/global.js';
+import { setupMobileMenu, initializePageLanguage } from '../global/global.min.js';
 
 document.addEventListener('DOMContentLoaded', function () {
   initSignupPage();

@@ -192,16 +192,16 @@ class UserController {
             body {
                 font-family: 'Quicksand', sans-serif;
                 text-align: center;
-                background: linear-gradient(to bottom right, #e0f7ff, #ffffff);
+                background: linear-gradient(to bottom right, #e0f7ff, var(--background-color));
                 margin: 0;
                 padding: 40px 20px;
-                color: #2c3e50;
+                color: var(--primary-color);
             }
 
             .container {
                 max-width: 500px;
                 margin: auto;
-                background-color: #ffffff;
+                background-color: var(--background-color);
                 padding: 30px;
                 border-radius: 15px;
                 box-shadow: 0 8px 20px rgba(0, 123, 255, 0.2);
@@ -221,7 +221,7 @@ class UserController {
 
             .button {
                 background-color: #007bff;
-                color: white;
+                color: var(--background-color);
                 padding: 12px 24px;
                 border: none;
                 border-radius: 25px;
@@ -468,9 +468,7 @@ class UserController {
   }
   async getAllUsersWithAdoptions(req, res) {
     try {
-      console.log("getAllUsersWithAdoptions called");
       const users = await userModel.getAllWithAdoptionCounts();
-      console.log(`Retrieved ${users.length} users with adoption counts`);
       sendResponse(res, 200, users);
     } catch (error) {
       console.error("Error getting users with adoption counts:", error);

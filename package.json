@@ -2,18 +2,25 @@
   "name": "tw_2025",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node backend/server.js"
+  "main": "index.js",
+  "scripts": {
+    "dev": "node scripts/dev.js",
+    "start": "set NODE_ENV=production&& node scripts/build.js production && node backend/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^6.0.0",
+    "compression": "^1.7.4",
     "dotenv": "^16.5.0",
     "jsonwebtoken": "^9.0.2",
     "nodemailer": "^7.0.3",
     "oracledb": "^6.8.0"
+  },
+  "devDependencies": {
+    "chokidar": "^3.5.3",
+    "clean-css-cli": "^5.6.3",
+    "terser": "^5.29.2"
   }
 }

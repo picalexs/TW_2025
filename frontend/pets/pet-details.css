@@ -1,5 +1,5 @@
 .pet-details-container {
-  max-width: 1200px;
+  max-width: 75rem;
   margin: 0 auto;
   padding: 2rem;
 }
@@ -9,16 +9,15 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 400px;
+  min-height: 25rem;
   text-align: center;
 }
 
-.loading-spinner {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #007bff;
+.loading-spinner {  border: 0.25rem solid #f3f3f3;
+  border-top: 0.25rem solid #007bff;
   border-radius: 50%;
-  width: 50px;
-  height: 50px;
+  width: 3.125rem;
+  height: 3.125rem;
   animation: spin 1s linear infinite;
   margin-bottom: 1rem;
 }
@@ -72,10 +71,9 @@
 
 .main-pet-image {
   width: 100%;
-  height: 400px;
-  object-fit: cover;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  height: 25rem;
+  object-fit: cover;  border-radius: 0.75rem;
+  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15);
 }
 
 .favorite-btn {
@@ -83,16 +81,15 @@
   top: 1rem;
   right: 1rem;
   background: rgba(255, 255, 255, 0.9);
-  border: none;
-  width: 48px;
-  height: 48px;
+  border: none;  width: 3rem;
+  height: 3rem;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(0.625rem);
 }
 
 .favorite-btn:hover {
@@ -106,7 +103,7 @@
 
 .heart-icon {
   font-size: 1.5rem;
-  color: #666;
+  color: var(--secondary-color);
   transition: color 0.3s;
 }
 
@@ -117,9 +114,8 @@
   padding: 0.5rem 0;
 }
 
-.thumbnail {
-  width: 80px;
-  height: 80px;
+.thumbnail {  width: 5rem;
+  height: 5rem;
   object-fit: cover;
   border-radius: 8px;
   cursor: pointer;
@@ -156,7 +152,7 @@
 }
 
 .status-badge.pending {
-  background-color: #fff3cd;
+  background-color: var(--background-color)3;
   color: #856404;
 }
 
@@ -168,7 +164,7 @@
 .pet-name {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #2c3e50;
+  color: var(--primary-color);
   margin-bottom: 1.5rem;
 }
 
@@ -187,7 +183,7 @@
 
 .info-label {
   font-weight: 600;
-  color: #666;
+  color: var(--secondary-color);
   font-size: 0.875rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -195,7 +191,7 @@
 
 .info-value {
   font-size: 1.125rem;
-  color: #2c3e50;
+  color: var(--primary-color);
   font-weight: 500;
 }
 
@@ -217,7 +213,7 @@
 
 .tabs-nav {
   display: flex;
-  border-bottom: 2px solid #e9ecef;
+  border-bottom: 2px solid var(--accent-color);
   margin-bottom: 2rem;
   overflow-x: auto;
 }
@@ -228,7 +224,7 @@
   padding: 1rem 1.5rem;
   cursor: pointer;
   font-weight: 500;
-  color: #666;
+  color: var(--secondary-color);
   border-bottom: 3px solid transparent;
   transition: all 0.3s;
   white-space: nowrap;
@@ -258,7 +254,7 @@
 .detail-section h3 {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--primary-color);
   margin-bottom: 1rem;
 }
 
@@ -270,21 +266,21 @@
 
 .detail-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(18.75rem, 1fr));
   gap: 2rem;
 }
 
 .detail-card {
-  background: #f8f9fa;
+  background: var(--background-color);
   padding: 1.5rem;
   border-radius: 12px;
-  border: 1px solid #e9ecef;
+  border: 1px solid var(--accent-color);
 }
 
 .detail-card h4 {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--primary-color);
   margin-bottom: 1rem;
 }
 
@@ -299,7 +295,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 0;
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 1px solid var(--accent-color);
 }
 
 .detail-item:last-child {
@@ -308,11 +304,11 @@
 
 .detail-label {
   font-weight: 600;
-  color: #666;
+  color: var(--secondary-color);
 }
 
 .detail-value {
-  color: #2c3e50;
+  color: var(--primary-color);
   font-weight: 500;
 }
 
@@ -344,21 +340,21 @@
 }
 
 .medical-record {
-  background: #fff;
-  border: 1px solid #e9ecef;
+  background: var(--background-color);
+  border: 1px solid var(--accent-color);
   border-radius: 8px;
   padding: 1.5rem;
 }
 
 .record-date {
   font-size: 0.875rem;
-  color: #666;
+  color: var(--secondary-color);
   font-weight: 500;
   margin-bottom: 0.5rem;
 }
 
 .record-description {
-  color: #2c3e50;
+  color: var(--primary-color);
   line-height: 1.6;
 }
 
@@ -369,8 +365,8 @@
 }
 
 .care-item {
-  background: #fff;
-  border: 1px solid #e9ecef;
+  background: var(--background-color);
+  border: 1px solid var(--accent-color);
   border-radius: 8px;
   padding: 1rem;
   text-align: center;
@@ -385,13 +381,13 @@
 
 .care-activity {
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--primary-color);
   margin-bottom: 0.25rem;
 }
 
 .care-frequency {
   font-size: 0.875rem;
-  color: #666;
+  color: var(--secondary-color);
 }
 
 .care-resources {
@@ -401,16 +397,16 @@
 }
 
 .care-resource {
-  background: #fff;
-  border: 1px solid #e9ecef;
+  background: var(--background-color);
+  border: 1px solid var(--accent-color);
   border-radius: 8px;
   padding: 1.5rem;
 }
 
 .resource-type {
   display: inline-block;
-  background: #f8f9fa;
-  color: #666;
+  background: var(--background-color);
+  color: var(--secondary-color);
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
   font-size: 0.75rem;
@@ -423,7 +419,7 @@
 .resource-title {
   font-size: 1.125rem;
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--primary-color);
   margin-bottom: 0.5rem;
 }
 
@@ -433,10 +429,10 @@
 }
 
 .address-info, .shelter-info {
-  background: #f8f9fa;
+  background: var(--background-color);
   padding: 1.5rem;
   border-radius: 12px;
-  border: 1px solid #e9ecef;
+  border: 1px solid var(--accent-color);
 }
 
 .shelter-contact {
@@ -455,12 +451,12 @@
 
 .shelter-details h4 {
   margin: 0 0 0.25rem 0;
-  color: #2c3e50;
+  color: var(--primary-color);
 }
 
 .shelter-details p {
   margin: 0;
-  color: #666;
+  color: var(--secondary-color);
   font-size: 0.875rem;
 }
 
@@ -471,8 +467,8 @@
 }
 
 .metric-item {
-  background: #fff;
-  border: 1px solid #e9ecef;
+  background: var(--background-color);
+  border: 1px solid var(--accent-color);
   border-radius: 8px;
   padding: 1rem;
   text-align: center;
@@ -487,7 +483,7 @@
 
 .metric-label {
   font-size: 0.875rem;
-  color: #666;
+  color: var(--secondary-color);
   margin-top: 0.25rem;
 }
 
@@ -498,8 +494,8 @@
 }
 
 .adoption-record {
-  background: #fff;
-  border: 1px solid #e9ecef;
+  background: var(--background-color);
+  border: 1px solid var(--accent-color);
   border-radius: 8px;
   padding: 1rem;
   display: flex;
@@ -512,7 +508,7 @@
 }
 
 .adoption-date {
-  color: #666;
+  color: var(--secondary-color);
   font-size: 0.875rem;
 }
 
@@ -530,7 +526,7 @@
 }
 
 .modal-content {
-  background: white;
+  background: var(--background-color);
   border-radius: 12px;
   max-width: 500px;
   width: 90%;
@@ -543,12 +539,12 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem;
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 1px solid var(--accent-color);
 }
 
 .modal-header h3 {
   margin: 0;
-  color: #2c3e50;
+  color: var(--primary-color);
 }
 
 .modal-close {
@@ -556,7 +552,7 @@
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: #666;
+  color: var(--secondary-color);
   padding: 0.5rem;
 }
 
@@ -572,7 +568,7 @@
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--primary-color);
 }
 
 .form-group input,

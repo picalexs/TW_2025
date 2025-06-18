@@ -1,24 +1,14 @@
 const abstractDTO = require("./abstractDTO");
 const oracledb = require("oracledb");
 const path = require("path");
+const ImagePathHandler = require("../utils/imagePathHandler");
 
 class petDTO extends abstractDTO {
   constructor() {
     super("animals");
   }
   mapToEntity(dbRow) {
-    let imagePath = dbRow.FILE_PATH;
-
-    if (imagePath) {
-      if (imagePath.startsWith("/")) {
-        imagePath = imagePath.substring(1);
-      }
-      if (!imagePath.startsWith("http")) {
-        imagePath = `/server/${imagePath}`;
-      }
-    } else {
-      imagePath = "/server/images/profile/default-pet-profile.jpg";
-    }
+    const imagePath = ImagePathHandler.processPetImagePath(dbRow.FILE_PATH);
 
     return {
       id: dbRow.ID,
