@@ -103,14 +103,14 @@ main, #content-container {
     border-radius: 1.25rem;
 }
 
-/* @keyframes skeleton-loading {
+@keyframes skeleton-loading {
     0% {
         background-position: 200% 0;
     }
     100% {
         background-position: -200% 0;
     }
-} */
+}
 
 @media (max-width: 768px) {
     .navbar-skeleton .skeleton-nav {

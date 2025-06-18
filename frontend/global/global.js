@@ -363,12 +363,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 tempDiv.innerHTML = html;
 
                 const header = tempDiv.querySelector('header');
-                const footer = tempDiv.querySelector('footer');                
+                const footer = tempDiv.querySelector('footer');
+
                 if (header && navbarContainer) {
-                    const skeleton = navbarContainer.querySelector('.navbar-skeleton');
-                    if (skeleton) {
-                        skeleton.remove();
-                    }
+                    navbarContainer.innerHTML = '';
                     navbarContainer.appendChild(header);
                 }
 
@@ -377,14 +375,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     footerContainer.appendChild(footer);
                 }
                 initBasicFunctionality();
-            }).catch(err => {
+            })
+            .catch(err => {
                 console.error('Error fetching or injecting global components:', err);
                 const errorMessage = '<div class="error-loading" style="color: red; text-align: center; padding: 20px;">Failed to load navigation. Please try refreshing the page.</div>';
-                if (navbarContainer) {
-                    const skeleton = navbarContainer.querySelector('.navbar-skeleton');
-                    if (skeleton) skeleton.remove();
-                    navbarContainer.innerHTML = errorMessage;
-                }
+                if (navbarContainer) navbarContainer.innerHTML = errorMessage;
                 if (footerContainer) footerContainer.innerHTML = errorMessage;
             });
     } else {
