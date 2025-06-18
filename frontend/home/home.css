@@ -37,6 +37,13 @@ section {
   contain: layout style;
   min-height: 50vh;
   isolation: isolate;
+  outline: none !important;
+  border: none !important;
+}
+
+section:focus {
+  outline: none !important;
+  border: none !important;
 }
 
 #dynamic-sections-container {
@@ -183,7 +190,7 @@ section {
   order: 4 !important;
   position: relative;
   z-index: 5;
-  background-color: var(--light-color);
+  background-color: var(--background-color);
   padding: 3rem 0;
   margin: 0;
   width: 100%;
@@ -197,8 +204,8 @@ section {
 .featured-users {
   order: 3;
   position: relative;
-  z-index: 5;
-  background-color: var(--light-color);
+  z-index: 5;  
+  background-color: var(--background-color);
   padding: 3rem 0;
   margin: 0;
   width: 100%;
@@ -289,7 +296,7 @@ section {
 }
 
 .user-card {
-  background: var(--background-color);
+  background: var(--light-color);
   border-radius: 1rem;
   box-shadow: 0 0.25rem 1rem var(--shadow-color);
   overflow: hidden;
@@ -355,7 +362,7 @@ section {
 .user-stats {
   margin-bottom: 1.5rem;
   padding: 0.75rem;
-  background-color: rgba(var(--info-color-rgb), 0.1);
+  background-color: rgba(var(--secondary-color-rgb), 0.1);
   border-radius: 0.5rem;
   text-align: center;
 }
@@ -423,11 +430,13 @@ section {
   order: 2;
   padding: 4rem 0;
   background: linear-gradient(135deg, var(--background-color) 0%, var(--accent-color) 100%);
-  margin: 2rem 0;
+  margin: 0;
   position: relative;
   overflow: visible;
   min-height: 600px;
   contain: layout style;
+  outline: none;
+  border: none;
 }
 
 .testimonials-carousel {
@@ -461,12 +470,12 @@ section {
 }
 
 .testimonial-card {
-  background: var(--background-color);
+  background: var(--light-color);
   border-radius: 1rem;
   padding: 2rem;
   box-shadow: 0 4px 6px var(--shadow-color);
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  border: 1px solid rgba(var(--info-color-rgb), 0.1);
+  border: 1px solid var(--border-color);
   flex: 0 0 calc(33.333% - 1.33rem);
   min-width: 300px;
   min-height: 350px;
@@ -579,7 +588,7 @@ section {
 }
 
 .testimonial-author:hover {
-  background-color: rgba(var(--info-color-rgb), 0.05);
+  background-color: rgba(var(--secondary-color-rgb), 0.05);
   transform: translateY(-1px);
 }
 
@@ -609,7 +618,7 @@ section {
   background: rgba(var(--light-color-rgb), 0.9);
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
-  border: 1px solid rgba(var(--info-color-rgb), 0.2);
+  border: 1px solid rgba(var(--secondary-color-rgb), 0.2);
 }
 
 .author-name {
@@ -640,18 +649,15 @@ section {
   margin-top: 2rem;
 }
 
-/* Testimonials section hover behavior */
 .testimonials-section:hover .carousel-arrow {
   opacity: 1;
 }
 
-/* Testimonials-specific carousel indicators positioning */
 .carousel-indicators {
   margin-top: 2.5rem;
 }
 
 @media (hover: none) and (pointer: coarse) {
-  /* Mobile-specific adjustments for testimonials indicators */
   .carousel-indicator {
     width: 1rem;
     height: 1rem;
@@ -757,7 +763,6 @@ section {
   }
 }
 
-/* Responsive Design */
 @media (max-width: 1024px) {
   .testimonial-card {
     flex: 0 0 calc(50% - 1rem);
@@ -773,15 +778,13 @@ section {
 }
 
 .user-card,
-.pet-card,
 .testimonial-card {
   min-height: 350px;
   contain: layout style;
   will-change: transform;
 }
 
-.user-image,
-.pet-image {
+.user-image {
   aspect-ratio: 4 / 3;
   object-fit: cover;
   width: 100%;

@@ -1,6 +1,10 @@
 /* -------------------------------------------
   PROFILE PAGE LAYOUT
 ------------------------------------------- */
+body {
+  background: var(--secondary-color);
+}
+
 .profile-container {
   min-width: 60%;
   max-width: 95%;
@@ -429,27 +433,6 @@
   display: flex;
   gap: 2rem;
   min-width: 100%;
-}
-
-.pet-card {
-  background: var(--background-color);
-  border-radius: 1rem;
-  padding: 0;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  border: 1px solid rgba(74, 137, 220, 0.1);
-  flex: 0 0 calc(33.333% - 1.33rem);
-  min-width: 300px;
-  overflow: hidden;
-}
-
-.pet-card:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 0.625rem 2rem rgba(0, 0, 0, 0.15);
-}
-
-.pet-card:hover .pet-image {
-  transform: scale(1.05);
 }
 
 .pet-image {

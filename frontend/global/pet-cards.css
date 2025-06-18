@@ -1,0 +1,311 @@
+/* -------------------------------------------
+  UNIFIED PET CARDS STYLES
+------------------------------------------- */
+
+.pet-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 28rem;
+    background: var(--light-color);
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 0.3125rem 1.25rem rgba(0, 0, 0, 0.15);
+    border: 0.0625rem solid rgba(0, 0, 0, 0.1);
+    position: relative;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    contain: layout style;
+    will-change: transform;
+}
+
+.pet-card:hover {
+    transform: translateY(-0.5rem);
+    box-shadow: 0 0.625rem 2rem rgba(0, 0, 0, 0.2);
+}
+
+.pet-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.pet-card:hover::before {
+    opacity: 1;
+}
+
+.pet-image {
+    width: 100%;
+    height: 12.5rem;
+    object-fit: cover;
+    border-radius: 1rem 1rem 0 0;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    aspect-ratio: 4 / 3;
+    contain: layout;
+}
+
+.pet-card:hover .pet-image {
+    transform: scale(1.05);
+}
+
+.pet-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+}
+
+.pet-name {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+.pet-description {
+    flex-grow: 1;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+.pet-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.tag {
+    background: rgba(var(--primary-color-rgb), 0.1);
+    color: var(--primary-color);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    border: 1px solid rgba(var(--primary-color-rgb), 0.2);
+    transition: all 0.3s ease;
+}
+
+.tag:hover {
+    background: rgba(var(--primary-color-rgb), 0.2);
+}
+
+.pet-details {
+    margin-bottom: 1rem;
+}
+
+.pet-detail {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.pet-detail-icon {
+    margin-right: 0.5rem;
+    color: var(--primary-color);
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pet-card-footer {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(var(--border-color-rgb, 184, 207, 206), 0.3);
+}
+
+.pet-status {
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+}
+
+.status-available {
+    background: rgba(var(--success-color-rgb), 0.1);
+    color: var(--success-color);
+    border: 1px solid rgba(var(--success-color-rgb), 0.3);
+}
+
+.status-pending {
+    background: rgba(var(--warning-color-rgb), 0.1);
+    color: var(--warning-color);
+    border: 1px solid rgba(var(--warning-color-rgb), 0.3);
+}
+
+.status-adopted {
+    background: rgba(var(--secondary-color-rgb), 0.1);
+    color: var(--secondary-color);
+    border: 1px solid rgba(var(--secondary-color-rgb), 0.3);
+}
+
+.compatibility-badge {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.compatibility-badge.excellent { 
+    background: rgba(var(--success-color-rgb), 0.2); 
+    color: var(--success-color); 
+}
+
+.compatibility-badge.very-good { 
+    background: rgba(139, 195, 74, 0.2); 
+    color: #8BC34A; 
+}
+
+.compatibility-badge.good { 
+    background: rgba(var(--warning-color-rgb), 0.2); 
+    color: var(--warning-color); 
+}
+
+.compatibility-badge.fair { 
+    background: rgba(255, 152, 0, 0.2); 
+    color: #FF9800; 
+}
+
+.compatibility-badge.low { 
+    background: rgba(var(--danger-color-rgb), 0.2); 
+    color: var(--danger-color); 
+}
+
+/* -------------------------------------------
+  GRID LAYOUTS
+------------------------------------------- */
+.pets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+    gap: 2rem;
+    padding: 2rem 0;
+    content-visibility: auto;
+    contain-intrinsic-size: 0 400px;
+}
+
+.pets-grid.list-view {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+.pets-grid.list-view .pet-card {
+    display: flex;
+    flex-direction: row;
+    min-height: 12rem;
+    max-height: 15rem;
+}
+
+.pets-grid.list-view .pet-image {
+    width: 12rem;
+    height: 100%;
+    border-radius: 1rem 0 0 1rem;
+    flex-shrink: 0;
+}
+
+.pets-grid.list-view .pet-info {
+    padding: 1rem 1.5rem;
+    flex: 1;
+}
+
+.pets-grid.list-view .pet-name {
+    font-size: 1.1rem;
+    margin-bottom: 0.3rem;
+}
+
+.pets-grid.list-view .pet-description {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.pets-grid.list-view .pet-card-footer {
+    padding-top: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+/* -------------------------------------------
+  RESPONSIVE DESIGN
+------------------------------------------- */
+@media (max-width: 768px) {
+    .pets-grid {
+        grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
+        gap: 1.5rem;
+        padding: 1rem 0;
+    }
+
+    .pet-card {
+        min-height: 24rem;
+    }
+
+    .pet-info {
+        padding: 1rem;
+    }
+
+    .pet-name {
+        font-size: 1.1rem;
+    }
+
+    .pet-description {
+        font-size: 0.9rem;
+    }
+
+    .pets-grid.list-view .pet-card {
+        flex-direction: column;
+        min-height: 20rem;
+    }
+
+    .pets-grid.list-view .pet-image {
+        width: 100%;
+        height: 10rem;
+        border-radius: 1rem 1rem 0 0;
+    }
+
+    .pets-grid.list-view .pet-info {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .pets-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .pet-card {
+        min-height: 22rem;
+    }
+
+    .pet-info {
+        padding: 0.75rem;
+    }
+
+    .pet-tags {
+        gap: 0.25rem;
+    }
+
+    .tag {
+        font-size: 0.75rem;
+        padding: 0.2rem 0.5rem;
+    }
+}
