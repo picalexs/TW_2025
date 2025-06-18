@@ -26,37 +26,71 @@ document.addEventListener('DOMContentLoaded', function() {
 
   const navbarService = new NavbarService();
   
+  function replaceSkeletonWithContent(container, newContent, isHeader = true) {
+    const skeleton = container.querySelector('.navbar-skeleton');
+    
+    if (skeleton && newContent) {
+      const tempContainer = document.createElement('div');
+      tempContainer.innerHTML = newContent;
+      const actualContent = tempContainer.firstElementChild;
+      
+      if (actualContent) {
+        actualContent.style.opacity = '0';
+        actualContent.style.transition = 'opacity 0.3s ease-in-out';
+        
+        container.insertBefore(actualContent, skeleton);
+        
+        actualContent.offsetHeight;
+        
+        requestAnimationFrame(() => {
+          actualContent.style.opacity = '1';
+          
+          setTimeout(() => {
+            if (skeleton.parentNode) {
+              skeleton.remove();
+            }
+          }, 300);
+        });
+      } else {
+        skeleton.remove();
+        container.appendChild(tempContainer.firstElementChild || tempContainer);
+      }
+    } else if (newContent) {
+      container.innerHTML = newContent;
+    }
+  }
+  
   navbarService.fetchGlobalComponents()
     .then(html => {
       const { header, footer } = navbarService.parseGlobalComponents(html);
 
       if (header) {
         if (headerComponent) {
-          headerComponent.innerHTML = header.outerHTML;
+          replaceSkeletonWithContent(headerComponent, header.outerHTML, true);
         } else if (navbarContainer) {
-          navbarContainer.innerHTML = '';
-          navbarContainer.appendChild(header.cloneNode(true));
+          replaceSkeletonWithContent(navbarContainer, header.outerHTML, true);
         }
       }
 
       if (footer) {
         if (footerComponent) {
-          footerComponent.innerHTML = footer.outerHTML;
+          replaceSkeletonWithContent(footerComponent, footer.outerHTML, false);
         } else if (footerContainer) {
-          footerContainer.innerHTML = '';
-          footerContainer.appendChild(footer.cloneNode(true));
+          replaceSkeletonWithContent(footerContainer, footer.outerHTML, false);
         }
       }
 
-      setupLanguageDropdown();
-      setupMobileMenu();
-      checkLoginStatusAndToggleNavButtons();
-      
-      document.dispatchEvent(new CustomEvent('componentsLoaded'));
-      
-      if (window.languageManager) {
-        window.languageManager.updateContent();
-      }
+      requestAnimationFrame(() => {
+        setupLanguageDropdown();
+        setupMobileMenu();
+        checkLoginStatusAndToggleNavButtons();
+        
+        document.dispatchEvent(new CustomEvent('componentsLoaded'));
+        
+        if (window.languageManager) {
+          window.languageManager.updateContent();
+        }
+      });
     })
     .catch(error => {
       console.error('Error loading navigation components:', error);

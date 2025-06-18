@@ -23,10 +23,8 @@
     --info-color-rgb: 59, 130, 246;
     --light-color-rgb: 255, 255, 255;
     --dark-color-rgb: 51, 52, 70;
-    
-      /* Text colors */
     --text-color: #333446;
-    --text-muted: #5A6B7A;
+    --text-muted: #4A5568;
     --text-secondary: #7F8CAA;
     --text-light: #ffffff;
     
@@ -36,6 +34,9 @@
     --border-color: #B8CFCE;
     --hover-color: #2A2D3A;
     --shadow-color: rgba(51, 52, 70, 0.1);
+    
+    --skeleton-base: #e2e8f0;
+    --skeleton-highlight: #f1f5f9;
 }
 
 /* -------------------------------------------
@@ -78,6 +79,7 @@ main, #content-container {
     position: sticky;
     top: 0;
     z-index: 100;
+    contain: layout style;
 }
 
 #global-navbar:not(:empty) {
@@ -91,26 +93,31 @@ main, #content-container {
     padding: 1rem;
     min-height: 4.5rem;
     background-color: var(--light-color);
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .navbar-skeleton .skeleton-logo {
     width: 200px;
     height: 2rem;
-    background: linear-gradient(90deg, var(--accent-color) 25%, var(--border-color) 50%, var(--accent-color) 75%);
+    background: linear-gradient(90deg, var(--skeleton-base) 25%, var(--skeleton-highlight) 50%, var(--skeleton-base) 75%);
     background-size: 200% 100%;
     animation: skeleton-loading 1.5s infinite;
     border-radius: 4px;
+    flex-shrink: 0;
 }
 
 .navbar-skeleton .skeleton-nav {
     display: flex;
     gap: 2rem;
+    flex-shrink: 0;
 }
 
 .navbar-skeleton .skeleton-nav-item {
     width: 60px;
     height: 1.5rem;
-    background: linear-gradient(90deg, var(--accent-color) 25%, var(--border-color) 50%, var(--accent-color) 75%);
+    background: linear-gradient(90deg, var(--skeleton-base) 25%, var(--skeleton-highlight) 50%, var(--skeleton-base) 75%);
     background-size: 200% 100%;
     animation: skeleton-loading 1.5s infinite;
     border-radius: 4px;
@@ -119,12 +126,13 @@ main, #content-container {
 .navbar-skeleton .skeleton-auth {
     display: flex;
     gap: 1rem;
+    flex-shrink: 0;
 }
 
 .navbar-skeleton .skeleton-auth-btn {
     width: 80px;
     height: 2.5rem;
-    background: linear-gradient(90deg, var(--accent-color) 25%, var(--border-color) 50%, var(--accent-color) 75%);
+    background: linear-gradient(90deg, var(--skeleton-base) 25%, var(--skeleton-highlight) 50%, var(--skeleton-base) 75%);
     background-size: 200% 100%;
     animation: skeleton-loading 1.5s infinite;
     border-radius: 1.25rem;
@@ -137,6 +145,11 @@ main, #content-container {
     100% {
         background-position: -200% 0;
     }
+}
+
+#global-navbar > header,
+#global-navbar > * {
+    transition: opacity 0.3s ease-in-out;
 }
 
 @media (max-width: 768px) {
@@ -152,10 +165,11 @@ main, #content-container {
         content: '';
         width: 30px;
         height: 21px;
-        background: linear-gradient(90deg, var(--accent-color) 25%, var(--border-color) 50%, var(--accent-color) 75%);
+        background: linear-gradient(90deg, var(--skeleton-base) 25%, var(--skeleton-highlight) 50%, var(--skeleton-base) 75%);
         background-size: 200% 100%;
         animation: skeleton-loading 1.5s infinite;
         border-radius: 4px;
+        flex-shrink: 0;
     }
 }
 
@@ -166,6 +180,11 @@ header {
     position: sticky;
     top: 0;
     z-index: 100;
+    min-height: 4.5rem;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .header-container {
@@ -176,7 +195,8 @@ header {
     justify-content: space-between;
     align-items: center;
     flex-wrap: nowrap;
-    position: relative; 
+    position: relative;
+    min-height: 2.5rem;
 }
 
 .logo {
@@ -573,19 +593,19 @@ header {
 
 .btn-outline-info {
     background-color: var(--background-color);
-    color: #17a2b8;
-    border: 2px solid #17a2b8;
+    color: var(--info-color);
+    border: 2px solid var(--info-color);
 }
 
 .btn-outline-info:hover {
-    background-color: #17a2b8;
+    background-color: var(--info-color);
     color: var(--background-color);
-    border: 2px solid #17a2b8;
-    box-shadow: 0 0 0 3px rgba(23, 162, 184, 0.4);
+    border: 2px solid var(--info-color);
+    box-shadow: 0 0 0 3px rgba(var(--info-color-rgb), 0.4);
 }
 
 .btn-outline-info:focus {
-    outline: 5px solid rgba(23, 162, 184, 0.5);
+    outline: 5px solid rgba(var(--info-color-rgb), 0.5);
     outline-offset: 3px;
 }
 
@@ -662,7 +682,7 @@ header {
 
 .btn-google-login {
     background-color: var(--background-color);
-    color: #4285f4;
+    color: var(--info-color);
     border: 2px solid var(--border-color);
     display: flex;
     align-items: center;
@@ -674,9 +694,9 @@ header {
 
 .btn-google-login:hover {
     background-color: var(--background-color);
-    color: #4285f4;
-    border: 2px solid #4285f4;
-    box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.4);
+    color: var(--info-color);
+    border: 2px solid var(--info-color);
+    box-shadow: 0 0 0 2px rgba(var(--info-color-rgb), 0.4);
 }
 
 .btn-google-login img {
@@ -1151,7 +1171,7 @@ footer {
   CARD PLACEHOLDER STYLES
 ------------------------------------------- */
 .card-placeholder, .testimonial-card.placeholder, .review-card.placeholder, .pet-card.placeholder, .user-card.placeholder {
-  background: linear-gradient(135deg, var(--background-color) 0%, var(--accent-color) 100%);
+  background: linear-gradient(135deg, var(--skeleton-highlight) 0%, var(--skeleton-base) 100%);
   border-radius: 16px;
   border: 1px solid rgba(0,0,0,0.05);
   box-shadow: 0 4px 16px rgba(0,0,0,0.08);
@@ -1174,7 +1194,7 @@ footer {
 .card-placeholder .placeholder-author,
 .card-placeholder .placeholder-location,
 .card-placeholder .placeholder-stars {
-  background: linear-gradient(90deg, #e0e0e0, #f0f0f0, #e0e0e0);
+  background: linear-gradient(90deg, var(--skeleton-base), var(--skeleton-highlight), var(--skeleton-base));
   background-size: 200% 100%;
   border-radius: 8px;
   margin: 0.5rem 0;
@@ -1188,7 +1208,7 @@ footer {
   height: 120px;
   border-radius: 12px;
   margin-bottom: 1rem;
-  background: linear-gradient(90deg, #d0d0d0, #e0e0e0, #d0d0d0);
+  background: linear-gradient(90deg, var(--skeleton-base), var(--skeleton-highlight), var(--skeleton-base));
   background-size: 200% 100%;
 }
 

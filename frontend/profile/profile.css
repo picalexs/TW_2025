@@ -329,7 +329,7 @@
 }
 
 .review-text {
-  color: var(--text-muted);
+  color: var(--text-color);
   line-height: 1.6;
   margin-bottom: 0.5rem;
 }
