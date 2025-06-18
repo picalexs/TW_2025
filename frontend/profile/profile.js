@@ -156,7 +156,7 @@ class ProfilePage {
 
   renderNoReviews(container) {
     container.innerHTML = `
-      <div class="no-reviews" style="text-align: center; padding: 2rem; background: #f8f9fa; border-radius: 8px; margin: 1rem 0;">
+      <div class="no-reviews" style="text-align: center; padding: 2rem; background: var(--background-color); border-radius: 8px; margin: 1rem 0;">
         <p style="color: #888; margin: 0;">This user hasn't received any reviews from adopters yet.</p>
       </div>
     `;

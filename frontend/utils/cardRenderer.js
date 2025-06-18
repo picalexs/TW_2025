@@ -323,10 +323,10 @@ class CardRenderer {
 
     if (variant === 'profile' && isClickable) {
       return `
-        <div class="testimonial-author-info" data-user-id="${testimonial.userId}" onclick="window.navigateToProfile(${testimonial.userId})" style="cursor: pointer; padding: 1rem 0; border-top: 1px solid #e9ecef; margin-top: 1rem; transition: background-color 0.3s ease;">
+        <div class="testimonial-author-info" data-user-id="${testimonial.userId}" onclick="window.navigateToProfile(${testimonial.userId})" style="cursor: pointer; padding: 1rem 0; border-top: 1px solid var(--accent-color); margin-top: 1rem; transition: background-color 0.3s ease;">
           <div class="author-info">
             <h4 class="author-name" style="margin: 0 0 0.25rem 0; font-size: 1rem; color: var(--primary-color);">${authorName}</h4>
-            <p class="author-role" style="margin: 0; font-size: 0.875rem; color: #666; font-weight: 500;">${authorRole}</p>
+            <p class="author-role" style="margin: 0; font-size: 0.875rem; color: var(--secondary-color); font-weight: 500;">${authorRole}</p>
           </div>
           <div class="profile-link-hint" style="text-align: right; margin-top: 0.5rem; opacity: 0.7; transition: opacity 0.3s ease;">
             <span class="link-text" style="font-size: 0.8rem; color: var(--primary-color); font-weight: 500;">View Profile →</span>

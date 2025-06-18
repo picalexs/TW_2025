@@ -5,24 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pet Adoption Center</title>
     
-    <!-- Critical CSS inlined to prevent render blocking -->
     <style>
       body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
       .hero { min-height: 100vh; position: relative; display: flex; align-items: center; justify-content: center; }
       .hero-slideshow { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
       .hero-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0; transition: opacity 1s ease-in-out; }
       .hero-slide.active { opacity: 1; }
-      .hero-content { position: relative; z-index: 2; text-align: center; color: white; padding: 2rem; }
+      .hero-content { position: relative; z-index: 2; text-align: center; color: var(--background-color); padding: 2rem; }
       .hero-title { font-size: 3rem; margin-bottom: 1rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
       .hero-subtitle { font-size: 1.25rem; margin-bottom: 2rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
-      .btn { display: inline-block; padding: 1rem 2rem; background: #4a89dc; color: white; text-decoration: none; border-radius: 5px; transition: background 0.3s; }
+      .btn { display: inline-block; padding: 1rem 2rem; background: #4a89dc; color: var(--background-color); text-decoration: none; border-radius: 5px; transition: background 0.3s; }
       .btn:hover { background: #357abd; }
       
       .loading-placeholder { background: linear-gradient(90deg, #f0f0f0 25%, transparent 37%, transparent 63%, #f0f0f0 75%); background-size: 400% 100%; animation: shimmer 1.5s infinite; }
       @keyframes shimmer { 0% { background-position: 100% 50%; } 100% { background-position: -100% 50%; } }
     </style>
     
-    <!-- Non-critical CSS loaded asynchronously -->
     <link rel="preload" href="../global/global.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="./home.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript>
@@ -51,9 +49,9 @@
       <section class="hero">
         <div class="hero-slideshow">
           <div class="hero-slide initial active" style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../assets/hero-bg.jpg');"></div>
-        </div>
+        </div>        
         <div class="hero-content">
-          <h2 class="hero-title" data-i18n="hero.title"></h2>
+          <h1 class="hero-title" data-i18n="hero.title"></h1>
           <p class="hero-subtitle" data-i18n="hero.subtitle"></p>
           <a href="../pets/pets.html" class="btn btn-primary" data-i18n="hero.browseButton"></a>
         </div>

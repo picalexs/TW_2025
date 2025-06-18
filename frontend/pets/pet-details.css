@@ -103,7 +103,7 @@
 
 .heart-icon {
   font-size: 1.5rem;
-  color: #666;
+  color: var(--secondary-color);
   transition: color 0.3s;
 }
 
@@ -152,7 +152,7 @@
 }
 
 .status-badge.pending {
-  background-color: #fff3;
+  background-color: var(--background-color)3;
   color: #856404;
 }
 
@@ -164,7 +164,7 @@
 .pet-name {
   font-size: 2.5rem;
   font-weight: 700;
-  color: #2c3e50;
+  color: var(--primary-color);
   margin-bottom: 1.5rem;
 }
 
@@ -183,7 +183,7 @@
 
 .info-label {
   font-weight: 600;
-  color: #666;
+  color: var(--secondary-color);
   font-size: 0.875rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -191,7 +191,7 @@
 
 .info-value {
   font-size: 1.125rem;
-  color: #2c3e50;
+  color: var(--primary-color);
   font-weight: 500;
 }
 
@@ -213,7 +213,7 @@
 
 .tabs-nav {
   display: flex;
-  border-bottom: 2px solid #e9ecef;
+  border-bottom: 2px solid var(--accent-color);
   margin-bottom: 2rem;
   overflow-x: auto;
 }
@@ -224,7 +224,7 @@
   padding: 1rem 1.5rem;
   cursor: pointer;
   font-weight: 500;
-  color: #666;
+  color: var(--secondary-color);
   border-bottom: 3px solid transparent;
   transition: all 0.3s;
   white-space: nowrap;
@@ -254,7 +254,7 @@
 .detail-section h3 {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--primary-color);
   margin-bottom: 1rem;
 }
 
@@ -271,16 +271,16 @@
 }
 
 .detail-card {
-  background: #f8f9fa;
+  background: var(--background-color);
   padding: 1.5rem;
   border-radius: 12px;
-  border: 1px solid #e9ecef;
+  border: 1px solid var(--accent-color);
 }
 
 .detail-card h4 {
   font-size: 1.25rem;
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--primary-color);
   margin-bottom: 1rem;
 }
 
@@ -295,7 +295,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 0;
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 1px solid var(--accent-color);
 }
 
 .detail-item:last-child {
@@ -304,11 +304,11 @@
 
 .detail-label {
   font-weight: 600;
-  color: #666;
+  color: var(--secondary-color);
 }
 
 .detail-value {
-  color: #2c3e50;
+  color: var(--primary-color);
   font-weight: 500;
 }
 
@@ -340,21 +340,21 @@
 }
 
 .medical-record {
-  background: #fff;
-  border: 1px solid #e9ecef;
+  background: var(--background-color);
+  border: 1px solid var(--accent-color);
   border-radius: 8px;
   padding: 1.5rem;
 }
 
 .record-date {
   font-size: 0.875rem;
-  color: #666;
+  color: var(--secondary-color);
   font-weight: 500;
   margin-bottom: 0.5rem;
 }
 
 .record-description {
-  color: #2c3e50;
+  color: var(--primary-color);
   line-height: 1.6;
 }
 
@@ -365,8 +365,8 @@
 }
 
 .care-item {
-  background: #fff;
-  border: 1px solid #e9ecef;
+  background: var(--background-color);
+  border: 1px solid var(--accent-color);
   border-radius: 8px;
   padding: 1rem;
   text-align: center;
@@ -381,13 +381,13 @@
 
 .care-activity {
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--primary-color);
   margin-bottom: 0.25rem;
 }
 
 .care-frequency {
   font-size: 0.875rem;
-  color: #666;
+  color: var(--secondary-color);
 }
 
 .care-resources {
@@ -397,16 +397,16 @@
 }
 
 .care-resource {
-  background: #fff;
-  border: 1px solid #e9ecef;
+  background: var(--background-color);
+  border: 1px solid var(--accent-color);
   border-radius: 8px;
   padding: 1.5rem;
 }
 
 .resource-type {
   display: inline-block;
-  background: #f8f9fa;
-  color: #666;
+  background: var(--background-color);
+  color: var(--secondary-color);
   padding: 0.25rem 0.75rem;
   border-radius: 12px;
   font-size: 0.75rem;
@@ -419,7 +419,7 @@
 .resource-title {
   font-size: 1.125rem;
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--primary-color);
   margin-bottom: 0.5rem;
 }
 
@@ -429,10 +429,10 @@
 }
 
 .address-info, .shelter-info {
-  background: #f8f9fa;
+  background: var(--background-color);
   padding: 1.5rem;
   border-radius: 12px;
-  border: 1px solid #e9ecef;
+  border: 1px solid var(--accent-color);
 }
 
 .shelter-contact {
@@ -451,12 +451,12 @@
 
 .shelter-details h4 {
   margin: 0 0 0.25rem 0;
-  color: #2c3e50;
+  color: var(--primary-color);
 }
 
 .shelter-details p {
   margin: 0;
-  color: #666;
+  color: var(--secondary-color);
   font-size: 0.875rem;
 }
 
@@ -467,8 +467,8 @@
 }
 
 .metric-item {
-  background: #fff;
-  border: 1px solid #e9ecef;
+  background: var(--background-color);
+  border: 1px solid var(--accent-color);
   border-radius: 8px;
   padding: 1rem;
   text-align: center;
@@ -483,7 +483,7 @@
 
 .metric-label {
   font-size: 0.875rem;
-  color: #666;
+  color: var(--secondary-color);
   margin-top: 0.25rem;
 }
 
@@ -494,8 +494,8 @@
 }
 
 .adoption-record {
-  background: #fff;
-  border: 1px solid #e9ecef;
+  background: var(--background-color);
+  border: 1px solid var(--accent-color);
   border-radius: 8px;
   padding: 1rem;
   display: flex;
@@ -508,7 +508,7 @@
 }
 
 .adoption-date {
-  color: #666;
+  color: var(--secondary-color);
   font-size: 0.875rem;
 }
 
@@ -526,7 +526,7 @@
 }
 
 .modal-content {
-  background: white;
+  background: var(--background-color);
   border-radius: 12px;
   max-width: 500px;
   width: 90%;
@@ -539,12 +539,12 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.5rem;
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 1px solid var(--accent-color);
 }
 
 .modal-header h3 {
   margin: 0;
-  color: #2c3e50;
+  color: var(--primary-color);
 }
 
 .modal-close {
@@ -552,7 +552,7 @@
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: #666;
+  color: var(--secondary-color);
   padding: 0.5rem;
 }
 
@@ -568,7 +568,7 @@
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 600;
-  color: #2c3e50;
+  color: var(--primary-color);
 }
 
 .form-group input,

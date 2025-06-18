@@ -7,7 +7,7 @@
   margin: 0 auto;
   padding: 2rem 1rem;
   min-height: calc(100vh - 10rem);
-  background: #f8f9fa;
+  background: var(--background-color);
 }
 
 .navigation-header {
@@ -48,7 +48,7 @@
 
 .loading-spinner {  width: 3.125rem;
   height: 3.125rem;
-  border: 0.25rem solid #f3f3f3;
+  border: 0.25rem solid var(--background-color);
   border-top: 0.25rem solid var(--primary-color);
   border-radius: 50%;
   animation: spin 1s linear infinite;
@@ -65,7 +65,7 @@
 }
 
 .error-message p {
-  color: #666;
+  color: var(--text-muted);
   margin-bottom: 2rem;
 }
 
@@ -80,7 +80,7 @@
   display: flex;
   gap: 2rem;
   align-items: center;
-  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);  padding: 2rem;
+  background: linear-gradient(135deg, var(--light-color) 0%, var(--background-color) 100%);  padding: 2rem;
   border-radius: 1.25rem;
   box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.1);
   border: 0.0625rem solid rgba(255, 255, 255, 0.2);
@@ -98,7 +98,7 @@
   width: 10rem;
   height: 10rem;
   border-radius: 50%;
-  object-fit: cover;  border: 0.25rem solid white;
+  object-fit: cover;  border: 0.25rem solid var(--background-color);
   box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15);
 }
 
@@ -111,7 +111,7 @@
 
 .role-badge {
   background: var(--primary-color);
-  color: white;  padding: 0.4rem 1rem;
+  color: var(--background-color);  padding: 0.4rem 1rem;
   border-radius: 1.25rem;
   font-size: 0.85rem;
   font-weight: 600;
@@ -123,7 +123,7 @@
 }
 
 .role-badge.shelter {
-  background: #28a745;
+  background: var(--success-color);
 }
 
 .role-badge.user {
@@ -164,7 +164,7 @@
 
 .stat-item {
   text-align: center;
-  background: linear-gradient(135deg, #ffffff 0%, #f1f3f4 100%);  padding: 1rem 1rem;
+  background: linear-gradient(135deg, var(--background-color) 0%, var(--accent-color) 100%);  padding: 1rem 1rem;
   border-radius: 0.75rem;
   min-width: 6.25rem;
   transition: all 0.3s ease;
@@ -176,7 +176,7 @@
 .stat-item:hover {
   transform: translateY(-0.125rem);
   box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.12);
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: linear-gradient(135deg, var(--background-color) 0%, var(--accent-color) 100%);
 }
 
 .stat-item:active {
@@ -194,7 +194,7 @@
 
 .stat-label {
   display: block;
-  font-size: 0.8rem;  color: #666;
+  font-size: 0.8rem;  color: var(--secondary-color);
   margin-top: 0.3rem;
   text-transform: uppercase;
   letter-spacing: 0.01875rem;
@@ -219,7 +219,7 @@
 /* -------------------------------------------
   PROFILE DETAILS SECTION
 ------------------------------------------- */
-.profile-details {  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+.profile-details {  background: linear-gradient(135deg, var(--background-color) 0%, var(--background-color) 100%);
   border-radius: 1.25rem;
   box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.1);
   border: 0.0625rem solid rgba(255, 255, 255, 0.2);
@@ -260,7 +260,7 @@
 }
 
 .info-card {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: linear-gradient(135deg, var(--background-color) 0%, var(--accent-color) 100%);
   padding: 2rem;
   border-radius: 1rem;
   border: 0.0625rem solid rgba(0, 0, 0, 0.05);
@@ -298,7 +298,7 @@
 }
 
 .review-card {
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: linear-gradient(135deg, var(--background-color) 0%, var(--accent-color) 100%);
   padding: 2rem;
   border-radius: 1rem;
   border: 0.0625rem solid rgba(0, 0, 0, 0.05);
@@ -324,31 +324,31 @@
 }
 
 .star {
-  color: #ffc107;
+  color: var(--warning-color);
   font-size: 1.2rem;
 }
 
 .review-text {
-  color: #555;
+  color: var(--text-muted);
   line-height: 1.6;
   margin-bottom: 0.5rem;
 }
 
 .review-date {
   font-size: 0.875rem;
-  color: #666;
+  color: var(--text-muted);
 }
 
 .review-location {
   font-size: 0.875rem;
-  color: #666;
+  color: var(--secondary-color);
   margin: 0.5rem 0 0 0;
   font-style: italic;
 }
 
 .no-reviews {
   text-align: center;
-  color: #666;
+  color: var(--secondary-color);
   font-style: italic;
   padding: 3rem;
 }
@@ -363,7 +363,7 @@
   padding: 2rem 0;
   display: block;
   visibility: visible;
-  background: linear-gradient(135deg, #fafbfc 0%, #f8f9fa 100%);
+  background: linear-gradient(135deg, #fafbfc 0%, var(--background-color) 100%);
   border-radius: 1rem;
   border: 1px solid rgba(74, 137, 220, 0.1);
 }
@@ -387,7 +387,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: #666;
+  color: var(--secondary-color);
   font-style: italic;
 }
 
@@ -432,7 +432,7 @@
 }
 
 .pet-card {
-  background: white;
+  background: var(--background-color);
   border-radius: 1rem;
   padding: 0;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -542,13 +542,13 @@
 }
 
 .pet-status.pending {
-  background: #fff3;
+  background: var(--background-color)3;
   color: #856404;
 }
 
 .no-pets {
   text-align: center;
-  color: #666;
+  color: var(--secondary-color);
   font-style: italic;
   padding: 3rem;
   grid-column: 1 / -1;
@@ -569,7 +569,7 @@
 }
 
 .modal-content {
-  background-color: white;  margin: 5% auto;
+  background-color: var(--background-color);  margin: 5% auto;
   padding: 0;
   border-radius: 1rem;
   width: 90%;
@@ -592,8 +592,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;  padding: 1.5rem 2rem;
-  border-bottom: 0.0625rem solid #e9ecef;
-  background: #f8f9fa;
+  border-bottom: 0.0625rem solid var(--accent-color);
+  background: var(--background-color);
   border-radius: 1rem 1rem 0 0;
 }
 
@@ -608,7 +608,7 @@
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: #666;
+  color: var(--secondary-color);
   transition: color 0.3s;
 }
 
@@ -643,7 +643,7 @@
 .form-group input,
 .form-group textarea {
   width: 100%;  padding: 0.8rem;
-  border: 0.125rem solid #e9ecef;
+  border: 0.125rem solid var(--accent-color);
   border-radius: 0.5rem;
   font-size: 1rem;
   transition: border-color 0.3s;
@@ -672,12 +672,12 @@
 ------------------------------------------- */
 .owner-review {
   border-left: 0.25rem solid var(--primary-color);
-  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  background: linear-gradient(135deg, var(--background-color) 0%, var(--background-color) 100%);
 }
 
 .recommendation-badge {
   background: #28a745;
-  color: white;  padding: 0.2rem 0.6rem;
+  color: var(--background-color);  padding: 0.2rem 0.6rem;
   border-radius: 0.75rem;
   font-size: 0.75rem;
   font-weight: 600;
@@ -799,7 +799,7 @@
 
 .adoption-label {
   font-size: 0.875rem;
-  color: #666;
+  color: var(--secondary-color);
   margin: 0;
 }
 
@@ -825,7 +825,7 @@
 
 .adopter-name {
   font-weight: 500;
-  color: #333;
+  color: var(--primary-color);
   margin: 0 0 0.25rem 0;
   font-size: 0.9rem;
   transition: color 0.3s ease;
@@ -833,7 +833,7 @@
 
 .adopter-role {
   font-size: 0.8rem;
-  color: #666;
+  color: var(--secondary-color);
   margin: 0;
 }
 
@@ -860,7 +860,7 @@
 }
 
 .review-statistics {
-  background: linear-gradient(135deg, #ffffff 0%, #f1f3f4 100%);
+  background: linear-gradient(135deg, var(--background-color) 0%, var(--accent-color) 100%);
   border-radius: 1rem;
   padding: 2rem;
   margin-bottom: 2rem;
@@ -873,7 +873,7 @@
   justify-content: space-between;
   align-items: center;  margin-bottom: 1.5rem;
   padding-bottom: 1rem;
-  border-bottom: 0.125rem solid #e9ecef;
+  border-bottom: 0.125rem solid var(--accent-color);
 }
 
 .stats-header h4 {
@@ -902,7 +902,7 @@
 
 .stats-count {
   font-size: 0.9rem;
-  color: #666;
+  color: var(--secondary-color);
   font-weight: 500;
 }
 
@@ -937,14 +937,14 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 1rem;
-  background: white;
+  background: var(--background-color);
   border-radius: 0.5rem;
   border: 0.0625rem solid rgba(0, 0, 0, 0.05);
 }
 
 .stat-label {
   font-size: 0.9rem;
-  color: #666;
+  color: var(--secondary-color);
   font-weight: 500;
 }
 
@@ -1347,7 +1347,7 @@
   font-size: 0.85rem;
   margin-bottom: 0.3rem;
   font-weight: 500;
-  color: #666;
+  color: var(--secondary-color);
 }
 
 .filter-modal-content .modal-body {
@@ -1362,8 +1362,8 @@
   right: 0;
   margin: 0;
   padding: 0.75rem 1.5rem 0.75rem 1.5rem;
-  border-top: 1px solid #e9ecef;
-  background-color: white;
+  border-top: 1px solid var(--accent-color);
+  background-color: var(--background-color);
   border-radius: 0 0 1rem 1rem;
   display: flex;
   gap: 1rem;
@@ -1389,7 +1389,7 @@
 .filter-section {
   margin-bottom: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 1px solid var(--accent-color);
 }
 
 .filter-section:last-of-type {
@@ -1429,7 +1429,7 @@
   border: 1px solid #ddd;
   border-radius: 0.375rem;
   font-size: 0.85rem;
-  background-color: white;
+  background-color: var(--background-color);
   transition: border-color 0.3s ease;
 }
 
@@ -1502,8 +1502,8 @@
 }
 
 .filter-results-info {
-  background-color: #f8f9fa;
-  border: 1px solid #e9ecef;
+  background-color: var(--background-color);
+  border: 1px solid var(--accent-color);
   border-radius: 0.5rem;
   padding: 0.75rem 1rem;
   margin-bottom: 1.5rem;
@@ -1513,7 +1513,7 @@
 .filter-results-info p {
   margin: 0;
   font-size: 0.9rem;
-  color: #6c757d;
+  color: var(--secondary-color);
   font-style: italic;
 }
 

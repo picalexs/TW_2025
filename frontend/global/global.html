@@ -1,58 +1,55 @@
 <header>
-  <div class="header-container">
+  <div class="header-container">    
     <div class="logo">
-      <a href="/home/home.html" style="text-decoration: none;">
-        <h1>Pet Adoption Center</h1>
+      <a href="../home/home.html" style="text-decoration: none;" aria-label="Pet Adoption Center Home">
+        <span class="logo-text">Pet Adoption Center</span>
       </a>
     </div>
-    <ul class="nav-menu">      
-      <li class="nav-item"><a href="/home/home.html" class="nav-link" data-i18n="nav.home" data-i18n-fallback="Home"></a></li>
-      <li class="nav-item"><a href="/pets/pets.html" class="nav-link" data-i18n="nav.pets" data-i18n-fallback="Pets"></a></li>
+    <ul class="nav-menu">        
+      <li class="nav-item"><a href="../home/home.html" class="nav-link" data-i18n="nav.home" data-i18n-fallback="Home"></a></li>
+      <li class="nav-item"><a href="../pets/pets.html" class="nav-link" data-i18n="nav.pets" data-i18n-fallback="Pets"></a></li>
       <li class="nav-item"><a href="#about" class="nav-link" data-i18n="nav.about" data-i18n-fallback="About Us"></a></li>
     </ul>
     <div class="auth-container">
-      <div class="auth-buttons" id="auth-buttons-logged-out"> <a href="/login/login.html" class="btn btn-outline-primary nav-login-btn" data-i18n="nav.login" data-i18n-fallback="Login"></a> <a href="/signup/signup.html" class="btn btn-primary nav-signup-btn" data-i18n="nav.signup" data-i18n-fallback="Sign Up"></a> </div>
+      <div class="auth-buttons" id="auth-buttons-logged-out"> <a href="../login/login.html" class="btn btn-outline-primary nav-login-btn" data-i18n="nav.login" data-i18n-fallback="Login"></a> <a href="../signup/signup.html" class="btn btn-primary nav-signup-btn" data-i18n="nav.signup" data-i18n-fallback="Sign Up"></a> </div>
 
-      <div class="auth-buttons" id="auth-buttons-logged-in" style="display: none;"> <a href="#" class="btn btn-primary nav-logout-btn" data-i18n="nav.logout" data-i18n-fallback="Logout">Logout</a> </div>
-
-      <div class="language-dropdown">
-        <button class="language-current">
+      <div class="auth-buttons" id="auth-buttons-logged-in" style="display: none;"> <a href="#" class="btn btn-primary nav-logout-btn" data-i18n="nav.logout" data-i18n-fallback="Logout">Logout</a> </div>      <div class="language-dropdown">
+        <button class="language-current" aria-label="Select language" aria-expanded="false" aria-haspopup="true">
           <span class="flag-icon flag-en"></span>
           <span></span>
           <i class="dropdown-arrow">▼</i>
         </button>
-        <div class="language-options">
-          <a href="#" class="language-option" data-lang="en">
+        <div class="language-options" role="menu">
+          <a href="#" class="language-option" data-lang="en" role="menuitem" aria-label="Switch to English">
             <span class="flag-icon flag-en"></span>
             <span data-i18n="language.english" data-i18n-fallback="English"></span>
           </a>
-          <a href="#" class="language-option" data-lang="ro">
+          <a href="#" class="language-option" data-lang="ro" role="menuitem" aria-label="Switch to Romanian">
             <span class="flag-icon flag-ro"></span>
             <span data-i18n="language.romanian" data-i18n-fallback="Romanian"></span>
           </a>
         </div>
       </div>
-    </div>
-
-    <div class="mobile-menu-toggle">
+    </div>    
+    <button class="mobile-menu-toggle" aria-label="Open navigation menu" aria-expanded="false">
       <span></span>
       <span></span>
       <span></span>
-    </div>
+    </button>
   </div>
 
   <div class="mobile-menu-container">
-    <div class="mobile-auth" id="mobile-auth-logged-out"> <a href="/login/login.html" class="btn btn-outline-primary mobile-nav-login" data-i18n="nav.login"></a> <a href="/signup/signup.html" class="btn btn-primary mobile-nav-signup" data-i18n="nav.signup"></a> </div>
+    <div class="mobile-auth" id="mobile-auth-logged-out"> <a href="../login/login.html" class="btn btn-outline-primary mobile-nav-login" data-i18n="nav.login"></a> <a href="../signup/signup.html" class="btn btn-primary mobile-nav-signup" data-i18n="nav.signup"></a> </div>
 
     <div class="mobile-auth" id="mobile-auth-logged-in" style="display: none;"> <a href="#" class="btn btn-primary mobile-nav-logout" data-i18n="nav.logout">Logout</a> </div>
 
     <nav class="mobile-nav">
       <ul class="mobile-nav-menu">        
         <li class="mobile-nav-item">
-          <a href="/home/home.html" class="mobile-nav-link" data-i18n="nav.home"></a>
+          <a href="../home/home.html" class="mobile-nav-link" data-i18n="nav.home"></a>
         </li>
         <li class="mobile-nav-item">
-          <a href="/pets/pets.html" class="mobile-nav-link" data-i18n="nav.pets"></a>
+          <a href="../pets/pets.html" class="mobile-nav-link" data-i18n="nav.pets"></a>
         </li>
         <li class="mobile-nav-item">
           <a href="#about" class="mobile-nav-link" data-i18n="nav.about"></a>
@@ -62,12 +59,12 @@
 
     <div class="mobile-language">
       <div class="mobile-language-title" data-i18n="language.title"></div>
-      <div class="mobile-language-options">
-        <a href="#" class="mobile-language-option" data-lang="en">
+      <div class="mobile-language-options" role="menu">
+        <a href="#" class="mobile-language-option" data-lang="en" role="menuitem" aria-label="Switch to English">
           <span class="flag-icon flag-en"></span>
           <span data-i18n="language.english"></span>
         </a>
-        <a href="#" class="mobile-language-option" data-lang="ro">
+        <a href="#" class="mobile-language-option" data-lang="ro" role="menuitem" aria-label="Switch to Romanian">
           <span class="flag-icon flag-ro"></span>
           <span data-i18n="language.romanian"></span>
         </a>
@@ -78,10 +75,11 @@
 
 <div class="mobile-overlay"></div>
 
-<footer id="main-footer">
+<footer id="main-footer">  
   <div class="footer-container">
     <div class="footer-section">
-      <a href="/home/home.html" style="text-decoration: none; color: inherit;">
+      <a href="/home/home.html" style="text-decoration: none; color: inherit;" aria-label="Pet Adoption Center Home">
+        <h3>Pet Adoption Center</h3>
       </a>
       <p data-i18n="footer.tagline" data-i18n-fallback="Finding forever homes for pets in need"></p>
     </div>

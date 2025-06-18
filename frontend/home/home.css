@@ -76,7 +76,7 @@ section {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: var(--shadow-color);
   z-index: 0;
 }
 
@@ -131,8 +131,8 @@ section {
 .hero-title {
   font-size: 6rem;
   margin-bottom: 1.5rem;
-  text-shadow: 0.125rem 0.125rem 0.25rem rgba(0, 0, 0, 0.5);
-  color: white;
+  text-shadow: 0.125rem 0.125rem 0.25rem var(--shadow-color);
+  color: var(--background-color);
   position: relative;
   z-index: 41;
   font-weight: 700;
@@ -150,8 +150,8 @@ section {
 .hero-subtitle {
   font-size: 1.75rem;
   margin-bottom: 2rem;
-  text-shadow: 0.0625rem 0.0625rem 0.125rem rgba(0, 0, 0, 0.5);
-  color: white;
+  text-shadow: 0.0625rem 0.0625rem 0.125rem var(--shadow-color);
+  color: var(--background-color);
   min-height: 2.5rem;
   display: flex;
   align-items: center;
@@ -250,13 +250,13 @@ section {
 .error-message {
   text-align: center;
   padding: 2rem;
-  background-color: rgba(231, 76, 60, 0.1);
+  background-color: rgba(var(--danger-color-rgb), 0.1);
   border-radius: 0.5rem;
   margin: 1rem 0;
 }
 
 .error-details {
-  color: #e74c3c;
+  color: var(--danger-color);
   margin: 0.5rem 0 1rem;
   font-size: 0.9em;
 }
@@ -289,9 +289,9 @@ section {
 }
 
 .user-card {
-  background: white;
+  background: var(--background-color);
   border-radius: 1rem;
-  box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.25rem 1rem var(--shadow-color);
   overflow: hidden;
   border: 0.0625rem solid var(--border-color);
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -335,12 +335,13 @@ section {
 }
 
 .username-tag {
-  color: var(--primary-color);
+  color: var(--text-light);
+  background-color: var(--primary-color);
   padding: 0.25rem 0.6rem;
   border-radius: 12px;
   font-size: 0.8rem;
-  font-weight: 500;
-  border: 1px solid rgba(74, 137, 220, 0.2);
+  font-weight: 600;
+  border: 1px solid var(--primary-color);
   white-space: nowrap;
 }
 
@@ -354,7 +355,7 @@ section {
 .user-stats {
   margin-bottom: 1.5rem;
   padding: 0.75rem;
-  background-color: rgba(74, 144, 226, 0.1);
+  background-color: rgba(var(--info-color-rgb), 0.1);
   border-radius: 0.5rem;
   text-align: center;
 }
@@ -421,7 +422,7 @@ section {
 .testimonials-section {
   order: 2;
   padding: 4rem 0;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  background: linear-gradient(135deg, var(--background-color) 0%, var(--accent-color) 100%);
   margin: 2rem 0;
   position: relative;
   overflow: visible;
@@ -460,12 +461,12 @@ section {
 }
 
 .testimonial-card {
-  background: white;
+  background: var(--background-color);
   border-radius: 1rem;
   padding: 2rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px var(--shadow-color);
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  border: 1px solid rgba(74, 137, 220, 0.1);
+  border: 1px solid rgba(var(--info-color-rgb), 0.1);
   flex: 0 0 calc(33.333% - 1.33rem);
   min-width: 300px;
   min-height: 350px;
@@ -485,7 +486,7 @@ section {
 }
 
 .stars {
-  color: #ffc107;
+  color: var(--warning-color);
   font-size: 1.5rem;
   letter-spacing: 0.125rem;
   display: inline-flex;
@@ -506,13 +507,13 @@ section {
 }
 
 .star-full {
-  color: #ffc107;
+  color: var(--warning-color);
 }
 
 .star-half {
   position: relative;
   display: inline-block;
-  color: #e4e4e4;
+  color: var(--border-color);
 }
 
 .star-half::before {
@@ -522,12 +523,12 @@ section {
   top: 0;
   width: 50%;
   overflow: hidden;
-  color: #ffc107;
+  color: var(--warning-color);
   z-index: 1;
 }
 
 .star-empty {
-  color: #e4e4e4;
+  color: var(--text-muted);
 }
 
 .testimonial-text {
@@ -567,7 +568,7 @@ section {
 
 
 .testimonial-author {
-  border-top: 1px solid #e9ecef;
+  border-top: 1px solid var(--border-color);
   padding-top: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
@@ -578,7 +579,7 @@ section {
 }
 
 .testimonial-author:hover {
-  background-color: rgba(74, 144, 226, 0.05);
+  background-color: rgba(var(--info-color-rgb), 0.05);
   transform: translateY(-1px);
 }
 
@@ -605,10 +606,10 @@ section {
   font-size: 0.8rem;
   color: var(--primary-color);
   font-weight: 500;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(var(--light-color-rgb), 0.9);
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
-  border: 1px solid rgba(74, 144, 226, 0.2);
+  border: 1px solid rgba(var(--info-color-rgb), 0.2);
 }
 
 .author-name {
@@ -620,8 +621,8 @@ section {
 
 .author-role {
   font-size: 0.9rem;
-  color: var(--primary-color);
-  font-weight: 500;
+  color: var(--text-color);
+  font-weight: 700;
   margin: 0 0 0.25rem 0;
 }
 
