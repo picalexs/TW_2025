@@ -373,12 +373,28 @@ class CardRenderer {
       tags.push(pet.breed);
     }
     
-    if (pet.size) {
-      tags.push(pet.size);
+    if (pet.sizeCategory) {
+      tags.push(pet.sizeCategory);
+    }
+    
+    if (pet.tags && Array.isArray(pet.tags)) {
+      pet.tags.forEach(tag => {
+        if (typeof tag === 'object' && tag.name) {
+          tags.push(tag.name);
+        } else if (typeof tag === 'string') {
+          tags.push(tag);
+        }
+      });
     }
     
     if (variant === 'profile' && pet.personality && Array.isArray(pet.personality)) {
-      tags.push(...pet.personality.slice(0, 3));
+      pet.personality.slice(0, 3).forEach(personalityTag => {
+        if (typeof personalityTag === 'object' && personalityTag.name) {
+          tags.push(personalityTag.name);
+        } else if (typeof personalityTag === 'string') {
+          tags.push(personalityTag);
+        }
+      });
     }
     
     if (pet.activity_level) {
@@ -388,10 +404,15 @@ class CardRenderer {
     if (variant !== 'profile' && pet.healthStatus) {
       tags.push(pet.healthStatus);
     }
-
-    return tags.length > 0 ? `
+    
+    const uniqueTags = [...new Set(tags)].slice(0, 6);
+    
+    return uniqueTags.length > 0 ? `
       <div class="pet-tags">
-        ${tags.map(tag => `<span class="tag">${this._capitalizeFirst(tag)}</span>`).join('')}
+        ${uniqueTags.map(tag => {
+          const tagText = typeof tag === 'string' ? tag : String(tag);
+          return `<span class="tag">${this._capitalizeFirst(tagText)}</span>`;
+        }).join('')}
       </div>
     ` : '';
   }

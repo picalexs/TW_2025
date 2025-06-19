@@ -47,7 +47,30 @@ class petDTO extends abstractDTO {
         }
       );
 
-      return result.rows.map((row) => this.mapToEntity(row));
+      const pets = result.rows.map((row) => this.mapToEntity(row));
+      
+      for (const pet of pets) {
+        try {
+          const tagsResult = await this.executeCustomQuery(
+            `SELECT t.id, t.name
+             FROM tags t
+             JOIN animal_tags at ON t.id = at.tag_id
+             WHERE at.animal_id = :id`,
+            [pet.id],
+            { outFormat: oracledb.OUT_FORMAT_OBJECT }
+          );
+
+          pet.tags = tagsResult.rows.map((tag) => ({
+            id: tag.ID,
+            name: tag.NAME,
+          }));
+        } catch (tagError) {
+          pet.tags = [];
+          console.error(`Error fetching tags for pet ${pet.id}:`, tagError);
+        }
+      }
+
+      return pets;
     } catch (error) {
       if (error.errorNum) {
         if (error.errorNum === 942) {
