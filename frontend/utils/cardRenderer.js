@@ -192,7 +192,8 @@ class CardRenderer {
   }
   _formatPetInfo(pet, variant) {
     const lm = this.languageManager;
-    // Compose info line: Name • Gender • Age
+    
+    //Name • Gender • Age
     const genderText = pet.gender ? this._capitalizeFirst(pet.gender) : 'Unknown';
     const ageText = pet.age ? `${pet.age} years old` : 'Age unknown';
     switch (variant) {
