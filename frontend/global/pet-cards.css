@@ -16,6 +16,8 @@
     transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     contain: layout style;
     will-change: transform;
+    min-width: 280px;
+    max-width: 100%;
 }
 
 .pet-card:hover {
@@ -58,14 +60,33 @@
     display: flex;
     flex-direction: column;
     padding: 1.5rem;
+    align-items: flex-start;
+    text-align: left;
+}
+
+.pet-info-line {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  justify-content: flex-start;
+  margin-top: 0.1rem;
 }
 
 .pet-name {
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--primary-color);
-    margin-bottom: 0.5rem;
-    line-height: 1.2;
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  line-height: 1.2;
+  text-align: left;
+}
+
+.pet-meta {
+  font-size: 1rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  text-align: left;
 }
 
 .pet-description {
@@ -73,7 +94,7 @@
     margin-bottom: 1rem;
     line-height: 1.5;
     color: var(--text-muted);
-    font-size: 0.95rem;
+    font-size: 1.1rem;
 }
 
 .pet-tags {
@@ -130,11 +151,21 @@
 }
 
 .pet-status {
-    font-weight: 600;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    transition: all 0.3s ease;
+  display: inline-block;
+  padding: 0.2rem 0.7rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.3rem;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0.1rem;
+  position: relative;
+  left: 0;
+  top: 0;
+  align-self: flex-start;
 }
 
 .status-available {
@@ -245,6 +276,66 @@
 }
 
 /* -------------------------------------------
+  PET SIMPLE GRID LAYOUT
+------------------------------------------- */
+
+.pets-simple-grid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    max-width: 100%;
+    margin: 0 auto;
+    justify-content: center;
+}
+
+/* When there's only one pet, make it larger and centered */
+.pets-simple-grid:has(.pet-card:only-child) {
+    grid-template-columns: 1fr;
+    max-width: 500px;
+    justify-content: center;
+}
+
+.pets-simple-grid:has(.pet-card:only-child) .pet-card {
+    max-width: 500px;
+    min-height: 32rem;
+}
+
+/* For 2 pets, ensure they don't get too wide */
+.pets-simple-grid:has(.pet-card:nth-child(2):last-child) {
+    grid-template-columns: repeat(2, minmax(320px, 400px));
+    justify-content: center;
+}
+
+/* Responsive behavior */
+@media (max-width: 1024px) {
+    .pets-simple-grid {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+    
+    .pets-simple-grid:has(.pet-card:nth-child(2):last-child) {
+        grid-template-columns: repeat(2, minmax(300px, 350px));
+    }
+}
+
+@media (max-width: 768px) {
+    .pets-simple-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        max-width: 400px;
+    }
+    
+    .pets-simple-grid:has(.pet-card:only-child) {
+        max-width: 400px;
+    }
+    
+    .pets-simple-grid:has(.pet-card:only-child) .pet-card {
+        max-width: 400px;
+        min-height: 30rem;
+    }
+}
+
+/* -------------------------------------------
   RESPONSIVE DESIGN
 ------------------------------------------- */
 @media (max-width: 768px) {
@@ -294,8 +385,8 @@
 
     .pet-card {
         min-height: 22rem;
-    }
-
+    }    
+    
     .pet-info {
         padding: 0.75rem;
     }
@@ -308,4 +399,72 @@
         font-size: 0.75rem;
         padding: 0.2rem 0.5rem;
     }
+}
+
+/* -------------------------------------------
+  PET STATUS STYLING
+------------------------------------------- */
+
+.pet-status {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 1rem;
+}
+
+.pet-status.available {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.pet-status.pending {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #faeeba;
+}
+
+.pet-status.adopted {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.pets-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  justify-items: center;
+}
+
+@media (max-width: 1024px) {
+  .pets-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .pets-grid {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+  .pet-card {
+    max-width: 420px;
+    width: 100%;
+  }
+}
+
+/* Center single card and make it bigger */
+.pets-grid:only-child, .pets-grid:has(.pet-card:only-child) {
+  justify-items: center;
+}
+.pets-grid .pet-card:only-child {
+  max-width: 520px;
+  min-width: 320px;
+  width: 100%;
+  font-size: 1.1em;
 }

@@ -140,10 +140,7 @@ class ProfilePage {
         ownerReviewsData.reviews &&
         ownerReviewsData.reviews.length > 0
       ) {
-        // Store original data for filtering
         this.originalReviewsData = ownerReviewsData;
-        
-        // Apply current filters and render
         this.applyFiltersAndRender();
       } else {
         this.renderNoReviews(reviewsContainer);
@@ -165,28 +162,19 @@ class ProfilePage {
   async loadAndRenderPets(userId) {
     try {
       const petsContainer = document.getElementById("pets-container");
-      petsContainer.innerHTML = this.createPetsLoadingState();
-
+      petsContainer.innerHTML = this.createPetsLoadingState();      
       if (this.currentUser.role === "shelter") {
         try {
-          let allPets = await this.petService.getPetsByShelter(userId);
-          
-          // Add temporary pets for testing if no pets exist
-          if (!allPets || allPets.length === 0) {
-            allPets = this.createTemporaryPets();
-          } else {
-            // Add some temp pets to existing ones for testing
-            allPets = [...allPets, ...this.createTemporaryPets()];
-          }
+          const allPets = await this.petService.getPetsByShelter(userId);
           
           if (allPets && allPets.length > 0) {
             const availablePets = allPets.filter(
               (pet) => pet.adoptionStatus === "available"
             );
+            
             if (availablePets && availablePets.length > 0) {
               this.currentAvailablePets = availablePets;
               petsContainer.innerHTML = this.renderPetsList(availablePets);
-              this.initPetsCarousel();
             } else {
               petsContainer.innerHTML = this.createEmptyPetsState();
             }
@@ -195,11 +183,7 @@ class ProfilePage {
           }
         } catch (fetchError) {
           console.error("Error fetching shelter pets:", fetchError);
-          // Show temp pets even if API fails for testing
-          const tempPets = this.createTemporaryPets();
-          this.currentAvailablePets = tempPets;
-          petsContainer.innerHTML = this.renderPetsList(tempPets);
-          this.initPetsCarousel();
+          petsContainer.innerHTML = this.createErrorPetsState();
         }
       } else {
         const adoptionCount = this.currentUser.adoption_count || 0;
@@ -266,8 +250,7 @@ class ProfilePage {
       </div>
     `;
   }  
-  
-  renderPetsList(pets) {
+    renderPetsList(pets) {
     if (!pets || pets.length === 0) {
       return `
         <div class="pets-grid">
@@ -277,20 +260,16 @@ class ProfilePage {
         </div>
       `;    
     }
-
-    return window.CarouselHelpers.generatePetsCarouselHTML(
-      pets,
-      (pet) => this.createPetCardHTML(pet),
-      () => this.getPetsCardsPerSlide()
-    );
+    
+    const petCards = pets.map(pet => this.createPetCardHTML(pet)).join('');
+    return `
+      <div class="pets-grid">
+        <div class="pets-simple-grid">
+          ${petCards}
+        </div>
+      </div>
+    `;
   }
-
-  getPetsCardsPerSlide() {
-    const width = window.innerWidth;
-    if (width <= 768) return 1;
-    if (width <= 1024) return 2;
-    return 3;  }
-
   createReviewHTML(review) {
     const stars = "★".repeat(review.rating) + "☆".repeat(5 - review.rating);
     const reviewDate = new Date(review.date).toLocaleDateString("en-US", {
@@ -858,151 +837,9 @@ class ProfilePage {
       this.currentFilters.petConditionRating > 0 ||
       this.currentFilters.processRating > 0;
 
-    indicator.style.display = hasActiveFilters ? 'inline' : 'none';  }
-
+    indicator.style.display = hasActiveFilters ? 'inline' : 'none';  
+  }
   petsCarousel = null;
-  initPetsCarousel() {
-    if (this.petsCarousel) {
-      this.petsCarousel.destroy();
-    }
-    
-    const config = window.CarouselHelpers.createPetsCarouselConfig('.pets-carousel');
-    
-    config.onSlideChange = (currentSlide, previousSlide, carousel) => {
-      console.log(`Pets carousel moved from slide ${previousSlide} to ${currentSlide}`);
-    };
-    
-    config.onInit = (carousel) => {
-      console.log('Pets carousel initialized successfully');
-    };
-    
-    this.petsCarousel = new window.Carousel(config);
-  }
-
-  createTemporaryPets() {
-    return [
-      {
-        id: 'temp-1',
-        name: 'Luna',
-        species: 'Dog',
-        breed: 'Golden Retriever',
-        age: 2,
-        gender: 'Female',
-        size: 'Large',
-        description: 'Luna is a friendly and energetic Golden Retriever who loves playing fetch and swimming. She is great with children and other dogs, making her the perfect family companion.',
-        imagePath: '../assets/default-pet-profile.jpg',
-        adoptionStatus: 'available',
-        personality: ['Friendly', 'Energetic', 'Loyal'],
-        goodWith: ['Children', 'Other Dogs'],
-        activity_level: 'High',
-        training_level: 'Basic',
-        health_status: 'Healthy',
-        vaccination_status: 'Up to date',
-        spayed_neutered: true,
-        adoption_fee: 250
-      },
-      {
-        id: 'temp-2',
-        name: 'Whiskers',
-        species: 'Cat',
-        breed: 'Maine Coon',
-        age: 3,
-        gender: 'Male',
-        size: 'Large',
-        description: 'Whiskers is a gentle giant with a magnificent coat. He loves to cuddle and is very calm and affectionate. Perfect for a quiet home environment.',
-        imagePath: '../assets/default-pet-profile.jpg',
-        adoptionStatus: 'available',
-        personality: ['Calm', 'Affectionate', 'Gentle'],
-        goodWith: ['Adults', 'Quiet Homes'],
-        activity_level: 'Low',
-        training_level: 'Litter trained',
-        health_status: 'Healthy',
-        vaccination_status: 'Up to date',
-        spayed_neutered: true,
-        adoption_fee: 150
-      },
-      {
-        id: 'temp-3',
-        name: 'Buddy',
-        species: 'Dog',
-        breed: 'Labrador Mix',
-        age: 1,
-        gender: 'Male',
-        size: 'Medium',
-        description: 'Buddy is a young and playful Labrador mix who is eager to learn and please. He would do great with an active family who can provide training and exercise.',
-        imagePath: '../assets/default-pet-profile.jpg',
-        adoptionStatus: 'available',
-        personality: ['Playful', 'Intelligent', 'Eager to Please'],
-        goodWith: ['Active Families', 'Training'],
-        activity_level: 'High',
-        training_level: 'In progress',
-        health_status: 'Healthy',
-        vaccination_status: 'Up to date',
-        spayed_neutered: true,
-        adoption_fee: 200
-      },
-      {
-        id: 'temp-4',
-        name: 'Mittens',
-        species: 'Cat',
-        breed: 'Domestic Shorthair',
-        age: 4,
-        gender: 'Female',
-        size: 'Medium',
-        description: 'Mittens is a sweet and independent cat who enjoys sunny windowsills and gentle pets. She is perfect for someone looking for a low-maintenance companion.',
-        imagePath: '../assets/default-pet-profile.jpg',
-        adoptionStatus: 'available',
-        personality: ['Independent', 'Sweet', 'Calm'],
-        goodWith: ['Adults', 'Single Pet Homes'],
-        activity_level: 'Low',
-        training_level: 'Litter trained',
-        health_status: 'Healthy',
-        vaccination_status: 'Up to date',
-        spayed_neutered: true,
-        adoption_fee: 100
-      },
-      {
-        id: 'temp-5',
-        name: 'Rocky',
-        species: 'Dog',
-        breed: 'German Shepherd',
-        age: 5,
-        gender: 'Male',
-        size: 'Large',
-        description: 'Rocky is a loyal and protective German Shepherd looking for an experienced owner. He is well-trained and would make an excellent guard dog for the right family.',
-        imagePath: '../assets/default-pet-profile.jpg',
-        adoptionStatus: 'available',
-        personality: ['Loyal', 'Protective', 'Intelligent'],
-        goodWith: ['Experienced Owners', 'Security Work'],
-        activity_level: 'High',
-        training_level: 'Advanced',
-        health_status: 'Healthy',
-        vaccination_status: 'Up to date',
-        spayed_neutered: true,
-        adoption_fee: 300
-      },
-      {
-        id: 'temp-6',
-        name: 'Snowball',
-        species: 'Rabbit',
-        breed: 'Holland Lop',
-        age: 1,
-        gender: 'Female',
-        size: 'Small',
-        description: 'Snowball is an adorable Holland Lop rabbit with soft, fluffy fur. She is gentle and would make a wonderful pet for families with children.',
-        imagePath: '../assets/default-pet-profile.jpg',
-        adoptionStatus: 'available',
-        personality: ['Gentle', 'Quiet', 'Friendly'],
-        goodWith: ['Children', 'Quiet Homes'],
-        activity_level: 'Low',
-        training_level: 'Litter trained',
-        health_status: 'Healthy',
-        vaccination_status: 'Up to date',
-        spayed_neutered: true,
-        adoption_fee: 75
-      }
-    ];
-  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {

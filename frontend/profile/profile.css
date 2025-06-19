@@ -391,38 +391,37 @@ body {
 }
 
 /* -------------------------------------------
-  PETS CAROUSEL - COMPACT STYLE
+  PETS SIMPLE GRID
 ------------------------------------------- */
-.pets-carousel {
-  position: relative;
-  max-width: 100%;
-  margin: 0;
-  overflow: visible;
-  padding: 0 2.5rem;
-  background: transparent;
-}
-
-.pets-carousel-wrapper {
-  position: relative;
-  overflow-x: hidden;
-  overflow-y: visible;
-  margin: 0;
-  padding: 0.25rem;
-  border-radius: 0.5rem;
-}
-
-.pets-track {
-  display: flex;
-  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+.pets-simple-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 0;
 }
 
-.pets-row {
-  display: flex;
-  gap: 2rem;
-  min-width: 100%;
-  justify-content: center;
-  align-items: stretch;
+@media (max-width: 1200px) {
+  .pets-simple-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .pets-simple-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .pets-simple-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 }
 
 .pet-image {
