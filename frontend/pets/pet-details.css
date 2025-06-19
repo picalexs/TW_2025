@@ -13,8 +13,9 @@
   text-align: center;
 }
 
-.loading-spinner {  border: 0.25rem solid #f3f3f3;
-  border-top: 0.25rem solid #007bff;
+.loading-spinner {  
+  border: 0.25rem solid var(--background-color);
+  border-top: 0.25rem solid var(--primary-color);
   border-radius: 50%;
   width: 3.125rem;
   height: 3.125rem;
@@ -35,14 +36,14 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: #007bff;
+  color: var(--primary-color);
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s;
 }
 
 .back-link:hover {
-  color: #0056b3;
+  color: var(--secondary-color);
 }
 
 .back-arrow {
@@ -56,8 +57,8 @@
 .pet-hero {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 3rem;
-  align-items: start;
+  gap: 2rem;
+  align-items: stretch;
 }
 
 .pet-image-gallery {
@@ -69,18 +70,18 @@
   margin-bottom: 1rem;
 }
 
-.main-pet-image {
+.main-pet-image {  
   width: 100%;
   height: 25rem;
   object-fit: cover;  border-radius: 0.75rem;
-  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15);
+  box-shadow: 0 0.5rem 1.5rem var(--shadow-color);
 }
 
 .favorite-btn {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--background-color);
   border: none;  width: 3rem;
   height: 3rem;
   border-radius: 50%;
@@ -93,12 +94,12 @@
 }
 
 .favorite-btn:hover {
-  background: rgba(255, 255, 255, 1);
+  background: var(--light-color);
   transform: scale(1.1);
 }
 
 .favorite-btn.favorited .heart-icon {
-  color: #e74c3c;
+  color: var(--danger-color);
 }
 
 .heart-icon {
@@ -114,7 +115,8 @@
   padding: 0.5rem 0;
 }
 
-.thumbnail {  width: 5rem;
+.thumbnail {  
+  width: 5rem;
   height: 5rem;
   object-fit: cover;
   border-radius: 8px;
@@ -130,11 +132,19 @@
 }
 
 .pet-basic-info {
-  padding: 1rem 0;
+  background: var(--light-color);
+  border-radius: 1rem;
+  padding: 2rem;
+  height: 25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-shadow: 0 0.25rem 1rem var(--shadow-color);
 }
 
 .pet-status {
   margin-bottom: 1rem;
+  text-align: left;
 }
 
 .status-badge {
@@ -147,18 +157,18 @@
 }
 
 .status-badge.available {
-  background-color: #d4edda;
-  color: #155724;
+  background-color: rgba(var(--success-color-rgb), 0.1);
+  color: var(--success-color);
 }
 
 .status-badge.pending {
-  background-color: var(--background-color)3;
-  color: #856404;
+  background-color: rgba(var(--warning-color-rgb), 0.1);
+  color: var(--warning-color);
 }
 
 .status-badge.adopted {
-  background-color: #f8d7da;
-  color: #721c24;
+  background-color: rgba(var(--danger-color-rgb), 0.1);
+  color: var(--danger-color);
 }
 
 .pet-name {
@@ -166,6 +176,7 @@
   font-weight: 700;
   color: var(--primary-color);
   margin-bottom: 1.5rem;
+  text-align: left;
 }
 
 .pet-quick-info {
@@ -199,6 +210,8 @@
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
+  justify-content: flex-start;
+  margin-top: auto;
 }
 
 .btn-large {
@@ -208,11 +221,13 @@
 }
 
 .pet-details-tabs {
-  margin-top: 3rem;
+  margin: 3rem auto;
+  max-width: 90%;
 }
 
 .tabs-nav {
   display: flex;
+  justify-content: center;
   border-bottom: 2px solid var(--accent-color);
   margin-bottom: 2rem;
   overflow-x: auto;
@@ -231,16 +246,18 @@
 }
 
 .tab-btn:hover {
-  color: #007bff;
+  color: var(--primary-color);
 }
 
 .tab-btn.active {
-  color: #007bff;
-  border-bottom-color: #007bff;
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
 }
 
 .tab-content {
   display: none;
+  max-width: 90%;
+  margin: 0 auto;
 }
 
 .tab-content.active {
@@ -261,7 +278,7 @@
 .pet-description {
   font-size: 1.125rem;
   line-height: 1.7;
-  color: #555;
+  color: var(--text-muted);
 }
 
 .detail-grid {
@@ -314,7 +331,7 @@
 
 .fee-value {
   font-size: 1.25rem;
-  color: #007bff;
+  color: var(--success-color);
   font-weight: 700;
 }
 
@@ -325,8 +342,8 @@
 }
 
 .pet-tag {
-  background: #e3f2fd;
-  color: #1976d2;
+  background: rgba(var(--accent-color-rgb), 0.2);
+  color: var(--primary-color);
   padding: 0.5rem 1rem;
   border-radius: 20px;
   font-size: 0.875rem;
@@ -375,7 +392,7 @@
 .care-time {
   font-size: 1.125rem;
   font-weight: 700;
-  color: #007bff;
+  color: var(--primary-color);
   margin-bottom: 0.5rem;
 }
 
@@ -424,7 +441,7 @@
 }
 
 .resource-content {
-  color: #555;
+  color: var(--text-muted);
   line-height: 1.6;
 }
 
@@ -477,7 +494,7 @@
 .metric-value {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #007bff;
+  color: var(--primary-color);
   display: block;
 }
 
@@ -518,7 +535,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(var(--dark-color-rgb), 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -574,8 +591,7 @@
 .form-group input,
 .form-group textarea {
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #ddd;
+  padding: 0.75rem;  border: 1px solid var(--border-color);
   border-radius: 8px;
   font-size: 1rem;
 }
@@ -583,8 +599,8 @@
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(var(--primary-color-rgb), 0.1);
 }
 
 .form-actions {
@@ -604,6 +620,11 @@
     gap: 2rem;
   }
 
+  .pet-basic-info {
+    height: auto;
+    min-height: 20rem;
+  }
+
   .main-pet-image {
     height: 300px;
   }
@@ -614,6 +635,14 @@
 
   .pet-quick-info {
     grid-template-columns: 1fr;
+  }
+
+  .pet-details-tabs {
+    max-width: 100%;
+  }
+
+  .tab-content {
+    max-width: 100%;
   }
 
   .tabs-nav {
