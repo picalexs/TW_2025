@@ -15,8 +15,6 @@
       .hero-content { position: relative; z-index: 2; text-align: center; color: var(--background-color); padding: 2rem; max-width: 80%; width: 100%; min-height: 400px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
       .hero-title { font-size: 6rem; margin-bottom: 1.5rem; text-shadow: 0.125rem 0.125rem 0.25rem var(--shadow-color); color: var(--background-color); font-weight: 700; line-height: 1.1; text-align: center; }
       .hero-subtitle { font-size: 1.75rem; margin-bottom: 2rem; text-shadow: 0.0625rem 0.0625rem 0.125rem var(--shadow-color); color: var(--background-color); text-align: center; }
-      .btn { display: inline-flex; align-items: center; justify-content: center; padding: 1rem 2.5rem; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: var(--light-color); text-decoration: none; border-radius: 2rem; font-size: 1.2rem; font-weight: 700; transition: all 0.4s ease; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 0.5rem 1.5rem rgba(74, 137, 220, 0.3); }
-      .btn:hover { transform: translateY(-0.25rem) scale(1.05); background: linear-gradient(135deg, var(--secondary-color), var(--primary-color)); box-shadow: 0 0.75rem 2rem rgba(74, 137, 220, 0.4); }
       
       .loading-placeholder { background: linear-gradient(90deg, #f0f0f0 25%, transparent 37%, transparent 63%, #f0f0f0 75%); background-size: 400% 100%; animation: shimmer 1.5s infinite; }
       @keyframes shimmer { 0% { background-position: 100% 50%; } 100% { background-position: -100% 50%; } }
@@ -26,17 +24,16 @@
         .hero-subtitle { font-size: 1.2rem; }
         .hero-content { padding: 1rem; min-height: 300px; }
       }
-    </style>
-
+    </style>    
     <link rel="preload" href="../global/global.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="../global/pet-cards.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="./testimonials.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="../global/testimonials.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="./home.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
 
     <noscript>
       <link rel="stylesheet" href="../global/global.min.css" />
       <link rel="stylesheet" href="../global/pet-cards.min.css" />
-      <link rel="stylesheet" href="./testimonials.min.css" />
+      <link rel="stylesheet" href="../global/testimonials.min.css" />
       <link rel="stylesheet" href="./home.min.css" />
     </noscript>
     
