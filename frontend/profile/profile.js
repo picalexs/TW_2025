@@ -1,6 +1,6 @@
-import UserService from "../services/userService.js";
-import PetService from "../services/petService.js";
-import { OwnerReviewService } from "../services/ownerReviewService.js";
+import UserService from "../services/userService.min.js";
+import PetService from "../services/petService.min.js";
+import { OwnerReviewService } from "../services/ownerReviewService.min.js";
 import {
   setupMobileMenu,
   initializePageLanguage,
@@ -140,10 +140,7 @@ class ProfilePage {
         ownerReviewsData.reviews &&
         ownerReviewsData.reviews.length > 0
       ) {
-        // Store original data for filtering
         this.originalReviewsData = ownerReviewsData;
-        
-        // Apply current filters and render
         this.applyFiltersAndRender();
       } else {
         this.renderNoReviews(reviewsContainer);
@@ -165,19 +162,19 @@ class ProfilePage {
   async loadAndRenderPets(userId) {
     try {
       const petsContainer = document.getElementById("pets-container");
-      petsContainer.innerHTML = this.createPetsLoadingState();
-
+      petsContainer.innerHTML = this.createPetsLoadingState();      
       if (this.currentUser.role === "shelter") {
         try {
           const allPets = await this.petService.getPetsByShelter(userId);
+          
           if (allPets && allPets.length > 0) {
             const availablePets = allPets.filter(
               (pet) => pet.adoptionStatus === "available"
             );
+            
             if (availablePets && availablePets.length > 0) {
               this.currentAvailablePets = availablePets;
               petsContainer.innerHTML = this.renderPetsList(availablePets);
-              this.initPetsCarousel();
             } else {
               petsContainer.innerHTML = this.createEmptyPetsState();
             }
@@ -253,8 +250,7 @@ class ProfilePage {
       </div>
     `;
   }  
-  
-  renderPetsList(pets) {
+    renderPetsList(pets) {
     if (!pets || pets.length === 0) {
       return `
         <div class="pets-grid">
@@ -264,20 +260,16 @@ class ProfilePage {
         </div>
       `;    
     }
-
-    return window.CarouselHelpers.generatePetsCarouselHTML(
-      pets,
-      (pet) => this.createPetCardHTML(pet),
-      () => this.getPetsCardsPerSlide()
-    );
+    
+    const petCards = pets.map(pet => this.createPetCardHTML(pet)).join('');
+    return `
+      <div class="pets-grid">
+        <div class="pets-simple-grid">
+          ${petCards}
+        </div>
+      </div>
+    `;
   }
-
-  getPetsCardsPerSlide() {
-    const width = window.innerWidth;
-    if (width <= 768) return 1;
-    if (width <= 1024) return 2;
-    return 3;  }
-
   createReviewHTML(review) {
     const stars = "★".repeat(review.rating) + "☆".repeat(5 - review.rating);
     const reviewDate = new Date(review.date).toLocaleDateString("en-US", {
@@ -845,26 +837,9 @@ class ProfilePage {
       this.currentFilters.petConditionRating > 0 ||
       this.currentFilters.processRating > 0;
 
-    indicator.style.display = hasActiveFilters ? 'inline' : 'none';  }
-
-  petsCarousel = null;
-  initPetsCarousel() {
-    if (this.petsCarousel) {
-      this.petsCarousel.destroy();
-    }
-    
-    const config = window.CarouselHelpers.createPetsCarouselConfig('.pets-carousel');
-    
-    config.onSlideChange = (currentSlide, previousSlide, carousel) => {
-      console.log(`Pets carousel moved from slide ${previousSlide} to ${currentSlide}`);
-    };
-    
-    config.onInit = (carousel) => {
-      console.log('Pets carousel initialized successfully');
-    };
-    
-    this.petsCarousel = new window.Carousel(config);
+    indicator.style.display = hasActiveFilters ? 'inline' : 'none';  
   }
+  petsCarousel = null;
 }
 
 document.addEventListener("DOMContentLoaded", () => {

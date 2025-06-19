@@ -1,7 +1,7 @@
 /* -------------------------------------------
   ROOT VARIABLES
 ------------------------------------------- */
-:root {
+:root { 
     /* Main color palette*/
     --primary-color: #333446;
     --secondary-color: #7F8CAA;
@@ -67,6 +67,20 @@ main, #content-container {
     flex: 1 0 auto;
     min-height: 100vh;
     contain: layout style;
+}
+
+/* -------------------------------------------
+  TYPOGRAPHY - HEADINGS
+------------------------------------------- */
+h1 {
+    font-size: 2rem;
+}
+
+section h1,
+article h1,
+aside h1,
+nav h1 {
+    font-size: 2rem;
 }
 
 /* -------------------------------------------
@@ -705,24 +719,6 @@ header {
 }
 
 /* -------------------------------------------
-  COMMON CAROUSEL STRUCTURE STYLES
-------------------------------------------- */
-.carousel-wrapper,
-.testimonials-carousel-wrapper,
-.pets-carousel-wrapper {
-  position: relative;
-  overflow-x: hidden;
-  overflow-y: visible;
-}
-
-.carousel-track,
-.testimonials-track,
-.pets-track {
-  display: flex;
-  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-/* -------------------------------------------
   UNIVERSAL FOCUS STYLES
 ------------------------------------------- */
 input:focus, 
@@ -753,101 +749,6 @@ a:focus {
     outline-offset: 2px;
 }
 
-/* -------------------------------------------
-  CAROUSEL COMMON STYLES
-------------------------------------------- */
-.carousel-arrow {
-  background: var(--secondary-color);
-  color: var(--background-color);
-  border: none;
-  border-radius: 50%;
-  width: 3rem;
-  height: 3rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 1.25rem;
-  opacity: 0.7;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  position: absolute;
-  top: calc(50% - 1.5rem);
-  transform: translateY(-50%);
-  z-index: 10;
-}
-
-.carousel-prev {
-  left: -4vw;
-}
-
-.carousel-next {
-  right: -4vw;
-}
-
-.carousel-arrow:hover {
-  background: var(--primary-color);
-  transform: translateY(-50%) scale(1.1);
-}
-
-.carousel-arrow:active {
-  transform: translateY(-50%) scale(0.95);
-}
-
-.carousel-arrow:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-  transform: translateY(-50%);
-}
-
-.carousel-arrow:disabled:hover {
-  background: var(--secondary-color);
-  transform: translateY(-50%);
-}
-
-.carousel-indicators {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 1.5rem;
-}
-
-.carousel-indicator {
-  width: 0.75rem;
-  height: 0.75rem;
-  border-radius: 50%;
-  border: none;
-  background: var(--accent-color);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  opacity: 0.6;
-}
-
-.carousel-indicator.active {
-  background: var(--primary-color);
-  opacity: 1;
-  transform: scale(1.2);
-}
-
-.carousel-indicator:hover {
-  opacity: 0.8;
-}
-
-.carousel-indicator:active {
-  transform: scale(1.1);
-}
-
-.carousel-arrow:focus {
-    outline: 3px solid rgba(74, 137, 220, 0.4);
-    outline-offset: 2px;
-}
-
-.carousel-indicator:focus {
-    outline: 3px solid rgba(74, 137, 220, 0.4);
-    outline-offset: 2px;
-}
 
 .language-current:focus {
     outline: 3px solid rgba(74, 137, 220, 0.4);
@@ -1387,31 +1288,65 @@ img {
 
 @media (max-width: 480px) {
     .logo h1 {
-        font-size: 1.2rem;
-    }
+        font-size: 1.2rem;    }
+}
+/* -------------------------------------------
+  NAVIGATION ELEMENTS
+------------------------------------------- */
+.navigation-header {
+  margin-bottom: 2rem;
 }
 
-/* Responsive carousel arrow sizing */
-@media (max-width: 1024px) {
-  .carousel-arrow {
-    width: 2.5rem;
-    height: 2.5rem;
-    font-size: 1.1rem;
-  }
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
 }
 
-@media (max-width: 768px) {
-  .carousel-arrow {
-    width: 2.25rem;
-    height: 2.25rem;
-    font-size: 1rem;
-  }
+.back-link:hover {
+  color: var(--primary-dark);
 }
 
-@media (max-width: 576px) {
-  .carousel-arrow {
-    width: 2rem;
-    height: 2rem;
-    font-size: 0.9rem;
-  }
+.back-arrow {
+  font-size: 1.2rem;
+}
+
+/* -------------------------------------------
+  UNIVERSAL STAR RATING STYLES
+------------------------------------------- */
+.stars {
+  color: var(--warning-color);
+  font-size: 1.5rem;
+  letter-spacing: 0.125rem;
+  display: inline-flex;
+  align-items: center;
+  vertical-align: center;
+}
+
+.star {
+  display: inline-block;
+  position: relative;
+  font-size: inherit;
+  color: var(--warning-color);
+  vertical-align: center;
+}
+
+.star-full {
+  color: var(--warning-color);
+}
+
+.star-empty {
+  color: var(--border-color);
+}
+
+.rating-number {
+  font-size: 0.9rem;  color: var(--text-muted);
+  font-weight: 500;
+  white-space: nowrap;
+  line-height: 1;
+  vertical-align: baseline;
 }

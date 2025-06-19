@@ -1,4 +1,4 @@
-import languageManager from '../languages/language.js';
+import languageManager from '../languages/language.min.js';
 
 export let isLoggedIn = false;
 
@@ -230,8 +230,6 @@ function createSlideshow(options = {}) {
     }
 
     slideshowContainers.forEach(container => {
-        console.log(`Setting up slideshow for container:`, container);
-
         Array.from(container.children).forEach(child => {
             if (child.classList.contains(settings.slideClass)) {
                 child.remove();

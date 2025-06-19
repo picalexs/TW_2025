@@ -1,31 +1,7 @@
-/* Add Pet Form Styles */
 .add-pet-container {
     max-width: 90%;
     margin: 0 auto;
     padding: 2rem;
-}
-
-.navigation-header {
-    margin-bottom: 2rem;
-}
-
-.back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: #007bff;
-    text-decoration: none;
-    font-weight: 500;
-    padding: 0.5rem 0;
-    transition: color 0.3s;
-}
-
-.back-link:hover {
-    color: #0056b3;
-}
-
-.back-arrow {
-    font-size: 1.2rem;
 }
 
 .form-container {
@@ -117,7 +93,7 @@
 
 .form-label {
     font-weight: 600;
-    color: var(--primary-color)
+    color: var(--primary-color);
     font-size: 1.2rem;
     margin-bottom: 0.5rem;
 }

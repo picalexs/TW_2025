@@ -47,7 +47,30 @@ class petDTO extends abstractDTO {
         }
       );
 
-      return result.rows.map((row) => this.mapToEntity(row));
+      const pets = result.rows.map((row) => this.mapToEntity(row));
+      
+      for (const pet of pets) {
+        try {
+          const tagsResult = await this.executeCustomQuery(
+            `SELECT t.id, t.name
+             FROM tags t
+             JOIN animal_tags at ON t.id = at.tag_id
+             WHERE at.animal_id = :id`,
+            [pet.id],
+            { outFormat: oracledb.OUT_FORMAT_OBJECT }
+          );
+
+          pet.tags = tagsResult.rows.map((tag) => ({
+            id: tag.ID,
+            name: tag.NAME,
+          }));
+        } catch (tagError) {
+          pet.tags = [];
+          console.error(`Error fetching tags for pet ${pet.id}:`, tagError);
+        }
+      }
+
+      return pets;
     } catch (error) {
       if (error.errorNum) {
         if (error.errorNum === 942) {
@@ -154,7 +177,12 @@ class petDTO extends abstractDTO {
            WHERE animal_id = :id
            ORDER BY record_date DESC`,
           [id],
-          { outFormat: oracledb.OUT_FORMAT_OBJECT }
+          { 
+            outFormat: oracledb.OUT_FORMAT_OBJECT,
+            fetchInfo: {
+              DESCRIPTION: { type: oracledb.STRING }
+            }
+          }
         );
 
         pet.medicalHistory = medicalResult.rows.map((record) => ({
@@ -186,8 +214,8 @@ class petDTO extends abstractDTO {
       } catch (careError) {
         pet.careSchedule = [];
         console.error("Error fetching pet care schedule:", careError);
-      }
-
+      }      
+      
       try {
         const resourcesResult = await this.executeCustomQuery(
           `SELECT id, resource_type, title, content
@@ -195,7 +223,12 @@ class petDTO extends abstractDTO {
            WHERE animal_id = :id
            ORDER BY resource_type, title`,
           [id],
-          { outFormat: oracledb.OUT_FORMAT_OBJECT }
+          { 
+            outFormat: oracledb.OUT_FORMAT_OBJECT,
+            fetchInfo: {
+              CONTENT: { type: oracledb.STRING }
+            }
+          }
         );
 
         pet.careResources = resourcesResult.rows.map((resource) => ({

@@ -46,7 +46,7 @@
                 </a>
             </div>
 
-            <section class="pet-header">
+            <section class="pet-header">                
                 <div class="pet-hero">
                     <div class="pet-image-gallery">
                         <div class="main-image-container">
@@ -57,12 +57,11 @@
                         </div>
                         <div id="image-thumbnails" class="image-thumbnails"></div>
                     </div>
-                    
                     <div class="pet-basic-info">
-                        <div class="pet-status">
+                        <div class="pet-header-row">
+                            <h1 id="pet-name" class="pet-name"></h1>
                             <span id="adoption-status" class="status-badge"></span>
                         </div>
-                        <h1 id="pet-name" class="pet-name"></h1>
                         <div class="pet-quick-info">
                             <div class="info-item">
                                 <span class="info-label" data-i18n="species" data-i18n-fallback="Species">Species:</span>
@@ -81,14 +80,13 @@
                                 <span id="pet-gender" class="info-value"></span>
                             </div>
                         </div>
-                        
-                        <div class="adoption-actions">
-                            <button id="adopt-btn" class="btn btn-primary btn-large" data-i18n="startAdoption" data-i18n-fallback="Start Adoption Process">Start Adoption Process</button>
-                            <button id="contact-shelter-btn" class="btn btn-secondary" data-i18n="contactShelter" data-i18n-fallback="Contact Shelter">Contact Shelter</button>
-                        </div>
                     </div>
                 </div>
             </section>
+
+            <div class="adoption-actions">
+                <button id="contact-shelter-btn" class="btn btn-primary btn-large" data-i18n="contact" data-i18n-fallback="Contact">Contact</button>
+            </div>
 
             <section class="pet-details-tabs">
                 <div class="tabs-nav">

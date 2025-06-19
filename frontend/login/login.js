@@ -1,6 +1,5 @@
-import languageManager from '../languages/language.js';
 import { setupMobileMenu, createSlideshow, initializePageLanguage, checkLoginStatusAndToggleNavButtons } from '../global/global.min.js';
-import UserService from '../services/userService.js';
+import UserService from '../services/userService.min.js';
 
 const API_BASE_URL = window.APP_CONFIG?.api?.baseURL || 'http://localhost:8080';
 
@@ -45,7 +44,8 @@ async function handleLogin(event) {
       const response = await userService.login(email, password);
 
     if (response.success) {
-      localStorage.setItem('isLoggedIn', 'true');      
+      localStorage.setItem('isLoggedIn', 'true');
+
       showMessage('Login successful! Redirecting...', 'success');
       window.location.href = '../home/home.html';
     } else {

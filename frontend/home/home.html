@@ -3,30 +3,40 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pet Adoption Center</title>
-    
+    <title>Pet Adoption Center</title>    
+
+    <!-- Critical CSS-->
     <style>
-      body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
-      .hero { min-height: 100vh; position: relative; display: flex; align-items: center; justify-content: center; }
-      .hero-slideshow { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
-      .hero-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center; opacity: 0; transition: opacity 1s ease-in-out; }
-      .hero-slide.active { opacity: 1; }
-      .hero-content { position: relative; z-index: 2; text-align: center; color: var(--background-color); padding: 2rem; }
-      .hero-title { font-size: 3rem; margin-bottom: 1rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
-      .hero-subtitle { font-size: 1.25rem; margin-bottom: 2rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
-      .btn { display: inline-block; padding: 1rem 2rem; background: #4a89dc; color: var(--background-color); text-decoration: none; border-radius: 5px; transition: background 0.3s; }
-      .btn:hover { background: #357abd; }
+      body { margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+      .hero { min-height: 80vh; position: relative; display: flex; align-items: center; justify-content: center; text-align: center; padding: 2rem 5%; z-index: 1; overflow: hidden; }
+      .hero-slideshow { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; overflow: hidden; background-color: var(--shadow-color); }
+      .hero-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-size: cover; background-position: center center; opacity: 0; transition: opacity 1.5s ease-in-out; z-index: 1; }
+      .hero-slide.active { opacity: 1; z-index: 2; }
+      .hero-content { position: relative; z-index: 2; text-align: center; color: var(--background-color); padding: 2rem; max-width: 80%; width: 100%; min-height: 400px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+      .hero-title { font-size: 6rem; margin-bottom: 1.5rem; text-shadow: 0.125rem 0.125rem 0.25rem var(--shadow-color); color: var(--background-color); font-weight: 700; line-height: 1.1; text-align: center; }
+      .hero-subtitle { font-size: 1.75rem; margin-bottom: 2rem; text-shadow: 0.0625rem 0.0625rem 0.125rem var(--shadow-color); color: var(--background-color); text-align: center; }
       
       .loading-placeholder { background: linear-gradient(90deg, #f0f0f0 25%, transparent 37%, transparent 63%, #f0f0f0 75%); background-size: 400% 100%; animation: shimmer 1.5s infinite; }
       @keyframes shimmer { 0% { background-position: 100% 50%; } 100% { background-position: -100% 50%; } }
-    </style>
-    
+      
+      @media (max-width: 416px) {
+        .hero-title { font-size: 2rem; }
+        .hero-subtitle { font-size: 1.2rem; }
+        .hero-content { padding: 1rem; min-height: 300px; }
+      }
+    </style>    
     <link rel="preload" href="../global/global.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="../global/pet-cards.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="../global/testimonials.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="./home.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+
     <noscript>
       <link rel="stylesheet" href="../global/global.min.css" />
+      <link rel="stylesheet" href="../global/pet-cards.min.css" />
+      <link rel="stylesheet" href="../global/testimonials.min.css" />
       <link rel="stylesheet" href="./home.min.css" />
     </noscript>
+    
   </head>  
   <body>
     <div id="global-navbar">
@@ -51,17 +61,17 @@
           <div class="hero-slide initial active" style="background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../assets/hero-bg.jpg');"></div>
         </div>        
         <div class="hero-content">
-          <h1 class="hero-title" data-i18n="hero.title"></h1>
-          <p class="hero-subtitle" data-i18n="hero.subtitle"></p>
-          <a href="../pets/pets.html" class="btn btn-primary" data-i18n="hero.browseButton"></a>
+          <h1 class="hero-title" data-i18n="hero.title" data-i18n-fallback="Find Your Perfect Companion"></h1>
+          <p class="hero-subtitle" data-i18n="hero.subtitle" data-i18n-fallback="Discover loving pets waiting for their forever home"></p>
+          <a href="../pets/pets.html" class="btn btn-primary" data-i18n="hero.browseButton" data-i18n-fallback="Browse Pets"></a>
         </div>
       </section>      
       <section id="featured-pets" class="featured-pets">
-        <div class="section-container">
+        <div class="section-container">          
           <div class="section-header">
-            <h2 class="section-title" data-i18n="featuredPets.title"></h2>
-            <p data-i18n="featuredPets.subtitle"></p>
-          </div>          
+            <h2 class="section-title" data-i18n="featuredPets.title" data-i18n-fallback="Featured Pets"></h2>
+            <p data-i18n="featuredPets.subtitle" data-i18n-fallback="Meet some of our adorable pets looking for homes"></p>
+          </div>
           <div id="pets-grid" class="pets-grid">
             <div class="pet-card placeholder card-placeholder">
                 <div class="placeholder-content"></div>
@@ -104,11 +114,11 @@
       </section>
 
       <section class="featured-users" id="featured-users">
-        <div class="section-container">
+        <div class="section-container">          
           <div class="section-header">
-            <h2 class="section-title" data-i18n="featuredUsers.title">Our Community</h2>
-            <p data-i18n="featuredUsers.subtitle">Meet members of our community who have made a difference through adoption</p>
-          </div>          
+            <h2 class="section-title" data-i18n="featuredUsers.title" data-i18n-fallback="Our Community"></h2>
+            <p data-i18n="featuredUsers.subtitle" data-i18n-fallback="Meet members of our community who have made a difference through adoption"></p>
+          </div>
           <div class="users-grid">
             <div class="user-card placeholder card-placeholder">
               <div class="placeholder-author"></div>
@@ -135,10 +145,10 @@
       </section>
 
       <section id="testimonials" class="testimonials-section">
-        <div class="section-container">
+        <div class="section-container">         
           <div class="section-header">
-            <h2 class="section-title" data-i18n="testimonials.title">What Our Community Says</h2>
-            <p data-i18n="testimonials.subtitle">Real stories from pet adopters and shelter partners</p>
+            <h2 class="section-title" data-i18n="testimonials.title" data-i18n-fallback="What Our Community Says"></h2>
+            <p data-i18n="testimonials.subtitle" data-i18n-fallback="Real stories from pet adopters and shelter partners"></p>
           </div>
           <div class="testimonials-carousel">
             <div class="testimonials-carousel-wrapper">

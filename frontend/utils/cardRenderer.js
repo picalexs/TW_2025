@@ -190,23 +190,27 @@ class CardRenderer {
     if (showFull || description.length <= 100) return description;
     return description.substring(0, 100) + '...';
   }
-
   _formatPetInfo(pet, variant) {
     const lm = this.languageManager;
     
+    //Name • Gender • Age
+    const genderText = pet.gender ? this._capitalizeFirst(pet.gender) : 'Unknown';
+    const ageText = pet.age ? `${pet.age} years old` : 'Age unknown';
     switch (variant) {
       case 'profile':
         return `
-          <h4 class="pet-name">${pet.name || 'Unknown Pet'}</h4>
-          <p class="pet-breed">${pet.breed || 'Mixed'} • ${pet.species || 'Unknown'}</p>
-          <p class="pet-age">${pet.age ? `${pet.age} years old` : 'Age unknown'}</p>
-          <span class="pet-status ${pet.adoptionStatus || 'available'}">${this._capitalizeFirst(pet.adoptionStatus || 'available')}</span>
+          <span class="pet-status ${(pet.adoptionStatus || 'available').toLowerCase()}">${this._capitalizeFirst(pet.adoptionStatus || 'available')}</span>
+          <div class="pet-info-line">
+            <h4 class="pet-name">${pet.name || 'Unknown Pet'}</h4>
+            <span class="pet-meta">• ${genderText} • ${ageText}</span>
+          </div>
+          ${pet.description ? `<p class="pet-description">${pet.description}</p>` : ''}
         `;
       
       case 'compact':
         return `
           <h4 class="pet-name">${pet.name || 'Unknown Pet'}</h4>
-          <p class="pet-brief">${pet.species || 'Pet'} • ${pet.adoptionStatus || 'Available'}</p>
+          <p class="pet-brief">${pet.species || 'Pet'} • ${this._capitalizeFirst(pet.adoptionStatus || 'Available')}</p>
         `;
       
       default:
@@ -257,7 +261,6 @@ class CardRenderer {
         : `Adopted ${adoptionCount} pets`;
     }
     
-    // Try translation if language manager exists
     if (this.languageManager?.translate) {
       const impactKey = adoptionCount === 1 ? 'single' : 'multiple';
       const translationKey = `featuredUsers.adoptionImpact.${roleKey}.${impactKey}`;
@@ -360,40 +363,58 @@ class CardRenderer {
       return 'Unknown date';
     }
   }  
-  
-  _renderPetTags(pet, variant) {
-    if (variant === 'profile') return '';
+    _renderPetTags(pet, variant) {
+    const tags = [];
     
-    let speciesText = 'Unknown';
-    let healthText = 'Status unknown';
-    
-    if (pet.species && typeof pet.species === 'string' && pet.species !== 'undefined' && pet.species !== 'null') {
-      speciesText = pet.species;
-      if (this.languageManager?.translate) {
-        const translated = this.languageManager.translate(`species.${pet.species.toLowerCase()}`, pet.species);
-        if (translated && typeof translated === 'string' && translated !== 'undefined') {
-          speciesText = translated;
-        }
-      }
+    if (pet.species) {
+      tags.push(pet.species);
+    }
+    if (pet.breed && pet.breed !== 'Mixed') {
+      tags.push(pet.breed);
     }
     
-    if (pet.healthStatus && typeof pet.healthStatus === 'string' && pet.healthStatus !== 'undefined' && pet.healthStatus !== 'null') {
-      healthText = pet.healthStatus;
-      if (this.languageManager?.translate) {
-        const cleanKey = pet.healthStatus.toLowerCase().replace(/\s+/g, '');
-        const translated = this.languageManager.translate(`healthStatus.${cleanKey}`, pet.healthStatus);
-        if (translated && typeof translated === 'string' && translated !== 'undefined') {
-          healthText = translated;
-        }
-      }
+    if (pet.sizeCategory) {
+      tags.push(pet.sizeCategory);
     }
-
-    return `
+    
+    if (pet.tags && Array.isArray(pet.tags)) {
+      pet.tags.forEach(tag => {
+        if (typeof tag === 'object' && tag.name) {
+          tags.push(tag.name);
+        } else if (typeof tag === 'string') {
+          tags.push(tag);
+        }
+      });
+    }
+    
+    if (variant === 'profile' && pet.personality && Array.isArray(pet.personality)) {
+      pet.personality.slice(0, 3).forEach(personalityTag => {
+        if (typeof personalityTag === 'object' && personalityTag.name) {
+          tags.push(personalityTag.name);
+        } else if (typeof personalityTag === 'string') {
+          tags.push(personalityTag);
+        }
+      });
+    }
+    
+    if (pet.activity_level) {
+      tags.push(`${pet.activity_level} Energy`);
+    }
+    
+    if (variant !== 'profile' && pet.healthStatus) {
+      tags.push(pet.healthStatus);
+    }
+    
+    const uniqueTags = [...new Set(tags)].slice(0, 6);
+    
+    return uniqueTags.length > 0 ? `
       <div class="pet-tags">
-        <span class="tag">${speciesText}</span>
-        <span class="tag">${healthText}</span>
+        ${uniqueTags.map(tag => {
+          const tagText = typeof tag === 'string' ? tag : String(tag);
+          return `<span class="tag">${this._capitalizeFirst(tagText)}</span>`;
+        }).join('')}
       </div>
-    `;
+    ` : '';
   }
 
   _renderPetActions(pet, variant, clickAction) {

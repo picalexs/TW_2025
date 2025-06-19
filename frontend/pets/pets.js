@@ -1,4 +1,4 @@
-import PetService from '../services/petService.js';
+import PetService from '../services/petService.min.js';
 const petService = new PetService();
 
 let allPets = [];

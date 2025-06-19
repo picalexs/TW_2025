@@ -106,7 +106,12 @@ class LanguageManager {
         
         console.warn(`Translation not found for key: ${keyPath}`);
         return keyPath;
-      }
+      }    
+    }
+
+    if (typeof value === 'object' && value !== null) {
+      console.warn(`Translation for key '${keyPath}' returned an object, using fallback`);
+      return fallback !== undefined ? fallback : keyPath;
     }
 
     return value;
