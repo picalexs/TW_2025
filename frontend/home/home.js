@@ -1,7 +1,7 @@
-import { fetchPets, renderPets, showPetLoadError, showPetPlaceholders } from '../pets/pets.js';
+import { fetchPets, renderPets, showPetLoadError, showPetPlaceholders } from '../pets/pets.min.js';
 import { setupMobileMenu, initializePageLanguage, checkLoginStatusAndToggleNavButtons, navigateToProfile } from '../global/global.min.js';
 import ApiService from '../services/api.min.js';
-import UserService from '../services/userService.js';
+import UserService from '../services/userService.min.js';
 const apiService = new ApiService();
 
 window.navigateToProfile = navigateToProfile;

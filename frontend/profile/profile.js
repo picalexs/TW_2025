@@ -1,6 +1,6 @@
-import UserService from "../services/userService.js";
-import PetService from "../services/petService.js";
-import { OwnerReviewService } from "../services/ownerReviewService.js";
+import UserService from "../services/userService.min.js";
+import PetService from "../services/petService.min.js";
+import { OwnerReviewService } from "../services/ownerReviewService.min.js";
 import {
   setupMobileMenu,
   initializePageLanguage,

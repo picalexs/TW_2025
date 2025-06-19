@@ -1,5 +1,5 @@
 import { setupLanguageDropdown, setupMobileMenu, initSlideshow } from './global.min.js';
-import NavbarService from '../services/navbarService.js';
+import NavbarService from '../services/navbarService.min.js';
 
 document.addEventListener('DOMContentLoaded', function() {
   console.log("Inject-navbar.js - Loading components");

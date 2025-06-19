@@ -1,6 +1,5 @@
-import languageManager from '../languages/language.js';
 import { setupMobileMenu, createSlideshow, initializePageLanguage, checkLoginStatusAndToggleNavButtons } from '../global/global.min.js';
-import UserService from '../services/userService.js';
+import UserService from '../services/userService.min.js';
 
 const API_BASE_URL = window.APP_CONFIG?.api?.baseURL || 'http://localhost:8080';
 

@@ -84,12 +84,6 @@ h1 {
     border: 1px solid rgba(var(--success-color-rgb), 0.3);
 }
 
-.compatibility-badge.excellent { background: rgba(var(--success-color-rgb), 0.2); color: var(--success-color); }
-.compatibility-badge.very-good { background: rgba(139, 195, 74, 0.2); color: #8BC34A; }
-.compatibility-badge.good { background: rgba(var(--warning-color-rgb), 0.2); color: var(--warning-color); }
-.compatibility-badge.fair { background: rgba(255, 152, 0, 0.2); color: #FF9800; }
-.compatibility-badge.low { background: rgba(var(--danger-color-rgb), 0.2); color: var(--danger-color); }
-
 .match-reasons {
     color: rgba(var(--light-color-rgb), 0.9);
     font-size: 0.9rem;

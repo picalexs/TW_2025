@@ -70,6 +70,20 @@ main, #content-container {
 }
 
 /* -------------------------------------------
+  TYPOGRAPHY - HEADINGS
+------------------------------------------- */
+h1 {
+    font-size: 2rem;
+}
+
+section h1,
+article h1,
+aside h1,
+nav h1 {
+    font-size: 2rem;
+}
+
+/* -------------------------------------------
   HEADER & NAVIGATION
 ------------------------------------------- */
 #global-navbar {
@@ -1414,4 +1428,29 @@ img {
     height: 2rem;
     font-size: 0.9rem;
   }
+}
+
+/* -------------------------------------------
+  NAVIGATION ELEMENTS
+------------------------------------------- */
+.navigation-header {
+  margin-bottom: 2rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.back-link:hover {
+  color: var(--primary-dark);
+}
+
+.back-arrow {
+  font-size: 1.2rem;
 }

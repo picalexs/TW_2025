@@ -14,28 +14,6 @@ body {
   background: var(--background-color);
 }
 
-.navigation-header {
-  margin-bottom: 2rem;
-}
-
-.back-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--primary-color);
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s;
-}
-
-.back-link:hover {
-  color: var(--primary-dark);
-}
-
-.back-arrow {
-  font-size: 1.2rem;
-}
-
 /* -------------------------------------------
   LOADING & ERROR STATES
 ------------------------------------------- */

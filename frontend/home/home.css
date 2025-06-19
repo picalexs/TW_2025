@@ -1,32 +1,10 @@
 /* -------------------------------------------
-  LAYOUT & GLOBAL STRUCTURE
+  HOME PAGE SPECIFIC LAYOUT
 ------------------------------------------- */
-body {
-  position: relative;
-}
-
-header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-main {
-  position: relative;
-  z-index: 1;
-  min-height: 100%;
-}
-
 #content-container {
-  position: relative;
+  background: var(--secondary-color);
   display: flex;
   flex-direction: column;
-  margin-top: 0;
-  background: var(--light-color);
-  min-height: 100vh;
-  contain: layout style;
-  will-change: transform;
-  overflow-anchor: none;
 }
 
 section {
