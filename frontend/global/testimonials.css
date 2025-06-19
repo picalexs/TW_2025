@@ -75,31 +75,6 @@
   gap: 0.75rem;
 }
 
-.stars {
-  color: var(--warning-color);
-  font-size: 1.5rem;
-  letter-spacing: 0.125rem;
-  display: inline-flex;
-  align-items: center;
-}
-
-.rating-number {
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.star {
-  display: inline-block;
-  position: relative;
-  font-size: inherit;
-}
-
-.star-full {
-  color: var(--warning-color);
-}
-
 .star-half {
   position: relative;
   display: inline-block;
