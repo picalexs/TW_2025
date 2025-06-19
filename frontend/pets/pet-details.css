@@ -1,7 +1,8 @@
 .pet-details-container {
-  max-width: 75rem;
+  max-width: 100vw;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 2.5rem;
+  box-sizing: border-box;
 }
 
 .loading-container, .error-container {
@@ -54,43 +55,75 @@
   margin-bottom: 3rem;
 }
 
+.pet-header-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.pet-header-row .pet-name {
+  margin-bottom: 0;
+  font-size: 2rem;
+  min-width: 0;
+  flex: 1 1 auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pet-header-row .status-badge {
+  font-size: 0.95rem;
+  flex-shrink: 0;
+}
+
 .pet-hero {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: auto 1fr;
   gap: 2rem;
-  align-items: stretch;
+  align-items: start;
 }
 
 .pet-image-gallery {
-  position: relative;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 1rem;
 }
 
 .main-image-container {
   position: relative;
-  margin-bottom: 1rem;
+  flex-shrink: 0;
 }
 
 .main-pet-image {  
   width: 100%;
-  height: 25rem;
-  object-fit: cover;  border-radius: 0.75rem;
+  max-width: 28rem;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  border-radius: 0.75rem;
   box-shadow: 0 0.5rem 1.5rem var(--shadow-color);
 }
 
 .favorite-btn {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: 0.75rem;
+  right: 0.75rem;
   background: var(--background-color);
-  border: none;  width: 3rem;
-  height: 3rem;
+  border: none;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s;
-  backdrop-filter: blur(0.625rem);
+  box-shadow: 0 0.125rem 0.5rem var(--shadow-color);
+  z-index: 3;
 }
 
 .favorite-btn:hover {
@@ -99,7 +132,7 @@
 }
 
 .favorite-btn.favorited .heart-icon {
-  color: var(--danger-color);
+  color: var(--danger-color) !important;
 }
 
 .heart-icon {
@@ -110,36 +143,58 @@
 
 .image-thumbnails {
   display: flex;
-  gap: 0.5rem;
-  overflow-x: auto;
-  padding: 0.5rem 0;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0.75rem;
+  width: auto;
+  min-width: 4rem;
+  max-width: 5rem;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  box-sizing: border-box;
 }
 
 .thumbnail {  
-  width: 5rem;
-  height: 5rem;
+  width: 4em;
+  height: 4em;
+  min-width: 3em;
+  min-height: 3em;
+  max-width: 5em;
+  max-height: 5em;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 0.5em;
   cursor: pointer;
   opacity: 0.7;
-  transition: opacity 0.3s;
+  transition: all 0.3s ease;
   flex-shrink: 0;
+  border: 2px solid transparent;
+  box-shadow: 0 0.125em 0.5em var(--shadow-color);
+  background: var(--background-color);
+  display: block;
 }
 
 .thumbnail:hover,
 .thumbnail.active {
   opacity: 1;
+  border: 2px solid var(--primary-color);
+  box-shadow: 0 0.25em 0.75em rgba(var(--primary-color-rgb), 0.3);
 }
 
 .pet-basic-info {
+  max-width: 40rem;
+  min-width: 320px;
+  width: 100%;
   background: var(--light-color);
   border-radius: 1rem;
-  padding: 2rem;
-  height: 25rem;
+  padding: 1.5rem 2.5rem;
+  min-height: 12rem;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   box-shadow: 0 0.25rem 1rem var(--shadow-color);
+  position: relative;
 }
 
 .pet-status {
@@ -148,11 +203,11 @@
 }
 
 .status-badge {
-  padding: 0.5rem 1rem;
+  padding: 0.35em 0.8em;
   border-radius: 20px;
   font-weight: 600;
   text-transform: uppercase;
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   letter-spacing: 0.5px;
 }
 
@@ -207,22 +262,27 @@
 }
 
 .adoption-actions {
+  margin: 2rem 0 0 0;
   display: flex;
+  justify-content: flex-start;
   gap: 1rem;
   flex-wrap: wrap;
-  justify-content: flex-start;
-  margin-top: auto;
 }
 
 .btn-large {
-  padding: 1rem 2rem;
-  font-size: 1.125rem;
+  padding: 0.5em 1.5em;
+  font-size: 1rem;
   font-weight: 600;
+  align-content: center;
 }
 
 .pet-details-tabs {
   margin: 3rem auto;
-  max-width: 90%;
+  width: 100%;
+  background: var(--light-color);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 0.25rem 1rem var(--shadow-color);
 }
 
 .tabs-nav {
@@ -243,6 +303,13 @@
   border-bottom: 3px solid transparent;
   transition: all 0.3s;
   white-space: nowrap;
+  outline: none;
+  box-shadow: none;
+}
+
+.tab-btn:focus {
+  outline: none;
+  box-shadow: none;
 }
 
 .tab-btn:hover {
@@ -342,8 +409,8 @@
 }
 
 .pet-tag {
-  background: rgba(var(--accent-color-rgb), 0.2);
-  color: var(--primary-color);
+  background: var(--secondary-color);
+  color: var(--light-color);
   padding: 0.5rem 1rem;
   border-radius: 20px;
   font-size: 0.875rem;
@@ -377,9 +444,10 @@
 
 .care-schedule {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
 }
+
 
 .care-item {
   background: var(--background-color);
@@ -591,7 +659,8 @@
 .form-group input,
 .form-group textarea {
   width: 100%;
-  padding: 0.75rem;  border: 1px solid var(--border-color);
+  padding: 0.75rem;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   font-size: 1rem;
 }
@@ -610,60 +679,220 @@
   margin-top: 1.5rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
   .pet-details-container {
     padding: 1rem;
   }
-
   .pet-hero {
-    grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 1.5rem;
   }
+}
 
-  .pet-basic-info {
-    height: auto;
-    min-height: 20rem;
+@media (max-width: 1110px) {
+  .pet-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: static;
   }
-
+  .pet-image-gallery {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    width: 100%;
+    max-width: 22rem;
+    margin: 0 auto;
+    z-index: 1;
+    gap: 1rem;
+  }
+  .main-image-container {
+    max-width: 18rem;
+    margin: 0 auto;
+    position: relative;
+    flex: 1 1 auto;
+    display: flex;
+    align-items: flex-end;
+  }
   .main-pet-image {
-    height: 300px;
+    max-width: 18rem;
+    width: 100%;
+    margin: 0 auto;
+    display: block;
   }
-
-  .pet-name {
-    font-size: 2rem;
+  .image-thumbnails {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: 0.75em;
+    margin: 0 0 0 0;
+    padding: 0;
+    width: auto;
+    min-width: 3em;
+    max-width: 4em;
   }
+  .thumbnail {
+    width: 3em;
+    height: 3em;
+    min-width: 2em;
+    min-height: 2em;
+    max-width: 4em;
+    max-height: 4em;
+  }
+  .pet-basic-info {
+    position: static;
+    width: 100%;
+    max-width: 100%;
+    margin: 1.5rem auto 0 auto;
+    background: var(--light-color);
+    z-index: 2;
+    box-shadow: 0 0.5rem 2rem var(--shadow-color);
+    opacity: 0.97;
+    transform: none;
+    left: auto;
+    top: auto;
+    bottom: auto;
+  }
+  #image-thumbnails.image-thumbnails {
+    margin-bottom: 0;
+  }
+  .adoption-actions {
+    margin-top: 2em;
+  }
+}
 
+@media (max-width: 900px) {
+  .pet-details-container {
+    padding: 0.75rem 0.75rem 0.75rem 0.75rem;
+  }
+  .pet-hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .pet-image-gallery {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    max-width: 22rem;
+    width: 100%;
+    margin: 0 auto;
+    gap: 0.5rem;
+  }
+  .main-image-container {
+    max-width: 18rem;
+    margin: 0 auto;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    position: relative;
+  }
+  .main-pet-image {
+    max-width: 18rem;
+    width: 100%;
+    margin: 0 auto;
+    display: block;
+  }
+  .image-thumbnails {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    width: auto;
+    min-width: 3em;
+    max-width: 4em;
+    margin: 0 0 0 0;
+    padding: 0;
+    gap: 0.5em;
+  }
+  .pet-basic-info {
+    max-width: 100vw;
+    width: 100vw;
+    margin: 1rem auto 0 auto;
+    padding: 0.75rem 0.75rem 0.75rem 0.75rem;
+  }
+  .pet-header-row {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: 0.25rem;
+    margin-right: 0.25rem;
+  }
+  .pet-header-row .pet-name {
+    flex: 0 1 auto;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 60vw;
+  }
+  .pet-header-row .status-badge {
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
   .pet-quick-info {
-    grid-template-columns: 1fr;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    margin : 0.5rem 0.5rem 0.5rem 0.5rem;
   }
+  .info-item {
+    min-width: 0;
+    flex: 1 1 0;
+    gap: 0.1rem;
+  }
+}
 
+@media (max-width: 700px) {
+  .pet-basic-info {
+    padding: 0.5rem;
+    max-width: 98vw;
+    width: 98vw;
+  }
+  .image-thumbnails {
+    gap: 0.5em;
+    margin-top: 0.5em;
+    padding-left: 0.5rem;
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+  }
+  .pet-quick-info {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.5rem;
+    margin : 0.5rem 0.5rem 0.5rem 0.5rem;
+  }
   .pet-details-tabs {
-    max-width: 100%;
+    padding: 0.5rem;
   }
-
-  .tab-content {
-    max-width: 100%;
-  }
-
-  .tabs-nav {
-    justify-content: start;
-  }
-
-  .tab-btn {
-    padding: 0.75rem 1rem;
-    font-size: 0.875rem;
-  }
-
   .detail-grid {
     grid-template-columns: 1fr;
+    gap: 0.5rem;
   }
+}
 
-  .adoption-actions {
-    flex-direction: column;
+@media (max-width: 600px) {
+  .pet-details-container {
+    padding: 0.5rem;
+    overflow-x: hidden;
   }
-
-  .btn-large {
-    width: 100%;
+  .tabs-nav {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+  .tab-btn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.95rem;
+    min-width: 6.5rem;
+    flex: 1 1 40%;
+    white-space: normal;
+  }
+  .tab-content {
+    max-width: 100vw;
+    padding: 0.5rem 0.5rem;
   }
 }
 
@@ -672,15 +901,7 @@
     grid-template-columns: 1fr;
   }
 
-  .pet-metrics {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .modal-content {
-    width: 95%;
-  }
-
-  .form-actions {
-    flex-direction: column;
+  .pet-details-container {
+    padding: 0.5rem;
   }
 }

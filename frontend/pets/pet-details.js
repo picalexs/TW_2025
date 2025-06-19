@@ -83,20 +83,36 @@ class PetDetailsPage {
     const thumbnailsContainer = document.getElementById('image-thumbnails');
     thumbnailsContainer.innerHTML = '';
 
-    if (pet.media && pet.media.length > 0) {
-      const images = pet.media.filter(media => media.type === 'image' || !media.type);
-      images.forEach((media, index) => {
-        const thumbnail = document.createElement('img');
-        const imagePath = window.ImagePathHandler.processPetImagePath(media.filePath);
-        
-        thumbnail.src = imagePath;
-        thumbnail.alt = `${pet.name} photo ${index + 1}`;
-        thumbnail.className = `thumbnail ${index === 0 ? 'active' : ''}`;
-        thumbnail.addEventListener('click', () => this.switchMainImage(media.filePath, index));
-        thumbnailsContainer.appendChild(thumbnail);
+    const allImages = [];
+    
+    if (pet.imagePath) {
+      allImages.push({
+        filePath: pet.imagePath,
+        isProfile: true
       });
     }
-  }  
+    
+    if (pet.media && pet.media.length > 0) {
+      const mediaImages = pet.media.filter(media => media.type === 'image' || !media.type);
+      allImages.push(...mediaImages.map(media => ({
+        filePath: media.filePath,
+        isProfile: false
+      })));
+    }
+
+    const imagesToShow = allImages.slice(0, 5);
+    
+    imagesToShow.forEach((image, index) => {
+      const thumbnail = document.createElement('img');
+      const imagePath = window.ImagePathHandler.processPetImagePath(image.filePath);
+      
+      thumbnail.src = imagePath;
+      thumbnail.alt = `${pet.name} photo ${index + 1}`;
+      thumbnail.className = `thumbnail ${index === 0 ? 'active' : ''}`;
+      thumbnail.addEventListener('click', () => this.switchMainImage(image.filePath, index));
+      thumbnailsContainer.appendChild(thumbnail);
+    });
+  }
   
   switchMainImage(imagePath, index) {
     const mainImage = document.getElementById('main-pet-image');
@@ -329,13 +345,10 @@ class PetDetailsPage {
       });
     });
   }
-
+  
   initEventListeners() {
     const favoriteBtn = document.getElementById('favorite-btn');
     favoriteBtn.addEventListener('click', () => this.toggleFavorite());
-
-    const adoptBtn = document.getElementById('adopt-btn');
-    adoptBtn.addEventListener('click', () => this.startAdoptionProcess());
 
     const contactBtn = document.getElementById('contact-shelter-btn');
     contactBtn.addEventListener('click', () => this.showContactModal());
@@ -363,14 +376,14 @@ class PetDetailsPage {
 
   toggleFavorite() {
     const favoriteBtn = document.getElementById('favorite-btn');
+    const heartIcon = favoriteBtn.querySelector('.heart-icon');
     favoriteBtn.classList.toggle('favorited');
+    if (favoriteBtn.classList.contains('favorited')) {
+      heartIcon.textContent = '♥';
+    } else {
+      heartIcon.textContent = '♡';
+    }
     console.log('Toggle favorite for pet:', this.currentPet.id);
-  }
-
-  startAdoptionProcess() {
-    //redirect to adotpion form
-    console.log('Start adoption process for pet:', this.currentPet.id);
-    alert('Adoption process start.');
   }
 
   showContactModal() {

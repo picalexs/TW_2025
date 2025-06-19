@@ -177,7 +177,12 @@ class petDTO extends abstractDTO {
            WHERE animal_id = :id
            ORDER BY record_date DESC`,
           [id],
-          { outFormat: oracledb.OUT_FORMAT_OBJECT }
+          { 
+            outFormat: oracledb.OUT_FORMAT_OBJECT,
+            fetchInfo: {
+              DESCRIPTION: { type: oracledb.STRING }
+            }
+          }
         );
 
         pet.medicalHistory = medicalResult.rows.map((record) => ({
@@ -209,8 +214,8 @@ class petDTO extends abstractDTO {
       } catch (careError) {
         pet.careSchedule = [];
         console.error("Error fetching pet care schedule:", careError);
-      }
-
+      }      
+      
       try {
         const resourcesResult = await this.executeCustomQuery(
           `SELECT id, resource_type, title, content
@@ -218,7 +223,12 @@ class petDTO extends abstractDTO {
            WHERE animal_id = :id
            ORDER BY resource_type, title`,
           [id],
-          { outFormat: oracledb.OUT_FORMAT_OBJECT }
+          { 
+            outFormat: oracledb.OUT_FORMAT_OBJECT,
+            fetchInfo: {
+              CONTENT: { type: oracledb.STRING }
+            }
+          }
         );
 
         pet.careResources = resourcesResult.rows.map((resource) => ({
