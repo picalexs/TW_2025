@@ -248,20 +248,71 @@ class PetDetailsPage {
 
   renderShelterInfo(shelter) {
     const container = document.getElementById('shelter-info');
-      if (shelter && (shelter.firstName || shelter.email)) {
+    if (shelter && (shelter.firstName || shelter.email)) {
       const name = [shelter.firstName, shelter.lastName].filter(Boolean).join(' ') || 'Shelter Contact';
       const profilePic = window.ImagePathHandler.processUserImagePath(shelter.profilePicture);
       
-      container.innerHTML = `
-        <div class="shelter-contact">
-          <img src="${profilePic}" alt="${name}" class="shelter-avatar">
-          <div class="shelter-details">
-            <h4>${name}</h4>
-            ${shelter.email ? `<p>Email: ${shelter.email}</p>` : ''}
-            ${shelter.phone ? `<p>Phone: ${shelter.phone}</p>` : ''}
+      // Use the shelter.id from the backend
+      const shelterId = shelter.id;
+      console.log('Shelter ID from backend:', shelterId);
+      console.log('Full shelter object:', shelter);
+      
+      if (shelterId) {
+        const profileLink = `../profile/profile.html?id=${shelterId}`;
+        console.log('Generated profile link:', profileLink);
+        
+        container.innerHTML = `
+          <div class="shelter-contact shelter-clickable" style="cursor:pointer;transition:all 0.3s;padding:0.75rem;border-radius:8px;border:1px solid transparent;">
+            <img src="${profilePic}" alt="${name}" class="shelter-avatar">
+            <div class="shelter-details">
+              <h4>${name}</h4>
+              ${shelter.email ? `<p>Email: ${shelter.email}</p>` : ''}
+              ${shelter.phone ? `<p>Phone: ${shelter.phone}</p>` : ''}
+            </div>
           </div>
-        </div>
-      `;
+        `;
+        
+        const shelterElement = container.querySelector('.shelter-clickable');
+        if (shelterElement) {
+          console.log('Adding click listener to shelter element');
+          
+          shelterElement.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Shelter clicked, navigating to:', profileLink);
+            window.location.href = profileLink;
+          });
+          
+          shelterElement.addEventListener('mouseenter', () => {
+            shelterElement.style.backgroundColor = 'rgba(var(--primary-color-rgb), 0.1)';
+            shelterElement.style.borderColor = 'var(--primary-color)';
+            shelterElement.style.transform = 'translateY(-2px)';
+          });
+          
+          shelterElement.addEventListener('mouseleave', () => {
+            shelterElement.style.backgroundColor = 'transparent';
+            shelterElement.style.borderColor = 'transparent';
+            shelterElement.style.transform = 'translateY(0)';
+          });
+          
+          console.log('Event listeners added successfully');
+        } else {
+          console.error('Could not find shelter clickable element');
+        }
+      } else {
+        console.log('No shelter ID found, rendering non-clickable version');
+        container.innerHTML = `
+          <div class="shelter-contact">
+            <img src="${profilePic}" alt="${name}" class="shelter-avatar">
+            <div class="shelter-details">
+              <h4>${name}</h4>
+              ${shelter.email ? `<p>Email: ${shelter.email}</p>` : ''}
+              ${shelter.phone ? `<p>Phone: ${shelter.phone}</p>` : ''}
+            </div>
+          </div>
+        `;
+      }
+      
     } else {
       container.innerHTML = '<p>Shelter information not available</p>';
     }

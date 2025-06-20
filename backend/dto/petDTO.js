@@ -99,12 +99,12 @@ class petDTO extends abstractDTO {
           code: "VALIDATION_ERROR",
           status: 400,
         });
-      }
-
+      }      
+      
       const result = await this.executeCustomQuery(
         `SELECT a.*, m.file_path, 
                 addr.street, addr.city, addr.country, addr.postal_code,
-                u.first_name as shelter_first_name, u.last_name as shelter_last_name,
+                u.id as shelter_user_id, u.first_name as shelter_first_name, u.last_name as shelter_last_name,
                 u.email as shelter_email, u.phone as shelter_phone,
                 u.profile_picture as shelter_profile_picture
          FROM animals a
@@ -139,10 +139,11 @@ class petDTO extends abstractDTO {
           country: result.rows[0].COUNTRY,
           postalCode: result.rows[0].POSTAL_CODE,
         };
-      }
-
+      }      
+      
       if (result.rows[0].SHELTER_FIRST_NAME) {
         pet.shelter = {
+          id: result.rows[0].SHELTER_USER_ID,
           firstName: result.rows[0].SHELTER_FIRST_NAME,
           lastName: result.rows[0].SHELTER_LAST_NAME,
           email: result.rows[0].SHELTER_EMAIL,
