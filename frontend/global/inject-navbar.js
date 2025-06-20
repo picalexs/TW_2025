@@ -1,4 +1,4 @@
-import { setupLanguageDropdown, setupMobileMenu, initSlideshow } from './global.min.js';
+import { setupLanguageDropdown, setupMobileMenu, checkLoginStatusAndToggleNavButtons } from './global.min.js';
 import NavbarService from '../services/navbarService.min.js';
 
 document.addEventListener('DOMContentLoaded', function() {

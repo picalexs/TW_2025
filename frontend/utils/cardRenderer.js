@@ -462,24 +462,13 @@ class CardRenderer {
       }
     }
     return `<a href="#" class="btn btn-outline-primary view-user-btn" data-user-id="${user.id || ''}">${viewProfileText}</a>`;
-  }  
-    _getClickHandler(clickAction, type, id) {
+  }    
+  
+  _getClickHandler(clickAction, type, id) {
     switch (clickAction) {
       case 'navigate':
         if (type === 'pet') {
-          const currentPath = window.location.pathname;
-          let targetPath = '';
-          
-          if (currentPath.includes('/pets/pets-page/')) {
-            targetPath = '../pet-details/pet-details.html';
-          } else if (currentPath.includes('/pets/add-pet/')) {
-            targetPath = '../pet-details/pet-details.html';
-          } else if (currentPath.includes('/pets/')) {
-            targetPath = './pet-details/pet-details.html';
-          } else {
-            targetPath = './pets/pet-details/pet-details.html';
-          }
-          
+          const targetPath = '/frontend/pets/pet-details/pet-details.html';
           return { attr: `onclick="window.location.href='${targetPath}?id=${id}'"` };
         } else if (type === 'user') {
           return { attr: `onclick="window.navigateToProfile && window.navigateToProfile(${id})"` };

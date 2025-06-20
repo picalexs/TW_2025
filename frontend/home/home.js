@@ -355,7 +355,7 @@ function addEventListeners() {
       event.preventDefault();
       const userId = event.currentTarget.getAttribute('data-user-id');
       console.log(`Viewing user details for user ID: ${userId}`);
-      window.location.href = `../profile/profile.html?id=${userId}`;
+      window.location.href = `/frontend/profile/profile.html?id=${userId}`;
     });
   });
 }

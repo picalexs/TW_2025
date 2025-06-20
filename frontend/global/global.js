@@ -386,17 +386,6 @@ export function navigateToProfile(userId) {
     return;
   }
   
-  const currentPath = window.location.pathname;
-  let profilePath;
-  
-  if (currentPath.includes('/profile/')) {
-    profilePath = `profile.html?id=${userId}`;
-  } else if (currentPath.includes('/home/') || currentPath.includes('/pets/') || currentPath.includes('/login/') || currentPath.includes('/signup/')) {
-    profilePath = `../profile/profile.html?id=${userId}`;
-  } else {
-    profilePath = `profile/profile.html?id=${userId}`;
-  }
-  
-  window.location.href = profilePath;
+  window.location.href = `/frontend/profile/profile.html?id=${userId}`;
 }
-export { setupLanguageDropdown, setupMobileMenu, initSlideshow, createSlideshow, initializePageLanguage, checkLoginStatusAndToggleNavButtons };
+export { setupLanguageDropdown, setupMobileMenu, initSlideshow, createSlideshow, initializePageLanguage, checkLoginStatusAndToggleNavButtons};

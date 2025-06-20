@@ -38,12 +38,12 @@ class ResourcePreloader {
     
     this.preloadedResources.add(src);
   }
-
+  
   prefetchNavigation() {
     const navLinks = [
-      '../pets/pets-page/pets-page.html',
-      '../login/login.html',
-      '../signup/signup.html'
+      '/frontend/pets/pets-page/pets-page.html',
+      '/frontend/login/login.html',
+      '/frontend/signup/signup.html'
     ];
 
     navLinks.forEach(href => {
