@@ -16,10 +16,9 @@ class AddPetPage {
       await this.loadTags();
       this.renderTags();
       this.initializeEventListeners();
-      this.enhanceFormValidation();
+      this.enhanceFormValidation();    
     } catch (error) {
       console.error('Error initializing add pet page:', error);
-      this.showMessage('Failed to load page data', 'error');
     }
   }
 
@@ -54,11 +53,10 @@ class AddPetPage {
     }
 
     console.log('Rendering tags:', this.availableTags);
-    tagsContainer.innerHTML = '';
-
+    tagsContainer.innerHTML = '';    
     this.availableTags.forEach(tag => {
       const tagElement = document.createElement('div');
-      tagElement.className = `tag-checkbox ${tag.isCustom ? 'custom-tag' : ''}`;
+      tagElement.className = 'tag-checkbox';
       tagElement.innerHTML = `
         <input type="checkbox" id="tag-${tag.id}" value="${tag.id}">
         <label for="tag-${tag.id}">
@@ -139,18 +137,13 @@ class AddPetPage {
       if (!this.validatePetData(petData)) {
         this.setLoading(false);
         return;
-      }
-
-      const result = await this.petService.addPet(petData);
+      }      
       
-      this.showMessage('Pet added successfully!', 'success');
-        setTimeout(() => {
-        window.location.href = '../pets-page/pets-page.html';
-      }, 2000);
+      const result = await this.petService.addPet(petData);
+      window.location.href = '../pets-page/pets-page.html';
 
     } catch (error) {
       console.error('Error adding pet:', error);
-      this.showMessage(error.message || 'Failed to add pet. Please try again.', 'error');
       this.setLoading(false);
     }
   }
@@ -254,20 +247,29 @@ class AddPetPage {
     if (errorElement) {
       errorElement.classList.remove('show');
     }
-  }
+  }  validatePetData(petData) {
+    let isValid = true;
 
-  validatePetData(petData) {
+    document.querySelectorAll('.form-input, .form-select, .form-textarea').forEach(control => {
+      control.classList.remove('error');
+    });
+
     if (!petData.name) {
-      this.showMessage('Pet name is required', 'error');
-      return false;
+      const nameInput = document.getElementById('pet-name');
+      if (nameInput) {
+        nameInput.classList.add('error');
+      }
+      isValid = false;
     }
-
     if (!petData.species) {
-      this.showMessage('Species is required', 'error');
-      return false;
+      const speciesSelect = document.getElementById('pet-species');
+      if (speciesSelect) {
+        speciesSelect.classList.add('error');
+      }
+      isValid = false;
     }
 
-    return true;
+    return isValid;
   }
   setLoading(isLoading) {
     const submitBtn = document.getElementById('submit-btn');
@@ -379,10 +381,8 @@ class AddPetPage {
         newTagElement.checked = true;
         newTagElement.closest('.tag-checkbox').classList.add('selected');
       }
-      
-      this.closeNewTagModal()
-      this.showMessage(`Tag "${tagName}" created and selected successfully!`, 'success');
-      
+
+      this.closeNewTagModal();
     } catch (error) {
       console.error('Error creating tag:', error);
       this.showTagError('Failed to create tag. Please try again.');
