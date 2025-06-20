@@ -23,6 +23,7 @@ class userDTO extends abstractDTO {
       imagePath: ImagePathHandler.processUserImagePath(dbRow.PROFILE_PICTURE),
       adoption_count: dbRow.ADOPTION_COUNT || 0,
       pets_helped_count: dbRow.PETS_HELPED_COUNT || 0,
+      is_verified: dbRow.IS_VERIFIED,
     };
   }
 
@@ -114,40 +115,9 @@ class userDTO extends abstractDTO {
     return result.rowsAffected > 0;
   }
 
-  // async authenticateUser(email, password) {
-  //   let connection;
-  //   try {
-  //     connection = await this.getConnection(); // Utilizează metoda din AbstractDTO
-  //     const sql = `SELECT ID, USERNAME, PASSWORD_HASH, EMAIL, IS_VERIFIED FROM users WHERE email = :email`;
-  //     const binds = { email };
-  //     const result = await connection.execute(sql, binds);
-
-  //     if (result.rows.length > 0) {
-  //       const user = result.rows[0];
-  //       const isMatch = await bcrypt.compare(password, user.PASSWORD_HASH);
-  //       if (isMatch) {
-  //         return {
-  //           id: user.ID,
-  //           username: user.USERNAME,
-  //           email: user.EMAIL,
-  //           is_verified: user.IS_VERIFIED
-  //         };
-  //       }
-  //     }
-  //     return null;
-  //   } catch (error) {
-  //     console.error("Error during authentication DTO:", error);
-  //     throw error;
-  //   } finally {
-  //     if (connection) {
-  //       await connection.close();
-  //     }
-  //   }
-  // }
-
   async authenticateUser(connection, email, password) {
     try {
-      const sql = `SELECT ID, USERNAME, PASSWORD_HASH, EMAIL, IS_VERIFIED FROM users WHERE email = :email`;
+      const sql = `SELECT ID, USERNAME, PASSWORD_HASH, EMAIL, IS_VERIFIED, ROLE FROM users WHERE email = :email`;
       const binds = { email };
       const options = {
         outFormat: oracledb.OUT_FORMAT_OBJECT,
@@ -173,10 +143,11 @@ class userDTO extends abstractDTO {
         };
       }
 
-      const mappedUser = {};
-      for (const key in user) {
-        mappedUser[key.toLowerCase()] = user[key];
-      }
+      const mappedUser = this.mapToEntity(user);
+      // const mappedUser = {};
+      // for (const key in user) {
+      //   mappedUser[key.toLowerCase()] = user[key];
+      // }
       return {
         success: true,
         message: "Authentication successful!",
