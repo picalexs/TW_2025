@@ -22,26 +22,26 @@ DELETE FROM address;
 
 commit;
 
-insert into address (id, street, city, country, postal_code, latitude, longitude) values (1, '123 Main St', 'Springfield', 'USA', '12345', 40.7128, -74.0060);
-insert into address (id, street, city, country, postal_code, latitude, longitude) values (2, '456 Elm St', 'Shelbyville', 'USA', '23456', 41.0000, -75.0000);
-insert into address (id, street, city, country, postal_code, latitude, longitude) values (3, '789 Oak St', 'Capital City', 'USA', '34567', 39.9526, -75.1652);
-insert into address (id, street, city, country, postal_code, latitude, longitude) values (4, '101 Pine St', 'Riverdale', 'USA', '45678', 42.3601, -71.0589);
-insert into address (id, street, city, country, postal_code, latitude, longitude) values (5, '202 Maple Ave', 'Westfield', 'USA', '56789', 40.6589, -74.3473);
-insert into address (id, street, city, country, postal_code, latitude, longitude) values (6, '303 Cedar Blvd', 'Eastwood', 'USA', '67890', 41.2033, -77.1945);
-insert into address (id, street, city, country, postal_code, latitude, longitude) values (7, '404 Birch Rd', 'Northtown', 'USA', '78901', 42.0451, -87.6877);
-insert into address (id, street, city, country, postal_code, latitude, longitude) values (8, '505 Walnut Dr', 'Southside', 'USA', '89012', 39.7391, -104.9847);
-insert into address (id, street, city, country, postal_code, latitude, longitude) values (9, '606 Cherry Ln', 'Midville', 'USA', '90123', 36.1627, -86.7816);
-insert into address (id, street, city, country, postal_code, latitude, longitude) values (10, '707 Ash St', 'Greendale', 'USA', '01234', 43.0642, -87.9073);
-insert into address (id, street, city, country, postal_code, latitude, longitude) values (11, '808 Poplar Way', 'Fairview', 'USA', '11111', 34.0522, -118.2437);
-insert into address (id, street, city, country, postal_code, latitude, longitude) values (12, '909 Hickory Ct', 'Hillcrest', 'USA', '22222', 25.7617, -80.1918);
-insert into address (id, street, city, country, postal_code, latitude, longitude) values (13, '1010 Sycamore Pl', 'Valley View', 'USA', '33333', 32.7767, -96.7970);
-insert into address (id, street, city, country, postal_code, latitude, longitude) values (14, '1111 Dogwood Ave', 'Riverside', 'USA', '44444', 47.6062, -122.3321);
-insert into address (id, street, city, country, postal_code, latitude, longitude) values (15, '1212 Willow St', 'Lakeside', 'USA', '55555', 41.8781, -87.6298);
-insert into address (id, street, city, country, postal_code, latitude, longitude) values (16, '1313 Redwood Dr', 'Mountain View', 'USA', '66666', 37.3861, -122.0839);
-insert into address (id, street, city, country, postal_code, latitude, longitude) values (17, '1414 Spruce Ln', 'Oceanside', 'USA', '77777', 33.1959, -117.3795);
-insert into address (id, street, city, country, postal_code, latitude, longitude) values (18, '1515 Fir Ave', 'Desert Springs', 'USA', '88888', 33.4484, -112.0740);
-insert into address (id, street, city, country, postal_code, latitude, longitude) values (19, '1616 Juniper Rd', 'Forest Hills', 'USA', '99999', 35.2271, -80.8431);
-insert into address (id, street, city, country, postal_code, latitude, longitude) values (20, '1717 Cypress St', 'Garden City', 'USA', '00000', 40.7272, -73.6370);
+insert into address (id, street, city, country, postal_code) values (1, '123 Main St', 'Springfield', 'USA', '12345');
+insert into address (id, street, city, country, postal_code) values (2, '456 Elm St', 'Shelbyville', 'USA', '23456');
+insert into address (id, street, city, country, postal_code) values (3, '789 Oak St', 'Capital City', 'USA', '34567');
+insert into address (id, street, city, country, postal_code) values (4, '101 Pine St', 'Riverdale', 'USA', '45678');
+insert into address (id, street, city, country, postal_code) values (5, '202 Maple Ave', 'Westfield', 'USA', '56789');
+insert into address (id, street, city, country, postal_code) values (6, '303 Cedar Blvd', 'Eastwood', 'USA', '67890');
+insert into address (id, street, city, country, postal_code) values (7, '404 Birch Rd', 'Northtown', 'USA', '78901');
+insert into address (id, street, city, country, postal_code) values (8, '505 Walnut Dr', 'Southside', 'USA', '89012');
+insert into address (id, street, city, country, postal_code) values (9, '606 Cherry Ln', 'Midville', 'USA', '90123');
+insert into address (id, street, city, country, postal_code) values (10, '707 Ash St', 'Greendale', 'USA', '01234');
+insert into address (id, street, city, country, postal_code) values (11, '808 Poplar Way', 'Fairview', 'USA', '11111');
+insert into address (id, street, city, country, postal_code) values (12, '909 Hickory Ct', 'Hillcrest', 'USA', '22222');
+insert into address (id, street, city, country, postal_code) values (13, '1010 Sycamore Pl', 'Valley View', 'USA', '33333');
+insert into address (id, street, city, country, postal_code) values (14, '1111 Dogwood Ave', 'Riverside', 'USA', '44444');
+insert into address (id, street, city, country, postal_code) values (15, '1212 Willow St', 'Lakeside', 'USA', '55555');
+insert into address (id, street, city, country, postal_code) values (16, '1313 Redwood Dr', 'Mountain View', 'USA', '66666');
+insert into address (id, street, city, country, postal_code) values (17, '1414 Spruce Ln', 'Oceanside', 'USA', '77777');
+insert into address (id, street, city, country, postal_code) values (18, '1515 Fir Ave', 'Desert Springs', 'USA', '88888');
+insert into address (id, street, city, country, postal_code) values (19, '1616 Juniper Rd', 'Forest Hills', 'USA', '99999');
+insert into address (id, street, city, country, postal_code) values (20, '1717 Cypress St', 'Garden City', 'USA', '00000');
 commit;
 
 DECLARE

@@ -37,7 +37,11 @@ class PetService {  constructor(options = {}) {
     }
     
     try {
-      return await this.apiService.get(this.endpoints.detail(id));
+      const pet = await this.apiService.get(this.endpoints.detail(id));
+      console.log('PetService - Pet data received:', pet);
+      console.log('PetService - Pet media:', pet.media);
+      console.log('PetService - Pet imagePath:', pet.imagePath);
+      return pet;
     } catch (error) {
       if (this.debug) {
         console.error(`Error fetching pet with ID ${id}:`, error);
@@ -56,6 +60,33 @@ class PetService {  constructor(options = {}) {
     } catch (error) {
       if (this.debug) {
         console.error('Error adding pet:', error);
+      }
+      throw error;
+    }
+  }
+
+  async addPetWithFiles(formData) {
+    if (!formData) {
+      throw new Error('Form data is required');
+    }
+    
+    try {
+      if (this.debug) console.log('Adding pet with files...');
+      
+      const response = await fetch(`${this.apiService.baseURL}${this.endpoints.base}`, {
+        method: 'POST',
+        body: formData
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      if (this.debug) {
+        console.error('Error adding pet with files:', error);
       }
       throw error;
     }

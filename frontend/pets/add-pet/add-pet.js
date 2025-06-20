@@ -18,10 +18,9 @@ class AddPetPage {
   async init() {
     try {
       await this.loadTags();
-      this.renderTags();
+      this.renderTags();      
       this.initializeEventListeners();
       this.enhanceFormValidation();      
-      this.initMapSection();
       this.initMediaUpload();
       this.initMedicalSection();
       this.initCareScheduleSection();
@@ -154,18 +153,42 @@ class AddPetPage {
       this.setLoading(true);
       
       const formData = new FormData(e.target);
-      const petData = this.createPetData(formData);
       
+      const petData = this.createPetData(formData);
       if (!this.validatePetData(petData)) {
         this.setLoading(false);
         return;
-      }      
+      }
       
-      const result = await this.petService.addPet(petData);
+      const submitFormData = new FormData();
+      
+      Object.keys(petData).forEach(key => {
+        if (key !== 'mediaFiles' && key !== 'medicalHistory' && key !== 'careResources' && key !== 'careSchedule') {
+          if (petData[key] !== null && petData[key] !== undefined) {
+            submitFormData.append(key, petData[key]);
+          }
+        }
+      });
+      
+      if (this.mediaFiles && this.mediaFiles.length > 0) {
+        this.mediaFiles.forEach((file, index) => {
+          submitFormData.append('mediaFiles', file);
+        });
+        submitFormData.append('profileImageIndex', this.profileImageIndex);
+      }
+      
+      submitFormData.append('medicalHistory', JSON.stringify(petData.medicalHistory));
+      submitFormData.append('careResources', JSON.stringify(petData.careResources));
+      submitFormData.append('careSchedule', JSON.stringify(petData.careSchedule));
+      submitFormData.append('tags', JSON.stringify(petData.tags));
+        const result = await this.petService.addPetWithFiles(submitFormData);
+      console.log('Pet creation successful:', result);
       window.location.href = '../pets-page/pets-page.html';
 
     } catch (error) {
       console.error('Error adding pet:', error);
+      console.error('Error details:', error.message);
+      alert('Error creating pet: ' + error.message);
       this.setLoading(false);
     }
   }
@@ -186,14 +209,11 @@ class AddPetPage {
       adoptionStatus: 'available',
       adoptionFee: formData.get('adoptionFee') ? parseFloat(formData.get('adoptionFee')) : null,
       shelterId: this.tempUserId,
-      addressId: 1,
-      tags: Array.from(this.selectedTags),
+      tags: this.getSelectedTagsForSubmission(),
       address: formData.get('address'),
       city: formData.get('city'),
       postalCode: formData.get('postalCode'),
       country: formData.get('country'),
-      latitude: formData.get('latitude'),
-      longitude: formData.get('longitude'),
       mediaFiles: this.mediaFiles,
       profileImageIndex: this.profileImageIndex,
       medicalHistory: this.collectMedicalHistoryData(),
@@ -552,6 +572,7 @@ class AddPetPage {
     
     if (!loadingSpinner || !btnText) {
       console.error('Button structure incomplete - missing spinner or text elements');
+      console.error('Submit button HTML:', submitBtn.outerHTML);
       return;
     }
 
@@ -666,6 +687,7 @@ class AddPetPage {
     
     if (!loadingSpinner || !btnText) {
       console.error('Tag button structure incomplete - missing spinner or text elements');
+      console.error('Create tag button HTML:', submitBtn.outerHTML);
       return;
     }
 
@@ -704,113 +726,7 @@ class AddPetPage {
       }, 5000);
     }
   }
-
-  initMapSection() {
-    const mapContainer = document.getElementById('pet-location-map');
-    if (!mapContainer) return;
-
-    const defaultLat = 45.9432;
-    const defaultLng = 24.9668;
-    const defaultZoom = 6.5;
-
-    mapContainer.style.height = '30rem';
-    mapContainer.style.borderRadius = '10px';
-    mapContainer.style.marginTop = '1rem';
-
-    this.map = L.map('pet-location-map').setView([defaultLat, defaultLng], defaultZoom);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
-    }).addTo(this.map);
-
-    this.locationMarker = null;
-
-    let latInput = document.getElementById('pet-latitude');
-    let lngInput = document.getElementById('pet-longitude');
-    if (!latInput) {
-      latInput = document.createElement('input');
-      latInput.type = 'hidden';
-      latInput.id = 'pet-latitude';
-      latInput.name = 'latitude';
-      mapContainer.parentElement.appendChild(latInput);
-    }
-    if (!lngInput) {
-      lngInput = document.createElement('input');
-      lngInput.type = 'hidden';
-      lngInput.id = 'pet-longitude';
-      lngInput.name = 'longitude';
-      mapContainer.parentElement.appendChild(lngInput);
-    }
-
-    this.map.on('click', (e) => {
-      const { lat, lng } = e.latlng;
-      this.setMapMarker(lat, lng);
-    });
-    const locateBtn = document.getElementById('locate-on-map');
-    if (locateBtn) {
-      locateBtn.addEventListener('click', () => this.geocodeAddress());
-    }
-
-    const cityInput = document.getElementById('pet-city');
-    const countryInput = document.getElementById('pet-country');
-    const addressInput = document.getElementById('pet-address');
-    const postalCodeInput = document.getElementById('pet-postal-code');
-    const autoGeocode = () => {
-      if (
-        cityInput?.value.trim() &&
-        countryInput?.value.trim() &&
-        addressInput?.value.trim() &&
-        postalCodeInput?.value.trim()
-      ) {
-        this.geocodeAddress();
-      }
-    };
-    [cityInput, countryInput, addressInput, postalCodeInput].forEach(input => {
-      if (input) {
-        input.addEventListener('change', autoGeocode);
-        input.addEventListener('blur', autoGeocode);
-      }
-    });
-  }
-
-  setMapMarker(lat, lng) {
-    if (this.locationMarker) {
-      this.locationMarker.setLatLng([lat, lng]);
-    } else {
-      this.locationMarker = L.marker([lat, lng], { draggable: true }).addTo(this.map);
-      this.locationMarker.on('dragend', (e) => {
-        const pos = e.target.getLatLng();
-        this.updateLatLngFields(pos.lat, pos.lng);
-      });
-    }    this.map.setView([lat, lng], 14);
-    this.updateLatLngFields(lat, lng);
-  }
-  updateLatLngFields(lat, lng) {
-    document.getElementById('pet-latitude').value = lat;
-    document.getElementById('pet-longitude').value = lng;
-  }
-
-  async geocodeAddress() {
-    const city = document.getElementById('pet-city')?.value || '';
-    const country = document.getElementById('pet-country')?.value || '';
-    const address = document.getElementById('pet-address')?.value || '';
-    const postalCode = document.getElementById('pet-postal-code')?.value || '';
-    const query = encodeURIComponent([address, city, postalCode, country].filter(Boolean).join(', '));
-    if (!query) return;
-    try {
-      const url = `https://nominatim.openstreetmap.org/search?format=json&q=${query}`;
-      const response = await fetch(url);
-      const data = await response.json();
-      if (data && data.length > 0) {
-        const { lat, lon } = data[0];
-        this.setMapMarker(parseFloat(lat), parseFloat(lon));
-      } else {
-        alert('Location not found. Please refine the address.');
-      }
-    } catch (err) {
-      alert('Error locating address.');
-    }
-  }
-
+  
   initMediaUpload() {
     const mediaInput = document.getElementById('pet-media');
     const previewContainer = document.getElementById('media-preview');
@@ -907,7 +823,10 @@ class AddPetPage {
     clone.classList.remove('medical-history-entry-template');
     
     const description = clone.querySelector('.medical-history-description');
+    const date = clone.querySelector('.medical-history-date');
+    
     if (description) {
+      description.setAttribute('name', 'medicalHistoryDescription');
       description.addEventListener('blur', () => {
         this.validateMedicalField(description, 'Medical history description is required');
       });
@@ -917,6 +836,10 @@ class AddPetPage {
           this.clearFieldError(description);
         }
       });
+    }
+    
+    if (date) {
+      date.setAttribute('name', 'medicalHistoryDate');
     }
     
     const removeBtn = clone.querySelector('.remove-medical-history-btn');
@@ -944,6 +867,7 @@ class AddPetPage {
     const content = clone.querySelector('.care-resource-content');
     
     if (type) {
+      type.setAttribute('name', 'careResourceType');
       type.addEventListener('blur', () => {
         this.validateMedicalField(type, 'Care resource type is required');
       });
@@ -956,6 +880,7 @@ class AddPetPage {
     }
     
     if (title) {
+      title.setAttribute('name', 'careResourceTitle');
       title.addEventListener('blur', () => {
         this.validateMedicalField(title, 'Care resource title is required');
       });
@@ -968,6 +893,7 @@ class AddPetPage {
     }
     
     if (content) {
+      content.setAttribute('name', 'careResourceContent');
       content.addEventListener('blur', () => {
         this.validateMedicalField(content, 'Care resource content is required');
       });
@@ -1003,6 +929,7 @@ class AddPetPage {
     const frequency = clone.querySelector('.care-schedule-frequency');
     
     if (activity) {
+      activity.setAttribute('name', 'careScheduleActivity');
       activity.addEventListener('blur', () => {
         this.validateMedicalField(activity, 'Care schedule activity is required');
       });
@@ -1015,6 +942,7 @@ class AddPetPage {
     }
     
     if (hour) {
+      hour.setAttribute('name', 'careScheduleHour');
       hour.addEventListener('blur', () => {
         this.validateMedicalField(hour, 'Care schedule time is required');
       });
@@ -1027,6 +955,7 @@ class AddPetPage {
     }
     
     if (frequency) {
+      frequency.setAttribute('name', 'careScheduleFrequency');
       frequency.addEventListener('blur', () => {
         this.validateMedicalField(frequency, 'Care schedule frequency is required');
       });
@@ -1059,6 +988,27 @@ class AddPetPage {
       this.clearFieldError(field);
       return true;
     }
+  }
+
+  getSelectedTagsForSubmission() {
+    const tagsForSubmission = [];
+    
+    for (const tagId of this.selectedTags) {
+      const tag = this.availableTags.find(t => t.id === tagId);
+      
+      if (tag) {
+        if (tag.isCustom) {
+          tagsForSubmission.push({
+            name: tag.name,
+            isCustom: true
+          });
+        } else {
+          tagsForSubmission.push(tagId);
+        }
+      }
+    }
+    
+    return tagsForSubmission;
   }
 }
 

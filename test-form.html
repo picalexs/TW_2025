@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Pet Form Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ccc; }
+        .test-button { padding: 10px 20px; margin: 10px; background: #007bff; color: white; border: none; cursor: pointer; }
+        .test-button:hover { background: #0056b3; }
+        .result { margin: 10px 0; padding: 10px; border: 1px solid #ddd; background: #f9f9f9; }
+        .error { border-color: #dc3545; background: #f8d7da; }
+        .success { border-color: #28a745; background: #d4edda; }
+    </style>
+</head>
+<body>
+    <h1>Add Pet Form Test</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: Basic Form Submission</h2>
+        <button class="test-button" onclick="testBasicSubmission()">Test Basic Submission</button>
+        <div id="result1" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 2: Form with File Upload</h2>
+        <input type="file" id="testFile" accept="image/*" multiple>
+        <button class="test-button" onclick="testFileSubmission()">Test File Submission</button>
+        <div id="result2" class="result"></div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 3: Direct API Test</h2>
+        <button class="test-button" onclick="testDirectAPI()">Test Direct API</button>
+        <div id="result3" class="result"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8080/api/pets';
+        
+        // Helper function to create basic form data
+        function createBasicFormData() {
+            const formData = new FormData();
+            
+            // Required fields
+            formData.append('name', 'Test Pet');
+            formData.append('species', 'dog');
+            formData.append('gender', 'male');
+            formData.append('healthStatus', 'excellent');
+            formData.append('city', 'Test City');
+            formData.append('country', 'Test Country');
+            formData.append('adoptionFee', '100');
+            
+            // Optional fields with defaults
+            formData.append('breed', 'Mixed Breed');
+            formData.append('age', '2');
+            formData.append('sizeCategory', 'medium');
+            formData.append('weightKg', '15');
+            formData.append('color', 'Brown');
+            formData.append('description', 'A lovely test pet');
+            formData.append('relationWithOthers', 'friendly');
+            formData.append('adoptionStatus', 'available');
+            formData.append('shelterId', '4');
+            formData.append('addressId', '1');
+            formData.append('postalCode', '12345');
+            formData.append('address', 'Test Address');
+            
+            // JSON fields
+            formData.append('tags', JSON.stringify([]));
+            formData.append('medicalHistory', JSON.stringify([]));
+            formData.append('careResources', JSON.stringify([]));
+            formData.append('careSchedule', JSON.stringify([]));
+            formData.append('profileImageIndex', '0');
+            
+            return formData;
+        }
+        
+        async function testBasicSubmission() {
+            const resultDiv = document.getElementById('result1');
+            resultDiv.innerHTML = 'Testing basic submission...';
+            
+            try {
+                const formData = createBasicFormData();
+                
+                const response = await fetch(API_BASE, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `<div class="success">✅ Success! Pet created with ID: ${result.id}</div>`;
+                    console.log('Success:', result);
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ Error: ${result.message || result.error}</div>`;
+                    console.error('Error:', result);
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Network Error: ${error.message}</div>`;
+                console.error('Network Error:', error);
+            }
+        }
+        
+        async function testFileSubmission() {
+            const resultDiv = document.getElementById('result2');
+            const fileInput = document.getElementById('testFile');
+            
+            if (!fileInput.files.length) {
+                resultDiv.innerHTML = '<div class="error">Please select at least one file first</div>';
+                return;
+            }
+            
+            resultDiv.innerHTML = 'Testing file submission...';
+            
+            try {
+                const formData = createBasicFormData();
+                
+                // Add files
+                for (let i = 0; i < fileInput.files.length; i++) {
+                    formData.append('mediaFiles', fileInput.files[i]);
+                }
+                
+                const response = await fetch(API_BASE, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `<div class="success">✅ Success! Pet created with ID: ${result.id}<br>Media paths: ${JSON.stringify(result.mediaPaths)}</div>`;
+                    console.log('Success:', result);
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ Error: ${result.message || result.error}</div>`;
+                    console.error('Error:', result);
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Network Error: ${error.message}</div>`;
+                console.error('Network Error:', error);
+            }
+        }
+        
+        async function testDirectAPI() {
+            const resultDiv = document.getElementById('result3');
+            resultDiv.innerHTML = 'Testing direct API...';
+            
+            try {
+                // First test API status
+                const statusResponse = await fetch('http://localhost:8080/api/status');
+                const statusResult = await statusResponse.json();
+                
+                if (statusResponse.ok) {
+                    resultDiv.innerHTML = `<div class="success">✅ API Status: ${statusResult.message}</div>`;
+                    
+                    // Now test the pets endpoint
+                    const petsResponse = await fetch('http://localhost:8080/api/pets');
+                    const petsResult = await petsResponse.json();
+                    
+                    if (petsResponse.ok) {
+                        resultDiv.innerHTML += `<div class="success">✅ Pets API: Found ${petsResult.length} pets</div>`;
+                    } else {
+                        resultDiv.innerHTML += `<div class="error">❌ Pets API Error: ${petsResult.message || petsResult.error}</div>`;
+                    }
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ API Status Error: ${statusResult.message || statusResult.error}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ Network Error: ${error.message}</div>`;
+                console.error('Network Error:', error);
+            }
+        }
+    </script>
+</body>
+</html>

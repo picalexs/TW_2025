@@ -26,8 +26,6 @@ CREATE TABLE address (
   city VARCHAR2(100) NOT NULL,
   country VARCHAR2(100) NOT NULL,
   postal_code VARCHAR2(20),
-  latitude NUMBER(10,8),
-  longitude NUMBER(11,8),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -320,7 +318,6 @@ CREATE INDEX idx_animal_tags_animal ON animal_tags(animal_id);
 CREATE INDEX idx_animal_tags_tag ON animal_tags(tag_id);
 CREATE INDEX idx_user_tags_user ON user_preference_tags(user_id);
 CREATE INDEX idx_address_city ON address(city);
-CREATE INDEX idx_address_coords ON address(latitude, longitude);
 CREATE INDEX idx_testimonials_user ON testimonials(user_id, created_at);
 CREATE INDEX idx_owner_reviews_reviewer ON owner_reviews(reviewer_id, created_at);
 CREATE INDEX idx_owner_reviews_owner ON owner_reviews(reviewed_owner_id, created_at);

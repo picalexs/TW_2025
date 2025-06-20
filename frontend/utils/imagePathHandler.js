@@ -27,7 +27,12 @@ class ImagePathHandler {
             return `${this.API_BASE_URL}${imagePath}`;
         }
 
-        return defaultPath;
+        let cleanPath = imagePath;
+        if (cleanPath.startsWith("/")) {
+            cleanPath = cleanPath.substring(1);
+        }
+
+        return `${this.API_BASE_URL}/api/static/${cleanPath}`;
     }
 
     static processPetImagePath(imagePath) {

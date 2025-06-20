@@ -63,8 +63,16 @@ class PetDetailsPage {
   
   renderPetHeader(pet) {
     const mainImage = document.getElementById('main-pet-image');
-    const imagePath = window.ImagePathHandler.processPetImagePath(pet.imagePath);
     
+    let profileImagePath;
+    if (pet.media && pet.media.length > 0) {
+      const imageMedia = pet.media.find(media => media.type === 'image' || !media.type);
+      profileImagePath = imageMedia ? imageMedia.filePath : pet.imagePath;
+    } else {
+      profileImagePath = pet.imagePath;
+    }
+    
+    const imagePath = window.ImagePathHandler.processPetImagePath(profileImagePath);
     mainImage.src = imagePath;
     mainImage.alt = pet.name;
 
@@ -87,19 +95,22 @@ class PetDetailsPage {
 
     const allImages = [];
     
-    if (pet.imagePath) {
+    if (pet.media && pet.media.length > 0) {
+      const mediaImages = pet.media.filter(media => media.type === 'image' || !media.type);
+      
+      mediaImages.forEach((media, index) => {
+        allImages.push({
+          filePath: media.filePath,
+          isProfile: index === 0
+        });
+      });
+    }
+
+    else if (pet.imagePath) {
       allImages.push({
         filePath: pet.imagePath,
         isProfile: true
       });
-    }
-    
-    if (pet.media && pet.media.length > 0) {
-      const mediaImages = pet.media.filter(media => media.type === 'image' || !media.type);
-      allImages.push(...mediaImages.map(media => ({
-        filePath: media.filePath,
-        isProfile: false
-      })));
     }
 
     const imagesToShow = allImages.slice(0, 5);
@@ -573,8 +584,7 @@ class PetDetailsPage {
 
   getCityCoordinates(city) {
     if (!city) return null;
-    
-    // Simple coordinates mapping for common cities
+
     const cityCoords = {
       'london': { lat: 51.5074, lng: -0.1278 },
       'paris': { lat: 48.8566, lng: 2.3522 },
@@ -582,6 +592,7 @@ class PetDetailsPage {
       'los angeles': { lat: 34.0522, lng: -118.2437 },
       'tokyo': { lat: 35.6762, lng: 139.6503 },
       'bucharest': { lat: 44.4268, lng: 26.1025 },
+      'iasi': { lat: 47.1585, lng: 27.6014 },
       'budapest': { lat: 47.4979, lng: 19.0402 },
       'vienna': { lat: 48.2082, lng: 16.3738 },
       'rome': { lat: 41.9028, lng: 12.4964 },

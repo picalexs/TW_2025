@@ -6,10 +6,7 @@ const ImagePathHandler = require("../utils/imagePathHandler");
 class petDTO extends abstractDTO {
   constructor() {
     super("animals");
-  }
-  mapToEntity(dbRow) {
-    const imagePath = ImagePathHandler.processPetImagePath(dbRow.FILE_PATH);
-
+  }  mapToEntity(dbRow) {
     return {
       id: dbRow.ID,
       name: dbRow.NAME,
@@ -26,18 +23,16 @@ class petDTO extends abstractDTO {
       adoptionFee: dbRow.ADOPTION_FEE,
       relationWithOthers: dbRow.RELATION_WITH_OTHERS,
       createdAt: dbRow.CREATED_AT,
-      imagePath: imagePath,
+      imagePath: null,
     };
   }
+  
   async getAll() {
     try {
       const result = await this.executeCustomQuery(
-        `SELECT a.*, m.file_path
+        `SELECT a.*
          FROM animals a
-         LEFT JOIN media m ON a.id = m.animal_id
-         WHERE m.id IS NULL OR m.id = (
-           SELECT MIN(id) FROM media WHERE animal_id = a.id
-         )`,
+         ORDER BY a.created_at DESC`,
         [],
         {
           outFormat: oracledb.OUT_FORMAT_OBJECT,
@@ -50,6 +45,19 @@ class petDTO extends abstractDTO {
       const pets = result.rows.map((row) => this.mapToEntity(row));
       
       for (const pet of pets) {
+        try {
+          const mediaResult = await this.executeCustomQuery(
+            `SELECT file_path FROM media WHERE animal_id = :id ORDER BY id FETCH FIRST 1 ROWS ONLY`,
+            [pet.id],
+            { outFormat: oracledb.OUT_FORMAT_OBJECT }
+          );
+          
+          if (mediaResult.rows.length > 0) {
+            pet.imagePath = mediaResult.rows[0].FILE_PATH;
+          }
+        } catch (mediaError) {
+          console.error(`Error fetching profile image for pet ${pet.id}:`, mediaError);
+        }
         try {
           const tagsResult = await this.executeCustomQuery(
             `SELECT t.id, t.name
@@ -100,20 +108,16 @@ class petDTO extends abstractDTO {
           status: 400,
         });
       }      
-      
-      const result = await this.executeCustomQuery(
-        `SELECT a.*, m.file_path, 
+        const result = await this.executeCustomQuery(
+        `SELECT a.*, 
                 addr.street, addr.city, addr.country, addr.postal_code,
                 u.id as shelter_user_id, u.first_name as shelter_first_name, u.last_name as shelter_last_name,
                 u.email as shelter_email, u.phone as shelter_phone,
                 u.profile_picture as shelter_profile_picture
          FROM animals a
-         LEFT JOIN media m ON a.id = m.animal_id
          LEFT JOIN address addr ON a.address_id = addr.id
          LEFT JOIN users u ON a.shelter_id = u.id
-         WHERE a.id = :id AND (m.id IS NULL OR m.id = (
-           SELECT MIN(id) FROM media WHERE animal_id = a.id
-         ))`,
+         WHERE a.id = :id`,
         [id],
         {
           outFormat: oracledb.OUT_FORMAT_OBJECT,
@@ -258,6 +262,12 @@ class petDTO extends abstractDTO {
           type: media.TYPE,
           filePath: media.FILE_PATH,
         }));
+        
+        // Set the profile image from the first media item for backward compatibility
+        // The frontend will use pet.media[0] as the profile image
+        if (pet.media.length > 0) {
+          pet.imagePath = pet.media[0].filePath;
+        }
       } catch (mediaError) {
         pet.media = [];
         console.error("Error fetching pet media:", mediaError);
@@ -360,16 +370,12 @@ class petDTO extends abstractDTO {
           code: "VALIDATION_ERROR",
           status: 400,
         });
-      }
-
+      }      
+      
       const result = await this.executeCustomQuery(
-        `SELECT a.*, m.file_path
+        `SELECT a.*
          FROM animals a
-         LEFT JOIN media m ON a.id = m.animal_id
          WHERE a.shelter_id = :shelterId
-         AND (m.id IS NULL OR m.id = (
-           SELECT MIN(id) FROM media WHERE animal_id = a.id
-         ))
          ORDER BY a.created_at DESC`,
         [shelterId],
         {
@@ -380,7 +386,25 @@ class petDTO extends abstractDTO {
         }
       );
 
-      return result.rows.map((row) => this.mapToEntity(row));
+      const pets = result.rows.map((row) => this.mapToEntity(row));
+      
+      for (const pet of pets) {
+        try {
+          const mediaResult = await this.executeCustomQuery(
+            `SELECT file_path FROM media WHERE animal_id = :id ORDER BY id FETCH FIRST 1 ROWS ONLY`,
+            [pet.id],
+            { outFormat: oracledb.OUT_FORMAT_OBJECT }
+          );
+          
+          if (mediaResult.rows.length > 0) {
+            pet.imagePath = mediaResult.rows[0].FILE_PATH;
+          }
+        } catch (mediaError) {
+          console.error(`Error fetching profile image for pet ${pet.id}:`, mediaError);
+        }
+      }
+
+      return pets;
     } catch (error) {
       throw Object.assign(
         new Error(`Failed to fetch pets for shelter: ${error.message}`),
@@ -409,9 +433,12 @@ class petDTO extends abstractDTO {
         adoptionStatus,
         adoptionFee,
         relationWithOthers,
-        addressId,
         shelterId,
         tags,
+        city,
+        country,
+        address,
+        postalCode
       } = petData;
 
       if (!name || !species) {
@@ -421,6 +448,16 @@ class petDTO extends abstractDTO {
           ),
           { code: "VALIDATION_ERROR", status: 400 }
         );
+      }
+
+      let addressId = null;
+      if (city && country) {
+        addressId = await this.createAddress({
+          street: address,
+          city,
+          country,
+          postalCode
+        });
       }
 
       const result = await this.executeCustomQuery(
@@ -478,33 +515,12 @@ class petDTO extends abstractDTO {
           id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
         },
         { autoCommit: true }
-      );
-
+      );      
+      
       const petId = result.outBinds.id[0];
 
-      if (tags && Array.isArray(tags)) {
-        for (const tagId of tags) {
-          try {
-            await this.executeCustomQuery(
-              `INSERT INTO animal_tags (animal_id, tag_id) VALUES (:animalId, :tagId)`,
-              { animalId: petId, tagId },
-              { autoCommit: true }
-            );
-          } catch (tagError) {
-            console.error(
-              `Error assigning tag ${tagId} to pet ${petId}:`,
-              tagError
-            );
-            if (tagError.errorNum === 2291) {
-              throw Object.assign(new Error(`Invalid tag ID: ${tagId}`), {
-                code: "INVALID_TAG",
-                status: 400,
-                originalError: tagError,
-              });
-            }
-          }
-        }
-      }
+      // Tags are now handled separately by the controller
+      // No longer processing tags in the DTO create method
 
       return petId;
     } catch (error) {
@@ -544,6 +560,187 @@ class petDTO extends abstractDTO {
       }
 
       throw Object.assign(new Error(`Failed to create pet: ${error.message}`), {
+        code: "DB_ERROR",
+        status: 500,
+        originalError: error,
+      });
+    }
+  }
+
+  async saveMediaPaths(petId, mediaPaths) {
+    try {
+      for (const media of mediaPaths) {
+        await this.executeCustomQuery(
+          `INSERT INTO media (animal_id, type, file_path) VALUES (:petId, :type, :path)`,
+          [petId, media.type, media.path],
+          { autoCommit: true }
+        );
+      }
+      return true;
+    } catch (error) {
+      console.error("Error saving media paths:", error);
+      throw Object.assign(new Error(`Failed to save media paths: ${error.message}`), {
+        code: "DB_ERROR",
+        status: 500,
+        originalError: error,
+      });
+    }
+  }
+
+  async saveTags(petId, tags) {
+    try {
+      for (const tagId of tags) {
+        await this.executeCustomQuery(
+          `INSERT INTO animal_tags (animal_id, tag_id) VALUES (:petId, :tagId)`,
+          [petId, tagId],
+          { autoCommit: true }
+        );
+      }
+      return true;
+    } catch (error) {
+      console.error("Error saving tags:", error);
+      throw Object.assign(new Error(`Failed to save tags: ${error.message}`), {
+        code: "DB_ERROR",
+        status: 500,
+        originalError: error,
+      });
+    }
+  }
+
+  async saveMedicalHistory(petId, medicalHistory) {
+    try {
+      for (const entry of medicalHistory) {
+        await this.executeCustomQuery(
+          `INSERT INTO medical_history (animal_id, description, record_date) VALUES (:petId, :description, :recordDate)`,
+          [petId, entry.description, entry.date || new Date()],
+          { autoCommit: true }
+        );
+      }
+      return true;
+    } catch (error) {
+      console.error("Error saving medical history:", error);
+      throw Object.assign(new Error(`Failed to save medical history: ${error.message}`), {
+        code: "DB_ERROR",
+        status: 500,
+        originalError: error,
+      });
+    }
+  }
+  async saveCareResources(petId, careResources) {
+    try {
+      for (const resource of careResources) {
+        await this.executeCustomQuery(
+          `INSERT INTO care_resources (animal_id, resource_type, title, content) VALUES (:petId, :resourceType, :title, :content)`,
+          [petId, resource.type, resource.title, resource.content],
+          { autoCommit: true }
+        );
+      }
+      return true;
+    } catch (error) {
+      console.error("Error saving care resources:", error);
+      throw Object.assign(new Error(`Failed to save care resources: ${error.message}`), {
+        code: "DB_ERROR",
+        status: 500,
+        originalError: error,
+      });
+    }
+  }
+  async saveCareSchedule(petId, careSchedule) {
+    try {
+      for (const schedule of careSchedule) {
+        await this.executeCustomQuery(
+          `INSERT INTO care_schedule (animal_id, activity, hour, frequency) VALUES (:petId, :activity, :hour, :frequency)`,
+          [petId, schedule.activity, schedule.hour, schedule.frequency],
+          { autoCommit: true }
+        );
+      }
+      return true;
+    } catch (error) {
+      console.error("Error saving care schedule:", error);
+      throw Object.assign(new Error(`Failed to save care schedule: ${error.message}`), {
+        code: "DB_ERROR",
+        status: 500,
+        originalError: error,
+      });
+    }
+  }
+
+  async getTagById(tagId) {
+    try {
+      const result = await this.executeCustomQuery(
+        `SELECT id, name FROM tags WHERE id = :tagId`,
+        [tagId],
+        { outFormat: oracledb.OUT_FORMAT_OBJECT }
+      );
+      
+      return result.rows.length > 0 ? result.rows[0] : null;
+    } catch (error) {
+      console.error("Error fetching tag by ID:", error);
+      return null;
+    }
+  }
+
+  async createTag(tagName) {
+    try {
+      const existingResult = await this.executeCustomQuery(
+        `SELECT id FROM tags WHERE LOWER(name) = LOWER(:tagName)`,
+        [tagName],
+        { outFormat: oracledb.OUT_FORMAT_OBJECT }
+      );
+
+      if (existingResult.rows.length > 0) {
+        return existingResult.rows[0].ID;
+      }
+
+      const result = await this.executeCustomQuery(
+        `INSERT INTO tags (name) VALUES (:tagName) RETURNING id INTO :id`,
+        {
+          tagName: tagName,
+          id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER }
+        },
+        { autoCommit: true }
+      );
+
+      return result.outBinds.id[0];
+    } catch (error) {
+      console.error("Error creating tag:", error);
+      throw Object.assign(new Error(`Failed to create tag: ${error.message}`), {
+        code: "DB_ERROR",
+        status: 500,
+        originalError: error,
+      });
+    }
+  }
+
+  async createAddress(addressData) {
+    try {
+      const { street, city, country, postalCode } = addressData;
+      
+      if (!city || !country) {
+        throw Object.assign(
+          new Error("City and country are required for address"),
+          { code: "VALIDATION_ERROR", status: 400 }
+        );
+      }
+
+      const result = await this.executeCustomQuery(
+        `INSERT INTO address (street, city, country, postal_code) 
+         VALUES (:street, :city, :country, :postalCode) 
+         RETURNING id INTO :id`,
+        {
+          street: street || null,
+          city,
+          country,
+          postalCode: postalCode || null,
+          id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER }
+        },
+        { autoCommit: true }
+      );
+
+      return result.outBinds.id[0];
+    } catch (error) {
+      console.error("Error creating address:", error);
+      throw Object.assign(new Error(`Failed to create address: ${error.message}`), {
         code: "DB_ERROR",
         status: 500,
         originalError: error,

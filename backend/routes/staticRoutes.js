@@ -66,11 +66,17 @@ async function handleStaticRoutes(req, res) {
       const serverRoot = path.join(__dirname, '..');
       const projectRoot = path.join(serverRoot, '..');
       
-      const searchPaths = [
-        path.join(projectRoot, 'server', requestPath),
-        path.join(projectRoot, 'frontend', 'assets', requestPath),
-        path.join(serverRoot, requestPath)
-      ];
+      const searchPaths = [];
+      
+      if (requestPath.startsWith('server/')) {
+        searchPaths.push(path.join(projectRoot, requestPath));
+      } else {
+        searchPaths.push(
+          path.join(projectRoot, 'server', requestPath),
+          path.join(projectRoot, 'frontend', 'assets', requestPath),
+          path.join(serverRoot, requestPath)
+        );
+      }
       
       let filePath = null;
       for (const tryPath of searchPaths) {

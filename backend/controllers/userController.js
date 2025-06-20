@@ -34,10 +34,6 @@ class UserController {
     try {
       const { username, email, password } = await collectRequestData(req);
 
-      if (!username || !email || !password) {
-        return sendResponse(res, 400, { message: 'All fields are required.' });
-      }
-
       const passwordHash = await bcrypt.hash(password, 10);
       const emailToken = crypto.randomBytes(32).toString('hex');
       const tokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
@@ -46,7 +42,7 @@ class UserController {
         username,
         password_hash: passwordHash,
         email,
-        email_token: emailToken,
+        email_token: emailToken,  
         token_expires: tokenExpires
       });
 
