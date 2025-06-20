@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title data-i18n="petDetailsPageTitle" data-i18n-fallback="Pet Details"></title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
-    <link rel="stylesheet" href="../global/global.min.css">
-    <link rel="stylesheet" href="pets.min.css">
+    <title data-i18n="petDetailsPageTitle" data-i18n-fallback="Pet Details"></title>    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">      
+    <link rel="stylesheet" href="../../global/global.min.css">
+    <link rel="stylesheet" href="../pets-page/pets-page.min.css">
     <link rel="stylesheet" href="pet-details.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 </head>
 <body>
     <div id="global-navbar">
@@ -27,22 +28,22 @@
     <main class="pet-details-container">
         <div id="loading-state" class="loading-container">
             <div class="loading-spinner"></div>
-            <p data-i18n="loadingPetDetails" data-i18n-fallback="Loading pet details...">Loading pet details...</p>
+            <p data-i18n="loadingPetDetails" data-i18n-fallback="Loading pet details..."></p>
         </div>
 
         <div id="error-state" class="error-container" style="display: none;">
             <div class="error-message">
-                <h2 data-i18n="errorTitle" data-i18n-fallback="Pet Not Found">Pet Not Found</h2>
-                <p data-i18n="errorMessage" data-i18n-fallback="Sorry, we couldn't find the pet you're looking for.">Sorry, we couldn't find the pet you're looking for.</p>
-                <a href="pets.html" class="btn btn-primary" data-i18n="backToPets" data-i18n-fallback="Back to Pets">Back to Pets</a>
+                <h2 data-i18n="errorTitle" data-i18n-fallback="Pet Not Found"></h2>
+                <p data-i18n="errorMessage" data-i18n-fallback="Sorry, we couldn't find the pet you're looking for."></p>
+                <a href="../pets-page/pets-page.html" class="btn btn-primary" data-i18n="backToPets" data-i18n-fallback="Back to Pets"></a>
             </div>
         </div>
 
         <div id="pet-details-content" class="pet-details-content" style="display: none;">
-            <div class="navigation-header">
-                <a href="pets.html" class="back-link">
+            <div class="navigation-header">                
+                <a href="../pets-page/pets-page.html" class="back-link">
                     <span class="back-arrow">←</span>
-                    <span data-i18n="backToPets" data-i18n-fallback="Back to Pets">Back to Pets</span>
+                    <span data-i18n="backToPets" data-i18n-fallback="Back to Pets"></span>
                 </a>
             </div>
 
@@ -64,19 +65,19 @@
                         </div>
                         <div class="pet-quick-info">
                             <div class="info-item">
-                                <span class="info-label" data-i18n="species" data-i18n-fallback="Species">Species:</span>
+                                <span class="info-label" data-i18n="species" data-i18n-fallback="Species:"></span>
                                 <span id="pet-species" class="info-value"></span>
                             </div>
                             <div class="info-item">
-                                <span class="info-label" data-i18n="breed" data-i18n-fallback="Breed">Breed:</span>
+                                <span class="info-label" data-i18n="breed" data-i18n-fallback="Breed:"></span>
                                 <span id="pet-breed" class="info-value"></span>
                             </div>
                             <div class="info-item">
-                                <span class="info-label" data-i18n="age" data-i18n-fallback="Age">Age:</span>
+                                <span class="info-label" data-i18n="age" data-i18n-fallback="Age:"></span>
                                 <span id="pet-age" class="info-value"></span>
                             </div>
                             <div class="info-item">
-                                <span class="info-label" data-i18n="gender" data-i18n-fallback="Gender">Gender:</span>
+                                <span class="info-label" data-i18n="gender" data-i18n-fallback="Gender:"></span>
                                 <span id="pet-gender" class="info-value"></span>
                             </div>
                         </div>
@@ -85,49 +86,49 @@
             </section>
 
             <div class="adoption-actions">
-                <button id="contact-shelter-btn" class="btn btn-primary btn-large" data-i18n="contact" data-i18n-fallback="Contact">Contact</button>
+                <button id="contact-shelter-btn" class="btn btn-primary btn-large" data-i18n="contact" data-i18n-fallback="Contact"></button>
             </div>
 
             <section class="pet-details-tabs">
                 <div class="tabs-nav">
-                    <button class="tab-btn active" data-tab="overview" data-i18n="overview" data-i18n-fallback="Overview">Overview</button>
-                    <button class="tab-btn" data-tab="health" data-i18n="health" data-i18n-fallback="Health & Care">Health & Care</button>
-                    <button class="tab-btn" data-tab="behavior" data-i18n="behavior" data-i18n-fallback="Behavior">Behavior</button>
-                    <button class="tab-btn" data-tab="location" data-i18n="location" data-i18n-fallback="Location">Location</button>
-                    <button class="tab-btn" data-tab="adoption" data-i18n="adoption" data-i18n-fallback="Adoption">Adoption</button>
+                    <button class="tab-btn active" data-tab="overview" data-i18n="overview" data-i18n-fallback="Overview"></button>
+                    <button class="tab-btn" data-tab="health" data-i18n="health" data-i18n-fallback="Health & Care"></button>
+                    <button class="tab-btn" data-tab="behavior" data-i18n="behavior" data-i18n-fallback="Behavior"></button>
+                    <button class="tab-btn" data-tab="location" data-i18n="location" data-i18n-fallback="Location"></button>
+                    <button class="tab-btn" data-tab="adoption" data-i18n="adoption" data-i18n-fallback="Adoption"></button>
                 </div>
 
                 <div id="overview-tab" class="tab-content active">
                     <div class="detail-section">
-                        <h3 data-i18n="aboutPet" data-i18n-fallback="About This Pet">About This Pet</h3>
+                        <h3 data-i18n="aboutPet" data-i18n-fallback="About This Pet"></h3>
                         <p id="pet-description" class="pet-description"></p>
                     </div>
 
                     <div class="detail-grid">
                         <div class="detail-card">
-                            <h4 data-i18n="basicInfo" data-i18n-fallback="Basic Information">Basic Information</h4>
+                            <h4 data-i18n="basicInfo" data-i18n-fallback="Basic Information"></h4>
                             <div class="detail-list">
                                 <div class="detail-item">
-                                    <span class="detail-label" data-i18n="size" data-i18n-fallback="Size">Size:</span>
+                                    <span class="detail-label" data-i18n="size" data-i18n-fallback="Size:"></span>
                                     <span id="pet-size" class="detail-value"></span>
                                 </div>
                                 <div class="detail-item">
-                                    <span class="detail-label" data-i18n="weight" data-i18n-fallback="Weight">Weight:</span>
+                                    <span class="detail-label" data-i18n="weight" data-i18n-fallback="Weight:"></span>
                                     <span id="pet-weight" class="detail-value"></span>
                                 </div>
                                 <div class="detail-item">
-                                    <span class="detail-label" data-i18n="color" data-i18n-fallback="Color">Color:</span>
+                                    <span class="detail-label" data-i18n="color" data-i18n-fallback="Color:"></span>
                                     <span id="pet-color" class="detail-value"></span>
                                 </div>
                                 <div class="detail-item">
-                                    <span class="detail-label" data-i18n="healthStatus" data-i18n-fallback="Health Status">Health Status:</span>
+                                    <span class="detail-label" data-i18n="healthStatus" data-i18n-fallback="Health Status:"></span>
                                     <span id="pet-health-status" class="detail-value"></span>
                                 </div>
                             </div>
                         </div>
 
                         <div class="detail-card">
-                            <h4 data-i18n="characteristics" data-i18n-fallback="Characteristics">Characteristics</h4>
+                            <h4 data-i18n="characteristics" data-i18n-fallback="Characteristics"></h4>
                             <div id="pet-tags" class="pet-tags"></div>
                         </div>
                     </div>
@@ -135,62 +136,62 @@
 
                 <div id="health-tab" class="tab-content">
                     <div class="detail-section">
-                        <h3 data-i18n="medicalHistory" data-i18n-fallback="Medical History">Medical History</h3>
+                        <h3 data-i18n="medicalHistory" data-i18n-fallback="Medical History"></h3>
                         <div id="medical-history" class="medical-records"></div>
                     </div>
 
                     <div class="detail-section">
-                        <h3 data-i18n="careSchedule" data-i18n-fallback="Daily Care Schedule">Daily Care Schedule</h3>
+                        <h3 data-i18n="careSchedule" data-i18n-fallback="Daily Care Schedule"></h3>
                         <div id="care-schedule" class="care-schedule"></div>
                     </div>
 
                     <div class="detail-section">
-                        <h3 data-i18n="careResources" data-i18n-fallback="Care Resources">Care Resources</h3>
+                        <h3 data-i18n="careResources" data-i18n-fallback="Care Resources"></h3>
                         <div id="care-resources" class="care-resources"></div>
                     </div>
                 </div>
 
                 <div id="behavior-tab" class="tab-content">
                     <div class="detail-section">
-                        <h3 data-i18n="relationWithOthers" data-i18n-fallback="Relationship with Others">Relationship with Others</h3>
+                        <h3 data-i18n="relationWithOthers" data-i18n-fallback="Relationship with Others"></h3>
                         <p id="pet-relations" class="behavior-description"></p>
                     </div>
-                </div>
-
+                </div>                
                 <div id="location-tab" class="tab-content">
                     <div class="detail-section">
-                        <h3 data-i18n="petLocation" data-i18n-fallback="Pet Location">Pet Location</h3>
+                        <h3 data-i18n="petLocation" data-i18n-fallback="Pet Location"></h3>
                         <div id="pet-address" class="address-info"></div>
+                        <div id="map" style="height: 400px; margin-top: 1rem; border-radius: 8px; overflow: hidden;"></div>
                     </div>
 
                     <div class="detail-section">
-                        <h3 data-i18n="shelterInfo" data-i18n-fallback="Shelter Information">Shelter Information</h3>
+                        <h3 data-i18n="shelterInfo" data-i18n-fallback="Shelter Information"></h3>
                         <div id="shelter-info" class="shelter-info"></div>
                     </div>
                 </div>
 
                 <div id="adoption-tab" class="tab-content">
                     <div class="detail-section">
-                        <h3 data-i18n="adoptionDetails" data-i18n-fallback="Adoption Details">Adoption Details</h3>
+                        <h3 data-i18n="adoptionDetails" data-i18n-fallback="Adoption Details"></h3>
                         <div class="adoption-info">
                             <div class="detail-item">
-                                <span class="detail-label" data-i18n="adoptionFee" data-i18n-fallback="Adoption Fee">Adoption Fee:</span>
+                                <span class="detail-label" data-i18n="adoptionFee" data-i18n-fallback="Adoption Fee:"></span>
                                 <span id="adoption-fee" class="detail-value fee-value"></span>
                             </div>
                             <div class="detail-item">
-                                <span class="detail-label" data-i18n="availableSince" data-i18n-fallback="Available Since">Available Since:</span>
+                                <span class="detail-label" data-i18n="availableSince" data-i18n-fallback="Available Since:"></span>
                                 <span id="available-since" class="detail-value"></span>
                             </div>
                         </div>
                     </div>
 
                     <div class="detail-section">
-                        <h3 data-i18n="petStats" data-i18n-fallback="Pet Statistics">Pet Statistics</h3>
+                        <h3 data-i18n="petStats" data-i18n-fallback="Pet Statistics"></h3>
                         <div id="pet-metrics" class="pet-metrics"></div>
                     </div>
 
                     <div class="detail-section">
-                        <h3 data-i18n="adoptionHistory" data-i18n-fallback="Adoption History">Adoption History</h3>
+                        <h3 data-i18n="adoptionHistory" data-i18n-fallback="Adoption History"></h3>
                         <div id="adoption-history" class="adoption-history"></div>
                     </div>
                 </div>
@@ -201,36 +202,38 @@
     <div id="contact-modal" class="modal" style="display: none;">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 data-i18n="contactShelter" data-i18n-fallback="Contact Shelter">Contact Shelter</h3>
+                <h3 data-i18n="contactShelter" data-i18n-fallback="Contact Shelter"></h3>
                 <button class="modal-close">&times;</button>
             </div>
             <div class="modal-body">
                 <form id="contact-form">
                     <div class="form-group">
-                        <label data-i18n="yourName" data-i18n-fallback="Your Name">Your Name:</label>
+                        <label data-i18n="yourName" data-i18n-fallback="Your Name:"></label>
                         <input type="text" id="contact-name" required>
                     </div>
                     <div class="form-group">
-                        <label data-i18n="yourEmail" data-i18n-fallback="Your Email">Your Email:</label>
+                        <label data-i18n="yourEmail" data-i18n-fallback="Your Email:"></label>
                         <input type="email" id="contact-email" required>
                     </div>
                     <div class="form-group">
-                        <label data-i18n="message" data-i18n-fallback="Message">Message:</label>
+                        <label data-i18n="message" data-i18n-fallback="Message:"></label>
                         <textarea id="contact-message" rows="4" required></textarea>
                     </div>
                     <div class="form-actions">
-                        <button type="button" class="btn btn-secondary modal-close" data-i18n="cancel" data-i18n-fallback="Cancel">Cancel</button>
-                        <button type="submit" class="btn btn-primary" data-i18n="sendMessage" data-i18n-fallback="Send Message">Send Message</button>
+                        <button type="button" class="btn btn-secondary modal-close" data-i18n="cancel" data-i18n-fallback="Cancel"></button>
+                        <button type="submit" class="btn btn-primary" data-i18n="sendMessage" data-i18n-fallback="Send Message"></button>
                     </div>
                 </form>
             </div>
         </div>
-    </div>    
-    <div id="global-footer"></div>
-      <script src="../config.min.js"></script>
-    <script src="../utils/imagePathHandler.min.js"></script>
-    <script type="module" src="../global/global.min.js"></script>
-    <script type="module" src="../languages/language.min.js"></script>
+    </div>      
+    
+    <div id="global-footer"></div>    
+    <script src="../../config.min.js"></script>
+    <script src="../../utils/imagePathHandler.min.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script type="module" src="../../global/global.min.js"></script>
+    <script type="module" src="../../languages/language.min.js"></script>
     <script type="module" src="pet-details.min.js"></script>
 </body>
 </html>

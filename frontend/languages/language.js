@@ -12,7 +12,7 @@ class LanguageManager {
     });
   }
 
-  async loadTranslation() {
+  async loadTranslation() {    
     try {
       const page = window.location.pathname.split('/').pop().replace('.html', '');
       const basePath = window.location.pathname.includes('/home/') ? '../' : '../';

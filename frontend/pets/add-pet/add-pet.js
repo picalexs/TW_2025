@@ -1,5 +1,5 @@
-import PetService from '../services/petService.min.js';
-import { setupMobileMenu, initializePageLanguage, checkLoginStatusAndToggleNavButtons } from '../global/global.min.js';
+import PetService from '../../services/petService.min.js';
+import { setupMobileMenu, initializePageLanguage, checkLoginStatusAndToggleNavButtons } from '../../global/global.min.js';
 
 class AddPetPage {
   constructor() {
@@ -98,7 +98,7 @@ class AddPetPage {
 
     if (cancelBtn) {
       cancelBtn.addEventListener('click', () => {
-        window.location.href = 'pets.html';
+        window.location.href = '../pets-page/pets-page.html';
       });
     }
 
@@ -144,9 +144,8 @@ class AddPetPage {
       const result = await this.petService.addPet(petData);
       
       this.showMessage('Pet added successfully!', 'success');
-      
-      setTimeout(() => {
-        window.location.href = 'pets.html';
+        setTimeout(() => {
+        window.location.href = '../pets-page/pets-page.html';
       }, 2000);
 
     } catch (error) {

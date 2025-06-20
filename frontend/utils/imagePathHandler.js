@@ -1,12 +1,12 @@
 class ImagePathHandler {
     static get API_BASE_URL() {
         return window.APP_CONFIG?.api?.baseURL || 'http://localhost:8080';
-    }
-
+    }    
+    
     static get DEFAULTS() {
         return {
-            USER: '../assets/default-user-profile.jpg',
-            PET: '../assets/default-pet-profile.jpg'
+            USER: '/frontend/assets/default-user-profile.jpg',
+            PET: '/frontend/assets/default-pet-profile.jpg'
         };
     }
 

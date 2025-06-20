@@ -2,9 +2,9 @@ class ResourcePreloader {
   constructor() {
     this.preloadedResources = new Set();
     this.criticalFonts = [];
-    this.criticalImages = [
-      '../assets/default-pet-profile.jpg',
-      '../assets/default-user-profile.jpg'
+    this.criticalImages = [      
+      '/frontend/assets/default-pet-profile.jpg',
+      '/frontend/assets/default-user-profile.jpg'
     ];
   }
 
@@ -41,7 +41,7 @@ class ResourcePreloader {
 
   prefetchNavigation() {
     const navLinks = [
-      '../pets/pets.html',
+      '../pets/pets-page/pets-page.html',
       '../login/login.html',
       '../signup/signup.html'
     ];

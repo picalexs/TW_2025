@@ -31,9 +31,9 @@ export function loadPage(pageId) {
       const petId = urlParams.get('id');
       
       if (petId) {
-        window.location.href = './pets/pet-details.html?id=' + petId;
+        window.location.href = './pets/pet-details/pet-details.html?id=' + petId;
       } else {
-        window.location.href = './pets/pets.html';
+        window.location.href = './pets/pets-page/pets-page.html';
       }
       break;
     

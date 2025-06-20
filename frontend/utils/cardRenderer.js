@@ -16,16 +16,18 @@ class CardRenderer {
       pet.imagePath || pet.media?.[0]?.filePath
     );
     
+    const defaultPetImage = this.imagePathHandler?.DEFAULTS?.PET || '/frontend/assets/default-pet-profile.jpg';
+    
     const description = this._formatDescription(pet.description, showFullDescription);
     const petInfo = this._formatPetInfo(pet, variant);
     const clickHandler = this._getClickHandler(clickAction, 'pet', pet.id);
 
     const cardHTML = `
-      <div class="pet-card" ${clickHandler.attr}>
-        <img src="${imagePath}" 
+      <div class="pet-card" ${clickHandler.attr}>        
+      <img src="${imagePath}" 
              alt="${pet.name || 'Pet'}" 
              class="pet-image" 
-             onerror="this.src='../assets/default-pet-profile.jpg'">
+             onerror="this.src='${defaultPetImage}'">
         <div class="pet-info">
           ${petInfo}
           ${this._renderPetTags(pet, variant)}
@@ -43,22 +45,24 @@ class CardRenderer {
       variant = 'default',
       showStats = true,
       clickAction = 'navigate'
-    } = options;
-
+    } = options;    
+    
     const imagePath = this.imagePathHandler.processUserImagePath(
       user.imagePath || user.profile_picture
     );
+    
+    const defaultUserImage = this.imagePathHandler?.DEFAULTS?.USER || '/frontend/assets/default-user-profile.jpg';
     
     const userInfo = this._formatUserInfo(user, variant);
     const userStats = showStats ? this._formatUserStats(user, variant) : '';
     const clickHandler = this._getClickHandler(clickAction, 'user', user.id);
 
     const cardHTML = `
-      <div class="user-card" data-user-id="${user.id || ''}" ${clickHandler.attr}>
-        <img src="${imagePath}" 
+      <div class="user-card" data-user-id="${user.id || ''}" ${clickHandler.attr}>        
+      <img src="${imagePath}" 
              alt="${userInfo.displayName}" 
              class="user-image" 
-             onerror="this.src='../assets/default-user-profile.jpg'">
+             onerror="this.src='${defaultUserImage}'">
         <div class="user-info">
           <div class="user-name-section">
             <h3 class="user-name">${userInfo.displayName}</h3>
@@ -430,7 +434,21 @@ class CardRenderer {
     
     if (clickAction === 'custom') return '';
     
-    return `<a href="/frontend/pets/pet-details.html?id=${pet.id || ''}" class="btn btn-primary">${viewDetailsText}</a>`;
+    // Use the same path logic as _getClickHandler
+    const currentPath = window.location.pathname;
+    let targetPath = '';
+    
+    if (currentPath.includes('/pets/pets-page/')) {
+      targetPath = '../pet-details/pet-details.html';
+    } else if (currentPath.includes('/pets/add-pet/')) {
+      targetPath = '../pet-details/pet-details.html';
+    } else if (currentPath.includes('/pets/')) {
+      targetPath = './pet-details/pet-details.html';
+    } else {
+      targetPath = './pets/pet-details/pet-details.html';
+    }
+    
+    return `<a href="${targetPath}?id=${pet.id || ''}" class="btn btn-primary">${viewDetailsText}</a>`;
   }
 
   _renderUserActions(user, variant, clickAction) {
@@ -443,15 +461,26 @@ class CardRenderer {
         viewProfileText = translated;
       }
     }
-    
     return `<a href="#" class="btn btn-outline-primary view-user-btn" data-user-id="${user.id || ''}">${viewProfileText}</a>`;
-  }
-
-  _getClickHandler(clickAction, type, id) {
+  }  
+    _getClickHandler(clickAction, type, id) {
     switch (clickAction) {
       case 'navigate':
         if (type === 'pet') {
-          return { attr: `onclick="window.location.href='../pets/pet-details.html?id=${id}'"` };
+          const currentPath = window.location.pathname;
+          let targetPath = '';
+          
+          if (currentPath.includes('/pets/pets-page/')) {
+            targetPath = '../pet-details/pet-details.html';
+          } else if (currentPath.includes('/pets/add-pet/')) {
+            targetPath = '../pet-details/pet-details.html';
+          } else if (currentPath.includes('/pets/')) {
+            targetPath = './pet-details/pet-details.html';
+          } else {
+            targetPath = './pets/pet-details/pet-details.html';
+          }
+          
+          return { attr: `onclick="window.location.href='${targetPath}?id=${id}'"` };
         } else if (type === 'user') {
           return { attr: `onclick="window.navigateToProfile && window.navigateToProfile(${id})"` };
         }

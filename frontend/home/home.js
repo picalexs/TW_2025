@@ -1,4 +1,4 @@
-import { fetchPets, renderPets, showPetLoadError, showPetPlaceholders } from '../pets/pets.min.js';
+import { fetchPets, renderPets} from '../pets/pets-page/pets-page.min.js';
 import { setupMobileMenu, initializePageLanguage, checkLoginStatusAndToggleNavButtons, navigateToProfile } from '../global/global.min.js';
 import ApiService from '../services/api.min.js';
 import UserService from '../services/userService.min.js';

@@ -7,23 +7,20 @@ function checkLoginStatusAndToggleNavButtons() {
     console.log('User login status:', isLoggedIn);
 
     const authButtonsLoggedOut = document.getElementById('auth-buttons-logged-out');
-    const authButtonsLoggedIn = document.getElementById('auth-buttons-logged-in'); // This div should exist and be hidden by default
+    const authButtonsLoggedIn = document.getElementById('auth-buttons-logged-in');
     const mobileAuthLoggedOut = document.getElementById('mobile-auth-logged-out');
-    const mobileAuthLoggedIn = document.getElementById('mobile-auth-logged-in'); // This div should exist and be hidden by default
+    const mobileAuthLoggedIn = document.getElementById('mobile-auth-logged-in');
 
     const logoutButton = document.querySelector('.nav-logout-btn');
     const mobileLogoutLink = document.querySelector('.mobile-nav-logout');
 
     if (isLoggedIn) {
-        // Hide login/signup containers
         if (authButtonsLoggedOut) authButtonsLoggedOut.style.display = 'none';
         if (mobileAuthLoggedOut) mobileAuthLoggedOut.style.display = 'none';
 
-        // Show logout containers
         if (authButtonsLoggedIn) authButtonsLoggedIn.style.display = 'flex';
         if (mobileAuthLoggedIn) mobileAuthLoggedIn.style.display = 'block';
 
-        // Ensure logout button/link event listener is set up
         if (logoutButton && !logoutButton.dataset.listenerAttached) {
             logoutButton.addEventListener('click', handleLogout);
             logoutButton.dataset.listenerAttached = 'true';
@@ -34,11 +31,9 @@ function checkLoginStatusAndToggleNavButtons() {
         }
 
     } else {
-        // Show login/signup containers
         if (authButtonsLoggedOut) authButtonsLoggedOut.style.display = 'flex';
         if (mobileAuthLoggedOut) mobileAuthLoggedOut.style.display = 'block';
 
-        // Hide logout containers
         if (authButtonsLoggedIn) authButtonsLoggedIn.style.display = 'none';
         if (mobileAuthLoggedIn) mobileAuthLoggedIn.style.display = 'none';
     }
@@ -47,7 +42,6 @@ function checkLoginStatusAndToggleNavButtons() {
 function handleLogout(event) {
     event.preventDefault();
     localStorage.removeItem('isLoggedIn');
-    // localStorage.removeItem('userData');
     isLoggedIn = false;
     console.log('User logged out. Updating UI and redirecting...');
     checkLoginStatusAndToggleNavButtons();
@@ -69,15 +63,11 @@ function setupLanguageDropdown() {
     const currentLang = localStorage.getItem('language') || 'en';
     updateCurrentLanguage(currentLang);
 
-    // Re-attach listeners to ensure they work after HTML injection
     languageOptions.forEach(option => {
-        // It's safer to re-query the elements if they were re-injected
-        // or ensure you only clone if you truly need new DOM elements
         const lang = option.getAttribute('data-lang');
-        // Remove existing listeners if any (important if this is called multiple times)
-        const oldOption = option; // Keep a reference to the current element
-        const newOption = oldOption.cloneNode(true); // Clone to remove existing listeners
-        oldOption.parentNode.replaceChild(newOption, oldOption); // Replace the old element
+        const oldOption = option;
+        const newOption = oldOption.cloneNode(true);
+        oldOption.parentNode.replaceChild(newOption, oldOption);
 
         if (lang === currentLang) {
             newOption.classList.add('active');
@@ -137,7 +127,6 @@ function setupMobileMenu() {
     const currentLang = localStorage.getItem('language') || 'en';
     setActiveMobileLanguage(currentLang);
 
-    // Ensure listeners are only attached once for toggle and overlay
     if (!toggle.dataset.listenerAttached) {
         toggle.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -163,7 +152,6 @@ function setupMobileMenu() {
 
 
     options.forEach(option => {
-        // Similar to language dropdown, re-attach listeners if elements are re-injected
         const oldOption = option;
         const newOption = oldOption.cloneNode(true);
         oldOption.parentNode.replaceChild(newOption, oldOption);
@@ -345,11 +333,18 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.setAttribute('data-page', 'loginPage');
     } else if (isSignupPage) {
         document.body.setAttribute('data-page', 'signupPage');
-    }
-
-    if (navbarContainer || footerContainer) {
+    }    if (navbarContainer || footerContainer) {
       console.log('global.min.js: Attempting to fetch global.html...');
-        fetch('../global/global.html')
+        const currentPath = window.location.pathname;
+        let globalHtmlPath = '../global/global.html';
+        
+        if (currentPath.includes('/pets/pets-page/') || 
+            currentPath.includes('/pets/pet-details/') || 
+            currentPath.includes('/pets/add-pet/')) {
+            globalHtmlPath = '../../global/global.html';
+        }
+        
+        fetch(globalHtmlPath)
             .then(res => {
                 if (!res.ok) {
                     throw new Error(`Failed to load global.html: ${res.status} ${res.statusText}`);
@@ -404,5 +399,4 @@ export function navigateToProfile(userId) {
   
   window.location.href = profilePath;
 }
-
 export { setupLanguageDropdown, setupMobileMenu, initSlideshow, createSlideshow, initializePageLanguage, checkLoginStatusAndToggleNavButtons };

@@ -1,11 +1,13 @@
-import PetService from '../services/petService.min.js';
-import { setupMobileMenu, initializePageLanguage, checkLoginStatusAndToggleNavButtons } from '../global/global.min.js';
+import PetService from '../../services/petService.min.js';
+import { setupMobileMenu, initializePageLanguage, checkLoginStatusAndToggleNavButtons } from '../../global/global.min.js';
 
 class PetDetailsPage {
   constructor() {
     this.petService = new PetService();
     this.currentPet = null;
     this.currentImageIndex = 0;
+    this.map = null;
+    this.mapInitialized = false;
     this.init();
   }
 
@@ -386,13 +388,17 @@ class PetDetailsPage {
     const tabContents = document.querySelectorAll('.tab-content');
 
     tabBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', async () => {
         const targetTab = btn.getAttribute('data-tab');
         
         tabBtns.forEach(b => b.classList.remove('active'));
         tabContents.forEach(c => c.classList.remove('active'));
         btn.classList.add('active');
         document.getElementById(`${targetTab}-tab`).classList.add('active');
+        
+        if (targetTab === 'location' && !this.mapInitialized) {
+          setTimeout(() => this.initMap(), 100);
+        }
       });
     });
   }
@@ -492,6 +498,100 @@ class PetDetailsPage {
   capitalizeFirst(str) {
     if (!str) return '';
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  }
+  async initMap() {
+    if (this.mapInitialized || !window.L) {
+      return;
+    }
+
+    try {
+      let lat = 44.4268; // Default to Bucharest
+      let lng = 26.1025;
+      let address = 'Location not available';
+
+      if (this.currentPet && this.currentPet.address) {
+        const addr = this.currentPet.address;
+        const addressParts = [];
+        if (addr.street) addressParts.push(addr.street);
+        if (addr.city) addressParts.push(addr.city);
+        if (addr.country) addressParts.push(addr.country);
+        
+        if (addressParts.length > 0) {
+          address = addressParts.join(', ');
+          
+          // Try to get coordinates from predefined list first
+          let cityCoords = this.getCityCoordinates(addr.city);
+          
+          // If not found, try geocoding service
+          if (!cityCoords && addr.city) {
+            cityCoords = await this.geocodeCity(addr.city, addr.country);
+          }
+          
+          if (cityCoords) {
+            lat = cityCoords.lat;
+            lng = cityCoords.lng;
+          }
+        }
+      }
+
+      this.map = L.map('map').setView([lat, lng], 13);
+      
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        attribution: '© OpenStreetMap contributors & CartoDB',
+        tileSize: 256,
+        detectRetina: true,
+        maxZoom: 18
+      }).addTo(this.map);
+
+      const marker = L.marker([lat, lng]).addTo(this.map);
+      marker.bindPopup(`<b>Pet Location</b><br>${address}`).openPopup();
+
+      this.mapInitialized = true;
+      console.log('Map initialized successfully with coordinates:', lat, lng);
+    } catch (error) {
+      console.error('Error initializing map:', error);
+    }
+  }
+
+  async geocodeCity(city, country) {
+    try {
+      const query = country ? `${city}, ${country}` : city;
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`);
+      const data = await response.json();
+      
+      if (data && data.length > 0) {
+        return {
+          lat: parseFloat(data[0].lat),
+          lng: parseFloat(data[0].lon)
+        };
+      }
+    } catch (error) {
+      console.error('Geocoding error:', error);
+    }
+    return null;
+  }
+
+  getCityCoordinates(city) {
+    if (!city) return null;
+    
+    // Simple coordinates mapping for common cities
+    const cityCoords = {
+      'london': { lat: 51.5074, lng: -0.1278 },
+      'paris': { lat: 48.8566, lng: 2.3522 },
+      'new york': { lat: 40.7128, lng: -74.0060 },
+      'los angeles': { lat: 34.0522, lng: -118.2437 },
+      'tokyo': { lat: 35.6762, lng: 139.6503 },
+      'bucharest': { lat: 44.4268, lng: 26.1025 },
+      'budapest': { lat: 47.4979, lng: 19.0402 },
+      'vienna': { lat: 48.2082, lng: 16.3738 },
+      'rome': { lat: 41.9028, lng: 12.4964 },
+      'berlin': { lat: 52.5200, lng: 13.4050 },
+      'madrid': { lat: 40.4168, lng: -3.7038 },
+      'amsterdam': { lat: 52.3676, lng: 4.9041 }
+    };
+    
+    const normalizedCity = city.toLowerCase().trim();
+    return cityCoords[normalizedCity] || null;
   }
 }
 

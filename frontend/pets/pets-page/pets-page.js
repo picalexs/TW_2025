@@ -1,4 +1,4 @@
-import PetService from '../services/petService.min.js';
+import PetService from '../../services/petService.min.js';
 const petService = new PetService();
 
 let allPets = [];
@@ -22,7 +22,6 @@ export function renderPets(pets, containerId = 'pets-grid') {
     return;
   }
 
-  // Only clear and render if we actually have pets
   if (pets && pets.length > 0) {
     container.innerHTML = '';
     
@@ -33,7 +32,6 @@ export function renderPets(pets, containerId = 'pets-grid') {
     
     updateResultsCount(pets.length);
   }
-  // If no pets, keep existing placeholders
 }
 
 function updateResultsCount(count) {
@@ -227,10 +225,9 @@ export function initializeFilterButtons() {
       renderPets(allPets);
     });
   }
-
   if (addPetBtn) {
     addPetBtn.addEventListener('click', () => {
-      window.location.href = 'add-pet.html';
+      window.location.href = '../add-pet/add-pet.html';
     });
   }
 }

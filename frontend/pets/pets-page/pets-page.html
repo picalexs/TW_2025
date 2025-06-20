@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title data-i18n="pageTitle" data-i18n-fallback="Available Pets"></title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">      
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">        
     
-    <link rel="stylesheet" href="../global/global.min.css">
-    <link rel="stylesheet" href="../global/pet-cards.css">
-    <link rel="stylesheet" href="pets.min.css">
+    <link rel="stylesheet" href="../../global/global.min.css">
+    <link rel="stylesheet" href="../../global/pet-cards.css">
+    <link rel="stylesheet" href="pets-page.min.css">
 </head>
 <body>
     <div id="global-navbar">
@@ -34,8 +34,8 @@
         </div>
         <div id="recommendations-section" class="recommendations-section" style="display: none;">
             <div class="section-header">
-                <h2 class="section-subtitle" data-i18n="smartRecommendations" data-i18n-fallback="Smart Recommendations for You">Smart Recommendations for You</h2>
-                <button id="refresh-recommendations" class="btn btn-secondary" data-i18n="refreshRecommendations" data-i18n-fallback="Refresh">Refresh</button>
+                <h2 class="section-subtitle" data-i18n="smartRecommendations" data-i18n-fallback="Smart Recommendations for You"></h2>
+                <button id="refresh-recommendations" class="btn btn-secondary" data-i18n="refreshRecommendations" data-i18n-fallback="Refresh"></button>
             </div>
             <div id="recommendations-grid" class="recommendations-grid">
                 <div class="loading-spinner" data-i18n="loadingRecommendations" data-i18n-fallback="Loading recommendations..."></div>
@@ -44,52 +44,52 @@
 
         <div class="filters-container">
             <div class="filters-header">
-                <h3 data-i18n="filterPets" data-i18n-fallback="Filter Pets">Filter Pets</h3>
-                <button id="toggle-advanced-filters" class="btn btn-link" data-i18n="advancedFilters" data-i18n-fallback="Advanced Filters">Advanced Filters</button>
+                <h3 data-i18n="filterPets" data-i18n-fallback="Filter Pets"></h3>
+                <button id="toggle-advanced-filters" class="btn btn-link" data-i18n="advancedFilters" data-i18n-fallback="Advanced Filters"></button>
             </div>
             
             <div class="filters-row">
                 <div class="filter-group">
-                    <label class="filter-label" data-i18n="species" data-i18n-fallback="Species">Species</label>
+                    <label class="filter-label" data-i18n="species" data-i18n-fallback="Species"></label>
                     <select id="species-filter" class="filter-select">
-                        <option value="" data-i18n="allSpecies" data-i18n-fallback="All Species">All Species</option>
-                        <option value="dog" data-i18n="dog" data-i18n-fallback="Dog">Dog</option>
-                        <option value="cat" data-i18n="cat" data-i18n-fallback="Cat">Cat</option>
-                        <option value="bird" data-i18n="bird" data-i18n-fallback="Bird">Bird</option>
-                        <option value="rabbit" data-i18n="rabbit" data-i18n-fallback="Rabbit">Rabbit</option>
-                        <option value="other" data-i18n="other" data-i18n-fallback="Other">Other</option>
+                        <option value="" data-i18n="allSpecies" data-i18n-fallback="All Species"></option>
+                        <option value="dog" data-i18n="dog" data-i18n-fallback="Dog"></option>
+                        <option value="cat" data-i18n="cat" data-i18n-fallback="Cat"></option>
+                        <option value="bird" data-i18n="bird" data-i18n-fallback="Bird"></option>
+                        <option value="rabbit" data-i18n="rabbit" data-i18n-fallback="Rabbit"></option>
+                        <option value="other" data-i18n="other" data-i18n-fallback="Other"></option>
                     </select>
                 </div>
                 
                 <div class="filter-group">
-                    <label class="filter-label" data-i18n="age" data-i18n-fallback="Age">Age</label>
+                    <label class="filter-label" data-i18n="age" data-i18n-fallback="Age"></label>
                     <select id="age-filter" class="filter-select">
-                        <option value="" data-i18n="allAges" data-i18n-fallback="All Ages">All Ages</option>
-                        <option value="0-1" data-i18n="baby" data-i18n-fallback="Baby (0-1 years)">Baby (0-1 years)</option>
-                        <option value="1-3" data-i18n="young" data-i18n-fallback="Young (1-3 years)">Young (1-3 years)</option>
-                        <option value="3-7" data-i18n="adult" data-i18n-fallback="Adult (3-7 years)">Adult (3-7 years)</option>
-                        <option value="7+" data-i18n="senior" data-i18n-fallback="Senior (7+ years)">Senior (7+ years)</option>
+                        <option value="" data-i18n="allAges" data-i18n-fallback="All Ages"></option>
+                        <option value="0-1" data-i18n="baby" data-i18n-fallback="Baby (0-1 years)"></option>
+                        <option value="1-3" data-i18n="young" data-i18n-fallback="Young (1-3 years)"></option>
+                        <option value="3-7" data-i18n="adult" data-i18n-fallback="Adult (3-7 years)"></option>
+                        <option value="7+" data-i18n="senior" data-i18n-fallback="Senior (7+ years)"></option>
                     </select>
                 </div>
                 
                 <div class="filter-group">
-                    <label class="filter-label" data-i18n="size" data-i18n-fallback="Size">Size</label>
+                    <label class="filter-label" data-i18n="size" data-i18n-fallback="Size"></label>
                     <select id="size-filter" class="filter-select">
-                        <option value="" data-i18n="allSizes" data-i18n-fallback="All Sizes">All Sizes</option>
-                        <option value="small" data-i18n="small" data-i18n-fallback="Small">Small</option>
-                        <option value="medium" data-i18n="medium" data-i18n-fallback="Medium">Medium</option>
-                        <option value="large" data-i18n="large" data-i18n-fallback="Large">Large</option>
+                        <option value="" data-i18n="allSizes" data-i18n-fallback="All Sizes"></option>
+                        <option value="small" data-i18n="small" data-i18n-fallback="Small"></option>
+                        <option value="medium" data-i18n="medium" data-i18n-fallback="Medium"></option>
+                        <option value="large" data-i18n="large" data-i18n-fallback="Large"></option>
                     </select>
                 </div>
                 
                 <div class="filter-group">
-                    <label class="filter-label" data-i18n="sortBy" data-i18n-fallback="Sort By">Sort By</label>
+                    <label class="filter-label" data-i18n="sortBy" data-i18n-fallback="Sort By"></label>
                     <select id="sort-filter" class="filter-select">
-                        <option value="newest" data-i18n="newest" data-i18n-fallback="Newest First">Newest First</option>
-                        <option value="oldest" data-i18n="oldest" data-i18n-fallback="Oldest First">Oldest First</option>
-                        <option value="popularity" data-i18n="popularity" data-i18n-fallback="Most Popular">Most Popular</option>
-                        <option value="compatibility" data-i18n="compatibility" data-i18n-fallback="Best Match">Best Match</option>
-                        <option value="name" data-i18n="name" data-i18n-fallback="Name A-Z">Name A-Z</option>
+                        <option value="newest" data-i18n="newest" data-i18n-fallback="Newest First"></option>
+                        <option value="oldest" data-i18n="oldest" data-i18n-fallback="Oldest First"></option>
+                        <option value="popularity" data-i18n="popularity" data-i18n-fallback="Most Popular"></option>
+                        <option value="compatibility" data-i18n="compatibility" data-i18n-fallback="Best Match"></option>
+                        <option value="name" data-i18n="name" data-i18n-fallback="Name A-Z"></option>
                     </select>
                 </div>
             </div>
@@ -98,66 +98,66 @@
             <div id="advanced-filters-panel" class="advanced-filters-panel" style="display: none;">
                 <div class="filters-row">
                     <div class="filter-group">
-                        <label class="filter-label" data-i18n="healthStatus" data-i18n-fallback="Health Status">Health Status</label>
+                        <label class="filter-label" data-i18n="healthStatus" data-i18n-fallback="Health Status"></label>
                         <select id="health-filter" class="filter-select">
-                            <option value="" data-i18n="allHealthStatuses" data-i18n-fallback="All">All</option>
-                            <option value="excellent" data-i18n="excellent" data-i18n-fallback="Excellent">Excellent</option>
-                            <option value="good" data-i18n="good" data-i18n-fallback="Good">Good</option>
-                            <option value="fair" data-i18n="fair" data-i18n-fallback="Fair">Fair</option>
-                            <option value="special_needs" data-i18n="specialNeeds" data-i18n-fallback="Special Needs">Special Needs</option>
+                            <option value="" data-i18n="allHealthStatuses" data-i18n-fallback="All"></option>
+                            <option value="excellent" data-i18n="excellent" data-i18n-fallback="Excellent"></option>
+                            <option value="good" data-i18n="good" data-i18n-fallback="Good"></option>
+                            <option value="fair" data-i18n="fair" data-i18n-fallback="Fair"></option>
+                            <option value="special_needs" data-i18n="specialNeeds" data-i18n-fallback="Special Needs"></option>
                         </select>
                     </div>
                     
                     <div class="filter-group">
-                        <label class="filter-label" data-i18n="goodWithKids" data-i18n-fallback="Good with Kids">Good with Kids</label>
+                        <label class="filter-label" data-i18n="goodWithKids" data-i18n-fallback="Good with Kids"></label>
                         <select id="kids-filter" class="filter-select">
-                            <option value="" data-i18n="noPreference" data-i18n-fallback="No Preference">No Preference</option>
-                            <option value="yes" data-i18n="yes" data-i18n-fallback="Yes">Yes</option>
-                            <option value="no" data-i18n="no" data-i18n-fallback="No">No</option>
+                            <option value="" data-i18n="noPreference" data-i18n-fallback="No Preference"></option>
+                            <option value="yes" data-i18n="yes" data-i18n-fallback="Yes"></option>
+                            <option value="no" data-i18n="no" data-i18n-fallback="No"></option>
                         </select>
                     </div>
                     
                     <div class="filter-group">
-                        <label class="filter-label" data-i18n="goodWithPets" data-i18n-fallback="Good with Other Pets">Good with Other Pets</label>
+                        <label class="filter-label" data-i18n="goodWithPets" data-i18n-fallback="Good with Other Pets"></label>
                         <select id="pets-filter" class="filter-select">
-                            <option value="" data-i18n="noPreference" data-i18n-fallback="No Preference">No Preference</option>
-                            <option value="yes" data-i18n="yes" data-i18n-fallback="Yes">Yes</option>
-                            <option value="no" data-i18n="no" data-i18n-fallback="No">No</option>
+                            <option value="" data-i18n="noPreference" data-i18n-fallback="No Preference"></option>
+                            <option value="yes" data-i18n="yes" data-i18n-fallback="Yes"></option>
+                            <option value="no" data-i18n="no" data-i18n-fallback="No"></option>
                         </select>
                     </div>
                     
                     <div class="filter-group">
-                        <label class="filter-label" data-i18n="energyLevel" data-i18n-fallback="Energy Level">Energy Level</label>
+                        <label class="filter-label" data-i18n="energyLevel" data-i18n-fallback="Energy Level"></label>
                         <select id="energy-filter" class="filter-select">
-                            <option value="" data-i18n="allLevels" data-i18n-fallback="All Levels">All Levels</option>
-                            <option value="low" data-i18n="low" data-i18n-fallback="Low">Low</option>
-                            <option value="medium" data-i18n="medium" data-i18n-fallback="Medium">Medium</option>
-                            <option value="high" data-i18n="high" data-i18n-fallback="High">High</option>
+                            <option value="" data-i18n="allLevels" data-i18n-fallback="All Levels"></option>
+                            <option value="low" data-i18n="low" data-i18n-fallback="Low"></option>
+                            <option value="medium" data-i18n="medium" data-i18n-fallback="Medium"></option>
+                            <option value="high" data-i18n="high" data-i18n-fallback="High"></option>
                         </select>
                     </div>
                 </div>
                 
                 <div class="filters-row">
                     <div class="filter-group">
-                        <label class="filter-label" data-i18n="searchName" data-i18n-fallback="Search by Name">Search by Name</label>
+                        <label class="filter-label" data-i18n="searchName" data-i18n-fallback="Search by Name"></label>
                         <input type="text" id="name-search" class="filter-input" placeholder="Enter pet name...">
                     </div>
                     
                     <div class="filter-group">
-                        <label class="filter-label" data-i18n="maxDistance" data-i18n-fallback="Max Distance (km)">Max Distance (km)</label>
+                        <label class="filter-label" data-i18n="maxDistance" data-i18n-fallback="Max Distance (km)"></label>
                         <input type="number" id="distance-filter" class="filter-input" placeholder="50" min="1" max="500">
                     </div>
                 </div>
             </div>
             
             <div class="filter-buttons">
-                <button id="apply-filters" class="btn btn-primary" data-i18n="applyFilters" data-i18n-fallback="Apply Filters">Apply Filters</button>
-                <button id="reset-filters" class="btn reset-filters" data-i18n="resetFilters" data-i18n-fallback="Reset">Reset</button>
+                <button id="apply-filters" class="btn btn-primary" data-i18n="applyFilters" data-i18n-fallback="Apply Filters"></button>
+                <button id="reset-filters" class="btn reset-filters" data-i18n="resetFilters" data-i18n-fallback="Reset"></button>
             </div>
         </div>
         
         <div id="results-summary" class="results-summary">
-            <span id="results-count" data-i18n="showingResults" data-i18n-fallback="Showing all pets">Showing all pets</span>
+            <span id="results-count" data-i18n="showingResults" data-i18n-fallback="Showing all pets"></span>
             <div class="view-options">
                 <button id="grid-view" class="view-toggle active" title="Grid View">
                     <i class="icon-grid"></i>
@@ -208,14 +208,13 @@
     </main>    
     <div id="global-footer"></div>
     
-    <!-- Optimized script loading for better performance -->
-    <script src="../config.min.js" defer></script>
-    <script src="../utils/imagePathHandler.min.js" defer></script>
-    <script src="../utils/cardRenderer.min.js" defer></script>
+    <script src="../../config.min.js" defer></script>
+    <script src="../../utils/imagePathHandler.min.js" defer></script>
+    <script src="../../utils/cardRenderer.min.js" defer></script>
     <script type="module">
-        import { fetchPets, renderPets, showPetLoadError, initializeViewToggle, initializeAdvancedFilters, initializeFilterButtons } from './pets.min.js';
-        import '../global/global.min.js'; 
-        import languageManager from '../languages/language.min.js';
+        import { fetchPets, renderPets, showPetLoadError, initializeViewToggle, initializeAdvancedFilters, initializeFilterButtons } from './pets-page.min.js';
+        import '../../global/global.min.js'; 
+        import languageManager from '../../languages/language.min.js';
 
         document.addEventListener('DOMContentLoaded', async () => {
             try {
