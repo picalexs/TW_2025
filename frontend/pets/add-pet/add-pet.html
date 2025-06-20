@@ -106,7 +106,21 @@
                 <!-- Health Information -->
                 <div class="form-section">
                     <h2 class="section-title" data-i18n="healthInformation" data-i18n-fallback="Health Information"></h2>
-                    
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label for="pet-description" class="form-label" data-i18n="description" data-i18n-fallback="Description"></label>
+                            <textarea id="pet-description" name="description" class="form-textarea" rows="4" 
+                                placeholder="Describe the pet's personality, behavior, special needs, etc."></textarea>
+                        </div>
+                        <div class="form-group full-width">
+                            <label for="pet-relations" class="form-label" data-i18n="relationWithOthers" data-i18n-fallback="Relationship with Others"></label>
+                            <textarea id="pet-relations" name="relationWithOthers" class="form-textarea" rows="3" 
+                                placeholder="How does this pet get along with kids, other pets, etc.?"></textarea>
+                        </div>
+                    </div>
+                </div>                <!-- Medical History Section -->
+                <div class="form-section">
+                    <h2 class="section-title" data-i18n="medicalHistory" data-i18n-fallback="Medical History"></h2>
                     <div class="form-grid">
                         <div class="form-group full-width">
                             <label for="pet-health-status" class="form-label" data-i18n="healthStatus" data-i18n-fallback="Health Status"></label>
@@ -118,17 +132,89 @@
                                 <option value="special needs" data-i18n="specialNeeds" data-i18n-fallback="Special Needs"></option>
                             </select>
                         </div>
-
-                        <div class="form-group full-width">
-                            <label for="pet-description" class="form-label" data-i18n="description" data-i18n-fallback="Description"></label>
-                            <textarea id="pet-description" name="description" class="form-textarea" rows="4" 
-                                placeholder="Describe the pet's personality, behavior, special needs, etc."></textarea>
+                        
+                        <!-- Medical History Entries -->
+                        <div class="form-group full-width medical-history-list-group">
+                            <label class="form-label" data-i18n="medicalHistoryEntries" data-i18n-fallback="Medical History Entries"></label>
+                            <div id="medical-history-list">
+                              <!-- Medical history entries will be added here -->
+                            </div>
+                            <button type="button" id="add-medical-history-btn" class="add-tag-btn" style="margin-top:0.5rem;">
+                                <span class="plus-icon">+</span>
+                                <span data-i18n="addMedicalHistory" data-i18n-fallback="Add Medical History Entry"></span>
+                            </button>
                         </div>
 
-                        <div class="form-group full-width">
-                            <label for="pet-relations" class="form-label" data-i18n="relationWithOthers" data-i18n-fallback="Relationship with Others"></label>
-                            <textarea id="pet-relations" name="relationWithOthers" class="form-textarea" rows="3" 
-                                placeholder="How does this pet get along with kids, other pets, etc.?"></textarea>
+                        <div class="medical-section-divider"></div>                        
+                        <div class="form-group full-width care-resources-list-group">
+                            <label class="form-label" data-i18n="careResources" data-i18n-fallback="Care Resources"></label>
+                            <div id="care-resources-list">
+                              <!-- Care resource entries will be added here -->
+                            </div>
+                            <button type="button" id="add-care-resource-btn" class="add-tag-btn" style="margin-top:0.5rem;">
+                                <span class="plus-icon">+</span>
+                                <span data-i18n="addCareResource" data-i18n-fallback="Add Care Resource"></span>
+                            </button>
+                        </div>
+
+                        <div class="medical-section-divider"></div>
+
+                        <!-- Care Schedule -->
+                        <div class="form-group full-width care-schedule-list-group">
+                            <label class="form-label" data-i18n="careSchedule" data-i18n-fallback="Care Schedule"></label>
+                            <div id="care-schedule-list">
+                              <!-- Care schedule entries will be added here -->
+                            </div>
+                            <button type="button" id="add-care-schedule-btn" class="add-tag-btn" style="margin-top:0.5rem;">
+                                <span class="plus-icon">+</span>
+                                <span data-i18n="addCareSchedule" data-i18n-fallback="Add Care Schedule"></span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Templates -->
+                    <div class="medical-history-entry-template" style="display:none">
+                        <div class="medical-history-entry">
+                            <textarea class="form-textarea medical-history-description" rows="3" required placeholder="Description of medical event, treatment, vaccination, etc. (Required)"></textarea>
+                            <input type="date" class="form-input medical-history-date" title="Record date (optional - defaults to today)">
+                            <button type="button" class="remove-medical-history-btn" title="Remove entry">&times;</button>
+                        </div>
+                    </div>
+                    <div class="care-resources-entry-template" style="display:none">
+                        <div class="care-resources-entry">
+                            <select class="form-select care-resource-type" required>
+                                <option value="">Select Resource Type *</option>
+                                <option value="diet">Diet & Nutrition</option>
+                                <option value="exercise">Exercise Requirements</option>
+                                <option value="grooming">Grooming Instructions</option>
+                                <option value="medication">Medication Schedule</option>
+                                <option value="training">Training Tips</option>
+                                <option value="behavioral">Behavioral Notes</option>
+                                <option value="emergency">Emergency Care</option>
+                                <option value="general">General Care</option>
+                            </select>
+                            <input type="text" class="form-input care-resource-title" required placeholder="Title (Required) - e.g., 'Daily Medication Schedule'">
+                            <textarea class="form-textarea care-resource-content" rows="3" required placeholder="Detailed care instructions or resource information (Required)"></textarea>
+                            <button type="button" class="remove-care-resource-btn" title="Remove resource">&times;</button>
+                        </div>
+                    </div>
+
+                    <div class="care-schedule-entry-template" style="display:none">
+                        <div class="care-schedule-entry">
+                            <input type="text" class="form-input care-schedule-activity" required placeholder="Activity (Required) - e.g., 'Feeding', 'Walk', 'Medication'">
+                            <input type="time" class="form-input care-schedule-hour" required title="Time for this activity">
+                            <select class="form-select care-schedule-frequency" required>
+                                <option value="">Select Frequency *</option>
+                                <option value="daily">Daily</option>
+                                <option value="twice daily">Twice Daily</option>
+                                <option value="three times daily">Three Times Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="twice weekly">Twice Weekly</option>
+                                <option value="monthly">Monthly</option>
+                                <option value="as needed">As Needed</option>
+                                <option value="other">Other</option>
+                            </select>
+                            <button type="button" class="remove-care-schedule-btn" title="Remove schedule">&times;</button>
                         </div>
                     </div>
                 </div>

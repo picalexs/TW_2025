@@ -20,9 +20,11 @@ class AddPetPage {
       await this.loadTags();
       this.renderTags();
       this.initializeEventListeners();
-      this.enhanceFormValidation();
+      this.enhanceFormValidation();      
       this.initMapSection();
       this.initMediaUpload();
+      this.initMedicalSection();
+      this.initCareScheduleSection();
     } catch (error) {
       console.error('Error initializing add pet page:', error);
     }
@@ -51,7 +53,9 @@ class AddPetPage {
       console.error('Error loading tags:', error);
       this.availableTags = [];
     }
-  }  renderTags() {
+  }  
+  
+  renderTags() {
     const tagsContainer = document.getElementById('tags-container');
     if (!tagsContainer) {
       console.error('Tags container not found in DOM');
@@ -98,6 +102,7 @@ class AddPetPage {
     
     console.log('Tags rendered successfully, container has', tagsContainer.children.length, 'children');
   }
+
   initializeEventListeners() {
     const form = document.getElementById('add-pet-form');
     const cancelBtn = document.getElementById('cancel-btn');
@@ -134,7 +139,7 @@ class AddPetPage {
     }
 
     if (newTagModal) {
-      newTagModal.addEventListener('click', (e) => {
+      newTagModal.addEventListener('click', (e) => {        
         if (e.target === newTagModal) {
           this.closeNewTagModal();
         }
@@ -191,8 +196,74 @@ class AddPetPage {
       longitude: formData.get('longitude'),
       mediaFiles: this.mediaFiles,
       profileImageIndex: this.profileImageIndex,
+      medicalHistory: this.collectMedicalHistoryData(),
+      careResources: this.collectCareResourcesData(),
+      careSchedule: this.collectCareScheduleData(),
     };
-  }  enhanceFormValidation() {
+  }
+
+  collectMedicalHistoryData() {
+    const entries = [];
+    const medicalEntries = document.querySelectorAll('#medical-history-list .medical-history-entry:not(.medical-history-entry-template)');
+    
+    medicalEntries.forEach(entry => {
+      const description = entry.querySelector('.medical-history-description')?.value?.trim();
+      const date = entry.querySelector('.medical-history-date')?.value;
+      
+      if (description) {
+        entries.push({
+          description,
+          record_date: date || null
+        });
+      }
+    });
+    
+    return entries;
+  }
+
+  collectCareResourcesData() {
+    const entries = [];
+    const careEntries = document.querySelectorAll('#care-resources-list .care-resources-entry:not(.care-resources-entry-template)');
+    
+    careEntries.forEach(entry => {
+      const type = entry.querySelector('.care-resource-type')?.value?.trim();
+      const title = entry.querySelector('.care-resource-title')?.value?.trim();
+      const content = entry.querySelector('.care-resource-content')?.value?.trim();
+      
+      if (type && title && content) {
+        entries.push({
+          resource_type: type,
+          title,
+          content
+        });
+      }
+    });
+    
+    return entries;
+  }
+
+  collectCareScheduleData() {
+    const entries = [];
+    const scheduleEntries = document.querySelectorAll('#care-schedule-list .care-schedule-entry:not(.care-schedule-entry-template)');
+    
+    scheduleEntries.forEach(entry => {
+      const activity = entry.querySelector('.care-schedule-activity')?.value?.trim();
+      const hour = entry.querySelector('.care-schedule-hour')?.value;
+      const frequency = entry.querySelector('.care-schedule-frequency')?.value;
+      
+      if (activity && hour && frequency) {
+        entries.push({
+          activity,
+          hour,
+          frequency
+        });
+      }
+    });
+    
+    return entries;
+  }
+  
+  enhanceFormValidation() {
     const nameInput = document.getElementById('pet-name');
     const speciesSelect = document.getElementById('pet-species');
     
@@ -218,7 +289,9 @@ class AddPetPage {
         this.validateField(speciesSelect, 'species');
       });
     }
-  }validateField(field, type) {
+  }
+  
+  validateField(field, type) {
     const value = field.value.trim();
     const formGroup = field.closest('.form-group');
     
@@ -297,7 +370,9 @@ class AddPetPage {
         }
       }, 300);
     }
-  }  validatePetData(petData) {
+  }  
+  
+  validatePetData(petData) {
     let isValid = true;
 
     document.querySelectorAll('.form-input, .form-select, .form-textarea').forEach(control => {
@@ -394,8 +469,77 @@ class AddPetPage {
       isValid = false;
     }
 
+    const medicalEntries = document.querySelectorAll('#medical-history-list .medical-history-entry:not(.medical-history-entry-template)');
+    medicalEntries.forEach((entry, index) => {
+      const description = entry.querySelector('.medical-history-description');
+      if (description && !description.value.trim()) {
+        description.classList.add('error');
+        const formGroup = description.closest('.form-group') || entry;
+        this.showFieldError(formGroup, 'Medical history description is required');
+        isValid = false;
+      }
+    });
+
+    const careResourceEntries = document.querySelectorAll('#care-resources-list .care-resources-entry:not(.care-resources-entry-template)');
+    careResourceEntries.forEach((entry, index) => {
+      const type = entry.querySelector('.care-resource-type');
+      const title = entry.querySelector('.care-resource-title');
+      const content = entry.querySelector('.care-resource-content');
+
+      if (type && !type.value.trim()) {
+        type.classList.add('error');
+        const formGroup = type.closest('.form-group') || entry;
+        this.showFieldError(formGroup, 'Care resource type is required');
+        isValid = false;
+      }
+
+      if (title && !title.value.trim()) {
+        title.classList.add('error');
+        const formGroup = title.closest('.form-group') || entry;
+        this.showFieldError(formGroup, 'Care resource title is required');
+        isValid = false;
+      }
+
+      if (content && !content.value.trim()) {
+        content.classList.add('error');
+        const formGroup = content.closest('.form-group') || entry;
+        this.showFieldError(formGroup, 'Care resource content is required');
+        isValid = false;
+      }
+    });
+
+    // Validate care schedule entries - if any exist, all fields must be filled
+    const careScheduleEntries = document.querySelectorAll('#care-schedule-list .care-schedule-entry:not(.care-schedule-entry-template)');
+    careScheduleEntries.forEach((entry, index) => {
+      const activity = entry.querySelector('.care-schedule-activity');
+      const hour = entry.querySelector('.care-schedule-hour');
+      const frequency = entry.querySelector('.care-schedule-frequency');
+
+      if (activity && !activity.value.trim()) {
+        activity.classList.add('error');
+        const formGroup = activity.closest('.form-group') || entry;
+        this.showFieldError(formGroup, 'Care schedule activity is required');
+        isValid = false;
+      }
+
+      if (hour && !hour.value.trim()) {
+        hour.classList.add('error');
+        const formGroup = hour.closest('.form-group') || entry;
+        this.showFieldError(formGroup, 'Care schedule time is required');
+        isValid = false;
+      }
+
+      if (frequency && !frequency.value.trim()) {
+        frequency.classList.add('error');
+        const formGroup = frequency.closest('.form-group') || entry;
+        this.showFieldError(formGroup, 'Care schedule frequency is required');
+        isValid = false;
+      }
+    });
+
     return isValid;
   }
+
   setLoading(isLoading) {
     const submitBtn = document.getElementById('submit-btn');
     if (!submitBtn) {
@@ -672,7 +816,6 @@ class AddPetPage {
     const previewContainer = document.getElementById('media-preview');
     if (!mediaInput || !previewContainer) return;
     mediaInput.addEventListener('change', (e) => {
-      // Revoke old URLs
       this.mediaObjectURLs.forEach(url => URL.revokeObjectURL(url));
       this.mediaObjectURLs = [];
       this.mediaFiles = Array.from(e.target.files);
@@ -685,7 +828,6 @@ class AddPetPage {
     const previewContainer = document.getElementById('media-preview');
     previewContainer.innerHTML = '';
     if (!this.mediaFiles.length) return;
-    // Cache object URLs for each file
     this.mediaObjectURLs = this.mediaFiles.map((file, idx) => {
       if (this.mediaObjectURLs[idx]) return this.mediaObjectURLs[idx];
       return URL.createObjectURL(file);
@@ -711,6 +853,192 @@ class AddPetPage {
       });
       previewContainer.appendChild(mediaWrapper);
     });
+  }
+
+  initMedicalSection() {
+    const addMedicalHistoryBtn = document.getElementById('add-medical-history-btn');
+    const addCareResourceBtn = document.getElementById('add-care-resource-btn');
+
+    if (addMedicalHistoryBtn) {
+      addMedicalHistoryBtn.addEventListener('click', () => this.addMedicalHistoryEntry());
+    }
+
+    if (addCareResourceBtn) {
+      addCareResourceBtn.addEventListener('click', () => this.addCareResourceEntry());
+    }
+  }
+
+  initCareScheduleSection() {
+    const addCareScheduleBtn = document.getElementById('add-care-schedule-btn');
+
+    if (addCareScheduleBtn) {
+      addCareScheduleBtn.addEventListener('click', () => this.addCareScheduleEntry());
+    }
+  }
+
+  addMedicalHistoryEntry() {
+    const template = document.querySelector('.medical-history-entry-template');
+    const container = document.getElementById('medical-history-list');
+    
+    if (!template || !container) return;
+    
+    const clone = template.cloneNode(true);
+    clone.style.display = 'block';
+    clone.classList.remove('medical-history-entry-template');
+    
+    const description = clone.querySelector('.medical-history-description');
+    if (description) {
+      description.addEventListener('blur', () => {
+        this.validateMedicalField(description, 'Medical history description is required');
+      });
+      description.addEventListener('input', () => {
+        if (description.value.trim()) {
+          description.classList.remove('error');
+          this.clearFieldError(description);
+        }
+      });
+    }
+    
+    const removeBtn = clone.querySelector('.remove-medical-history-btn');
+    if (removeBtn) {
+      removeBtn.addEventListener('click', () => {
+        clone.remove();
+      });
+    }
+    
+    container.appendChild(clone);
+  }
+
+  addCareResourceEntry() {
+    const template = document.querySelector('.care-resources-entry-template');
+    const container = document.getElementById('care-resources-list');
+    
+    if (!template || !container) return;
+    
+    const clone = template.cloneNode(true);
+    clone.style.display = 'block';
+    clone.classList.remove('care-resources-entry-template');
+    
+    const type = clone.querySelector('.care-resource-type');
+    const title = clone.querySelector('.care-resource-title');
+    const content = clone.querySelector('.care-resource-content');
+    
+    if (type) {
+      type.addEventListener('blur', () => {
+        this.validateMedicalField(type, 'Care resource type is required');
+      });
+      type.addEventListener('change', () => {
+        if (type.value.trim()) {
+          type.classList.remove('error');
+          this.clearFieldError(type);
+        }
+      });
+    }
+    
+    if (title) {
+      title.addEventListener('blur', () => {
+        this.validateMedicalField(title, 'Care resource title is required');
+      });
+      title.addEventListener('input', () => {
+        if (title.value.trim()) {
+          title.classList.remove('error');
+          this.clearFieldError(title);
+        }
+      });
+    }
+    
+    if (content) {
+      content.addEventListener('blur', () => {
+        this.validateMedicalField(content, 'Care resource content is required');
+      });
+      content.addEventListener('input', () => {
+        if (content.value.trim()) {
+          content.classList.remove('error');
+          this.clearFieldError(content);
+        }
+      });
+    }
+    
+    const removeBtn = clone.querySelector('.remove-care-resource-btn');
+    if (removeBtn) {
+      removeBtn.addEventListener('click', () => {
+        clone.remove();
+      });
+    }
+    container.appendChild(clone);
+  }
+
+  addCareScheduleEntry() {
+    const template = document.querySelector('.care-schedule-entry-template');
+    const container = document.getElementById('care-schedule-list');
+    
+    if (!template || !container) return;
+    
+    const clone = template.cloneNode(true);
+    clone.style.display = 'block';
+    clone.classList.remove('care-schedule-entry-template');
+    
+    const activity = clone.querySelector('.care-schedule-activity');
+    const hour = clone.querySelector('.care-schedule-hour');
+    const frequency = clone.querySelector('.care-schedule-frequency');
+    
+    if (activity) {
+      activity.addEventListener('blur', () => {
+        this.validateMedicalField(activity, 'Care schedule activity is required');
+      });
+      activity.addEventListener('input', () => {
+        if (activity.value.trim()) {
+          activity.classList.remove('error');
+          this.clearFieldError(activity);
+        }
+      });
+    }
+    
+    if (hour) {
+      hour.addEventListener('blur', () => {
+        this.validateMedicalField(hour, 'Care schedule time is required');
+      });
+      hour.addEventListener('change', () => {
+        if (hour.value.trim()) {
+          hour.classList.remove('error');
+          this.clearFieldError(hour);
+        }
+      });
+    }
+    
+    if (frequency) {
+      frequency.addEventListener('blur', () => {
+        this.validateMedicalField(frequency, 'Care schedule frequency is required');
+      });
+      frequency.addEventListener('change', () => {
+        if (frequency.value.trim()) {
+          frequency.classList.remove('error');
+          this.clearFieldError(frequency);
+        }
+      });
+    }
+    
+    const removeBtn = clone.querySelector('.remove-care-schedule-btn');
+    if (removeBtn) {
+      removeBtn.addEventListener('click', () => {
+        clone.remove();
+      });
+    }
+    
+    container.appendChild(clone);
+  }
+
+  validateMedicalField(field, errorMessage) {
+    if (!field.value.trim()) {
+      field.classList.add('error');
+      const formGroup = field.closest('.form-group') || field.parentElement;
+      this.showFieldError(formGroup, errorMessage);
+      return false;
+    } else {
+      field.classList.remove('error');
+      this.clearFieldError(field);
+      return true;
+    }
   }
 }
 
