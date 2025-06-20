@@ -83,6 +83,7 @@
   flex-direction: column;
   gap: 0.5rem;
   margin-bottom: 1.2rem;
+  position: relative;
 }
 
 .form-group.full-width {
@@ -103,7 +104,12 @@
 }
 
 .form-label[for="pet-name"]::after,
-.form-label[for="pet-species"]::after {
+.form-label[for="pet-species"]::after,
+.form-label[for="pet-gender"]::after,
+.form-label[for="pet-health-status"]::after,
+.form-label[for="pet-city"]::after,
+.form-label[for="pet-country"]::after,
+.form-label[for="adoption-fee"]::after {
   display: inline;
 }
 
@@ -221,6 +227,13 @@
   height: 20px;
   margin: 0;
   accent-color: #22c55e;
+  outline: none;
+  pointer-events: none;
+}
+
+.tag-checkbox input[type="checkbox"]:focus {
+  outline: none;
+  box-shadow: none;
 }
 
 .tag-checkbox label {
@@ -230,6 +243,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  pointer-events: none;
 }
 
 .custom-badge {
@@ -373,7 +387,39 @@
     min-width: 100px;
 }
 
-/* Form Validation States */
+.field-error-tooltip {
+  position: absolute;
+  bottom: calc(100% - 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #dc3545;
+  color: white;
+  padding: 0.4rem 0.6rem;
+  border-radius: 4px;
+  margin-bottom: -1rem;
+  font-size: 1rem;
+  white-space: nowrap;
+  z-index: 10;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+}
+
+.field-error-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #dc3545;
+}
+
+.field-error-tooltip.show {
+  opacity: 1;
+  visibility: visible;
+}
+
 .form-group.has-error .form-input,
 .form-group.has-error .form-select,
 .form-group.has-error .form-textarea {
@@ -395,7 +441,6 @@
     box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.15);
 }
 
-/* Loading State Improvements */
 .btn.loading {
     pointer-events: none;
     position: relative;
@@ -499,14 +544,92 @@
     display: block;
 }
 
-.form-input:invalid,
-.form-select:invalid,
-.form-textarea:invalid,
 .form-input.error,
 .form-select.error,
 .form-textarea.error {
   border-color: #dc3545 !important;
   box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.13);
+}
+
+.map-container {
+  margin-top: 2rem;
+  border: 2px solid var(--border-color, #e0e0e0);
+  border-radius: 12px;
+  padding: 1.5rem;
+  background: var(--background-color, #fff);
+}
+
+.map-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.map-header h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--primary-color, #4a89dc);
+  margin: 0;
+}
+
+.map-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  min-width: auto;
+}
+
+.location-map {
+  width: 100%;
+  height: 56vh;
+  border-radius: 1.2rem;
+  border: 0.15rem solid var(--border-color, #e0e0e0);
+  overflow: hidden;
+  box-shadow: 0 0.2rem 0.8rem rgba(0, 0, 0, 0.08);
+  background: #f8fafc;
+}
+
+@media (max-width: 900px) {
+  .location-map {
+    height: min(36vh, 380px);
+    border-radius: 1rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .location-map {
+    height: min(28vh, 220px);
+    border-radius: 0.7rem;
+  }
+}
+
+.map-help-text {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--secondary-color, #6c757d);
+  font-style: italic;
+  text-align: center;
+  line-height: 1.4;
+}
+
+/* Leaflet marker popup custom styles */
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.leaflet-popup-content {
+  font-family: inherit;
+  color: var(--primary-color, #4a89dc);
+  font-weight: 500;
 }
 
 @media (max-width: 1200px) {
@@ -572,5 +695,105 @@
   }
   .form-section {
     padding: 1rem 0.5rem;
+  }
+  .location-map {
+    height: 200px;
+  }
+}
+
+.media-upload-section {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.media-preview {
+  display: flex;
+  flex-direction: row;
+  gap: 0.7rem;
+  margin-top: 0.5rem;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.media-thumb-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 120px;
+  height: 120px;
+}
+
+.media-thumb {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 3px solid #e0e0e0;
+  background: #f8fafc;
+  transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.media-thumb:hover {
+  border-color: var(--hover-color, #2A2D3A);
+  box-shadow: 0 2px 12px rgba(42, 45, 58, 0.18);
+  transform: translateY(-2px) scale(1.03);
+  z-index: 3;
+  cursor: pointer;
+}
+
+.media-thumb-wrapper.selected .media-thumb {
+  border: 3px solid #ffc107;
+  box-shadow: 0 0 0 4px #fffbe6;
+  z-index: 2;
+}
+
+.media-thumb-wrapper.selected::after {
+  content: 'Profile picture';
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: #ffc107;
+  color: #333;
+  font-size: 0.95rem;
+  font-weight: bold;
+  padding: 2px 8px;
+  border-radius: 6px;
+  z-index: 3;
+  pointer-events: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  opacity: 0.82;
+}
+
+#pet-media {
+  width: 180px;
+  font-size: 0.95rem;
+  padding: 0.3rem 0.5rem;
+  margin-top: 1.2rem;
+  display: block;
+}
+
+@media (max-width: 900px) {
+  .media-preview {
+    flex-wrap: wrap;
+  }
+  .media-thumb, .media-thumb-wrapper {
+    width: 90px;
+    height: 90px;
+  }
+}
+
+@media (max-width: 600px) {
+  .media-preview {
+    flex-direction: column;
+    align-items: center;
+  }
+  .media-thumb, .media-thumb-wrapper {
+    width: 90vw;
+    height: 40vw;
+    max-width: 98vw;
+    max-height: 220px;
   }
 }

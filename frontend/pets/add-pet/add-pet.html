@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title data-i18n="addPetPageTitle" data-i18n-fallback="Add New Pet"></title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
     <link rel="stylesheet" href="../../global/global.min.css">
     <link rel="stylesheet" href="../pets-page/pets-page.min.css">
     <link rel="stylesheet" href="add-pet.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
 <body>
     <div id="global-navbar">
@@ -145,28 +147,65 @@
                     
                     <div class="tags-grid" id="tags-container">
                         <!-- Tags will be populated dynamically -->
+                    </div>                
+                </div>
+
+                <!-- Location Information -->
+                <div class="form-section">
+                    <h2 class="section-title" data-i18n="locationInformation" data-i18n-fallback="Location Information"></h2>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="pet-city" class="form-label" data-i18n="city" data-i18n-fallback="City"></label>
+                            <input type="text" id="pet-city" name="city" class="form-input" placeholder="e.g., Bucharest">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pet-country" class="form-label" data-i18n="country" data-i18n-fallback="Country"></label>
+                            <input type="text" id="pet-country" name="country" class="form-input" placeholder="e.g., Romania">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="pet-address" class="form-label" data-i18n="address" data-i18n-fallback="Full Address (Optional)"></label>
+                            <input type="text" id="pet-address" name="address" class="form-input" placeholder="e.g., 123 Main Street, Sector 1">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pet-postal-code" class="form-label" data-i18n="postalCode" data-i18n-fallback="Postal Code"></label>
+                            <input type="text" id="pet-postal-code" name="postalCode" class="form-input" placeholder="e.g., 010101">
+                        </div>
+                    </div>
+
+                    <div class="map-container">
+                        <div class="map-header">
+                            <h3 data-i18n="petLocation" data-i18n-fallback="Pet Location"></h3>
+                            <button type="button" id="locate-on-map" class="btn btn-secondary map-btn">
+                                <span data-i18n="locateOnMap" data-i18n-fallback="Locate on Map"></span>
+                            </button>
+                        </div>
+                        <div id="pet-location-map" class="location-map"></div>
                     </div>
                 </div>
 
                 <!-- Adoption Information -->
                 <div class="form-section">
                     <h2 class="section-title" data-i18n="adoptionInformation" data-i18n-fallback="Adoption Information"></h2>
-
                     <div class="form-grid">
                         <div class="form-group">
-                            <label for="adoption-status" class="form-label" data-i18n="adoptionStatus" data-i18n-fallback="Adoption Status"></label>
-                            <select id="adoption-status" name="adoptionStatus" class="form-select">
-                                <option value="available" data-i18n="available" data-i18n-fallback="Available"></option>
-                                <option value="pending" data-i18n="pending" data-i18n-fallback="Pending"></option>
-                                <option value="adopted" data-i18n="adopted" data-i18n-fallback="Adopted"></option>
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="adoption-fee" class="form-label" data-i18n="adoptionFee" data-i18n-fallback="Adoption Fee ($)"></label>
+                            <label for="adoption-fee" class="form-label" data-i18n="adoptionFee" data-i18n-fallback="Adoption Fee"></label>
                             <input type="number" id="adoption-fee" name="adoptionFee" class="form-input" min="0" step="0.01" placeholder="e.g., 150.00">
                         </div>
                     </div>
+                </div>
+
+                <!-- Media Upload Section -->
+                <div class="form-section">
+                  <h2 class="section-title">Media</h2>
+                  <div class="media-upload-section">
+                    <div id="media-preview" class="media-preview"></div>
+                    <input type="file" id="pet-media" name="media" class="form-input" accept="image/*,video/*" multiple>
+                    <div id="profile-image-select-help" class="media-help-text">Click an image to set as profile picture. The selected one is highlighted and labeled.</div>
+                  </div>
                 </div>
 
                 <!-- Form Actions -->
@@ -205,10 +244,9 @@
             </form>
         </div>
     </div>
-
     <div id="global-footer"></div>
-      <script type="module" src="../global/global.min.js"></script>
-    <script type="module" src="../languages/language.min.js"></script>
+    <script type="module" src="../../global/global.min.js"></script>
+    <script type="module" src="../../languages/language.min.js"></script>
     <script type="module" src="add-pet.min.js"></script>
 </body>
 </html>
