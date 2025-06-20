@@ -144,10 +144,6 @@ class userDTO extends abstractDTO {
       }
 
       const mappedUser = this.mapToEntity(user);
-      // const mappedUser = {};
-      // for (const key in user) {
-      //   mappedUser[key.toLowerCase()] = user[key];
-      // }
       return {
         success: true,
         message: "Authentication successful!",

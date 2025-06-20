@@ -7,15 +7,23 @@ const jwt = require('jsonwebtoken');
 
 class UserController {
 
-  // async getAllUsers(req, res) { 
-  //   try {
-  //     const users = await userModel.getAll();
-  //     sendResponse(res, 200, users);
-  //   } catch (error) {
-  //     console.error("Error getting all users:", error);
-  //     sendResponse(res, 500, { error: "Failed to fetch users", message: error.message });
-  //   }
-  // }
+  /* PT ADMIN
+  async getAllUsers(req, res) {
+    try {
+      // VERIFICAREA DE ROL AICI ESTE CORECTĂ PENTRU O RUTĂ ADMIN
+      if (!req.user || req.user.role !== 'admin') {
+        return sendResponse(res, 403, { success: false, message: "Forbidden: Only administrators can access this resource." });
+      }
+      console.log('[UserController] Fetching all users (admin access).');
+      // Aceasta poate apela userModel.getAll() dacă vrei toți userii, sau getAllWithAdoptionCounts()
+      const users = await userModel.getAll(); // Sau getAllWithAdoptionCounts() dacă e și pentru admini, dar fără filtre suplimentare
+      sendResponse(res, 200, { success: true, users: users });
+    } catch (error) {
+      console.error("Error getting all users (admin):", error);
+      sendResponse(res, 500, { success: false, message: "Internal server error." });
+    }
+  }
+    */
 
   async getAllUsers(req, res) {
     try {

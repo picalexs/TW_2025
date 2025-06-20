@@ -151,9 +151,6 @@ const server = http.createServer(async (req, res) => {
     if (!routeHandled) {
       routeHandled = await handleStaticRoutes(req, res);
     }
-    if (!routeHandled) {
-      routeHandled = await handleFrontendRoutes(req, res); // Rute frontend
-    }
 
     if (!routeHandled) {
       routeHandled = await handleUserRoutes(req, res);
@@ -178,9 +175,9 @@ const server = http.createServer(async (req, res) => {
       routeHandled = await handleNotificationRoutes(req, res);
     }
 
-    // if (!routeHandled) {
-    //   routeHandled = await handleFrontendRoutes(req, res);
-    // }
+    if (!routeHandled) {
+      routeHandled = await handleFrontendRoutes(req, res);
+    }
 
     if (!routeHandled) {
       console.log(`Route not found: ${req.url}`);

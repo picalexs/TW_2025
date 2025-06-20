@@ -294,9 +294,9 @@ async function fetchAndRenderUsers() {
       const userService = new UserService({ debug: true });
       const allUsers = await userService.getAllUsersWithAdoptions();
       
-      const usersWithAdoptions = allUsers.filter(user => 
-        user.adoption_count && user.adoption_count > 0
-      );
+      // const usersWithAdoptions = allUsers.filter(user => 
+      //   user.adoption_count && user.adoption_count > 0
+      // );
       
       if (usersWithAdoptions.length > 0) {
         const shuffledUsers = [...usersWithAdoptions].sort(() => Math.random() - 0.5);
