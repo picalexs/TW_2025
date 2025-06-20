@@ -12,11 +12,16 @@ class AddPetPage {
     this.mediaFiles = [];
     this.profileImageIndex = 0;
     this.mediaObjectURLs = [];
+    this.isEditMode = false;
+    this.editPetId = null;
+    this.currentPetData = null;
     this.init();
   }
-
+  
   async init() {
     try {
+      this.checkEditMode();
+      
       await this.loadTags();
       this.renderTags();      
       this.initializeEventListeners();
@@ -24,9 +29,159 @@ class AddPetPage {
       this.initMediaUpload();
       this.initMedicalSection();
       this.initCareScheduleSection();
+      
+      if (this.isEditMode && this.editPetId) {
+        await this.loadPetDataForEdit();
+      }
     } catch (error) {
       console.error('Error initializing add pet page:', error);
     }
+  }
+  checkEditMode() {
+    const urlParams = new URLSearchParams(window.location.search);
+    this.isEditMode = urlParams.get('edit') === 'true';
+    this.editPetId = urlParams.get('id');
+    
+    if (this.isEditMode) {
+      console.log('Edit mode detected for pet ID:', this.editPetId);
+      this.updateUIForEditMode();
+    }
+  }
+
+  updateUIForEditMode() {
+    // Update page title and heading
+    const pageTitle = document.querySelector('title');
+    if (pageTitle) {
+      pageTitle.textContent = 'Edit Pet';
+    }
+
+    const heading = document.querySelector('h1');
+    if (heading) {
+      heading.textContent = 'Edit Pet';
+    }
+
+    const description = document.querySelector('.form-header p');
+    if (description) {
+      description.textContent = 'Update the pet information below.';
+    }
+
+    const submitBtn = document.getElementById('submit-btn');
+    if (submitBtn) {
+      const btnText = submitBtn.querySelector('.btn-text');
+      if (btnText) {
+        btnText.textContent = 'Update Pet';
+      }
+    }
+  }  async loadPetDataForEdit() {
+    try {
+      console.log('Loading pet data for edit, ID:', this.editPetId);
+      const pet = await this.petService.getPetById(this.editPetId);
+      this.currentPetData = pet;
+      console.log('Loaded pet data:', pet);
+      
+      await this.populateFormWithPetData(pet);
+    } catch (error) {
+      console.error('Error loading pet data for edit:', error);
+      alert('Error loading pet data: ' + error.message);
+      // Redirect back to pets page on error
+      window.location.href = '../pets-page/pets-page.html';
+    }
+  }
+  async populateFormWithPetData(pet) {
+    // Basic information
+    this.setFieldValue('pet-name', pet.name);
+    this.setFieldValue('pet-species', pet.species);
+    this.setFieldValue('pet-breed', pet.breed);
+    this.setFieldValue('pet-age', pet.age);
+    this.setFieldValue('pet-gender', pet.gender);
+    this.setFieldValue('pet-size', pet.sizeCategory);
+    this.setFieldValue('pet-weight', pet.weightKg);
+    this.setFieldValue('pet-color', pet.color);
+    
+    // Description and behavior
+    this.setFieldValue('pet-description', pet.description);
+    this.setFieldValue('pet-relations', pet.relationWithOthers);
+    
+    // Health information
+    this.setFieldValue('pet-health-status', pet.healthStatus);
+    
+    // Location information
+    if (pet.address) {
+      this.setFieldValue('pet-city', pet.address.city);
+      this.setFieldValue('pet-country', pet.address.country);
+      this.setFieldValue('pet-address', pet.address.address);
+      this.setFieldValue('pet-postal-code', pet.address.postalCode);
+    }
+    
+    // Adoption information
+    this.setFieldValue('adoption-status', pet.adoptionStatus);
+    this.setFieldValue('adoption-fee', pet.adoptionFee);
+    
+    // Tags
+    if (pet.tags && Array.isArray(pet.tags)) {
+      pet.tags.forEach(tag => {
+        this.selectedTags.add(parseInt(tag.id));
+      });
+      this.renderTags(); // Re-render to show selected tags
+    }
+    
+    // Media files - display existing media
+    if (pet.media && Array.isArray(pet.media)) {
+      this.displayExistingMedia(pet.media);
+    }
+    
+    // Medical history, care resources, and care schedule
+    this.populateMedicalData(pet);
+  }
+
+  setFieldValue(fieldId, value) {
+    const field = document.getElementById(fieldId);
+    if (field && value !== null && value !== undefined) {
+      field.value = value;
+    }
+  }
+
+  displayExistingMedia(mediaArray) {
+    const mediaPreview = document.getElementById('media-preview');
+    if (!mediaPreview || !mediaArray.length) return;
+
+    mediaPreview.innerHTML = '';
+    
+    mediaArray.forEach((mediaItem, index) => {
+      const mediaElement = document.createElement('div');
+      mediaElement.className = 'media-preview-item';
+      
+      if (index === 0) {
+        mediaElement.classList.add('profile-image');
+      }
+      
+      if (mediaItem.type === 'image') {
+        mediaElement.innerHTML = `
+          <img src="${mediaItem.path}" alt="Pet media" />
+          <div class="media-controls">
+            <button type="button" class="set-profile-btn ${index === 0 ? 'active' : ''}" 
+                    onclick="setAsProfile(${index})">
+              ${index === 0 ? 'Profile' : 'Set as Profile'}
+            </button>
+          </div>
+        `;
+      } else if (mediaItem.type === 'video') {
+        mediaElement.innerHTML = `
+          <video src="${mediaItem.path}" controls></video>
+          <div class="media-controls">
+            <span>Video</span>
+          </div>
+        `;
+      }
+      
+      mediaPreview.appendChild(mediaElement);
+    });
+  }
+
+  populateMedicalData(pet) {
+    // For now, we'll skip populating complex nested data like medical history
+    // This can be implemented later if the backend provides this data
+    console.log('Medical data population not yet implemented');
   }
 
   async loadTags() {
@@ -181,14 +336,27 @@ class AddPetPage {
       submitFormData.append('careResources', JSON.stringify(petData.careResources));
       submitFormData.append('careSchedule', JSON.stringify(petData.careSchedule));
       submitFormData.append('tags', JSON.stringify(petData.tags));
-        const result = await this.petService.addPetWithFiles(submitFormData);
-      console.log('Pet creation successful:', result);
+      
+      let result;
+      if (this.isEditMode && this.editPetId) {
+        // Update existing pet
+        result = await this.petService.updatePetWithFiles(this.editPetId, submitFormData);
+        console.log('Pet update successful:', result);
+        alert('Pet updated successfully!');
+      } else {
+        // Create new pet
+        result = await this.petService.addPetWithFiles(submitFormData);
+        console.log('Pet creation successful:', result);
+        alert('Pet added successfully!');
+      }
+      
       window.location.href = '../pets-page/pets-page.html';
 
     } catch (error) {
-      console.error('Error adding pet:', error);
+      console.error('Error submitting pet form:', error);
       console.error('Error details:', error.message);
-      alert('Error creating pet: ' + error.message);
+      const action = this.isEditMode ? 'updating' : 'adding';
+      alert(`Error ${action} pet: ` + error.message);
       this.setLoading(false);
     }
   }
@@ -207,8 +375,7 @@ class AddPetPage {
       description: formData.get('description'),
       relationWithOthers: formData.get('relationWithOthers'),
       adoptionStatus: 'available',
-      adoptionFee: formData.get('adoptionFee') ? parseFloat(formData.get('adoptionFee')) : null,
-      shelterId: this.tempUserId,
+      adoptionFee: formData.get('adoptionFee') ? parseFloat(formData.get('adoptionFee')) : null,      shelterId: this.tempUserId,
       tags: this.getSelectedTagsForSubmission(),
       address: formData.get('address'),
       city: formData.get('city'),

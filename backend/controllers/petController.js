@@ -170,12 +170,97 @@ class PetController {
 
   async updatePet(req, res, id) {
     try {
-      const petData = await collectRequestData(req);
-      const updatedPet = await petModel.updatePet(id, petData);
-      if (updatedPet) {
-        sendResponse(res, 200, updatedPet);
+      const contentType = req.headers['content-type'];
+      
+      if (contentType && contentType.includes('multipart/form-data')) {
+        const fields = {};
+        const files = [];
+        
+        const busboy = Busboy({ headers: req.headers });
+        
+        busboy.on('field', (fieldname, val) => {
+          fields[fieldname] = val;
+        });
+        
+        busboy.on('file', (fieldname, file, info) => {
+          const { filename, encoding, mimeType } = info;
+          console.log(`Received file for update: ${filename}, type: ${mimeType}`);
+          
+          if (!filename) {
+            file.resume();
+            return;
+          }
+          
+          const chunks = [];
+          file.on('data', chunk => chunks.push(chunk));
+          file.on('end', () => {
+            files.push({
+              fieldname,
+              filename,
+              encoding,
+              mimeType,
+              buffer: Buffer.concat(chunks)
+            });
+          });
+        });
+          busboy.on('finish', async () => {
+          try {
+            console.log('Update form fields:', fields);
+            console.log('Update files count:', files.length);
+            
+            const result = await petModel.updatePet(id, fields, files);
+            if (!result) {
+              return sendResponse(res, 404, { error: "Pet not found for update" });
+            }
+            
+            if (result.pet && result.files) {
+              if (result.files && result.files.length > 0) {
+                const mediaPaths = await this.saveMediaFiles(result.files, id, result.profileImageIndex);
+                await petModel.saveMediaPaths(id, mediaPaths);
+              }
+              
+              if (result.tags && result.tags.length > 0) {
+                const processedTagIds = await petModel.processAndCreateTags(result.tags);
+                if (processedTagIds.length > 0) {
+                  await petModel.clearPetTags(id);
+                  await petModel.saveTags(id, processedTagIds);
+                }
+              }
+              
+              if (result.medicalHistory && result.medicalHistory.length > 0) {
+                await petModel.clearMedicalHistory(id);
+                await petModel.saveMedicalHistory(id, result.medicalHistory);
+              }
+              
+              if (result.careResources && result.careResources.length > 0) {
+                await petModel.clearCareResources(id);
+                await petModel.saveCareResources(id, result.careResources);
+              }
+              
+              if (result.careSchedule && result.careSchedule.length > 0) {
+                await petModel.clearCareSchedule(id);
+                await petModel.saveCareSchedule(id, result.careSchedule);
+              }
+              
+              sendResponse(res, 200, result.pet);
+            } else {
+              sendResponse(res, 200, result);
+            }
+          } catch (error) {
+            console.error(`Error in update pet processing:`, error);
+            sendResponse(res, 500, { error: "Failed to update pet", message: error.message });
+          }
+        });
+        
+        req.pipe(busboy);
       } else {
-        sendResponse(res, 404, { error: "Pet not found for update" });
+        const petData = await collectRequestData(req);
+        const updatedPet = await petModel.updatePet(id, petData);
+        if (updatedPet) {
+          sendResponse(res, 200, updatedPet);
+        } else {
+          sendResponse(res, 404, { error: "Pet not found for update" });
+        }
       }
     } catch (error) {
       console.error(`Error updating pet with ID ${id}:`, error);

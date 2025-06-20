@@ -9,11 +9,32 @@ class PetModel extends AbstractModel {
   async createPet(petData) {
     this.validatePetData(petData);
     return await this.dto.create(petData);
-  }
-
-  async updatePet(id, petData) {
-    this.validatePetData(petData, true);
-    return await this.dto.update(id, petData);
+  }  async updatePet(id, petDataOrFields, files = null) {
+    // Handle both JSON updates (without files) and multipart updates (with files)
+    if (files !== null) {
+      // Multipart form data update with files
+      const validatedData = this.validatePetCreationData(petDataOrFields, files);
+      const updatedPet = await this.dto.update(id, validatedData.petData);
+      
+      if (!updatedPet) {
+        return null;
+      }
+      
+      // Return the validated data so the controller can handle file saving
+      return {
+        pet: updatedPet,
+        files: files,
+        profileImageIndex: validatedData.profileImageIndex,
+        tags: validatedData.tags,
+        medicalHistory: validatedData.medicalHistory,
+        careResources: validatedData.careResources,
+        careSchedule: validatedData.careSchedule
+      };
+    } else {
+      // JSON update without files
+      this.validatePetData(petDataOrFields, true);
+      return await this.dto.update(id, petDataOrFields);
+    }
   }
 
   validatePetCreationData(fields, files) {    
@@ -321,6 +342,22 @@ class PetModel extends AbstractModel {
     }
 
     return processedTagIds;
+  }
+
+  async clearPetTags(petId) {
+    return await this.dto.clearPetTags(petId);
+  }
+
+  async clearMedicalHistory(petId) {
+    return await this.dto.clearMedicalHistory(petId);
+  }
+
+  async clearCareResources(petId) {
+    return await this.dto.clearCareResources(petId);
+  }
+
+  async clearCareSchedule(petId) {
+    return await this.dto.clearCareSchedule(petId);
   }
 }
 

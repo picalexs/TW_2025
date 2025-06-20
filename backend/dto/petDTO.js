@@ -747,5 +747,69 @@ class petDTO extends abstractDTO {
       });
     }
   }
+
+  async clearPetTags(petId) {
+    const connection = await this.getConnection();
+    try {
+      await connection.execute(
+        `DELETE FROM animal_tags WHERE animal_id = :petId`,
+        [petId],
+        { autoCommit: true }
+      );
+    } catch (error) {
+      console.error('Error clearing pet tags:', error);
+      throw error;
+    } finally {
+      await connection.close();
+    }
+  }
+
+  async clearMedicalHistory(petId) {
+    const connection = await this.getConnection();
+    try {
+      await connection.execute(
+        `DELETE FROM medical_history WHERE animal_id = :petId`,
+        [petId],
+        { autoCommit: true }
+      );
+    } catch (error) {
+      console.error('Error clearing medical history:', error);
+      throw error;
+    } finally {
+      await connection.close();
+    }
+  }
+
+  async clearCareResources(petId) {
+    const connection = await this.getConnection();
+    try {
+      await connection.execute(
+        `DELETE FROM care_resources WHERE animal_id = :petId`,
+        [petId],
+        { autoCommit: true }
+      );
+    } catch (error) {
+      console.error('Error clearing care resources:', error);
+      throw error;
+    } finally {
+      await connection.close();
+    }
+  }
+
+  async clearCareSchedule(petId) {
+    const connection = await this.getConnection();
+    try {
+      await connection.execute(
+        `DELETE FROM care_schedule WHERE animal_id = :petId`,
+        [petId],
+        { autoCommit: true }
+      );
+    } catch (error) {
+      console.error('Error clearing care schedule:', error);
+      throw error;
+    } finally {
+      await connection.close();
+    }
+  }
 }
 module.exports = new petDTO();

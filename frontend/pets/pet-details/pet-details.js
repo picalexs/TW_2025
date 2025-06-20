@@ -59,7 +59,8 @@ class PetDetailsPage {
     this.renderBehaviorTab(pet);
     this.renderLocationTab(pet);
     this.renderAdoptionTab(pet);
-  }  
+    this.checkPetOwnership(pet);
+  }
   
   renderPetHeader(pet) {
     const mainImage = document.getElementById('main-pet-image');
@@ -421,6 +422,9 @@ class PetDetailsPage {
     const contactBtn = document.getElementById('contact-shelter-btn');
     contactBtn.addEventListener('click', () => this.showContactModal());
 
+    const editBtn = document.getElementById('edit-pet-btn');
+    editBtn.addEventListener('click', () => this.editPet());
+
     this.initModalEvents();
   }
 
@@ -603,6 +607,27 @@ class PetDetailsPage {
     
     const normalizedCity = city.toLowerCase().trim();
     return cityCoords[normalizedCity] || null;
+  }  
+  
+  checkPetOwnership(pet) {//ANYONE can edit for now -needs JWT auth later
+    console.log('checkPetOwnership called for pet:', pet.id);
+    const editBtn = document.getElementById('edit-pet-btn');
+    if (editBtn) {
+      editBtn.style.display = 'inline-block';
+      console.log('Edit button shown for pet:', pet.id);
+    } else {
+      console.error('Edit button not found in DOM');
+    }
+  }
+
+  editPet() {
+    if (!this.currentPet) {
+      console.error('No pet data available for editing');
+      return;
+    }
+
+    const editUrl = `../add-pet/add-pet.html?edit=true&id=${this.currentPet.id}`;
+    window.location.href = editUrl;
   }
 }
 

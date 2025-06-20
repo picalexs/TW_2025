@@ -68,11 +68,12 @@ class UserService {
     try {
       const data = await this.apiService.post(this.endpoints.login, { email, password });
       
-      if (data && data.token) {
-        this._setAuthState(data.token, data.user);
+      if (data && data.user) {
+        localStorage.setItem('userData', JSON.stringify(data.user));
+        localStorage.setItem('isLoggedIn', 'true');
         return data;
       } else {
-        throw new Error('Invalid login response: missing token');
+        throw new Error('Invalid login response: missing user data');
       }
     } catch (error) {
       if (this.debug) {

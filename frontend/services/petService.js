@@ -111,6 +111,37 @@ class PetService {  constructor(options = {}) {
     }
   }
 
+  async updatePetWithFiles(id, formData) {
+    if (!id) {
+      throw new Error('Pet ID is required');
+    }
+    
+    if (!formData) {
+      throw new Error('Form data is required');
+    }
+    
+    try {
+      if (this.debug) console.log('Updating pet with files...');
+      
+      const response = await fetch(`${this.apiService.baseURL}${this.endpoints.detail(id)}`, {
+        method: 'PUT',
+        body: formData
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      return await response.json();
+    } catch (error) {
+      if (this.debug) {
+        console.error(`Error updating pet with files, ID ${id}:`, error);
+      }
+      throw error;
+    }
+  }
+
   async deletePet(id) {
     if (!id) {
       throw new Error('Pet ID is required');
