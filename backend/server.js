@@ -118,15 +118,18 @@ const server = http.createServer(async (req, res) => {
   try {
     let routeHandled = false;
     const publicRoutes = [
-      '/api/users/register',
-      '/api/users/verify-email',
-      '/api/auth/login',
-      '/api/config',
-      '/api/status',
-      '/api/static/',
-      '/home/home.html'
-      // public routes
-    ];
+  '/api/users/register',
+  '/api/users/verify-email',
+  '/api/auth/login',
+  '/api/config',
+  '/api/status',
+  '/api/static/',
+  '/home/home.html',
+  '/api/pets',                 
+  '/api/users/with-adoptions', 
+  '/api/testimonials',        
+  '/api/testimonials/random'   
+];
 
     const isPublicRoute = publicRoutes.some(route => req.url.startsWith(route));
 
