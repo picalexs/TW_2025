@@ -769,11 +769,83 @@
 }
 
 #pet-media {
-  width: 180px;
-  font-size: 0.95rem;
-  padding: 0.3rem 0.5rem;
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--primary-color, #4a89dc) 0%, #357ab8 100%);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(74, 137, 220, 0.3);
   margin-top: 1.2rem;
-  display: block;
+  min-width: 200px;
+  text-align: center;
+}
+
+#pet-media:hover {
+  background: linear-gradient(135deg, #357ab8 0%, #2c5aa0 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(74, 137, 220, 0.4);
+}
+
+#pet-media:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(74, 137, 220, 0.3);
+}
+
+.file-upload-wrapper {
+  position: relative;
+  display: inline-block;
+  margin-top: 1.2rem;
+}
+
+.file-upload-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, var(--primary-color, #4a89dc) 0%, #357ab8 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(74, 137, 220, 0.3);
+  min-width: 200px;
+  justify-content: center;
+}
+
+.file-upload-button:hover {
+  background: linear-gradient(135deg, #357ab8 0%, #2c5aa0 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(74, 137, 220, 0.4);
+}
+
+.file-upload-button:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(74, 137, 220, 0.3);
+}
+
+.file-upload-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(74, 137, 220, 0.3), 0 4px 12px rgba(74, 137, 220, 0.3);
+}
+
+.file-upload-icon {
+  font-size: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  vertical-align: middle;
+  transform: translateY(-0.2rem);
 }
 
 @media (max-width: 900px) {
@@ -783,6 +855,12 @@
   .media-thumb, .media-thumb-wrapper {
     width: 90px;
     height: 90px;
+  }
+  
+  .file-upload-button {
+    min-width: 180px;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
   }
 }
 
@@ -796,6 +874,18 @@
     height: 40vw;
     max-width: 98vw;
     max-height: 220px;
+  }
+  
+  .file-upload-button {
+    width: 100%;
+    min-width: auto;
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+  }
+  
+  .file-upload-wrapper {
+    width: 100%;
+    margin-top: 1rem;
   }
 }
 
@@ -1060,4 +1150,31 @@
 .form-group.care-resources-list-group .form-label,
 .form-group.care-schedule-list-group .form-label {
   margin-bottom: 0.5rem;
+}
+
+.file-upload-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(74, 137, 220, 0.3), 0 4px 12px rgba(74, 137, 220, 0.3);
+}
+
+.media-help-text {
+  font-size: 0.9rem;
+  color: var(--secondary-color, #6c757d);
+  margin-top: 1rem;
+  text-align: center;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.file-upload-button.empty {
+  animation: subtlePulse 2s ease-in-out infinite;
+}
+
+@keyframes subtlePulse {
+  0%, 100% {
+    box-shadow: 0 4px 12px rgba(74, 137, 220, 0.3);
+  }
+  50% {
+    box-shadow: 0 4px 12px rgba(74, 137, 220, 0.5);
+  }
 }

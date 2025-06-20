@@ -814,13 +814,33 @@ class AddPetPage {
   initMediaUpload() {
     const mediaInput = document.getElementById('pet-media');
     const previewContainer = document.getElementById('media-preview');
+    const uploadButton = document.querySelector('.file-upload-button');
+    
     if (!mediaInput || !previewContainer) return;
+    
+    if (uploadButton) {
+      uploadButton.classList.add('empty');
+    }
+    
     mediaInput.addEventListener('change', (e) => {
       this.mediaObjectURLs.forEach(url => URL.revokeObjectURL(url));
       this.mediaObjectURLs = [];
       this.mediaFiles = Array.from(e.target.files);
       this.profileImageIndex = 0;
       this.renderMediaPreview();
+      
+      if (uploadButton) {
+        const fileCount = this.mediaFiles.length;
+        const buttonText = uploadButton.querySelector('span:last-child');
+        
+        if (fileCount === 0) {
+          buttonText.textContent = 'Choose Photos & Videos';
+          uploadButton.classList.add('empty');
+        } else {
+          buttonText.textContent = `${fileCount} file${fileCount !== 1 ? 's' : ''} selected`;
+          uploadButton.classList.remove('empty');
+        }
+      }
     });
   }
 

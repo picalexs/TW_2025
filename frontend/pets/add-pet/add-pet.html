@@ -101,11 +101,11 @@
                             <input type="text" id="pet-color" name="color" class="form-input" placeholder="e.g., Brown, Black and White">
                         </div>
                     </div>
-                </div>
-
-                <!-- Health Information -->
+                </div>                
+                
+                <!-- Pet Description & Behavior -->
                 <div class="form-section">
-                    <h2 class="section-title" data-i18n="healthInformation" data-i18n-fallback="Health Information"></h2>
+                    <h2 class="section-title" data-i18n="petDescription" data-i18n-fallback="Pet Description & Behavior"></h2>
                     <div class="form-grid">
                         <div class="form-group full-width">
                             <label for="pet-description" class="form-label" data-i18n="description" data-i18n-fallback="Description"></label>
@@ -118,7 +118,9 @@
                                 placeholder="How does this pet get along with kids, other pets, etc.?"></textarea>
                         </div>
                     </div>
-                </div>                <!-- Medical History Section -->
+                </div>               
+
+                <!-- Medical History Section -->
                 <div class="form-section">
                     <h2 class="section-title" data-i18n="medicalHistory" data-i18n-fallback="Medical History"></h2>
                     <div class="form-grid">
@@ -170,49 +172,44 @@
                                 <span data-i18n="addCareSchedule" data-i18n-fallback="Add Care Schedule"></span>
                             </button>
                         </div>
-                    </div>
-
-                    <!-- Templates -->
+                    </div>                    <!-- Templates -->
                     <div class="medical-history-entry-template" style="display:none">
                         <div class="medical-history-entry">
-                            <textarea class="form-textarea medical-history-description" rows="3" required placeholder="Description of medical event, treatment, vaccination, etc. (Required)"></textarea>
-                            <input type="date" class="form-input medical-history-date" title="Record date (optional - defaults to today)">
+                            <textarea class="form-textarea medical-history-description" name="medicalHistoryDescription" rows="3" placeholder="Description of medical event, treatment, vaccination, etc."></textarea>
+                            <input type="date" class="form-input medical-history-date" name="medicalHistoryDate" title="Record date (optional - defaults to today)">
                             <button type="button" class="remove-medical-history-btn" title="Remove entry">&times;</button>
                         </div>
-                    </div>
-                    <div class="care-resources-entry-template" style="display:none">
-                        <div class="care-resources-entry">
-                            <select class="form-select care-resource-type" required>
-                                <option value="">Select Resource Type *</option>
-                                <option value="diet">Diet & Nutrition</option>
-                                <option value="exercise">Exercise Requirements</option>
-                                <option value="grooming">Grooming Instructions</option>
-                                <option value="medication">Medication Schedule</option>
-                                <option value="training">Training Tips</option>
-                                <option value="behavioral">Behavioral Notes</option>
-                                <option value="emergency">Emergency Care</option>
-                                <option value="general">General Care</option>
+                    </div>                    <div class="care-resources-entry-template" style="display:none">
+                        <div class="care-resources-entry">                            
+                            <select class="form-select care-resource-type" name="careResourceType">
+                                <option value="" data-i18n="selectResourceType" data-i18n-fallback="Select Resource Type"></option>
+                                <option value="diet" data-i18n="dietNutrition" data-i18n-fallback="Diet & Nutrition"></option>
+                                <option value="exercise" data-i18n="exerciseRequirements" data-i18n-fallback="Exercise Requirements"></option>
+                                <option value="grooming" data-i18n="groomingInstructions" data-i18n-fallback="Grooming Instructions"></option>
+                                <option value="medication" data-i18n="medicationSchedule" data-i18n-fallback="Medication Schedule"></option>
+                                <option value="training" data-i18n="trainingTips" data-i18n-fallback="Training Tips"></option>
+                                <option value="behavioral" data-i18n="behavioralNotes" data-i18n-fallback="Behavioral Notes"></option>
+                                <option value="emergency" data-i18n="emergencyCare" data-i18n-fallback="Emergency Care"></option>
+                                <option value="general" data-i18n="generalCare" data-i18n-fallback="General Care"></option>
                             </select>
-                            <input type="text" class="form-input care-resource-title" required placeholder="Title (Required) - e.g., 'Daily Medication Schedule'">
-                            <textarea class="form-textarea care-resource-content" rows="3" required placeholder="Detailed care instructions or resource information (Required)"></textarea>
+                            <input type="text" class="form-input care-resource-title" name="careResourceTitle" placeholder="Title - e.g., 'Daily Medication Schedule'">
+                            <textarea class="form-textarea care-resource-content" name="careResourceContent" rows="3" placeholder="Detailed care instructions or resource information"></textarea>
                             <button type="button" class="remove-care-resource-btn" title="Remove resource">&times;</button>
                         </div>
-                    </div>
-
-                    <div class="care-schedule-entry-template" style="display:none">
+                    </div>                    <div class="care-schedule-entry-template" style="display:none">
                         <div class="care-schedule-entry">
-                            <input type="text" class="form-input care-schedule-activity" required placeholder="Activity (Required) - e.g., 'Feeding', 'Walk', 'Medication'">
-                            <input type="time" class="form-input care-schedule-hour" required title="Time for this activity">
-                            <select class="form-select care-schedule-frequency" required>
-                                <option value="">Select Frequency *</option>
-                                <option value="daily">Daily</option>
-                                <option value="twice daily">Twice Daily</option>
-                                <option value="three times daily">Three Times Daily</option>
-                                <option value="weekly">Weekly</option>
-                                <option value="twice weekly">Twice Weekly</option>
-                                <option value="monthly">Monthly</option>
-                                <option value="as needed">As Needed</option>
-                                <option value="other">Other</option>
+                            <input type="text" class="form-input care-schedule-activity" name="careScheduleActivity" placeholder="Activity - e.g., 'Feeding', 'Walk', 'Medication'">
+                            <input type="time" class="form-input care-schedule-hour" name="careScheduleHour" title="Time for this activity">
+                            <select class="form-select care-schedule-frequency" name="careScheduleFrequency">
+                                <option value="" data-i18n="selectFrequency" data-i18n-fallback="Select Frequency"></option>
+                                <option value="daily" data-i18n="daily" data-i18n-fallback="Daily"></option>
+                                <option value="twice daily" data-i18n="twiceDaily" data-i18n-fallback="Twice Daily"></option>
+                                <option value="three times daily" data-i18n="threeTimesDaily" data-i18n-fallback="Three Times Daily"></option>
+                                <option value="weekly" data-i18n="weekly" data-i18n-fallback="Weekly"></option>
+                                <option value="twice weekly" data-i18n="twiceWeekly" data-i18n-fallback="Twice Weekly"></option>
+                                <option value="monthly" data-i18n="monthly" data-i18n-fallback="Monthly"></option>
+                                <option value="as needed" data-i18n="asNeeded" data-i18n-fallback="As Needed"></option>
+                                <option value="other" data-i18n="other" data-i18n-fallback="Other"></option>
                             </select>
                             <button type="button" class="remove-care-schedule-btn" title="Remove schedule">&times;</button>
                         </div>
@@ -282,16 +279,20 @@
                             <input type="number" id="adoption-fee" name="adoptionFee" class="form-input" min="0" step="0.01" placeholder="e.g., 150.00">
                         </div>
                     </div>
-                </div>
-
-                <!-- Media Upload Section -->
+                </div>                <!-- Media Upload Section -->
                 <div class="form-section">
-                  <h2 class="section-title">Media</h2>
+                  <h2 class="section-title" data-i18n="media" data-i18n-fallback="Media"></h2>
                   <div class="media-upload-section">
                     <div id="media-preview" class="media-preview"></div>
-                    <input type="file" id="pet-media" name="media" class="form-input" accept="image/*,video/*" multiple>
-                    <div id="profile-image-select-help" class="media-help-text">Click an image to set as profile picture. The selected one is highlighted and labeled.</div>
-                  </div>
+                    <div class="file-upload-wrapper">
+                      <input type="file" id="pet-media" name="media" accept="image/*,video/*" multiple style="display: none;">
+                      <button type="button" class="file-upload-button" onclick="document.getElementById('pet-media').click()">
+                        <span class="file-upload-icon">📷</span>
+                        <span data-i18n="chooseFiles" data-i18n-fallback="Choose Photos & Videos"></span>
+                      </button>
+                    </div>
+                    <div id="profile-image-select-help" class="media-help-text" data-i18n="mediaHelpText" data-i18n-fallback="Upload photos or videos and select one as the profile picture. The selected media will be highlighted and labeled.">
+                    </div></div>
                 </div>
 
                 <!-- Form Actions -->

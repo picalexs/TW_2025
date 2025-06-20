@@ -15,12 +15,14 @@ class LanguageManager {
   async loadTranslation() {    
     try {
       const page = window.location.pathname.split('/').pop().replace('.html', '');
-      const basePath = window.location.pathname.includes('/home/') ? '../' : '../';
+      const translationPage = page;
+      
+      const basePath = '/frontend/';
       
       const globalPath = `${basePath}languages/${this.currentLanguage}/global.json`;
-      const pagePath = `${basePath}languages/${this.currentLanguage}/${page}.json`;
+      const pagePath = `${basePath}languages/${this.currentLanguage}/${translationPage}.json`;
       const fallbackGlobalPath = `${basePath}languages/en/global.json`;
-      const fallbackPagePath = `${basePath}languages/en/${page}.json`;
+      const fallbackPagePath = `${basePath}languages/en/${translationPage}.json`;
 
       console.log(`Loading translations from:\n  Global: ${globalPath}\n  Page: ${pagePath}`);
       
@@ -55,7 +57,7 @@ class LanguageManager {
       if (pageRes.ok) {
         pageTranslations = await pageRes.json();
       } else if (this.currentLanguage !== 'en') {
-        console.warn(`Could not load page translations for ${page} in ${this.currentLanguage}, using fallbacks`);
+        console.warn(`Could not load page translations for ${translationPage} in ${this.currentLanguage}, using fallbacks`);
       }
 
       this.translations = { ...globalTranslations, ...pageTranslations };
