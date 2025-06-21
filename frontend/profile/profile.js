@@ -75,6 +75,7 @@ class ProfilePage {
     this.renderOverviewSection(user);
     this.loadAndRenderReviews(user.id);
     this.loadAndRenderPets(user.id);
+    this.updateProfileActions(user);
   }
 
   renderProfileHeader(user) {
@@ -488,10 +489,226 @@ class ProfilePage {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
+  showLoading() {
+    const loadingElement = document.getElementById('loading-indicator') || this.createLoadingElement();
+    loadingElement.style.display = 'flex';
+  }
+
+  hideLoading() {
+    const loadingElement = document.getElementById('loading-indicator');
+    if (loadingElement) {
+      loadingElement.style.display = 'none';
+    }
+  }
+
+  createLoadingElement() {
+    const existing = document.getElementById('loading-indicator');
+    if (existing) return existing;
+
+    const loadingElement = document.createElement('div');
+    loadingElement.id = 'loading-indicator';
+    loadingElement.className = 'loading-overlay';
+    loadingElement.innerHTML = `
+      <div class="loading-spinner">
+        <div class="spinner"></div>
+        <p>Loading profile...</p>
+      </div>
+    `;
+    loadingElement.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.9);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      backdrop-filter: blur(2px);
+    `;
+
+    const spinnerStyle = document.createElement('style');
+    spinnerStyle.textContent = `
+      .loading-spinner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+      .loading-spinner .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid var(--primary-color, #007bff);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+      .loading-spinner p {
+        margin: 0;
+        color: var(--text-color, #333);
+        font-weight: 500;
+      }
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    `;
+    document.head.appendChild(spinnerStyle);
+    document.body.appendChild(loadingElement);
+    return loadingElement;
+  }
+
+  showError(message) {
+    this.hideLoading();
+    const errorElement = document.getElementById('error-indicator') || this.createErrorElement();
+    const errorMessage = errorElement.querySelector('.error-message');
+    if (errorMessage) {
+      errorMessage.textContent = message;
+    }
+    errorElement.style.display = 'flex';
+
+    setTimeout(() => {
+      this.hideError();
+    }, 5000);
+  }
+
+  hideError() {
+    const errorElement = document.getElementById('error-indicator');
+    if (errorElement) {
+      errorElement.style.display = 'none';
+    }
+  }
+
+  createErrorElement() {
+    const existing = document.getElementById('error-indicator');
+    if (existing) return existing;
+
+    const errorElement = document.createElement('div');
+    errorElement.id = 'error-indicator';
+    errorElement.className = 'error-overlay';
+    errorElement.innerHTML = `
+      <div class="error-container">
+        <div class="error-icon">⚠️</div>
+        <p class="error-message">An error occurred</p>
+        <button class="error-close-btn" onclick="this.closest('.error-overlay').style.display='none'">Close</button>
+      </div>
+    `;
+    errorElement.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 10000;
+      display: none;
+      max-width: 400px;
+    `;
+
+    const errorStyle = document.createElement('style');
+    errorStyle.textContent = `
+      .error-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+        text-align: center;
+      }
+      .error-icon {
+        font-size: 1.5rem;
+      }
+      .error-message {
+        margin: 0;
+        font-weight: 500;
+      }
+      .error-close-btn {
+        background: #721c24;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.875rem;
+      }
+      .error-close-btn:hover {
+        background: #5a161f;
+      }
+    `;
+    document.head.appendChild(errorStyle);
+    document.body.appendChild(errorElement);
+    return errorElement;
+  }
+
+  showNotification(message, type = 'info', duration = 5000) {
+    const existingNotification = document.querySelector('.notification-popup');
+    if (existingNotification) {
+      existingNotification.remove();
+    }
+
+    const notification = document.createElement('div');
+    notification.className = `notification-popup notification-${type}`;
+    notification.innerHTML = `
+      <div class="notification-content">
+        <span class="notification-icon">${this.getNotificationIcon(type)}</span>
+        <span class="notification-message">${message}</span>
+        <button class="notification-close" onclick="this.parentElement.parentElement.remove()">×</button>
+      </div>
+    `;
+
+    document.body.appendChild(notification);
+    setTimeout(() => {
+      if (notification.parentElement) {
+        notification.classList.add('notification-fade-out');
+        setTimeout(() => {
+          if (notification.parentElement) {
+            notification.remove();
+          }
+        }, 300);
+      }
+    }, duration);
+
+    return notification;
+  }
+
+  getNotificationIcon(type) {
+    switch (type) {
+      case 'success': return '✓';
+      case 'error': return '✕';
+      case 'warning': return '⚠';
+      case 'info':
+      default: return 'ℹ';
+    }
+  }
+
+  showSuccessNotification(message, duration = 5000) {
+    return this.showNotification(message, 'success', duration);
+  }
+
+  showErrorNotification(message, duration = 7000) {
+    return this.showNotification(message, 'error', duration);
+  }
+
+  showWarningNotification(message, duration = 6000) {
+    return this.showNotification(message, 'warning', duration);
+  }
+
+  showInfoNotification(message, duration = 5000) {
+    return this.showNotification(message, 'info', duration);
+  }
+
   initEventListeners() {
     const contactBtn = document.getElementById("contact-user-btn");
     if (contactBtn) {
       contactBtn.addEventListener("click", () => this.showContactModal());
+    }
+
+    const editBtn = document.getElementById("edit-profile-btn");
+    if (editBtn) {
+      editBtn.addEventListener("click", () => this.showEditProfileModal());
     }
 
     const modal = document.getElementById("contact-modal");
@@ -512,7 +729,33 @@ class ProfilePage {
       contactForm.addEventListener("submit", (e) =>
         this.handleContactSubmit(e)
       );
-    }    this.initStatItemScrolling();
+    }
+
+    // Edit Profile Modal Event Listeners
+    const editModal = document.getElementById("edit-profile-modal");
+    const editCloseButtons = editModal.querySelectorAll(".modal-close");
+
+    editCloseButtons.forEach((button) => {
+      button.addEventListener("click", () => this.hideEditProfileModal());
+    });
+
+    editModal.addEventListener("click", (e) => {
+      if (e.target === editModal) {
+        this.hideEditProfileModal();
+      }
+    });
+
+    const editForm = document.getElementById("edit-profile-form");
+    if (editForm) {
+      editForm.addEventListener("submit", (e) => this.handleEditProfileSubmit(e));
+    }
+
+    const profileImageInput = document.getElementById("edit-profile-image");
+    if (profileImageInput) {
+      profileImageInput.addEventListener("change", (e) => this.handleProfileImagePreview(e));
+    }
+
+    this.initStatItemScrolling();
     
     this.initReviewsFilter();
   }
@@ -551,8 +794,150 @@ class ProfilePage {
     const email = document.getElementById("contact-email").value;
     const message = document.getElementById("contact-message").value;
 
-    alert("Message sent successfully! The user will be notified.");
+    this.showSuccessNotification("Message sent successfully! The user will be notified.");
     this.hideContactModal();
+  }
+
+  showEditProfileModal() {
+    this.populateEditForm();
+    document.getElementById("edit-profile-modal").style.display = "block";
+    document.body.style.overflow = "hidden";
+  }
+
+  hideEditProfileModal() {
+    document.getElementById("edit-profile-modal").style.display = "none";
+    document.body.style.overflow = "auto";
+
+    const form = document.getElementById("edit-profile-form");
+    if (form) {
+      form.reset();
+    }
+  }
+  populateEditForm() {
+    if (!this.currentUser) return;
+
+    document.getElementById("edit-first-name").value = this.currentUser.first_name || "";
+    document.getElementById("edit-last-name").value = this.currentUser.last_name || "";
+    document.getElementById("edit-username").value = this.currentUser.username || "";
+    document.getElementById("edit-email").value = this.currentUser.email || "";
+    document.getElementById("edit-phone").value = this.currentUser.phone || this.currentUser.phone_number || "";
+    document.getElementById("edit-role").value = this.currentUser.role || "user";
+    
+    const profileImagePreview = document.getElementById("edit-profile-image-preview");
+    if (profileImagePreview) {
+      const imagePath = window.ImagePathHandler.processUserImagePath(
+        this.currentUser.profile_picture || this.currentUser.imagePath
+      );
+      profileImagePreview.src = imagePath;
+    }
+  }
+
+  handleProfileImagePreview(e) {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const profileImagePreview = document.getElementById("edit-profile-image-preview");
+        if (profileImagePreview) {
+          profileImagePreview.src = e.target.result;
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+  async handleEditProfileSubmit(e) {
+    e.preventDefault();
+
+    const submitBtn = document.querySelector("#edit-profile-form button[type='submit']");
+    const btnText = submitBtn ? submitBtn.querySelector(".btn-text") : null;
+    const loadingSpinner = submitBtn ? submitBtn.querySelector(".loading-spinner") : null;
+
+    try {
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.classList.add("loading");
+      }
+      if (loadingSpinner) {
+        loadingSpinner.style.display = "inline-block";
+      }
+      if (btnText) {
+        btnText.style.opacity = "0.7";
+      }
+
+      const formElement = e.target;
+      const formData = new FormData(formElement);
+      const profileImageFile = formData.get("profile_picture");
+
+      let result;
+      
+      if (profileImageFile && profileImageFile.size > 0) {
+        result = await this.userService.updateProfileWithFiles(formData);
+      } else {
+        const userData = {
+          first_name: formData.get("first_name") || null,
+          last_name: formData.get("last_name") || null,
+          username: formData.get("username"),
+          email: formData.get("email"),
+          phone_number: formData.get("phone_number") || null,
+          role: formData.get("role")
+        };
+        result = await this.userService.updateProfile(userData);
+      }
+
+      if (result && result.success) {
+        if (result.user) {
+          this.currentUser = { ...this.currentUser, ...result.user };
+        } else {
+          const userData = {
+            first_name: formData.get("first_name") || null,
+            last_name: formData.get("last_name") || null,
+            username: formData.get("username"),
+            email: formData.get("email"),
+            phone_number: formData.get("phone_number") || null,
+            role: formData.get("role")
+          };
+          this.currentUser = { ...this.currentUser, ...userData };
+        }
+        
+        this.renderUserProfile(this.currentUser);
+        this.showSuccessNotification("Profile updated successfully!");
+        this.hideEditProfileModal();
+      } else {
+        throw new Error(result?.message || "Failed to update profile");
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      this.showErrorNotification(`Error updating profile: ${error.message}`);
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.classList.remove("loading");
+      }
+      if (loadingSpinner) {
+        loadingSpinner.style.display = "none";
+      }
+      if (btnText) {
+        btnText.style.opacity = "1";
+      }
+    }
+  }
+  
+  updateProfileActions(user) {
+    const contactBtn = document.getElementById("contact-user-btn");
+    const editBtn = document.getElementById("edit-profile-btn");
+    
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const currentUserId = localStorage.getItem('userId');
+    
+    const isOwnProfile = isLoggedIn && currentUserId && currentUserId === user.id.toString();
+    
+    if (isOwnProfile) {
+      if (editBtn) editBtn.style.display = "inline-block";
+      if (contactBtn) contactBtn.style.display = "none";
+    } else {
+      if (editBtn) editBtn.style.display = "none";
+      if (contactBtn) contactBtn.style.display = "inline-block";
+    }
   }
 
   getDisplayName(user) {
@@ -831,6 +1216,7 @@ class ProfilePage {
     indicator.style.display = hasActiveFilters ? 'inline' : 'none';  
   }
   petsCarousel = null;
+  
 }
 
 document.addEventListener("DOMContentLoaded", () => {

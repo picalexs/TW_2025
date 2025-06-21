@@ -23,9 +23,9 @@ const verifyToken = (req, res, next) => {
     if (!token) {
         console.warn('Access denied: No token provided.');
         return sendResponse(res, 401, { message: 'Access Denied: No token provided.' });
-    }
-
-    try {T
+    }    
+    
+    try {
         const verified = jwt.verify(token, JWT_SECRET);
         req.user = verified;
         next();

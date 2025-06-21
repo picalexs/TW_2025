@@ -287,12 +287,10 @@ async function fetchAndRenderUsers() {
     return;
   }
 
-  // Keep trying to load users without timeout
   const loadUsersWithRetry = async () => {
     try {
       const userService = new UserService({ debug: true });
       const allUsersResponse = await userService.getAllUsersWithAdoptions();
-      // Use .users property if present, otherwise empty array
       const allUsers = Array.isArray(allUsersResponse)
         ? allUsersResponse
         : (Array.isArray(allUsersResponse?.users) ? allUsersResponse.users : []);
@@ -373,7 +371,6 @@ document.addEventListener('DOMContentLoaded', () => {
  console.log('Token:', token.substring(0, 30) + '...'); 
  console.log('Utilizator:', { userId, username, email, role });
 
- // Curăță URL-ul de parametrii sensibili
  window.history.replaceState({}, document.title, window.location.pathname);
  } else if (localStorage.getItem('isLoggedIn') === 'true') {
  console.log("Utilizator deja logat, verificăm sesiunea existentă.");

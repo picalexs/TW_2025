@@ -1,5 +1,6 @@
 import { setupMobileMenu, createSlideshow, initializePageLanguage, checkLoginStatusAndToggleNavButtons } from '../global/global.min.js';
 import UserService from '../services/userService.min.js';
+import ApiService from '../services/api.min.js';
 
 const API_BASE_URL = window.APP_CONFIG?.api?.baseURL || 'http://localhost:8080';
 
@@ -14,30 +15,55 @@ document.addEventListener('DOMContentLoaded', function() {
     slideClass: 'login-slide',
     overlay: 'rgba(0, 0, 0, 0.6)'
   });
-  
+
   const urlParams = new URLSearchParams(window.location.search);
   if (urlParams.has('registered')) {
     showMessage('Registration successful! Please log in with your credentials.');
   }
+  if (urlParams.has('message')) {
+    showMessage(urlParams.get('message'), 'info');
+  }
+  if (urlParams.has('error')) {
+    const error = urlParams.get('error');
+    if (error === 'auth_failed') {
+      showMessage('Authentication failed. Please try again.', 'error');
+    }
+  }
 
   const googleLoginButton = document.getElementById('google-login-button');
+  const apiService = new ApiService();
     if (googleLoginButton) { 
-        googleLoginButton.addEventListener('click', () => {
-            const clientId = '197013963962-ef5d59pddh6qounv5iph66cjorr97s5f.apps.googleusercontent.com'; 
-            const redirectUri = 'http://localhost:8080/api/auth/google/callback'; 
+    googleLoginButton.addEventListener('click', async () => {
+      try {
+        const config = await apiService.get('/api/config');
+        
+        const clientId = config.googleAuth?.clientId; 
+        const redirectUri = config.googleAuth?.redirectUri;
 
-            const scope = 'openid profile email';
-            const responseType = 'code';
-            const accessType = 'offline';
-            const prompt = 'select_account';
+        const scope = 'openid profile email';
+        const responseType = 'code';
+        const accessType = 'offline';
+        const prompt = 'select_account';
 
-            const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&response_type=${responseType}&access_type=${accessType}&prompt=${prompt}`;
+        const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&response_type=${responseType}&access_type=${accessType}&prompt=${prompt}`;
 
-            window.location.href = googleAuthUrl;
-        });
-    } else {
-        console.warn("Google Login button not found with ID 'google-login-button'.");
-    }
+        window.location.href = googleAuthUrl;      
+      } catch (error) {
+        console.error('Error getting Google auth config:', error);
+
+        const scope = 'openid profile email';
+        const responseType = 'code';
+        const accessType = 'offline';
+        const prompt = 'select_account';
+
+        const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&response_type=${responseType}&access_type=${accessType}&prompt=${prompt}`;
+
+        window.location.href = googleAuthUrl;
+      }
+    });
+  } else {
+    console.warn("Google Login button not found with ID 'google-login-button'.");
+  }
 });
 
 function initLoginPage() {

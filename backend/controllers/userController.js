@@ -4,6 +4,9 @@ const bcrypt = require('bcrypt');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
+const Busboy = require('busboy');
+const path = require('path');
+const fs = require('fs').promises;
 
 class UserController {
 
@@ -522,18 +525,103 @@ class UserController {
         return sendResponse(res, 403, { success: false, message: "Forbidden: You can only update your own profile, unless you are an admin." });
       }
 
-      const userData = await collectRequestData(req);
-      console.log(`[UserController] Updating user with ID: ${id}`);
-      const result = await userModel.update(id, userData);
-      if (result.success) {
-        sendResponse(res, 200, { success: true, message: result.message, user: result.user });
+      const contentType = req.headers['content-type'];
+      
+      if (contentType && contentType.includes('multipart/form-data')) {
+        await this.updateUserWithFiles(req, res, id);
       } else {
-        sendResponse(res, result.statusCode || 400, { success: false, message: result.message });
+        const userData = await collectRequestData(req);
+        console.log(`[UserController] Updating user with ID: ${id}`);
+        const result = await userModel.updateUser(id, userData);
+        if (result.success) {
+          sendResponse(res, 200, { success: true, message: result.message, user: result.user });
+        } else {
+          sendResponse(res, result.statusCode || 400, { success: false, message: result.message });
+        }
       }
     } catch (error) {
       console.error(`Error updating user with ID ${id}:`, error);
       sendResponse(res, 500, { success: false, message: "Internal server error." });
     }
+  }
+
+  async updateUserWithFiles(req, res, id) {
+    const fields = {};
+    let profilePictureFile = null;
+    
+    const busboy = Busboy({ headers: req.headers });
+    
+    busboy.on('field', (fieldname, val) => {
+      fields[fieldname] = val;
+    });
+    
+    busboy.on('file', (fieldname, file, info) => {
+      if (fieldname === 'profile_picture') {
+        const { filename, mimeType } = info;
+        if (filename && mimeType.startsWith('image/')) {
+          const chunks = [];
+          file.on('data', chunk => chunks.push(chunk));
+          file.on('end', () => {
+            profilePictureFile = {
+              filename,
+              mimeType,
+              buffer: Buffer.concat(chunks)
+            };
+          });
+        } else {
+          file.resume();
+        }
+      } else {
+        file.resume();
+      }
+    });
+    
+    busboy.on('finish', async () => {
+      try {
+        let userData = {
+          first_name: fields.first_name || null,
+          last_name: fields.last_name || null,
+          username: fields.username,
+          email: fields.email,
+          phone_number: fields.phone_number || fields.phone || null,
+          role: fields.role
+        };
+        
+        if (profilePictureFile) {
+          const uploadDir = path.join(__dirname, '../../server/user', id.toString());
+          await fs.mkdir(uploadDir, { recursive: true });
+          
+          const ext = path.extname(profilePictureFile.filename) || '.jpg';
+          const filename = `profile${ext}`;
+          const filepath = path.join(uploadDir, filename);
+          const relativePath = `/server/user/${id}/${filename}`;
+          
+          await fs.writeFile(filepath, profilePictureFile.buffer);
+          userData.profile_picture = relativePath;
+          
+          console.log(`[UserController] Profile picture saved to: ${relativePath}`);
+        }
+        
+        console.log(`[UserController] Updating user with ID: ${id} (with files)`);
+        const result = await userModel.updateUser(id, userData);
+        
+        if (result.success) {
+          sendResponse(res, 200, { success: true, message: result.message, user: result.user });
+        } else {
+          sendResponse(res, result.statusCode || 400, { success: false, message: result.message });
+        }
+      } catch (error) {
+        console.error('Error handling profile picture update:', error);
+        sendResponse(res, 500, { success: false, message: "Internal server error." });
+      }
+    });
+    
+    busboy.on('error', (error) => {
+      console.error('Busboy parsing error:', error);
+      sendResponse(res, 400, { success: false, message: "Failed to parse form data." });
+    });
+    
+    req.pipe(busboy);
   }
 
   async deleteUser(req, res, id) {

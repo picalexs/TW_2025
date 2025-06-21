@@ -74,11 +74,15 @@
                                     <span class="stat-number" id="pets-helped">0</span>
                                     <span class="stat-label" data-i18n="petsHelped" data-i18n-fallback="Pets Helped"></span>
                                 </div>
-                            </div>
-
+                            </div>                            
                             <div class="profile-actions">
                                 <button id="contact-user-btn" class="btn btn-primary" data-i18n="contactUser"
                                     data-i18n-fallback="Contact User"></button>
+                                <button id="edit-profile-btn" class="btn btn-outline-primary" data-i18n="editProfile"
+                                    data-i18n-fallback="Edit Profile" style="display: none;">
+                                    <span class="edit-icon" aria-hidden="true" style="margin-right: 0.5em;">✏️</span>
+                                    <span class="edit-label" style="display:none;">Edit Profile</span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -139,6 +143,70 @@
                             data-i18n-fallback="Cancel"></button>
                         <button type="submit" class="btn btn-primary" data-i18n="sendMessage"
                             data-i18n-fallback="Send Message"></button>
+                    </div>
+                </form>
+            </div>        
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="edit-profile-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 data-i18n="editProfile" data-i18n-fallback="Edit Profile"></h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-profile-form">
+                    <div class="form-row profile-image-row">
+                        <div class="form-group profile-image-upload" style="flex:1;align-items:center;justify-content:center;">
+                            <label data-i18n="profilePicture" data-i18n-fallback="Profile Picture"></label>
+                            <img id="edit-profile-image-preview" src="" alt="Profile preview" class="profile-preview" style="width:120px;height:120px;border-radius:50%;object-fit:cover;margin-bottom:0.5em;display:block;margin-left:auto;margin-right:auto;">
+                            <input type="file" id="edit-profile-image" name="profile_picture" accept="image/*" style="display:none;">
+                            <label for="edit-profile-image" class="btn btn-outline-primary" style="margin-bottom:0.5em;">Change Photo</label>
+                        </div>
+                    </div>
+                    <div class="form-row compact-fields">
+                        <div class="form-group" style="flex:1;min-width:120px;">
+                            <label data-i18n="firstName" data-i18n-fallback="First Name"></label>
+                            <input type="text" id="edit-first-name" name="first_name">
+                        </div>
+                        <div class="form-group" style="flex:1;min-width:120px;">
+                            <label data-i18n="lastName" data-i18n-fallback="Last Name"></label>
+                            <input type="text" id="edit-last-name" name="last_name">
+                        </div>
+                    </div>
+                    <div class="form-row compact-fields">
+                        <div class="form-group" style="flex:1;min-width:120px;">
+                            <label data-i18n="username" data-i18n-fallback="Username"></label>
+                            <input type="text" id="edit-username" name="username" required>
+                        </div>
+                        <div class="form-group" style="flex:1;min-width:120px;">
+                            <label data-i18n="email" data-i18n-fallback="Email"></label>
+                            <input type="email" id="edit-email" name="email" required>
+                        </div>
+                    </div>
+                    <div class="form-row compact-fields">
+                        <div class="form-group" style="flex:1;min-width:120px;">
+                            <label data-i18n="phoneNumber" data-i18n-fallback="Phone Number"></label>
+                            <input type="tel" id="edit-phone" name="phone_number">
+                        </div>
+                        <div class="form-group" style="flex:1;min-width:120px;">
+                            <label data-i18n="role" data-i18n-fallback="Role"></label>
+                            <select id="edit-role" name="role">
+                                <option value="user" data-i18n="userRole" data-i18n-fallback="User">User</option>
+                                <option value="shelter" data-i18n="shelterRole" data-i18n-fallback="Shelter">Shelter</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary modal-close" data-i18n="cancel"
+                            data-i18n-fallback="Cancel"></button>
+                        <button type="submit" class="btn btn-primary" data-i18n="saveChanges"
+                            data-i18n-fallback="Save Changes">
+                            <span class="btn-text">Save Changes</span>
+                            <span class="loading-spinner" style="display: none;"></span>
+                        </button>
                     </div>
                 </form>
             </div>        
@@ -258,6 +326,24 @@
     <script type="module" src="../global/global.min.js"></script>
     <script type="module" src="../languages/language.min.js"></script>
     <script type="module" src="profile.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const fileInput = document.getElementById('edit-profile-image');
+        const previewImg = document.getElementById('edit-profile-image-preview');
+        if (fileInput && previewImg) {
+          fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+              const reader = new FileReader();
+              reader.onload = function(ev) {
+                previewImg.src = ev.target.result;
+              };
+              reader.readAsDataURL(file);
+            }
+          });
+        }
+      });
+    </script>
 </body>
 
 </html>

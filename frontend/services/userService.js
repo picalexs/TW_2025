@@ -115,10 +115,57 @@ class UserService {
     if (!userData) throw new Error('User data is required');
     
     try {
-      return await this.apiService.put(this.endpoints.profile, userData);
+      this._restoreAuthState();
+      
+      const currentUserId = localStorage.getItem('userId');
+      if (!currentUserId) throw new Error('No user ID found');
+        if (this.debug) {
+        console.log('Updating profile for user ID:', currentUserId);
+        console.log('Auth token present:', !!this.apiService.authToken);
+        console.log('Auth header set:', !!this.apiService.defaultHeaders['Authorization']);
+      }
+      
+      const response = await this.apiService.put(`/api/users/${currentUserId}`, userData);
+      return response;
     } catch (error) {
       if (this.debug) {
         console.error('Profile update error:', error);
+      }
+      throw error;
+    }
+  }
+
+  async updateProfileWithFiles(formData) {
+    if (!formData) throw new Error('Form data is required');
+    
+    try {
+      this._restoreAuthState();
+      
+      const currentUserId = localStorage.getItem('userId');
+      if (!currentUserId) throw new Error('No user ID found');
+      
+      if (this.debug) {
+        console.log('Updating profile with files for user ID:', currentUserId);
+        console.log('Auth token present:', !!this.apiService.authToken);
+      }
+      
+      const response = await fetch(`${this.apiService.baseURL}/api/users/${currentUserId}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${this.apiService.authToken}`
+        },
+        body: formData
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      if (this.debug) {
+        console.error('Profile update with files error:', error);
       }
       throw error;
     }
@@ -147,8 +194,7 @@ class UserService {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userData');
   }
-  
-  _restoreAuthState() {
+    _restoreAuthState() {
     try {
       const token = localStorage.getItem('authToken');
       if (token) {
@@ -157,6 +203,8 @@ class UserService {
         if (this.debug) {
           console.log('Authentication state restored from storage');
         }
+      } else if (this.debug) {
+        console.log('No auth token found in localStorage');
       }
     } catch (error) {
       if (this.debug) {

@@ -255,7 +255,7 @@ class userDTO extends abstractDTO {
   }
 
   async findByEmail(connection, email) {
-        const sql = `SELECT ID, USERNAME, EMAIL, FIRST_NAME, LAST_NAME, ROLE, IS_VERIFIED FROM users WHERE email = :email`;
+        const sql = `SELECT ID, USERNAME, EMAIL, FIRST_NAME, LAST_NAME, ROLE, IS_VERIFIED, PROFILE_PICTURE FROM users WHERE email = :email`;
         const binds = { email };
         const options = { outFormat: oracledb.OUT_FORMAT_OBJECT };
         const result = await connection.execute(sql, binds, options);
@@ -263,57 +263,164 @@ class userDTO extends abstractDTO {
             return this.mapToEntity(result.rows[0]);
         }
         return null;
-    }
+    }async createGoogleUser(connection, userData) {
+        try {
+            const { username, email, first_name, last_name, profile_picture, auth_provider } = userData;
 
-  async findByEmail(connection, email) {
-        const sql = `SELECT ID, USERNAME, EMAIL, FIRST_NAME, LAST_NAME, ROLE, IS_VERIFIED FROM users WHERE email = :email`;
-        const binds = { email };
-        const options = { outFormat: oracledb.OUT_FORMAT_OBJECT };
-        const result = await connection.execute(sql, binds, options);
-        if (result.rows.length > 0) {
-            return this.mapToEntity(result.rows[0]);
+            // Generate a default password hash for Google users
+            const defaultPasswordHash = await bcrypt.hash('google_auth_user', 10);
+
+            const sql = `INSERT INTO users (username, email, is_verified, first_name, last_name, profile_picture, role, password_hash, auth_provider)
+                         VALUES (:username, :email, 1, :first_name, :last_name, :profile_picture, :role, :password_hash, :auth_provider)`;
+            
+            const binds = { 
+                username, 
+                email, 
+                first_name, 
+                last_name, 
+                profile_picture, 
+                role: 'user',
+                password_hash: defaultPasswordHash,
+                auth_provider: auth_provider || 'google'
+            };
+            
+            const options = { autoCommit: true };
+            const result = await connection.execute(sql, binds, options);
+
+            if (result.rowsAffected > 0) {
+                // Fetch and return the newly created user
+                const newUser = await this.findByEmail(connection, email);
+                return newUser;
+            } else {
+                throw new Error('Failed to create user - no rows affected');
+            }
+        } catch (error) {
+            console.error('Error in createGoogleUser:', error);
+            throw error;
         }
-        return null;
     }
 
-    async createGoogleUser(connection, userData) {
-        const { username, password_hash, email, email_token, token_expires, auth_provider, google_id, first_name, last_name, profile_picture } = userData;
+  async update(connection, id, userData) {
+    try {
+      if (!id) {
+        throw Object.assign(new Error('User ID is required for update'), {
+          code: "VALIDATION_ERROR",
+          status: 400
+        });
+      }
+      
+      const checkQuery = `SELECT id FROM ${this.tableName} WHERE id = :id`;
+      const checkResult = await connection.execute(checkQuery, { id }, {
+        outFormat: oracledb.OUT_FORMAT_OBJECT
+      });
+      
+      if (checkResult.rows.length === 0) {
+        throw Object.assign(new Error(`User with id ${id} not found`), {
+          code: "NOT_FOUND",
+          status: 404
+        });
+      }
+      
+      const updates = [];
+      const binds = { id };
 
-        let sql = `INSERT INTO users (username, email, is_verified, first_name, last_name, profile_picture, role`;
-        let binds = { username, email, first_name, last_name, profile_picture, role: 'user' }; 
+      if (userData.first_name !== undefined) {
+        updates.push("first_name = :first_name");
+        binds.first_name = userData.first_name;
+      }
+      if (userData.last_name !== undefined) {
+        updates.push("last_name = :last_name");
+        binds.last_name = userData.last_name;
+      }
+      if (userData.username !== undefined) {
+        updates.push("username = :username");
+        binds.username = userData.username;
+      }
+      if (userData.email !== undefined) {
+        updates.push("email = :email");
+        binds.email = userData.email;
+      }
+      if (userData.phone_number !== undefined) {
+        updates.push("phone = :phone_number");
+        binds.phone_number = userData.phone_number;
+      }
+      if (userData.role !== undefined) {
+        updates.push("role = :role");
+        binds.role = userData.role;
+      }
+      if (userData.profile_picture !== undefined) {
+        updates.push("profile_picture = :profile_picture");
+        binds.profile_picture = userData.profile_picture;
+      }
 
-        let finalPasswordHash = password_hash;
-    if (!finalPasswordHash) {
-        finalPasswordHash = await bcrypt.hash('', 10);
+      if (updates.length === 0) {
+        throw Object.assign(new Error("No fields to update"), {
+          code: "VALIDATION_ERROR",
+          status: 400
+        });
+      }
+
+      const query = `UPDATE ${this.tableName} SET ${updates.join(", ")} WHERE id = :id`;
+
+      const result = await connection.execute(query, binds, { autoCommit: true });
+      
+      if (result.rowsAffected === 0) {
+        throw Object.assign(new Error("User not found or not updated"), {
+          code: "NOT_FOUND",
+          status: 404
+        });
+      }
+
+      const getUpdatedQuery = `
+        SELECT id, username, email, first_name, last_name, phone, role, profile_picture, created_at
+        FROM ${this.tableName} 
+        WHERE id = :id
+      `;
+      const updatedResult = await connection.execute(getUpdatedQuery, { id }, {
+        outFormat: oracledb.OUT_FORMAT_OBJECT
+      });
+
+      return this.mapToEntity(updatedResult.rows[0]);
+    } catch (error) {
+      console.error('Error in userDTO.update:', error);
+      
+      if (error.code && error.status) {
+        throw error;
+      }
+      
+      if (error.errorNum === 1407) {
+        throw Object.assign(new Error("Cannot update required field to NULL"), {
+          code: "NULL_CONSTRAINT",
+          status: 400,
+          originalError: error
+        });
+      } else if (error.errorNum === 12899) {
+        throw Object.assign(new Error("Value too large for one or more fields"), {
+          code: "VALUE_TOO_LARGE",
+          status: 400,
+          originalError: error
+        });
+      } else if (error.errorNum === 1) {
+        throw Object.assign(new Error("Username or email already exists"), {
+          code: "UNIQUE_CONSTRAINT",
+          status: 409,
+          originalError: error
+        });
+      } else if (error.errorNum === 2290) {
+        throw Object.assign(new Error("Invalid data format"), {
+          code: "CHECK_CONSTRAINT",
+          status: 400,
+          originalError: error
+        });
+      }
+      
+      throw Object.assign(new Error(`Failed to update user: ${error.message}`), {
+        code: "UPDATE_ERROR",
+        status: 500,
+        originalError: error
+      });
     }
-
-        if (auth_provider) {
-            sql += `, auth_provider`;
-            binds.auth_provider = auth_provider;
-        }
-       
-        sql += `, password_hash`;
-    binds.password_hash = finalPasswordHash;
-
-        if (email_token) {
-            sql += `, email_token, token_expires`;
-            binds.email_token = email_token;
-            binds.token_expires = token_expires;
-        }
-
-        sql += `) VALUES (:username, :email, 1, :first_name, :last_name, :profile_picture, :role`;
-        if (auth_provider) sql += `, :auth_provider`;
-        sql += `, :password_hash`;
-        if (email_token) sql += `, :email_token, :token_expires`;
-        sql += `)`;
-
-        const options = { autoCommit: true, outBinds: { id_out: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT } } };
-        const result = await connection.execute(sql, binds, options);
-
-        const newUserId = result.outBinds.id_out[0];
-        const newUser = await this.findByEmail(connection, email);
-        return newUser;
-    }
+  }
 
 }
 module.exports = new userDTO();

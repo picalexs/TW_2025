@@ -50,6 +50,32 @@ class UserModel extends AbstractModel {
     }
   }
 
+  validateGoogleUserData(userData) {
+    this.validateData(userData);
+
+    this.validateRequired(userData.username, 'Username');
+    this.validateRequired(userData.email, 'Email');
+
+    this.validateLength(userData.username, 'Username', 3, 50);
+    this.validateUsernameFormat(userData.username);
+
+    this.validateLength(userData.email, 'Email', 5, 100);
+    this.validateEmailFormat(userData.email);
+
+    if (userData.first_name) {
+      this.validateLength(userData.first_name, 'First name', 1, 50);
+    }
+
+    if (userData.last_name) {
+      this.validateLength(userData.last_name, 'Last name', 1, 50);
+    }
+
+    if (userData.phone_number) {
+      this.validateLength(userData.phone_number, 'Phone number', 10, 20);
+      this.validatePhoneFormat(userData.phone_number);
+    }
+  }
+
   validateUserLoginData(email, password) {
     this.validateRequired(email, 'Email');
     this.validateRequired(password, 'Password');
@@ -111,9 +137,83 @@ class UserModel extends AbstractModel {
       }
     }
   }
-
+  
   async updateUser(id, userData) {
-    return await this.dto.update(id, userData);
+    let connection;
+    try {
+      connection = await db.getConnection();
+      const result = await this.dto.update(connection, id, userData);
+      return { success: true, user: result, message: "User updated successfully" };
+    } catch (error) {
+      console.error('Error updating user:', error);
+      return { 
+        success: false, 
+        message: error.message || "Failed to update user",
+        statusCode: error.status || 500
+      };
+    } finally {
+      if (connection) {
+        try {
+          await connection.close();
+        } catch (err) {
+          console.error('Error closing connection:', err);
+        }
+      }
+    }
+  }
+
+  async updateUserWithFiles(id, fields, files) {
+    let connection;
+    try {
+      connection = await db.getConnection();
+      
+      const savedFiles = [];
+      for (const file of files) {
+        if (file.fieldname === 'profile_picture') {
+          const savedFile = await this.saveProfilePicture(file, id);
+          savedFiles.push(savedFile);
+        }
+      }
+      
+      const userData = { ...fields };
+      if (savedFiles.length > 0) {
+        userData.profile_picture = savedFiles[0].path;
+      }
+      
+      const result = await this.dto.update(connection, id, userData);
+      return result;
+    } finally {
+      if (connection) {
+        await connection.close();
+      }
+    }
+  }
+
+  async saveProfilePicture(file, userId) {
+    const fs = require('fs').promises;
+    const path = require('path');
+    
+    const uploadDir = path.join(process.cwd(), 'server', 'images', 'profile', 'users');
+    try {
+      await fs.mkdir(uploadDir, { recursive: true });
+    } catch (error) {
+      if (error.code !== 'EEXIST') throw error;
+    }
+    
+    const fileExtension = path.extname(file.filename);
+    const fileName = `user_${userId}_${Date.now()}${fileExtension}`;
+    const filePath = path.join(uploadDir, fileName);
+    
+    await fs.writeFile(filePath, file.buffer);
+    
+    const relativePath = `images/profile/users/${fileName}`;
+    
+    return {
+      path: relativePath,
+      filename: fileName,
+      originalName: file.filename,
+      mimeType: file.mimeType
+    };
   }
 
   async authenticate(email, password) {
@@ -155,8 +255,9 @@ class UserModel extends AbstractModel {
       }
     }
   }
-
   async createUserFromGoogle(userData) {
+    this.validateGoogleUserData(userData);
+    
     let connection;
     try {
       connection = await db.getConnection();

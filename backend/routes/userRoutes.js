@@ -54,17 +54,18 @@ async function handleUserRoutes(req, res) {
         if (method === "get") {
             console.log(`[UserRoutes] Handling /api/users/${id} GET request (Public)`);
             await userController.getUserById(req, res, id);
-            return true;
+            return true;  
         } else if (method === "put") {
-            console.log(`[UserRoutes] Handling /api/users/${id} PUT request (Protected)`);
+            console.log(`[UserRoutes] Handling /api/users/${id} PUT request (Protected - Own Profile)`);
             await new Promise((resolve, reject) => {
                 verifyToken(req, res, async (err) => {
-                    if (err) return reject(err);
-                    checkRole('admin')(req, res, async (roleErr) => {
-                        if (roleErr) return reject(roleErr);
-                        await userController.updateUser(req, res, id);
-                        resolve();
-                    });
+                    if (err) {
+                        console.error(`[UserRoutes] Token verification failed for PUT /api/users/${id}:`, err);
+                        return reject(err);
+                    }
+                    console.log(`[UserRoutes] Token verified for user update: ${req.user?.id} updating user ${id}`);
+                    await userController.updateUser(req, res, id);
+                    resolve();
                 });
             });
             return true;

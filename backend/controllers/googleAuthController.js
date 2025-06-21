@@ -9,14 +9,29 @@ const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const GOOGLE_REDIRECT_URI = process.env.GOOGLE_REDIRECT_URI;
 const JWT_SECRET = process.env.JWT_SECRET;
 
-class GoogleAuthController {
+class GoogleAuthController {    
+    
     async handleGoogleCallback(req, res) {
         const parsedUrl = url.parse(req.url, true);
         const code = parsedUrl.query.code;
+        const error = parsedUrl.query.error;        
+        
+        if (error === 'access_denied') {
+            console.log('[GoogleAuth] User cancelled Google login, redirecting to login page');
+            const baseUrl = this.getBaseUrl();
+            const loginUrl = `${baseUrl}/frontend/login/login.html?message=Google login was cancelled`;
+            res.writeHead(302, { 'Location': loginUrl });
+            res.end();
+            return;
+        }
 
         if (!code) {
             console.error('Google callback error: No authorization code received.');
-            return sendResponse(res, 400, { success: false, message: 'Authorization code missing.' });
+            const baseUrl = this.getBaseUrl();
+            const loginUrl = `${baseUrl}/frontend/login/login.html?error=auth_failed`;
+            res.writeHead(302, { 'Location': loginUrl });
+            res.end();
+            return;
         }
 
         try {
@@ -41,14 +56,29 @@ class GoogleAuthController {
             } catch (err) {
                 console.error(`[GoogleAuth] Error searching for user by email: ${email}`, err);
                 return sendResponse(res, 500, { success: false, message: 'Database error during user lookup.' });
-            }
-
+            }            
+            
             if (!user) {
                 try {
-                    user = await userModel.createUser({ email, name, picture });
+                    const userData = {
+                        email,
+                        username: this.generateUsernameFromEmail(email),
+                        first_name: name ? name.split(' ')[0] : null,
+                        last_name: name ? name.split(' ').slice(1).join(' ') : null,
+                        profile_picture: picture,
+                        auth_provider: 'google',
+                        is_verified: true
+                    };
+                    console.log('[GoogleAuth] Creating new user with data:', { ...userData, profile_picture: userData.profile_picture ? 'present' : 'null' });
+                    user = await userModel.createUserFromGoogle(userData);
+                    console.log('[GoogleAuth] New user created successfully:', user.id);
                 } catch (err) {
                     console.error('Error creating new user from Google profile:', err);
-                    return sendResponse(res, 500, { success: false, message: 'Failed to create user from Google profile.' });
+                    const baseUrl = this.getBaseUrl();
+                    const loginUrl = `${baseUrl}/frontend/login/login.html?error=registration_failed&message=${encodeURIComponent('Failed to create account. Please try again.')}`;
+                    res.writeHead(302, { 'Location': loginUrl });
+                    res.end();
+                    return;
                 }
             }
 
@@ -58,17 +88,18 @@ class GoogleAuthController {
                 JWT_SECRET,
                 { expiresIn: '1h' } 
             );
-            console.log('[GoogleAuth] App JWT generated.');
-
-            const frontendBaseUrl = await this.getFrontendBaseUrlFromApi();
-            const frontendHomeUrl = `${frontendBaseUrl}/home/home.html?token=${appJwt}&id=${user.id}&username=${user.username}&email=${user.email}&role=${user.role || 'user'}`;
+            console.log('[GoogleAuth] App JWT generated.');            const baseUrl = this.getBaseUrl();
+            const frontendHomeUrl = `${baseUrl}/frontend/home/home.html?token=${appJwt}&id=${user.id}&username=${user.username}&email=${user.email}&role=${user.role || 'user'}`;
             res.writeHead(302, { 'Location': frontendHomeUrl });
             res.end();
             console.log(`[GoogleAuth] Redirecting to frontend: ${frontendHomeUrl}`);
-
         } catch (error) {
             console.error('[GoogleAuth] Error in handleGoogleCallback:', error);
-            return sendResponse(res, 500, { success: false, message: 'Internal server error during Google authentication.' });
+            const baseUrl = this.getBaseUrl();
+            const loginUrl = `${baseUrl}/frontend/login/login.html?error=auth_failed`;
+            res.writeHead(302, { 'Location': loginUrl });
+            res.end();
+            return;
         }
     }
 
@@ -124,35 +155,37 @@ class GoogleAuthController {
         }
     }
 
+    generateUsernameFromEmail(email) {
+        const baseUsername = email.split('@')[0]
+            .replace(/[^a-zA-Z0-9]/g, '')
+            .toLowerCase();
+        
+        const randomSuffix = Math.floor(Math.random() * 10000);
+        return `${baseUsername}${randomSuffix}`;
+    }
+
+    getBaseUrl() {
+        return process.env.BASE_URL || 'http://127.0.0.1:5500';
+    }
+      
     getFrontendBaseUrlFromApi() {
         return new Promise((resolve) => {
-            const http = require('http');
+            if (frontendUrl) {
+                resolve(frontendUrl);
+                return;
+            }
+            
             const baseUrl = process.env.BASE_URL;
-            const apiUrl = `${baseUrl}/api/frontend-url`;
-            const frontendUrl = `${baseUrl}/frontend`;
-
-            http.get(apiUrl, (res) => {
-                let data = '';
-                res.on('data', chunk => data += chunk);
-                res.on('end', () => {
-                    const contentType = res.headers['content-type'] || '';
-                    if (res.statusCode === 200 && contentType.includes('application/json')) {
-                        try {
-                            const result = JSON.parse(data);
-                            if (result && result.url) {
-                                resolve(result.url);
-                                return;
-                            }
-                        } catch (e) {
-                            console.error('Error parsing frontend URL response:', e);
-                        }
-                    } else {
-                        console.error('Failed to get frontend URL from API. Status:', res.statusCode, 'Content-Type:', contentType);
-                    }
-                });
-            }).on('error', (err) => {
-                console.error('HTTP error while fetching frontend base URL:', err);
-            });
+            if (baseUrl) {
+                const fallbackUrl = `${baseUrl}/frontend`;
+                console.log(`[GoogleAuth] Using BASE_URL fallback: ${fallbackUrl}`);
+                resolve(fallbackUrl);
+                return;
+            }
+            
+            const finalFallback = 'http://127.0.0.1:5500/frontend';
+            console.log(`[GoogleAuth] Using hardcoded fallback: ${finalFallback}`);
+            resolve(finalFallback);
         });
     }
 }

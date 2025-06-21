@@ -35,12 +35,14 @@ class ApiService {
     
     this._initializeFromStorage();
   }
-
+  
   setAuthToken(token) {
     if (token) {
       this.defaultHeaders['Authorization'] = `Bearer ${token}`;
+      this.authToken = token;
     } else {
       delete this.defaultHeaders['Authorization'];
+      this.authToken = null;
     }
   }
 

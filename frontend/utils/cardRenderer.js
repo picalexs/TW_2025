@@ -434,19 +434,7 @@ class CardRenderer {
     
     if (clickAction === 'custom') return '';
     
-    // Use the same path logic as _getClickHandler
-    const currentPath = window.location.pathname;
-    let targetPath = '';
-    
-    if (currentPath.includes('/pets/pets-page/')) {
-      targetPath = '../pet-details/pet-details.html';
-    } else if (currentPath.includes('/pets/add-pet/')) {
-      targetPath = '../pet-details/pet-details.html';
-    } else if (currentPath.includes('/pets/')) {
-      targetPath = './pet-details/pet-details.html';
-    } else {
-      targetPath = './pets/pet-details/pet-details.html';
-    }
+    let targetPath = '/frontend/pets/pet-details/pet-details.html';
     
     return `<a href="${targetPath}?id=${pet.id || ''}" class="btn btn-primary">${viewDetailsText}</a>`;
   }
