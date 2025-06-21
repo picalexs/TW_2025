@@ -502,14 +502,7 @@ class UserController {
 
   async getUserById(req, res, id) {
     try {
-      if (!req.user) {
-        return sendResponse(res, 401, { success: false, message: "Unauthorized: Please log in to view user details." });
-      }
-
-      if (req.user.id !== id && req.user.role !== 'admin') {
-        return sendResponse(res, 403, { success: false, message: "Forbidden: You can only view your own profile, unless you are an admin." });
-      }
-
+      // Public: allow anyone to view user profiles by ID
       console.log(`[UserController] Fetching user by ID: ${id}`);
       const user = await userModel.getById(id);
       if (user) {
@@ -640,10 +633,10 @@ class UserController {
 
       console.log(`[UserController] Deleting user with ID: ${id}`);
       const result = await userModel.delete(id);
-      if (result.success) {
-        sendResponse(res, 200, { success: true, message: result.message });
+      if (result) {
+        sendResponse(res, 200, { success: true, message: "User deleted successfully." });
       } else {
-        sendResponse(res, result.statusCode || 404, { success: false, message: result.message });
+        sendResponse(res, 404, { success: false, message: "User not found." });
       }
     } catch (error) {
       console.error(`Error deleting user with ID ${id}:`, error);
@@ -651,4 +644,5 @@ class UserController {
     }
   }
 }
+
 module.exports = new UserController();
