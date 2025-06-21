@@ -308,47 +308,9 @@ class RSSManager {  constructor() {
           console.log('RSSManager: Widget content toggled to:', content.style.display);
         }
       });
-    }
+    }  
   }
-
-  getRSSFeedUrl(type) {
-    const params = new URLSearchParams();
-    
-    switch (type) {
-      case 'recent':
-        params.append('type', 'recent');
-        params.append('sortBy', 'newest');
-        break;
-        
-      case 'trending':
-        break;
-        
-      case 'location':
-        const location = document.getElementById('location-filter')?.value;
-        if (location) {
-          params.append('zone', location);
-        }
-        params.append('type', 'popular');
-        break;
-        
-      case 'breed':
-        const species = document.getElementById('species-for-rss')?.value;
-        const breed = document.getElementById('breed-filter')?.value;
-        if (species) params.append('species', species);
-        if (breed) params.append('breed', breed);
-        params.append('type', 'recent');
-        break;
-    }
-
-    const currentSpecies = document.getElementById('species-filter')?.value;
-    const currentCity = document.getElementById('city-filter')?.value;
-    
-    if (currentSpecies && !params.has('species')) {
-      params.append('species', currentSpecies);
-    }    const baseEndpoint = type === 'trending' ? '/rss/trending' : '/rss/pets';
-    return `${this.apiBaseUrl}${baseEndpoint}${params.toString() ? '?' + params.toString() : ''}`;
-  }
-
+  
   async copyFeedUrl(type) {
     try {
       const url = this.getRSSFeedUrl(type);
@@ -362,13 +324,82 @@ class RSSManager {  constructor() {
     }
   }
 
+  getRSSFeedUrl(type) {
+    let params = new URLSearchParams();
+    
+    if (type === 'trending') {
+      const baseUrl = `${this.apiBaseUrl}/rss/trending`;
+      const locationFilter = document.getElementById('location-filter');
+      if (locationFilter && locationFilter.value.trim()) {
+        params.append('zone', locationFilter.value.trim());
+      }
+      params.append('limit', '20');
+      return `${baseUrl}?${params.toString()}`;
+    } else {
+      const baseUrl = `${this.apiBaseUrl}/rss/pets`;
+      
+      if (type === 'recent') {
+        params.append('type', 'recent');
+      } else if (type === 'location') {
+        params.append('type', 'recent');
+        const locationFilter = document.getElementById('location-filter');
+        if (locationFilter && locationFilter.value.trim()) {
+          params.append('zone', locationFilter.value.trim());
+        }
+      } else if (type === 'breed') {
+        params.append('type', 'recent');
+        const speciesSelect = document.getElementById('species-for-rss');
+        const breedInput = document.getElementById('breed-filter');
+        
+        if (speciesSelect && speciesSelect.value) {
+          params.append('species', speciesSelect.value);
+        }
+        if (breedInput && breedInput.value.trim()) {
+          params.append('breed', breedInput.value.trim());
+        }
+      } else {
+        params.append('type', 'recent');
+      }
+      
+      params.append('limit', '20');
+      return `${baseUrl}?${params.toString()}`;
+    }
+  }
   async shareFeed(type) {
     try {
       console.log('RSSManager: Sharing feed of type:', type);
-      console.log('RSSManager: Using API URL:', `${this.apiBaseUrl}/rss/share?type=${type === 'trending' ? 'trending' : 'recent'}`);
+      let params = new URLSearchParams();
+      
+      if (type === 'trending') {
+        params.append('type', 'trending');
+      } else if (type === 'recent') {
+        params.append('type', 'recent');
+      } else if (type === 'location') {
+        params.append('type', 'recent');
+        const locationFilter = document.getElementById('location-filter');
+        if (locationFilter && locationFilter.value.trim()) {
+          params.append('zone', locationFilter.value.trim());
+        }
+      } else if (type === 'breed') {
+        params.append('type', 'recent');
+        const speciesSelect = document.getElementById('species-for-rss');
+        const breedInput = document.getElementById('breed-filter');
+        
+        if (speciesSelect && speciesSelect.value) {
+          params.append('species', speciesSelect.value);
+        }
+        if (breedInput && breedInput.value.trim()) {
+          params.append('breed', breedInput.value.trim());
+        }
+      } else {
+        params.append('type', 'recent');
+      }
+      
+      const apiUrl = `${this.apiBaseUrl}/rss/share?${params.toString()}`;
+      console.log('RSSManager: Using API URL:', apiUrl);
       
       this.showNotification('Loading sharing options...', 'info');
-      const response = await fetch(`${this.apiBaseUrl}/rss/share?type=${type === 'trending' ? 'trending' : 'recent'}`);
+      const response = await fetch(apiUrl);
       
       if (!response.ok) {
         if (response.status === 404) {
