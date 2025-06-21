@@ -61,7 +61,7 @@ class UserService {
       throw error;
     }
   }
-
+  
   async login(email, password) {
     if (!email) throw new Error('Email is required');
     if (!password) throw new Error('Password is required');
@@ -72,6 +72,12 @@ class UserService {
       if (data && data.user) {
         localStorage.setItem('userData', JSON.stringify(data.user));
         localStorage.setItem('isLoggedIn', 'true');
+        
+        if (data.token) {
+          localStorage.setItem('authToken', data.token);
+          this.apiService.setAuthToken(data.token);
+        }
+        
         return data;
       } else {
         throw new Error('Invalid login response: missing user data');

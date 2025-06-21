@@ -66,8 +66,16 @@ class PetService {
     try {
       if (this.debug) console.log('Adding pet with files...');
 
+      const headers = {};
+      
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const response = await fetch(`${this.apiService.baseURL}${this.endpoints.base}`, {
         method: 'POST',
+        headers: headers,
         body: formData
       });
 
@@ -114,8 +122,16 @@ class PetService {
     try {
       if (this.debug) console.log('Updating pet with files...');
 
+      const headers = {};
+      
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+
       const response = await fetch(`${this.apiService.baseURL}${this.endpoints.detail(id)}`, {
         method: 'PUT',
+        headers: headers,
         body: formData
       });
 

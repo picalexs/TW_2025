@@ -69,8 +69,15 @@ class PetController {
             size: Buffer.concat(chunks).length
           });
         });
-      });      busboy.on('finish', async () => {
+      });      
+      
+      busboy.on('finish', async () => {
         try {
+          if (req.user && req.user.id) {
+            fields.shelterId = req.user.id;
+            fields.userId = req.user.id;
+          }
+          
           const validatedData = petModel.validatePetCreationData(fields, files);
           
           const petId = await petModel.createPet(validatedData.petData);          

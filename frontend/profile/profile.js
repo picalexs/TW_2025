@@ -164,59 +164,62 @@ class ProfilePage {
     try {
       const petsContainer = document.getElementById("pets-container");
       petsContainer.innerHTML = this.createPetsLoadingState();      
-      if (this.currentUser.role === "shelter") {
-        try {
-          const allPets = await this.petService.getPetsByShelter(userId);
+      
+      // Load pets for any user - whether they're a shelter or regular user
+      try {
+        const allPets = await this.petService.getPetsByShelter(userId);
+        
+        if (allPets && allPets.length > 0) {
+          const availablePets = allPets.filter(
+            (pet) => pet.adoptionStatus === "available"
+          );
           
-          if (allPets && allPets.length > 0) {
-            const availablePets = allPets.filter(
-              (pet) => pet.adoptionStatus === "available"
-            );
-            
-            if (availablePets && availablePets.length > 0) {
-              this.currentAvailablePets = availablePets;
-              petsContainer.innerHTML = this.renderPetsList(availablePets);
-            } else {
-              petsContainer.innerHTML = this.createEmptyPetsState();
-            }
+          if (availablePets && availablePets.length > 0) {
+            this.currentAvailablePets = availablePets;
+            petsContainer.innerHTML = this.renderPetsList(availablePets);
           } else {
             petsContainer.innerHTML = this.createEmptyPetsState();
           }
-        } catch (fetchError) {
-          console.error("Error fetching shelter pets:", fetchError);
-          petsContainer.innerHTML = this.createErrorPetsState();
-        }
-      } else {
-        const adoptionCount = this.currentUser.adoption_count || 0;
-        const petsHelpedCount = this.currentUser.pets_helped_count || 0;
-
-        if (adoptionCount > 0 || petsHelpedCount > 0) {
-          petsContainer.innerHTML = `
-            <div class="adoption-info">
-              <h4>Community Contributions</h4>
-              ${
-                adoptionCount > 0
-                  ? `<p>✓ Adopted ${adoptionCount} pet${
-                      adoptionCount === 1 ? "" : "s"
-                    }</p>`
-                  : ""
-              }
-              ${
-                petsHelpedCount > 0
-                  ? `<p>✓ Helped ${petsHelpedCount} pet${
-                      petsHelpedCount === 1 ? "" : "s"
-                    } find homes</p>`
-                  : ""
-              }
-              <p class="privacy-note">Specific pet details are kept private for user security.</p>
-            </div>
-          `;
         } else {
-          petsContainer.innerHTML = `
-            <div class="no-pets">
-              <p data-i18n="noActivity" data-i18n-fallback="This user hasn't completed any pet adoptions yet.">This user hasn't completed any pet adoptions yet.</p>
-            </div>
-          `;
+          petsContainer.innerHTML = this.createEmptyPetsState();
+        }
+      } catch (fetchError) {
+        console.error("Error fetching user pets:", fetchError);
+        this.renderErrorPetsState();
+        if (this.currentUser.role !== "shelter") {
+          const adoptionCount = this.currentUser.adoption_count || 0;
+          const petsHelpedCount = this.currentUser.pets_helped_count || 0;
+
+          if (adoptionCount > 0 || petsHelpedCount > 0) {
+            petsContainer.innerHTML = `
+              <div class="adoption-info">
+                <h4>Community Contributions</h4>
+                ${
+                  adoptionCount > 0
+                    ? `<p>✓ Adopted ${adoptionCount} pet${
+                        adoptionCount === 1 ? "" : "s"
+                    }</p>`
+                    : ""
+                }
+                ${
+                  petsHelpedCount > 0
+                    ? `<p>✓ Helped ${petsHelpedCount} pet${
+                        petsHelpedCount === 1 ? "" : "s"
+                    } find homes</p>`
+                    : ""
+                }
+                <p class="privacy-note">Specific pet details are kept private for user security.</p>
+              </div>
+            `;
+          } else {
+            petsContainer.innerHTML = `
+              <div class="no-pets">
+                <p data-i18n="noActivity" data-i18n-fallback="This user hasn't completed any pet adoptions yet.">This user hasn't completed any pet adoptions yet.</p>
+              </div>
+            `;
+          }
+        } else {
+          petsContainer.innerHTML = this.createErrorPetsState();
         }
       }
     } catch (error) {
@@ -235,13 +238,26 @@ class ProfilePage {
       </div>
     `;
   }
-
+  
   createEmptyPetsState() {
-    return `
-      <div class="pets-grid">
-        ${CardRenderer.createPlaceholderCard("pet")}
-      </div>
-    `;
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    const currentUserId = localStorage.getItem('userId');
+    const isOwnProfile = isLoggedIn && currentUserId && currentUserId === this.currentUserId;
+    
+    if (isOwnProfile) {
+      return `
+        <div class="no-pets">
+          <p>You haven't added any pets yet.</p>
+          <p><a href="../pets/add-pet/add-pet.html" class="btn btn-primary">Add Your First Pet</a></p>
+        </div>
+      `;
+    } else {
+      return `
+        <div class="no-pets">
+          <p>This user hasn't listed any pets yet.</p>
+        </div>
+      `;
+    }
   }
 
   createErrorPetsState() {

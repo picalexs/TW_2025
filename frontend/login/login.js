@@ -85,11 +85,11 @@ async function handleLogin(event) {
 
    try {
       const userService = new UserService({ baseURL: API_BASE_URL });
-      const response = await userService.login(email, password);
-
-    if (response && response.user) {
+      const response = await userService.login(email, password);    if (response && response.user) {
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('userData', JSON.stringify(response.user));
+      localStorage.setItem('userId', response.user.id.toString());
+      localStorage.setItem('currentUserId', response.user.id.toString());
 
       showMessage('Login successful! Redirecting...', 'success');
       window.location.href = '../home/home.html';

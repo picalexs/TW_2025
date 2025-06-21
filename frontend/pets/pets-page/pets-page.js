@@ -1,7 +1,51 @@
 import PetService from '../../services/petService.min.js';
+import { checkLoginStatusAndToggleNavButtons } from '../../global/global.min.js';
+
 const petService = new PetService();
 
 let allPets = [];
+
+function getCurrentUserId() {
+  let userId = localStorage.getItem('currentUserId');
+  if (userId) {
+    return parseInt(userId);
+  }
+  
+  try {
+    const userData = localStorage.getItem('userData');
+    if (userData) {
+      const user = JSON.parse(userData);
+      return user.id ? parseInt(user.id) : null;
+    }
+  } catch (error) {
+    console.error('Error parsing userData:', error);
+  }
+  
+  return null;
+}
+
+function isUserLoggedIn() {
+  return localStorage.getItem('isLoggedIn') === 'true';
+}
+
+function toggleAddPetButton() {
+  const addPetBtn = document.getElementById('add-pet-btn');
+  if (addPetBtn) {
+    const loggedIn = isUserLoggedIn();
+    const userId = getCurrentUserId();
+    console.log('Checking add pet button visibility - logged in:', loggedIn, 'user ID:', userId);
+    
+    if (loggedIn && userId) {
+      addPetBtn.style.display = 'flex';
+      console.log('Showing add pet button');
+    } else {
+      addPetBtn.style.display = 'none';
+      console.log('Hiding add pet button');
+    }
+  } else {
+    console.log('Add pet button not found in DOM');
+  }
+}
 
 export async function fetchPets() {
   try {
@@ -203,6 +247,8 @@ export function initializeFilterButtons() {
   const resetBtn = document.getElementById('reset-filters');
   const addPetBtn = document.getElementById('add-pet-btn');
   
+  toggleAddPetButton();
+  
   if (applyBtn) {
     applyBtn.addEventListener('click', () => {
       const filteredPets = filterPets();
@@ -223,10 +269,14 @@ export function initializeFilterButtons() {
       
       renderPets(allPets);
     });
-  }
-  if (addPetBtn) {
+  }  if (addPetBtn) {
     addPetBtn.addEventListener('click', () => {
-      window.location.href = '../add-pet/add-pet.html';
+      if (isUserLoggedIn() && getCurrentUserId()) {
+        window.location.href = '../add-pet/add-pet.html';
+      } else {
+        alert('Please log in to add a pet.');
+        window.location.href = '../login/login.html';
+      }
     });
   }
 }
@@ -247,3 +297,8 @@ export function showPetPlaceholders(containerId = 'pets-grid', count = 6) {
     container.appendChild(placeholder.firstChild || placeholder);
   }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  checkLoginStatusAndToggleNavButtons();
+  toggleAddPetButton();
+});
