@@ -209,9 +209,8 @@
     <div id="global-footer"></div>
     
     <!-- Optimized script loading for better performance -->
-    <script src="../config.min.js" defer></script>
-    <script src="../utils/imagePathHandler.min.js" defer></script>
-    <script src="../utils/cardRenderer.min.js" defer></script>
+    <script src="../bundles/critical.min.js" defer></script>
+    <script src="../bundles/utils.min.js" defer></script>
     <script type="module">
         import { fetchPets, renderPets, showPetLoadError, initializeViewToggle, initializeAdvancedFilters, initializeFilterButtons } from './pets.min.js';
         import '../global/global.min.js'; 
