@@ -1,5 +1,7 @@
 {
-  "favorites_title": "Your Favorites",
-  "no_favorites": "You have no favorite pets yet.",
-  "error_loading": "Error loading favorites."
+  "favorites_title": "My Favorite Animals",
+  "no_favorites": "You have no favorite animals.",
+  "error_loading": "Error loading favorites.",
+  "not_authenticated": "You must be logged in to view your favorites.",
+  "remove": "Remove"
 }

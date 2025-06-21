@@ -6,9 +6,8 @@ function getCurrentUserId() {
   return (userId && isLoggedIn) ? userId : null;
 }
 
-const favoritesService = new FavoritesService();
-
 async function renderFavorites() {
+  const favoritesService = new FavoritesService(); // instanță nouă la fiecare apel
   const container = document.getElementById('favorites-list');
   container.innerHTML = '';
   const userId = getCurrentUserId();
