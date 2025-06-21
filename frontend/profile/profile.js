@@ -35,7 +35,7 @@ class ProfilePage {
     try {
       const urlParams = new URLSearchParams(window.location.search);
       const userId = urlParams.get("id");
-      console.log('[ProfilePage] Loading profile for userId:', userId);
+
       if (!userId) {
         this.showError("No user ID provided");
         return;
@@ -51,17 +51,12 @@ class ProfilePage {
   }
 
   async loadUserProfile(userId) {
-    // DEBUG: vezi dacă există token și ce URL se folosește
-    console.log('[DEBUG] authToken in localStorage:', localStorage.getItem('authToken'));
-    const apiBaseUrl = window.APP_CONFIG?.api?.baseURL || 'http://localhost:8080';
-    console.log('[DEBUG] API base URL:', apiBaseUrl);
-    console.log('[DEBUG] userId pentru profil:', userId);
     try {
       this.showLoading();
       const user = await this.userService.getUserById(userId);
 
       if (!user) {
-        this.showError("The profile was not found.");
+        this.showError("User not found");
         return;
       }
 
@@ -69,19 +64,8 @@ class ProfilePage {
       this.renderUserProfile(user);
       this.hideLoading();
     } catch (error) {
-      console.error("Error loading user profile (full error):", error);
-      // Try to extract backend message if present
-      let backendMsg =
-        (error && error.details && error.details.data && error.details.data.message) ||
-        (error && error.details && error.details.message) ||
-        (error && error.message);
-      if (error && error.details && error.details.status === 403) {
-        this.showError(backendMsg || "You are not allowed to view this profile.");
-      } else if (error && error.details && error.details.status === 404) {
-        this.showError(backendMsg || "The profile does not exist or was not found.");
-      } else {
-        this.showError(backendMsg || "An error occurred while loading the profile.");
-      }
+      console.error("Error loading user profile:", error);
+      this.showError("Failed to load user profile");
     }
   }
 
