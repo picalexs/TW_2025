@@ -69,7 +69,20 @@ class UserService {
     try {
       const data = await this.apiService.post(this.endpoints.login, { email, password });
       
-      if (data && data.user) {
+      if (data && data.user && data.token) {
+        // Clean up any legacy/extra keys for consistency
+        localStorage.removeItem('userId');
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('username');
+        localStorage.removeItem('userRole');
+        
+        localStorage.setItem('userData', JSON.stringify(data.user));
+        localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('authToken', data.token); // Store JWT for ApiService
+        this.apiService.setAuthToken(data.token); // Set for immediate use
+        return data;
+      } else if (data && data.user) {
+        // fallback for legacy backend: try to extract token from headers or elsewhere if needed
         localStorage.setItem('userData', JSON.stringify(data.user));
         localStorage.setItem('isLoggedIn', 'true');
         return data;

@@ -88,9 +88,16 @@ async function handleLogin(event) {
       const response = await userService.login(email, password);
 
     if (response && response.user) {
+      // Clean up any legacy/extra keys for consistenta
+      localStorage.removeItem('userId');
+      localStorage.removeItem('userEmail');
+      localStorage.removeItem('username');
+      localStorage.removeItem('userRole');
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('userData', JSON.stringify(response.user));
-
+      if (response.token) {
+        localStorage.setItem('authToken', response.token);
+      }
       showMessage('Login successful! Redirecting...', 'success');
       window.location.href = '../home/home.html';
     } else {

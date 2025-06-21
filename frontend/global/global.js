@@ -14,6 +14,15 @@ function checkLoginStatusAndToggleNavButtons() {
     const logoutButton = document.querySelector('.nav-logout-btn');
     const mobileLogoutLink = document.querySelector('.mobile-nav-logout');
 
+    // Dynamically set profile link if logged in
+    const profileBtn = document.querySelector('.nav-profile-btn');
+    if (isLoggedIn && profileBtn) {
+        const userId = localStorage.getItem('userId');
+        if (userId) {
+            profileBtn.href = `/frontend/profile/profile.html?id=${userId}`;
+        }
+    }
+
     if (isLoggedIn) {
         if (authButtonsLoggedOut) authButtonsLoggedOut.style.display = 'none';
         if (mobileAuthLoggedOut) mobileAuthLoggedOut.style.display = 'none';
@@ -41,6 +50,13 @@ function checkLoginStatusAndToggleNavButtons() {
 
 function handleLogout(event) {
     event.preventDefault();
+    // Remove all authentication-related keys for security and consistency
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userData');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('username');
+    localStorage.removeItem('userRole');
     localStorage.removeItem('isLoggedIn');
     isLoggedIn = false;
     console.log('User logged out. Updating UI and redirecting...');

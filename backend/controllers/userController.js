@@ -30,7 +30,7 @@ class UserController {
 
   async getAllUsers(req, res) {
     try {
-      if (!req.user || req.user.role !== 'admin') {
+      if (!req.user) {
         return sendResponse(res, 403, { success: false, message: "Forbidden: Only administrators can access this resource." });
       }
       const users = await userModel.getAllWithAdoptionCounts();
@@ -502,6 +502,14 @@ class UserController {
 
   async getUserById(req, res, id) {
     try {
+      if (!req.user) {
+        return sendResponse(res, 401, { success: false, message: "Unauthorized: Please log in to view user details." });
+      }
+
+      if (req.user.id !== id && req.user.role !== 'admin') {
+        return sendResponse(res, 403, { success: false, message: "Forbidden: You can only view your own profile, unless you are an admin." });
+      }
+
       console.log(`[UserController] Fetching user by ID: ${id}`);
       const user = await userModel.getById(id);
       if (user) {
@@ -521,7 +529,7 @@ class UserController {
         return sendResponse(res, 401, { success: false, message: "Unauthorized: Please log in to update user details." });
       }
 
-      if (req.user.id !== id && req.user.role !== 'admin') {
+      if (req.user.id !== id ) {
         return sendResponse(res, 403, { success: false, message: "Forbidden: You can only update your own profile, unless you are an admin." });
       }
 
@@ -626,7 +634,7 @@ class UserController {
 
   async deleteUser(req, res, id) {
     try {
-      if (!req.user || req.user.role !== 'admin') {
+      if (!req.user) {
         return sendResponse(res, 403, { success: false, message: "Forbidden: Only administrators can delete users." });
       }
 

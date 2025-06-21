@@ -35,11 +35,23 @@ class ApiService {
     
     this._initializeFromStorage();
   }
-  
+
+  _refreshAuthToken() {
+    const token = localStorage.getItem('authToken');
+    if (this.debug) {
+      console.log('[ApiService] _refreshAuthToken: token in localStorage:', token);
+    }
+    if (token) {
+      this.setAuthToken(token);
+    } else {
+      this.setAuthToken(null);
+    }
+  }
+
   setAuthToken(token) {
     if (token) {
       this.defaultHeaders['Authorization'] = `Bearer ${token}`;
-      this.authToken = token;
+      if (this.debug) this._log('Auth token set', this.defaultHeaders['Authorization']);
     } else {
       delete this.defaultHeaders['Authorization'];
       this.authToken = null;
@@ -47,14 +59,17 @@ class ApiService {
   }
 
   async get(endpoint, queryParams = {}, options = {}) {
+    this._refreshAuthToken();
     const url = this._buildUrl(endpoint, queryParams);
     return this._executeRequest(url, { 
       ...options, 
-      method: 'GET' 
+      method: 'GET',
+      headers: { ...this.defaultHeaders, ...options.headers }
     });
   }
 
   async post(endpoint, data, options = {}) {
+    this._refreshAuthToken();
     const url = this._buildUrl(endpoint);
     return this._executeRequest(url, {
       ...options,
@@ -65,6 +80,7 @@ class ApiService {
   }
 
   async put(endpoint, data, options = {}) {
+    this._refreshAuthToken();
     const url = this._buildUrl(endpoint);
     return this._executeRequest(url, {
       ...options,
@@ -75,6 +91,7 @@ class ApiService {
   }
 
   async delete(endpoint, options = {}) {
+    this._refreshAuthToken();
     const url = this._buildUrl(endpoint);
     return this._executeRequest(url, {
       ...options,
@@ -87,10 +104,26 @@ class ApiService {
     try {
       const response = await this.get('/api/status');
       
+      for (const endpoint of endpoints) {
+        try {
+          const response = await fetch(`${this.baseURL}${endpoint}`, {
+            method: 'GET',
+            mode: 'cors',
+            signal: AbortSignal.timeout(5000)
+          });
+      
       return {
-        success: response && response.status === 'ok',
-        data: response
+            success: response.ok,
+            status: response.status,
+            statusText: response.statusText,
+            endpoint: endpoint
       };
+        } catch (error) {
+          continue;
+        }
+      }
+      
+      throw new Error('All test endpoints failed');
     } catch (error) {
       if (this.debug) {
         this._log('API connection test failed', error);
@@ -140,6 +173,10 @@ class ApiService {
   }
 
   async _executeRequest(url, options = {}) {
+    if (this.debug) {
+      console.log('[ApiService] Executing request:', url);
+      console.log('[ApiService] Request headers:', { ...this.defaultHeaders, ...(options.headers || {}) });
+    }
     const timeoutMs = options.timeout || this.timeout;
     const maxRetries = options.retryCount ?? this.retryCount;
     let lastError;
