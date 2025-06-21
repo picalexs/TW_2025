@@ -247,3 +247,25 @@ export function showPetPlaceholders(containerId = 'pets-grid', count = 6) {
     container.appendChild(placeholder.firstChild || placeholder);
   }
 }
+
+export function initializeMatchingButton() {
+  const matchingBtn = document.getElementById('matching-btn');
+  if (!matchingBtn) return;
+  matchingBtn.addEventListener('click', () => {
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true' && localStorage.getItem('authToken');
+    if (isLoggedIn) {
+      // User is logged in, do nothing for now
+      return;
+    } else {
+      // User is not logged in, show login modal/box
+      if (window.showLoginModal) {
+        window.showLoginModal();
+      } else {
+        // Fallback: redirect to login page
+        window.location.href = '../../login/login.html?message=Please log in to use matching';
+      }
+    }
+  });
+}
+
+// Patch: call this in DOMContentLoaded in HTML

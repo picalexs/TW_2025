@@ -61,7 +61,7 @@ function handleLogout(event) {
     isLoggedIn = false;
     console.log('User logged out. Updating UI and redirecting...');
     checkLoginStatusAndToggleNavButtons();
-    window.location.href = '../home/home.html';
+    window.location.href = '/frontend/home/home.html';
 }
 
 function setupLanguageDropdown() {
