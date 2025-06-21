@@ -147,9 +147,9 @@ class GoogleAuthController {
 
     getFrontendBaseUrlFromApi() {
         return new Promise((resolve) => {
-            const https = require('https');
-            const apiUrl = 'https://your-api.com/frontend-url'; // TODO: Replace with your real API endpoint
-            https.get(apiUrl, (res) => {
+            const http = require('http');
+            const apiUrl = 'http://localhost:8080/api/frontend-url'; 
+            http.get(apiUrl, (res) => {
                 let data = '';
                 res.on('data', chunk => data += chunk);
                 res.on('end', () => {

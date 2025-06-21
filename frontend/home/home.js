@@ -349,52 +349,43 @@ async function fetchAndRenderUsers() {
     loadUsersWithRetry();
 }
 
-function addEventListeners() {
-  document.querySelectorAll('.view-user-btn').forEach(button => {
-    button.addEventListener('click', (event) => {
-      event.preventDefault();
-      const userId = event.currentTarget.getAttribute('data-user-id');
-      console.log(`Viewing user details for user ID: ${userId}`);
-      window.location.href = `../profile/profile.html?id=${userId}`;
-    });
-  });
-}
-
 document.addEventListener('DOMContentLoaded', () => {
-  console.log("DOM loaded - starting home page initialization");
+ console.log("DOM loaded - starting home page initialization");
   
-  if (document.body.classList.contains('home-initialized')) {
-    console.log('Home page already initialized');
-    return;
-  }
-  
-  document.body.classList.add('home-initialized');
-  document.body.classList.add('home_page');
-  initHomePage();
+ if (document.body.classList.contains('home-initialized')) {
+   console.log('Home page already initialized');
+ return; }
 
+ document.body.classList.add('home-initialized');
+ document.body.classList.add('home_page');
 
-  const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-    const userId = urlParams.get('id');
-    const username = urlParams.get('username');
-    const email = urlParams.get('email');
-    const role = urlParams.get('role'); 
+ const urlParams = new URLSearchParams(window.location.search);
+ const token = urlParams.get('token');
+ const userId = urlParams.get('id');
+ const username = urlParams.get('username');
+ const email = urlParams.get('email'); // <-- AICI ESTE CORECȚIA
+ const role = urlParams.get('role'); 
 
-    if (token) {
-        localStorage.setItem('userToken', token);
-        localStorage.setItem('userId', userId);
-        localStorage.setItem('username', username);
-        localStorage.setItem('userEmail', email);
-        localStorage.setItem('userRole', role); 
-        localStorage.setItem('isLoggedIn', 'true'); 
-        console.log('Login Google reușit: Token-ul și informațiile utilizatorului au fost salvate în localStorage.');
-        console.log('Token:', token.substring(0, 30) + '...'); 
-        console.log('Utilizator:', { userId, username, email, role });
+ if (token) {
+ localStorage.setItem('authToken', token);
+  localStorage.setItem('userId', userId);
+ localStorage.setItem('username', username);
+ localStorage.setItem('userEmail', email);
+ localStorage.setItem('userRole', role); 
+ localStorage.setItem('isLoggedIn', 'true'); 
+ localStorage.setItem('userData', JSON.stringify({ id: userId, username, email, role }));
+ console.log('Login Google reușit: Token-ul și informațiile utilizatorului au fost salvate în localStorage.');
+ console.log('Token:', token.substring(0, 30) + '...'); 
+ console.log('Utilizator:', { userId, username, email, role });
 
-        window.history.replaceState({}, document.title, window.location.pathname);
-    } else if (localStorage.getItem('isLoggedIn') === 'true') {
-        console.log("Utilizator deja logat, verificăm sesiunea existentă.");
-    } else {
-        console.log("Niciun token sau informații utilizator în URL pentru Google Login. Continuăm cu inițializarea normală a paginii.");
-    }
+ // Curăță URL-ul de parametrii sensibili
+ window.history.replaceState({}, document.title, window.location.pathname);
+ } else if (localStorage.getItem('isLoggedIn') === 'true') {
+ console.log("Utilizator deja logat, verificăm sesiunea existentă.");
+ } else {
+ console.log("Niciun token sau informații utilizator în URL pentru Google Login. Continuăm cu inițializarea normală a paginii.");
+ }
+
+ initHomePage();
 });
+
