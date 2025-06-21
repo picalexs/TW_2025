@@ -18,16 +18,21 @@ export default class FavoritesService {
     }
   }
 
-  async getFavorites(userId) {
-    if (!userId) throw new Error('User ID is required');
-    try {
-      if (this.debug) console.log('Fetching favorites for user:', userId);
-      return await this.apiService.get(this.endpoints.base, { user_id: userId });
-    } catch (error) {
-      if (this.debug) console.error('Error fetching favorites:', error);
-      throw error;
-    }
+ async getFavorites(userId) {
+  if (!userId) throw new Error('User ID is required');
+  
+  try {
+    if (this.debug) console.log('Fetching favorites for user:', userId);
+    return await this.apiService.get(this.endpoints.base, {
+      user_id: userId
+    });
+  } catch (error) {
+    if (this.debug) console.error('Error fetching favorites:', error);
+    throw error;
   }
+}
+
+
 
   async addFavorite(userId, animalId) {
     if (!userId || !animalId) throw new Error('User ID and Animal ID are required');
