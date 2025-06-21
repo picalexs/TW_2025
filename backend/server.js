@@ -13,6 +13,8 @@ const handleConfigRoutes = require('./routes/configRoutes');
 const { handleNotificationRoutes } = require('./routes/notificationRoutes');
 const handleFrontendRoutes = require('./routes/frontendRoutes');
 const { sendResponse } = require('./utils/helpers');
+const handleFavoriteRoutes = require('./routes/favoriteRoutes');
+// const handleProfileRoutes = require('./routes/profileRoutes');
 
 const { verifyToken, checkRole } = require('./middleware/authMiddleware');
 
@@ -172,6 +174,14 @@ const server = http.createServer(async (req, res) => {
     if (!routeHandled) {
       routeHandled = await handleOwnerReviewRoutes(req, res);
     }
+
+    if (!routeHandled) {
+      routeHandled = await handleFavoriteRoutes(req, res);
+    }
+
+    // if (!routeHandled) {
+    //   routeHandled = await handleProfileRoutes(req, res);
+    // }
 
     if (!routeHandled) {
       routeHandled = await handleNotificationRoutes(req, res);

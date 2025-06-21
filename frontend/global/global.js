@@ -50,6 +50,13 @@ function checkLoginStatusAndToggleNavButtons() {
 
 function handleLogout(event) {
     event.preventDefault();
+    // Remove all authentication-related keys for security and consistency
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userData');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userEmail');
+    localStorage.removeItem('username');
+    localStorage.removeItem('userRole');
     localStorage.removeItem('isLoggedIn');
     isLoggedIn = false;
     console.log('User logged out. Updating UI and redirecting...');

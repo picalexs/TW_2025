@@ -375,21 +375,24 @@ document.addEventListener('DOMContentLoaded', () => {
  const role = urlParams.get('role'); 
 
  if (token) {
- localStorage.setItem('authToken', token);
-  localStorage.setItem('userId', userId);
- localStorage.setItem('username', username);
- localStorage.setItem('userEmail', email);
- localStorage.setItem('userRole', role); 
- localStorage.setItem('isLoggedIn', 'true'); 
+  // Clean up any legacy/extra keys for consistency
+  localStorage.removeItem('userId');
+  localStorage.removeItem('userEmail');
+  localStorage.removeItem('username');
+  localStorage.removeItem('userRole');
 
- console.log('Google login successful: Token and user information saved in localStorage.');
- console.log('Token:', token.substring(0, 30) + '...'); 
- console.log('User:', { userId, username, email, role });
+  localStorage.setItem('authToken', token);
+  localStorage.setItem('isLoggedIn', 'true');
+  localStorage.setItem('userData', JSON.stringify({ id: userId, username, email, role }));
 
- window.history.replaceState({}, document.title, window.location.pathname);
+  console.log('Google login successful: Token and user information saved in localStorage.');
+  console.log('Token:', token.substring(0, 30) + '...'); 
+  console.log('User:', { userId, username, email, role });
 
- // Update navbar/profile link
- checkLoginStatusAndToggleNavButtons();
+  window.history.replaceState({}, document.title, window.location.pathname);
+
+  // Update navbar/profile link
+  checkLoginStatusAndToggleNavButtons();
  } else if (localStorage.getItem('isLoggedIn') === 'true') {
  console.log("User already logged in, checking existing session.");
  } else {
