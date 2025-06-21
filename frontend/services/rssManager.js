@@ -129,13 +129,13 @@ class RSSManager {  constructor() {
           <h4 data-i18n="shareVia" data-i18n-fallback="Share Via">Share Via</h4>
           <div class="social-sharing-buttons">
             <button class="social-btn twitter" onclick="rssManager.shareOnSocial('twitter')">
-              <i class="icon-twitter"></i> Twitter
+                Twitter
             </button>
             <button class="social-btn facebook" onclick="rssManager.shareOnSocial('facebook')">
-              <i class="icon-facebook"></i> Facebook
+                Facebook
             </button>
             <button class="social-btn linkedin" onclick="rssManager.shareOnSocial('linkedin')">
-              <i class="icon-linkedin"></i> LinkedIn
+                LinkedIn
             </button>
             <button class="social-btn email" onclick="rssManager.shareOnSocial('email')">
               <i class="icon-email"></i> Email
