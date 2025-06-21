@@ -19,6 +19,17 @@ async function handlePetRoutes(req, res) {
     }
     return true;
   }
+
+  if (trimmedPath === "api/pets/feed" || trimmedPath === "api/pets/feed/" || 
+      trimmedPath === "/api/pets/feed" || trimmedPath === "/api/pets/feed/") {
+    if (method === "get") {
+      await petController.getPetsFeed(req, res);
+    } else {
+      sendResponse(res, 405, { error: "Method not allowed" });
+    }
+    return true;
+  }
+
   const shelterPetsMatch = trimmedPath.match(/^api\/pets\/shelter\/(\d+)$/);
   if (shelterPetsMatch && method === "get") {
     const shelterId = parseInt(shelterPetsMatch[1]);

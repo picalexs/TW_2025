@@ -291,6 +291,147 @@ class PetController {
       sendResponse(res, 500, { error: "Failed to fetch pets by shelter", message: error.message });
     }
   }
+
+
+  async getPetsFeed(req, res) {
+    try {
+      const url = new URL(req.url, `http://${req.headers.host}`);
+      const searchParams = url.searchParams;
+      
+      const type = searchParams.get('type') || 'recent';
+      const zone = searchParams.get('zone');
+      const breed = searchParams.get('breed');
+      const species = searchParams.get('species');
+      const limit = parseInt(searchParams.get('limit')) || 20;
+      const format = searchParams.get('format') || 'json';
+      
+      // For demo purposes, create some sample pets if no database is available
+      const demoPets = [
+        {
+          id: 1,
+          name: 'Bella',
+          species: 'Dog',
+          breed: 'Golden Retriever',
+          age: '3 years',
+          gender: 'Female',
+          description: 'Friendly and energetic dog looking for an active family. Loves playing fetch and swimming.',
+          city: 'New York',
+          adoption_fee: 200,
+          created_at: new Date().toISOString()
+        },
+        {
+          id: 2,
+          name: 'Max',
+          species: 'Cat',
+          breed: 'Maine Coon',
+          age: '2 years',
+          gender: 'Male',
+          description: 'Gentle giant cat who loves cuddles and quiet evenings. Perfect for families with children.',
+          city: 'Los Angeles',
+          adoption_fee: 150,
+          created_at: new Date().toISOString()
+        },
+        {
+          id: 3,
+          name: 'Luna',
+          species: 'Dog',
+          breed: 'Border Collie',
+          age: '4 years',
+          gender: 'Female',
+          description: 'Intelligent and loyal companion. Great with kids and other pets. Needs daily exercise.',
+          city: 'Chicago',
+          adoption_fee: 250,
+          created_at: new Date().toISOString()
+        },
+        {
+          id: 4,
+          name: 'Charlie',
+          species: 'Cat',
+          breed: 'Persian',
+          age: '1 year',
+          gender: 'Male',
+          description: 'Young and playful cat with beautiful long fur. Looking for a loving home.',
+          city: 'Houston',
+          adoption_fee: 180,
+          created_at: new Date().toISOString()
+        },
+        {
+          id: 5,
+          name: 'Daisy',
+          species: 'Dog',
+          breed: 'Labrador Mix',
+          age: '5 years',
+          gender: 'Female',
+          description: 'Sweet and calm dog, perfect for seniors or families. House trained and well-behaved.',
+          city: 'Phoenix',
+          adoption_fee: 175,
+          created_at: new Date().toISOString()
+        }
+      ];
+
+      // Try to get real pets from database first
+      let pets = [];
+      try {
+        pets = await petModel.getAll();
+      } catch (dbError) {
+        console.log('Database not available, using demo pets for feed');
+        pets = demoPets;
+      }
+
+      // Apply filters
+      if (species) {
+        pets = pets.filter(pet => 
+          (pet.species || pet.SPECIES || '').toLowerCase().includes(species.toLowerCase())
+        );
+      }
+      
+      if (breed) {
+        pets = pets.filter(pet => 
+          (pet.breed || pet.BREED || '').toLowerCase().includes(breed.toLowerCase())
+        );
+      }
+      
+      if (zone) {
+        pets = pets.filter(pet => 
+          (pet.city || pet.CITY || '').toLowerCase().includes(zone.toLowerCase())
+        );
+      }
+
+      // Sort by type
+      if (type === 'popular') {
+        // Sort by a popularity metric (for demo, just reverse order)
+        pets = pets.reverse();
+      } else {
+        // Sort by created date (recent first)
+        pets = pets.sort((a, b) => {
+          const dateA = new Date(a.created_at || a.CREATED_AT || 0);
+          const dateB = new Date(b.created_at || b.CREATED_AT || 0);
+          return dateB - dateA;
+        });
+      }
+
+      // Limit results
+      pets = pets.slice(0, parseInt(limit));
+
+      sendResponse(res, 200, {
+        success: true,
+        data: pets,
+        meta: {
+          type,
+          filters: { zone, breed, species },
+          count: pets.length,
+          limit: parseInt(limit)
+        }
+      });
+
+    } catch (error) {
+      console.error('Error getting pets feed:', error);
+      sendResponse(res, 500, { 
+        error: 'Failed to fetch pets feed', 
+        message: error.message 
+      });
+    }
+  }
 }
 
 module.exports = new PetController();
