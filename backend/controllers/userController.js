@@ -643,6 +643,34 @@ class UserController {
       sendResponse(res, 500, { success: false, message: "Internal server error." });
     }
   }
+
+  async saveUserPreferenceTags(req, res) {
+    try {
+      const userId = req.user.id;
+      let body = '';
+      req.on('data', chunk => { body += chunk; });
+      req.on('end', async () => {
+        let tags = [];
+        try {
+          const data = JSON.parse(body);
+          tags = Array.isArray(data.tags) ? data.tags : [];
+        } catch (e) {
+          return sendResponse(res, 400, { success: false, message: 'Invalid request body.' });
+        }
+        if (!tags.length) {
+          return sendResponse(res, 400, { success: false, message: 'No tags provided.' });
+        }
+        const result = await userModel.saveUserPreferenceTags(userId, tags);
+        if (result.success) {
+          sendResponse(res, 200, { success: true, message: 'Preferences saved.' });
+        } else {
+          sendResponse(res, 500, { success: false, message: result.message || 'Failed to save preferences.' });
+        }
+      });
+    } catch (error) {
+      sendResponse(res, 500, { success: false, message: error.message || 'Server error.' });
+    }
+  }
 }
 
 module.exports = new UserController();

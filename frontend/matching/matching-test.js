@@ -6,10 +6,12 @@ document.addEventListener('DOMContentLoaded', function() {
     e.preventDefault();
     messageDiv.textContent = '';
     const selectedInputs = Array.from(form.querySelectorAll('input:checked'));
-    const tags = new Set();
+    const tags = new Map();
     selectedInputs.forEach(input => {
-      (input.dataset.tags || '').split(',').forEach(tag => {
-        if (tag.trim()) tags.add(tag.trim());
+      const ids = (input.dataset.tagId || '').split(',').map(id => id.trim()).filter(Boolean);
+      const names = (input.dataset.tagName || '').split(',').map(n => n.trim()).filter(Boolean);
+      ids.forEach((id, idx) => {
+        if (id) tags.set(id, names[idx] || '');
       });
     });
     if (!tags.size) {
@@ -23,13 +25,15 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
     try {
-      const res = await fetch('/api/user/preferences/tags', {
+      const apiBase = window.APP_CONFIG?.api?.baseURL || 'http://localhost:8080';
+      const tagArray = Array.from(tags.entries()).map(([id, name]) => ({ id: Number(id), name }));
+      const res = await fetch(`${apiBase}/api/user/preferences/tags`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + authToken
         },
-        body: JSON.stringify({ tags: Array.from(tags) })
+        body: JSON.stringify({ tags: tagArray })
       });
       if (res.ok) {
         messageDiv.textContent = 'Preferințele au fost salvate cu succes!';

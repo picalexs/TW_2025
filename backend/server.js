@@ -84,6 +84,8 @@ const sendCompressedResponse = (res, statusCode, data, contentType = 'applicatio
 };
 
 const server = http.createServer(async (req, res) => {
+  // Debug logging for all incoming requests
+  console.log(`[${new Date().toISOString()}] Incoming request: ${req.method} ${req.url}`);
   res.req = req;
 
   const allowedOrigins = generateAllowedOrigins();
@@ -156,51 +158,39 @@ const server = http.createServer(async (req, res) => {
       });
     }
 
+    // API route handlers first
     routeHandled = await handleConfigRoutes(req, res);
-
-    if (!routeHandled) {
-      routeHandled = await handleStaticRoutes(req, res);
-    }
-
     if (!routeHandled) {
       routeHandled = await handleUserRoutes(req, res);
     }
-
     if (!routeHandled) {
       routeHandled = await handlePetRoutes(req, res);
     }
-
     if (!routeHandled) {
       routeHandled = await handleRecommendationRoutes(req, res);
     }
     if (!routeHandled) {
       routeHandled = await handleTestimonialRoutes(req, res);
     }
-
     if (!routeHandled) {
       routeHandled = await handleOwnerReviewRoutes(req, res);
     }
-
     if (!routeHandled) {
       routeHandled = await handleFavoriteRoutes(req, res);
     }
-
-    // if (!routeHandled) {
-    //   routeHandled = await handleProfileRoutes(req, res);
-    // }
-
     if (!routeHandled) {
       routeHandled = await handleNotificationRoutes(req, res);
     }
-
     if (!routeHandled) {
       routeHandled = await handleRSSRoutes(req, res);
     }
-
+    // Static and frontend routes LAST
+    if (!routeHandled) {
+      routeHandled = await handleStaticRoutes(req, res);
+    }
     if (!routeHandled) {
       routeHandled = await handleFrontendRoutes(req, res);
     }
-
     if (!routeHandled) {
       console.log(`Route not found: ${req.url}`);
       sendCompressedResponse(res, 404, {

@@ -269,6 +269,48 @@ class UserModel extends AbstractModel {
       }
     }
   }
+
+  async saveUserPreferenceTags(userId, tags) {
+    let connection;
+    try {
+      connection = await db.getConnection();
+      // 1. Log received tag IDs
+      const receivedTagIds = tags.map(tag => tag.id);
+      console.log('Received tag IDs for user', userId, ':', receivedTagIds);
+      // 2. Check which tag IDs exist in TAGS table
+      const result = await connection.execute(
+        `SELECT id FROM tags WHERE id IN (${receivedTagIds.map((_, i) => ':id' + i).join(',')})`,
+        Object.fromEntries(receivedTagIds.map((id, i) => ['id' + i, id]))
+      );
+      const existingTagIds = result.rows.map(row => row.ID || row.id);
+      const missingTagIds = receivedTagIds.filter(id => !existingTagIds.includes(id));
+      if (missingTagIds.length > 0) {
+        console.error('Missing tag IDs in TAGS table:', missingTagIds);
+        return { success: false, message: 'Some tag IDs do not exist in TAGS table', missingTagIds };
+      }
+      // 3. Delete old tags
+      await connection.execute(
+        'DELETE FROM user_preference_tags WHERE user_id = :userId',
+        { userId },
+        { autoCommit: false }
+      );
+      // 4. Insert new tags by ID
+      for (const tagId of receivedTagIds) {
+        await connection.execute(
+          'INSERT INTO user_preference_tags (user_id, tag_id) VALUES (:userId, :tagId)',
+          { userId, tagId },
+          { autoCommit: false }
+        );
+      }
+      await connection.commit();
+      return { success: true };
+    } catch (error) {
+      if (connection) try { await connection.rollback(); } catch (e) {}
+      return { success: false, message: error.message };
+    } finally {
+      if (connection) await connection.close();
+    }
+  }
 }
 
 module.exports = new UserModel();
