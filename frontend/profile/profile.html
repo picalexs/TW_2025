@@ -123,16 +123,16 @@
             <div class="modal-body">
                 <form id="contact-form">
                     <div class="form-group">
-                        <label data-i18n="yourName" data-i18n-fallback="Your Name"></label>
-                        <input type="text" id="contact-name" required>
+                        <label for="contact-name" data-i18n="yourName" data-i18n-fallback="Your Name"></label>
+                        <input type="text" id="contact-name" required placeholder="Enter your name" title="Name">
                     </div>
                     <div class="form-group">
-                        <label data-i18n="yourEmail" data-i18n-fallback="Your Email"></label>
-                        <input type="email" id="contact-email" required>
+                        <label for="contact-email" data-i18n="yourEmail" data-i18n-fallback="Your Email"></label>
+                        <input type="email" id="contact-email" required placeholder="Enter your email" title="Email">
                     </div>
                     <div class="form-group">
-                        <label data-i18n="message" data-i18n-fallback="Message"></label>
-                        <textarea id="contact-message" rows="4" required></textarea>
+                        <label for="contact-message" data-i18n="message" data-i18n-fallback="Message"></label>
+                        <textarea id="contact-message" rows="4" required placeholder="Enter your message" title="Message"></textarea>
                     </div>
                     <div class="form-actions">
                         <button type="button" class="btn btn-secondary modal-close" data-i18n="cancel"
@@ -158,7 +158,8 @@
                         <div class="filter-section">
                             <h4 data-i18n="sortBy" data-i18n-fallback="Sort By"></h4>
                             <div class="form-group">
-                                <select id="sort-by" class="form-select">
+                                <label for="sort-by">Sort by</label>
+                                <select id="sort-by" class="form-select" title="Sort by">
                                     <option value="date-desc" data-i18n="sortDateNewest" data-i18n-fallback="Date (Newest First)"></option>
                                     <option value="date-asc" data-i18n="sortDateOldest" data-i18n-fallback="Date (Oldest First)"></option>
                                     <option value="rating-desc" data-i18n="sortRatingHighest" data-i18n-fallback="Rating (Highest First)"></option>
@@ -169,7 +170,8 @@
                         <div class="filter-section">
                             <h4 data-i18n="filterByRating" data-i18n-fallback="Filter by Rating"></h4>
                             <div class="form-group">
-                                <select id="min-rating" class="form-select">
+                                <label for="min-rating">Minimum Rating</label>
+                                <select id="min-rating" class="form-select" title="Minimum Rating">
                                     <option value="0" data-i18n="anyRating" data-i18n-fallback="Any Rating"></option>
                                     <option value="1">1★</option>
                                     <option value="2">2★</option>
@@ -183,7 +185,8 @@
                         <div class="filter-section">
                             <h4 data-i18n="filterByRecommendation" data-i18n-fallback="Filter by Recommendation"></h4>
                             <div class="form-group">
-                                <select id="recommendation-filter" class="form-select">
+                                <label for="recommendation-filter">Recommendation</label>
+                                <select id="recommendation-filter" class="form-select" title="Recommendation">
                                     <option value="all" data-i18n="allReviews" data-i18n-fallback="All Reviews"></option>
                                     <option value="recommended" data-i18n="recommendedOnly" data-i18n-fallback="Recommended Only"></option>
                                     <option value="not-recommended" data-i18n="notRecommendedOnly" data-i18n-fallback="Not Recommended Only"></option>
@@ -194,7 +197,8 @@
                         <div class="filter-section">
                             <h4 data-i18n="filterByAnimalType" data-i18n-fallback="Filter by Animal Type"></h4>
                             <div class="form-group">
-                                <select id="animal-type-filter" class="form-select">
+                                <label for="animal-type-filter">Animal Type</label>
+                                <select id="animal-type-filter" class="form-select" title="Animal Type">
                                     <option value="all" data-i18n="allAnimals" data-i18n-fallback="All Animals"></option>
                                     <option value="dog" data-i18n="dogsOnly" data-i18n-fallback="Dogs Only"></option>
                                     <option value="cat" data-i18n="catsOnly" data-i18n-fallback="Cats Only"></option>
@@ -207,8 +211,8 @@
                         <h4 data-i18n="filterByDetailedRatings" data-i18n-fallback="Filter by Detailed Ratings"></h4>
                         <div class="detailed-ratings-grid">
                             <div class="form-group">
-                                <label data-i18n="minCommunicationRating" data-i18n-fallback="Communication"></label>
-                                <select id="communication-rating" class="form-select">
+                                <label for="communication-rating" data-i18n="minCommunicationRating" data-i18n-fallback="Communication"></label>
+                                <select id="communication-rating" class="form-select" title="Communication">
                                     <option value="0" data-i18n="anyRating" data-i18n-fallback="Any"></option>
                                     <option value="1">1★</option>
                                     <option value="2">2★</option>
@@ -218,8 +222,8 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label data-i18n="minPetConditionRating" data-i18n-fallback="Pet Condition"></label>
-                                <select id="pet-condition-rating" class="form-select">
+                                <label for="pet-condition-rating" data-i18n="minPetConditionRating" data-i18n-fallback="Pet Condition"></label>
+                                <select id="pet-condition-rating" class="form-select" title="Pet Condition">
                                     <option value="0" data-i18n="anyRating" data-i18n-fallback="Any"></option>
                                     <option value="1">1★</option>
                                     <option value="2">2★</option>
@@ -229,8 +233,8 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label data-i18n="minProcessRating" data-i18n-fallback="Process"></label>
-                                <select id="process-rating" class="form-select">
+                                <label for="process-rating" data-i18n="minProcessRating" data-i18n-fallback="Process"></label>
+                                <select id="process-rating" class="form-select" title="Process">
                                     <option value="0" data-i18n="anyRating" data-i18n-fallback="Any"></option>
                                     <option value="1">1★</option>
                                     <option value="2">2★</option>

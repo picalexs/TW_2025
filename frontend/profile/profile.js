@@ -35,7 +35,7 @@ class ProfilePage {
     try {
       const urlParams = new URLSearchParams(window.location.search);
       const userId = urlParams.get("id");
-
+      console.log('[ProfilePage] Loading profile for userId:', userId);
       if (!userId) {
         this.showError("No user ID provided");
         return;

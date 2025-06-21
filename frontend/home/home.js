@@ -382,16 +382,18 @@ document.addEventListener('DOMContentLoaded', () => {
  localStorage.setItem('userRole', role); 
  localStorage.setItem('isLoggedIn', 'true'); 
 
- console.log('Login Google reușit: Token-ul și informațiile utilizatorului au fost salvate în localStorage.');
+ console.log('Google login successful: Token and user information saved in localStorage.');
  console.log('Token:', token.substring(0, 30) + '...'); 
- console.log('Utilizator:', { userId, username, email, role });
+ console.log('User:', { userId, username, email, role });
 
- // Curăță URL-ul de parametrii sensibili
  window.history.replaceState({}, document.title, window.location.pathname);
+
+ // Update navbar/profile link
+ checkLoginStatusAndToggleNavButtons();
  } else if (localStorage.getItem('isLoggedIn') === 'true') {
- console.log("Utilizator deja logat, verificăm sesiunea existentă.");
+ console.log("User already logged in, checking existing session.");
  } else {
- console.log("Niciun token sau informații utilizator în URL pentru Google Login. Continuăm cu inițializarea normală a paginii.");
+ console.log("No token or user information in the URL for Google Login. We continue with normal page initialization.");
  }
 
  initHomePage();
