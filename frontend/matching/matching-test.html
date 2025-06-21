@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n="title">Matching Test</title>
+    <link rel="preload" href="../global/global.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="../global/pet-cards.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="preload" href="matching-test.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript>
+      <link rel="stylesheet" href="../global/global.min.css" />
+      <link rel="stylesheet" href="../global/pet-cards.min.css" />
+      <link rel="stylesheet" href="matching-test.css" />
+    </noscript>
+  </head>
+  <body>
+    <div id="global-navbar">
+      <div class="navbar-skeleton">
+        <div class="skeleton-logo"></div>
+        <div class="skeleton-nav">
+          <div class="skeleton-nav-item"></div>
+          <div class="skeleton-nav-item"></div>
+          <div class="skeleton-nav-item"></div>
+        </div>
+        <div class="skeleton-auth">
+          <div class="skeleton-auth-btn"></div>
+          <div class="skeleton-auth-btn"></div>
+        </div>
+      </div>
+    </div>
+    <div id="mobile-overlay" class="mobile-overlay"></div>
+    <main id="content-container">
+      <div class="matching-container">
+        <h1 data-i18n="title">Matching Test</h1>
+        <form id="matching-test-form">
+          <!-- Q1 -->
+          <div class="question">
+            <label data-i18n="q1">How active are you in your daily life?</label>
+            <div class="answers">
+              <label><input type="radio" name="q1" data-tags="Energetic,Loves Fetch,Playful"> <span data-i18n="q1a1">Very active, I go for walks, runs, etc.</span></label>
+              <label><input type="radio" name="q1" data-tags="Playful,Calm"> <span data-i18n="q1a2">Moderately active, occasional walks.</span></label>
+              <label><input type="radio" name="q1" data-tags="Calm,Shy"> <span data-i18n="q1a3">Rather sedentary, I like peace and quiet.</span></label>
+            </div>
+          </div>
+          <!-- Q2 -->
+          <div class="question">
+            <label data-i18n="q2">Do you live with small children?</label>
+            <div class="answers">
+              <label><input type="radio" name="q2" data-tags="Good with Kids,Playful,Friendly"> <span data-i18n="q2a1">Yes</span></label>
+              <label><input type="radio" name="q2" data-tags=""> <span data-i18n="q2a2">No</span></label>
+            </div>
+          </div>
+          <!-- Q3 -->
+          <div class="question">
+            <label data-i18n="q3">Do you have other pets?</label>
+            <div class="answers">
+              <label><input type="radio" name="q3" data-tags="Good with Cats"> <span data-i18n="q3a1">Yes, I have cats.</span></label>
+              <label><input type="radio" name="q3" data-tags="Good with Dogs"> <span data-i18n="q3a2">Yes, I have dogs.</span></label>
+              <label><input type="radio" name="q3" data-tags=""> <span data-i18n="q3a3">No</span></label>
+            </div>
+          </div>
+          <!-- Q4 -->
+          <div class="question">
+            <label data-i18n="q4">How much time do you spend at home on a typical day?</label>
+            <div class="answers">
+              <label><input type="radio" name="q4" data-tags="Special Needs,Needs Medication,Senior"> <span data-i18n="q4a1">Most of the time at home</span></label>
+              <label><input type="radio" name="q4" data-tags="House Trained,Calm,Independent"> <span data-i18n="q4a2">I work from the office 8+ hours/day</span></label>
+            </div>
+          </div>
+          <!-- Q5 -->
+          <div class="question">
+            <label data-i18n="q5">Do you have previous experience with pets?</label>
+            <div class="answers">
+              <label><input type="radio" name="q5" data-tags="Special Needs,Needs Medication"> <span data-i18n="q5a1">Yes, I have had pets before.</span></label>
+              <label><input type="radio" name="q5" data-tags="Friendly,Calm,House Trained"> <span data-i18n="q5a2">No, this will be my first.</span></label>
+            </div>
+          </div>
+          <!-- Q6 -->
+          <div class="question">
+            <label data-i18n="q6">What size do you prefer for a pet?</label>
+            <div class="answers">
+              <label><input type="radio" name="q6" data-tags="Small Size"> <span data-i18n="q6a1">Small (5–10 kg)</span></label>
+              <label><input type="radio" name="q6" data-tags="Medium Size"> <span data-i18n="q6a2">Medium (10–20 kg)</span></label>
+              <label><input type="radio" name="q6" data-tags="Large Size"> <span data-i18n="q6a3">Large (20+ kg)</span></label>
+            </div>
+          </div>
+          <!-- Q7 -->
+          <div class="question">
+            <label data-i18n="q7">Do you have behavioral preferences? (Select all that apply)</label>
+            <div class="answers">
+              <label><input type="checkbox" name="q7" data-tags="Playful,Loves Fetch"> <span data-i18n="q7a1">Playful</span></label>
+              <label><input type="checkbox" name="q7" data-tags="Calm"> <span data-i18n="q7a2">Calm</span></label>
+              <label><input type="checkbox" name="q7" data-tags="Friendly"> <span data-i18n="q7a3">Affectionate</span></label>
+              <label><input type="checkbox" name="q7" data-tags="Senior,Calm"> <span data-i18n="q7a4">Not very active</span></label>
+              <label><input type="checkbox" name="q7" data-tags="Shy,Calm"> <span data-i18n="q7a5">Not too noisy or shy</span></label>
+            </div>
+          </div>
+          <!-- Q8 -->
+          <div class="question">
+            <label data-i18n="q8">Could you care for a pet with special needs (medication, mobility issues, etc.)?</label>
+            <div class="answers">
+              <label><input type="radio" name="q8" data-tags="Special Needs,Needs Medication"> <span data-i18n="q8a1">Yes, I am willing to get involved.</span></label>
+              <label><input type="radio" name="q8" data-tags=""> <span data-i18n="q8a2">I prefer a pet with minimal needs.</span></label>
+            </div>
+          </div>
+          <!-- Q9 -->
+          <div class="question">
+            <label data-i18n="q9">Do you live in a house or apartment?</label>
+            <div class="answers">
+              <label><input type="radio" name="q9" data-tags="Energetic,Large Size"> <span data-i18n="q9a1">House with yard</span></label>
+              <label><input type="radio" name="q9" data-tags="Small Size,Calm,House Trained"> <span data-i18n="q9a2">Apartment, small flat</span></label>
+            </div>
+          </div>
+          <button type="submit" class="submit-btn" data-i18n="submit">Submit</button>
+        </form>
+        <div id="matching-message" class="matching-message"></div>
+      </div>
+    </main>
+    <div id="global-footer"></div>
+    <script>
+      window.APP_CONFIG = window.APP_CONFIG || {};
+    </script>
+    <script src="../bundles/critical.min.js" defer></script>
+    <script src="../bundles/utils.min.js" defer></script>
+    <script type="module" src="../global/global.min.js"></script>
+    <script type="module" src="../languages/language.min.js"></script>
+    <script src="matching-test.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.languageManager) {
+          window.languageManager.init({
+            defaultLang: 'en',
+            supportedLangs: ['en', 'ro'],
+            resourcePath: '../matching/',
+            detectFromStorage: true
+          });
+        }
+        if (window.setupMobileMenu) window.setupMobileMenu();
+        if (window.initializePageLanguage) window.initializePageLanguage();
+      });
+    </script>
+  </body>
+</html>
