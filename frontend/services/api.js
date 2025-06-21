@@ -71,7 +71,8 @@ class ApiService {
     const url = this._buildUrl(endpoint, queryParams);
     return this._executeRequest(url, { 
       ...options, 
-      method: 'GET' 
+      method: 'GET',
+      headers: { ...this.defaultHeaders, ...options.headers }
     });
   }
 
