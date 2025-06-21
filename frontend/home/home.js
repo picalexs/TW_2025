@@ -287,23 +287,26 @@ async function fetchAndRenderUsers() {
     console.error("Featured users section not found in HTML");
     return;
   }
-  
+
   // Keep trying to load users without timeout
   const loadUsersWithRetry = async () => {
     try {
       const userService = new UserService({ debug: true });
-      const allUsers = await userService.getAllUsersWithAdoptions();
-      
+      const allUsersResponse = await userService.getAllUsersWithAdoptions();
+      // Use .users property if present, otherwise empty array
+      const allUsers = Array.isArray(allUsersResponse)
+        ? allUsersResponse
+        : (Array.isArray(allUsersResponse?.users) ? allUsersResponse.users : []);
+
       const usersWithAdoptions = allUsers.filter(user => 
         user.adoption_count && user.adoption_count > 0
       );
-      
+
       if (usersWithAdoptions.length > 0) {
         const shuffledUsers = [...usersWithAdoptions].sort(() => Math.random() - 0.5);
         
         const maxUsersPerRow = 4;
         const availableUsers = shuffledUsers.length;
-        
         let usersToShow;
         if (availableUsers >= maxUsersPerRow * 2) {
           usersToShow = maxUsersPerRow * 2;
@@ -312,12 +315,10 @@ async function fetchAndRenderUsers() {
         } else {
           usersToShow = availableUsers;
         }
-        
         const featuredUsers = shuffledUsers.slice(0, usersToShow);
         const usersGrid = usersSection.querySelector('.users-grid');
         if (usersGrid) {
           usersGrid.innerHTML = '';
-          
           featuredUsers.forEach(user => {
             const userCard = window.CardRenderer.createUserCard(user, {
               format: 'element',
@@ -325,15 +326,11 @@ async function fetchAndRenderUsers() {
               showStats: true,
               clickAction: 'navigate'
             });
-            
-            // Mark as loaded card for smooth animation
             userCard.classList.add('loaded');
             usersGrid.appendChild(userCard);
           });
         }
-        
         addEventListeners();
-        
         if (window.languageManager) {
           window.languageManager.updateContent();
         }
@@ -346,29 +343,46 @@ async function fetchAndRenderUsers() {
       setTimeout(() => loadUsersWithRetry(), 5000);
     }
   };
-    loadUsersWithRetry();
-}
-
-function addEventListeners() {
-  document.querySelectorAll('.view-user-btn').forEach(button => {
-    button.addEventListener('click', (event) => {
-      event.preventDefault();
-      const userId = event.currentTarget.getAttribute('data-user-id');
-      console.log(`Viewing user details for user ID: ${userId}`);
-      window.location.href = `/frontend/profile/profile.html?id=${userId}`;
-    });
-  });
+  loadUsersWithRetry();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  console.log("DOM loaded - starting home page initialization");
+ console.log("DOM loaded - starting home page initialization");
   
-  if (document.body.classList.contains('home-initialized')) {
-    console.log('Home page already initialized');
-    return;
-  }
-  
-  document.body.classList.add('home-initialized');
-  document.body.classList.add('home_page');
-  initHomePage();
+ if (document.body.classList.contains('home-initialized')) {
+   console.log('Home page already initialized');
+ return; }
+
+ document.body.classList.add('home-initialized');
+ document.body.classList.add('home_page');
+
+ const urlParams = new URLSearchParams(window.location.search);
+ const token = urlParams.get('token');
+ const userId = urlParams.get('id');
+ const username = urlParams.get('username');
+ const email = urlParams.get('email'); 
+ const role = urlParams.get('role'); 
+
+ if (token) {
+ localStorage.setItem('authToken', token);
+  localStorage.setItem('userId', userId);
+ localStorage.setItem('username', username);
+ localStorage.setItem('userEmail', email);
+ localStorage.setItem('userRole', role); 
+ localStorage.setItem('isLoggedIn', 'true'); 
+
+ console.log('Login Google reușit: Token-ul și informațiile utilizatorului au fost salvate în localStorage.');
+ console.log('Token:', token.substring(0, 30) + '...'); 
+ console.log('Utilizator:', { userId, username, email, role });
+
+ // Curăță URL-ul de parametrii sensibili
+ window.history.replaceState({}, document.title, window.location.pathname);
+ } else if (localStorage.getItem('isLoggedIn') === 'true') {
+ console.log("Utilizator deja logat, verificăm sesiunea existentă.");
+ } else {
+ console.log("Niciun token sau informații utilizator în URL pentru Google Login. Continuăm cu inițializarea normală a paginii.");
+ }
+
+ initHomePage();
 });
+

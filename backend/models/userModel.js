@@ -142,6 +142,32 @@ class UserModel extends AbstractModel {
       throw error;
     }
   }
+
+  async findByEmail(email) {
+    let connection;
+    try {
+      connection = await db.getConnection();
+      const user = await this.dto.findByEmail(connection, email);
+      return user;
+    } finally {
+      if (connection) {
+        await connection.close();
+      }
+    }
+  }
+
+  async createUserFromGoogle(userData) {
+    let connection;
+    try {
+      connection = await db.getConnection();
+      const result = await this.dto.createGoogleUser(connection, { ...userData, auth_provider: 'google' });
+      return result;
+    } finally {
+      if (connection) {
+        await connection.close();
+      }
+    }
+  }
 }
 
 module.exports = new UserModel();
