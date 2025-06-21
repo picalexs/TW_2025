@@ -46,6 +46,7 @@ CREATE TABLE users (
   role VARCHAR2(20) DEFAULT 'user',
   profile_picture VARCHAR2(255) DEFAULT '/images/profile/default-user-profile.jpg',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  auth_provider VARCHAR2(50) DEFAULT NULL,
   CONSTRAINT fk_users_address FOREIGN KEY (address_id) REFERENCES address(id),
   CONSTRAINT chk_users_role CHECK (role IN ('user', 'admin', 'shelter'))
 );

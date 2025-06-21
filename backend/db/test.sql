@@ -11,3 +11,4 @@ COMMIT;
 SELECT constraint_name, constraint_type, search_condition
 FROM user_constraints
 WHERE table_name = 'USERS';
+

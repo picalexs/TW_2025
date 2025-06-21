@@ -253,5 +253,67 @@ class userDTO extends abstractDTO {
       });
     }
   }
+
+  async findByEmail(connection, email) {
+        const sql = `SELECT ID, USERNAME, EMAIL, FIRST_NAME, LAST_NAME, ROLE, IS_VERIFIED FROM users WHERE email = :email`;
+        const binds = { email };
+        const options = { outFormat: oracledb.OUT_FORMAT_OBJECT };
+        const result = await connection.execute(sql, binds, options);
+        if (result.rows.length > 0) {
+            return this.mapToEntity(result.rows[0]);
+        }
+        return null;
+    }
+
+  async findByEmail(connection, email) {
+        const sql = `SELECT ID, USERNAME, EMAIL, FIRST_NAME, LAST_NAME, ROLE, IS_VERIFIED FROM users WHERE email = :email`;
+        const binds = { email };
+        const options = { outFormat: oracledb.OUT_FORMAT_OBJECT };
+        const result = await connection.execute(sql, binds, options);
+        if (result.rows.length > 0) {
+            return this.mapToEntity(result.rows[0]);
+        }
+        return null;
+    }
+
+    async createGoogleUser(connection, userData) {
+        const { username, password_hash, email, email_token, token_expires, auth_provider, google_id, first_name, last_name, profile_picture } = userData;
+
+        let sql = `INSERT INTO users (username, email, is_verified, first_name, last_name, profile_picture, role`;
+        let binds = { username, email, first_name, last_name, profile_picture, role: 'user' }; 
+
+        let finalPasswordHash = password_hash;
+    if (!finalPasswordHash) {
+        finalPasswordHash = await bcrypt.hash('', 10);
+    }
+
+        if (auth_provider) {
+            sql += `, auth_provider`;
+            binds.auth_provider = auth_provider;
+        }
+       
+        sql += `, password_hash`;
+    binds.password_hash = finalPasswordHash;
+
+        if (email_token) {
+            sql += `, email_token, token_expires`;
+            binds.email_token = email_token;
+            binds.token_expires = token_expires;
+        }
+
+        sql += `) VALUES (:username, :email, 1, :first_name, :last_name, :profile_picture, :role`;
+        if (auth_provider) sql += `, :auth_provider`;
+        sql += `, :password_hash`;
+        if (email_token) sql += `, :email_token, :token_expires`;
+        sql += `)`;
+
+        const options = { autoCommit: true, outBinds: { id_out: { type: oracledb.NUMBER, dir: oracledb.BIND_OUT } } };
+        const result = await connection.execute(sql, binds, options);
+
+        const newUserId = result.outBinds.id_out[0];
+        const newUser = await this.findByEmail(connection, email);
+        return newUser;
+    }
+
 }
 module.exports = new userDTO();

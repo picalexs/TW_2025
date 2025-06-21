@@ -128,7 +128,9 @@ const server = http.createServer(async (req, res) => {
   '/api/pets',                 
   '/api/users/with-adoptions', 
   '/api/testimonials',        
-  '/api/testimonials/random'   
+  '/api/testimonials/random',
+  '/api/pets/random',
+  '/api/auth/google/callback'
 ];
 
     const isPublicRoute = publicRoutes.some(route => req.url.startsWith(route));

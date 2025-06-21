@@ -1,6 +1,7 @@
 const userController = require("../controllers/userController");
 const url = require("url");
 const { sendResponse } = require("../utils/helpers");
+const googleAuthController = require('../controllers/googleAuthController');
 
 const { verifyToken, checkRole } = require('../middleware/authMiddleware'); 
 
@@ -48,19 +49,30 @@ async function handleUserRoutes(req, res) {
         return true;
     }
 
+    // if (trimmedPath === "api/users" || trimmedPath === "api/users/") {
+    //     if (method === "get") {
+    //         console.log('[UserRoutes] Handling /api/users GET request (Protected - requires admin)');
+    //         await new Promise((resolve, reject) => {
+    //             verifyToken(req, res, async (err) => { 
+    //                 if (err) return reject(err);
+    //                 checkRole('admin')(req, res, async (roleErr) => {
+    //                     if (roleErr) return reject(roleErr);
+    //                     await userController.getAllUsers(req, res);
+    //                     resolve();
+    //                 });
+    //             });
+    //         });
+    //         return true;
+    //     } else {
+    //         sendResponse(res, 405, { error: "Method not allowed for /api/users." });
+    //         return true;
+    //     }
+    // }
+
     if (trimmedPath === "api/users" || trimmedPath === "api/users/") {
         if (method === "get") {
-            console.log('[UserRoutes] Handling /api/users GET request (Protected - requires admin)');
-            await new Promise((resolve, reject) => {
-                verifyToken(req, res, async (err) => { // Aceasta rămâne dacă vrei ca /api/users (toți) să necesite token
-                    if (err) return reject(err);
-                    checkRole('admin')(req, res, async (roleErr) => {
-                        if (roleErr) return reject(roleErr);
-                        await userController.getAllUsers(req, res);
-                        resolve();
-                    });
-                });
-            });
+            console.log('[UserRoutes] Handling /api/users GET request (Public)');
+            await userController.getAllUsers(req, res); 
             return true;
         } else {
             sendResponse(res, 405, { error: "Method not allowed for /api/users." });
@@ -141,6 +153,12 @@ async function handleUserRoutes(req, res) {
             sendResponse(res, 405, { error: "Method not allowed for user ID routes" });
             return true;
         }
+    }
+
+    if (trimmedPath === "api/auth/google/callback" && method === "get") {
+        console.log('[UserRoutes] Handling /api/auth/google/callback GET request');
+        await googleAuthController.handleGoogleCallback(req, res);
+        return true;
     }
 
     console.log(`[UserRoutes] No user route matched: ${trimmedPath}`);

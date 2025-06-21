@@ -294,9 +294,9 @@ async function fetchAndRenderUsers() {
       const userService = new UserService({ debug: true });
       const allUsers = await userService.getAllUsersWithAdoptions();
       
-      // const usersWithAdoptions = allUsers.filter(user => 
-      //   user.adoption_count && user.adoption_count > 0
-      // );
+      const usersWithAdoptions = allUsers.filter(user => 
+        user.adoption_count && user.adoption_count > 0
+      );
       
       if (usersWithAdoptions.length > 0) {
         const shuffledUsers = [...usersWithAdoptions].sort(() => Math.random() - 0.5);
@@ -371,4 +371,30 @@ document.addEventListener('DOMContentLoaded', () => {
   document.body.classList.add('home-initialized');
   document.body.classList.add('home_page');
   initHomePage();
+
+
+  const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    const userId = urlParams.get('id');
+    const username = urlParams.get('username');
+    const email = urlParams.get('email');
+    const role = urlParams.get('role'); 
+
+    if (token) {
+        localStorage.setItem('userToken', token);
+        localStorage.setItem('userId', userId);
+        localStorage.setItem('username', username);
+        localStorage.setItem('userEmail', email);
+        localStorage.setItem('userRole', role); 
+        localStorage.setItem('isLoggedIn', 'true'); 
+        console.log('Login Google reușit: Token-ul și informațiile utilizatorului au fost salvate în localStorage.');
+        console.log('Token:', token.substring(0, 30) + '...'); 
+        console.log('Utilizator:', { userId, username, email, role });
+
+        window.history.replaceState({}, document.title, window.location.pathname);
+    } else if (localStorage.getItem('isLoggedIn') === 'true') {
+        console.log("Utilizator deja logat, verificăm sesiunea existentă.");
+    } else {
+        console.log("Niciun token sau informații utilizator în URL pentru Google Login. Continuăm cu inițializarea normală a paginii.");
+    }
 });
