@@ -1,7 +1,7 @@
 const abstractDTO = require("./abstractDTO");
 const bcrypt = require("bcrypt");
 const oracledb = require("oracledb");
-const { executeQuery, getConnection, closeConnection } = require("../db/dbConnection");
+const { executeQuery } = require("../db/dbConnection");
 const ImagePathHandler = require("../utils/imagePathHandler");
 
 class userDTO extends abstractDTO {

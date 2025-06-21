@@ -1,12 +1,14 @@
 const abstractDTO = require("./abstractDTO");
 const oracledb = require("oracledb");
 const path = require("path");
-const ImagePathHandler = require("../utils/imagePathHandler");
+const { getConnection} = require("../db/dbConnection");
 
 class petDTO extends abstractDTO {
   constructor() {
     super("animals");
-  }  mapToEntity(dbRow) {
+  }
+  
+  mapToEntity(dbRow) {
     return {
       id: dbRow.ID,
       name: dbRow.NAME,
@@ -749,7 +751,7 @@ class petDTO extends abstractDTO {
   }
 
   async clearPetTags(petId) {
-    const connection = await this.getConnection();
+    const connection = await getConnection();
     try {
       await connection.execute(
         `DELETE FROM animal_tags WHERE animal_id = :petId`,
@@ -765,7 +767,7 @@ class petDTO extends abstractDTO {
   }
 
   async clearMedicalHistory(petId) {
-    const connection = await this.getConnection();
+    const connection = await getConnection();
     try {
       await connection.execute(
         `DELETE FROM medical_history WHERE animal_id = :petId`,
@@ -781,7 +783,7 @@ class petDTO extends abstractDTO {
   }
 
   async clearCareResources(petId) {
-    const connection = await this.getConnection();
+    const connection = await getConnection();
     try {
       await connection.execute(
         `DELETE FROM care_resources WHERE animal_id = :petId`,
@@ -797,7 +799,7 @@ class petDTO extends abstractDTO {
   }
 
   async clearCareSchedule(petId) {
-    const connection = await this.getConnection();
+    const connection = await getConnection();
     try {
       await connection.execute(
         `DELETE FROM care_schedule WHERE animal_id = :petId`,
@@ -809,6 +811,152 @@ class petDTO extends abstractDTO {
       throw error;
     } finally {
       await connection.close();
+    }
+  }
+
+  async clearCareScheduleForPet(petId) {
+    const connection = await getConnection();
+    try {
+      await connection.execute(
+        `DELETE FROM care_schedule WHERE animal_id = :petId`,
+        [petId],
+        { autoCommit: true }
+      );
+    } catch (error) {
+      console.error('Error clearing care schedule:', error);
+      throw error;
+    } finally {
+      await connection.close();
+    }
+  }
+
+  async update(id, entityData) {
+    try {
+      if (!id) {
+        throw Object.assign(new Error(`Pet ID is required for update`), {
+          code: "VALIDATION_ERROR",
+          status: 400
+        });
+      }
+      
+      // Check if pet exists
+      const checkExists = await this.getById(id);
+      if (!checkExists) {
+        throw Object.assign(new Error(`Pet with id ${id} not found`), {
+          code: "NOT_FOUND",
+          status: 404
+        });
+      }
+      
+      const updates = [];
+      const binds = { id };
+      let addressId = null;
+
+      // Handle address fields separately
+      const addressFields = ['address', 'city', 'country', 'postalCode'];
+      const hasAddressFields = addressFields.some(field => entityData[field] !== undefined);
+      
+      if (hasAddressFields) {
+        // Create or update address
+        const addressData = {
+          street: entityData.address,
+          city: entityData.city,
+          country: entityData.country,
+          postalCode: entityData.postalCode
+        };
+        
+        if (addressData.city && addressData.country) {
+          addressId = await this.createAddress(addressData);
+          updates.push(`address_id = :addressId`);
+          binds.addressId = addressId;
+        }
+      }
+
+      // Handle other pet fields, mapping to correct column names
+      const fieldMapping = {
+        name: 'name',
+        species: 'species',
+        breed: 'breed',
+        age: 'age',
+        gender: 'gender',
+        sizeCategory: 'size_category',
+        weightKg: 'weight_kg',
+        color: 'color',
+        healthStatus: 'health_status',
+        description: 'description',
+        adoptionStatus: 'adoption_status',
+        adoptionFee: 'adoption_fee',
+        relationWithOthers: 'relation_with_others',
+        shelterId: 'shelter_id'
+      };
+
+      Object.entries(entityData).forEach(([key, value]) => {
+        if (value !== undefined && key !== 'id' && !addressFields.includes(key)) {
+          const columnName = fieldMapping[key] || key;
+          updates.push(`${columnName} = :${key}`);
+          binds[key] = value;
+        }
+      });
+
+      if (updates.length === 0) {
+        throw Object.assign(new Error("No fields to update"), {
+          code: "VALIDATION_ERROR",
+          status: 400
+        });
+      }
+
+      const query = `UPDATE animals SET ${updates.join(", ")} WHERE id = :id`;
+
+      await this.executeCustomQuery(query, binds, { autoCommit: true });
+      return this.getById(id);
+    } catch (error) {
+      if (error.code && error.status) {
+        throw error;
+      }
+      
+      if (error.errorNum === 1407) {
+        throw Object.assign(new Error("Cannot update column to NULL"), {
+          code: "NULL_CONSTRAINT",
+          status: 400,
+          originalError: error
+        });
+      } else if (error.errorNum === 12899) {
+        throw Object.assign(new Error("Value too large for one or more fields"), {
+          code: "VALUE_TOO_LARGE",
+          status: 400,
+          originalError: error
+        });
+      } else if (error.errorNum === 1) {
+        throw Object.assign(new Error("Unique constraint violated"), {
+          code: "UNIQUE_CONSTRAINT",
+          status: 409,
+          originalError: error
+        });
+      } else if (error.errorNum === 2290) {
+        throw Object.assign(new Error("Check constraint violated"), {
+          code: "CHECK_CONSTRAINT",
+          status: 400,
+          originalError: error
+        });
+      } else if (error.errorNum === 2291) {
+        throw Object.assign(new Error("Foreign key constraint violated"), {
+          code: "FOREIGN_KEY_CONSTRAINT",
+          status: 400,
+          originalError: error
+        });
+      } else if (error.errorNum === 904) {
+        throw Object.assign(new Error("Invalid column name in update query"), {
+          code: "INVALID_IDENTIFIER",
+          status: 500,
+          originalError: error
+        });
+      }
+      
+      throw Object.assign(new Error(`Failed to update pet: ${error.message}`), {
+        code: error.code || "DB_ERROR",
+        status: error.status || 500,
+        originalError: error
+      });
     }
   }
 }

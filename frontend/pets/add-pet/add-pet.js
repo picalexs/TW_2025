@@ -10,6 +10,7 @@ class AddPetPage {
     this.nextTagId = 16;
     this.touchedFields = new Set();
     this.mediaFiles = [];
+    this.existingMediaPaths = [];
     this.profileImageIndex = 0;
     this.mediaObjectURLs = [];
     this.isEditMode = false;
@@ -36,9 +37,11 @@ class AddPetPage {
         await this.loadPetDataForEdit();
         this.initMap();
       } else {
-        // For new pets, initialize map with default location
         this.initMap();
       }
+      
+      window.setAsProfile = (index) => this.setAsProfile(index);
+      
     } catch (error) {
       console.error('Error initializing add pet page:', error);
     }
@@ -52,10 +55,9 @@ class AddPetPage {
       console.log('Edit mode detected for pet ID:', this.editPetId);
       this.updateUIForEditMode();
     }
-  }
+  }  
 
   updateUIForEditMode() {
-    // Update page title and heading
     const pageTitle = document.querySelector('title');
     if (pageTitle) {
       pageTitle.textContent = 'Edit Pet';
@@ -71,14 +73,18 @@ class AddPetPage {
       description.textContent = 'Update the pet information below.';
     }
 
-    const submitBtn = document.getElementById('submit-btn');
-    if (submitBtn) {
-      const btnText = submitBtn.querySelector('.btn-text');
+    const editSubmitBtn = document.getElementById('submit-btn');
+    if (editSubmitBtn) {
+      const btnText = editSubmitBtn.querySelector('.btn-text');
       if (btnText) {
         btnText.textContent = 'Update Pet';
+      } else {
+        editSubmitBtn.textContent = 'Update Pet';
       }
     }
-  }  async loadPetDataForEdit() {
+  }  
+  
+  async loadPetDataForEdit() {
     try {
       console.log('Loading pet data for edit, ID:', this.editPetId);
       const pet = await this.petService.getPetById(this.editPetId);
@@ -89,10 +95,10 @@ class AddPetPage {
     } catch (error) {
       console.error('Error loading pet data for edit:', error);
       alert('Error loading pet data: ' + error.message);
-      // Redirect back to pets page on error
       window.location.href = '../pets-page/pets-page.html';
     }
   }
+
   async populateFormWithPetData(pet) {
     // Basic information
     this.setFieldValue('pet-name', pet.name);
@@ -122,7 +128,7 @@ class AddPetPage {
     // Adoption information
     this.setFieldValue('adoption-status', pet.adoptionStatus);
     this.setFieldValue('adoption-fee', pet.adoptionFee);
-      // Tags
+    // Tags
     if (pet.tags && Array.isArray(pet.tags)) {
       if (this.availableTags.length === 0) {
         await this.loadTags();
@@ -133,67 +139,103 @@ class AddPetPage {
         const tagId = typeof tag === 'object' ? tag.id : tag;
         this.selectedTags.add(parseInt(tagId));
       });
-      this.renderTags(); // Re-render to show selected tags
+      this.renderTags();
     }
     
-    // Media files - display existing media
+    // Media files
     if (pet.media && Array.isArray(pet.media)) {
       this.displayExistingMedia(pet.media);
     }
-    
+      
     // Medical history, care resources, and care schedule
     this.populateMedicalData(pet);
+    
+    this.updateUIForEditMode();
   }
 
   setFieldValue(fieldId, value) {
     const field = document.getElementById(fieldId);
     if (field && value !== null && value !== undefined) {
       if (field.tagName === 'SELECT') {
-        // Use the improved dropdown value setting method
         this.setDropdownValue(field, value);
       } else {
-        field.value = value;        field.dispatchEvent(new Event('change', { bubbles: true }));
+        field.value = value;
+        field.dispatchEvent(new Event('change', { bubbles: true }));
       }
       
       console.log(`✓ Set field "${fieldId}" to value "${value}"`);
     }
-  }
-
+  }    
+  
   displayExistingMedia(mediaArray) {
     const mediaPreview = document.getElementById('media-preview');
-    if (!mediaPreview || !mediaArray.length) return;
+    if (!mediaPreview) {
+      console.warn('Media preview container not found');
+      return;
+    }
+    
+    if (!mediaArray || !Array.isArray(mediaArray) || mediaArray.length === 0) {
+      console.log('No media to display');
+      mediaPreview.innerHTML = '';
+      return;
+    }
 
+    console.log('Displaying existing media:', mediaArray);
     mediaPreview.innerHTML = '';
     
+    this.existingMediaPaths = mediaArray;
+    this.profileImageIndex = 0;
+    
+    const uploadButton = document.querySelector('.file-upload-button');
+    if (uploadButton) {
+      const buttonText = uploadButton.querySelector('span:last-child');
+      if (buttonText) {
+        buttonText.textContent = `${mediaArray.length} existing file${mediaArray.length !== 1 ? 's' : ''}`;
+        uploadButton.classList.remove('empty');
+      }
+    }
+    
     mediaArray.forEach((mediaItem, index) => {
-      const mediaElement = document.createElement('div');
-      mediaElement.className = 'media-preview-item';
+      const mediaWrapper = document.createElement('div');
+      mediaWrapper.className = 'media-thumb-wrapper' + (index === 0 ? ' selected' : '');
       
-      if (index === 0) {
-        mediaElement.classList.add('profile-image');
+      const mediaPath = mediaItem.path || mediaItem.url || mediaItem.src;
+      if (!mediaPath) {
+        console.warn('Media item has no path:', mediaItem);
+        return;
       }
       
+      let mediaElem;
       if (mediaItem.type === 'image') {
-        mediaElement.innerHTML = `
-          <img src="${mediaItem.path}" alt="Pet media" />
-          <div class="media-controls">
-            <button type="button" class="set-profile-btn ${index === 0 ? 'active' : ''}" 
-                    onclick="setAsProfile(${index})">
-              ${index === 0 ? 'Profile' : 'Set as Profile'}
-            </button>
-          </div>
-        `;
+        mediaElem = document.createElement('img');
+        mediaElem.src = mediaPath;
+        mediaElem.className = 'media-thumb';
+        mediaElem.alt = 'Pet media';
       } else if (mediaItem.type === 'video') {
-        mediaElement.innerHTML = `
-          <video src="${mediaItem.path}" controls></video>
-          <div class="media-controls">
-            <span>Video</span>
-          </div>
-        `;      
+        mediaElem = document.createElement('video');
+        mediaElem.src = mediaPath;
+        mediaElem.className = 'media-thumb';
+        mediaElem.controls = true;
       }
       
-      mediaPreview.appendChild(mediaElement);
+      if (mediaElem) {
+        mediaWrapper.appendChild(mediaElem);
+        
+        mediaWrapper.addEventListener('click', () => {
+          this.profileImageIndex = index;
+          const allWrappers = mediaPreview.querySelectorAll('.media-thumb-wrapper');
+          allWrappers.forEach((wrapper, idx) => {
+            wrapper.classList.toggle('selected', idx === index);
+          });
+          console.log(`Selected existing media ${index + 1} as profile image`);
+        });
+        
+        mediaPreview.appendChild(mediaWrapper);
+        console.log(`✓ Added existing media item ${index + 1}: ${mediaPath}`);
+      }
     });
+    
+    console.log(`✓ Displayed ${mediaArray.length} existing media items`);
   }
 
   populateMedicalData(pet) {
@@ -201,7 +243,6 @@ class AddPetPage {
     
     // Populate medical history entries
     if (pet.medicalHistory && Array.isArray(pet.medicalHistory)) {
-      // Filter out empty entries
       const validMedicalHistory = pet.medicalHistory.filter(entry => 
         entry && (entry.description || entry.date || entry.record_date)
       );
@@ -226,17 +267,15 @@ class AddPetPage {
               console.log(`✓ Set medical history date: "${dateField.value}"`);
             }
           } else if (dateField && entry.record_date) {
-            // Handle alternative date field name
             const date = new Date(entry.record_date);
             if (!isNaN(date.getTime())) {
               dateField.value = date.toISOString().split('T')[0];
               console.log(`✓ Set medical history record_date: "${dateField.value}"`);
+            } else if (dateField && !entry.date && !entry.record_date) {
+              const today = new Date().toISOString().split('T')[0];
+              dateField.value = today;
+              console.log(`✓ Set fallback date to today: "${today}"`);
             }
-          } else if (dateField && !entry.date && !entry.record_date) {
-            // Set today's date as fallback for entries without dates
-            const today = new Date().toISOString().split('T')[0];
-            dateField.value = today;
-            console.log(`✓ Set fallback date to today: "${today}"`);
           }
         }
       });
@@ -251,61 +290,81 @@ class AddPetPage {
       validCareResources.forEach((resource, index) => {
         console.log(`Populating care resource entry ${index + 1}:`, resource);
         this.addCareResourceEntry();
-        const lastEntry = document.querySelector('#care-resources-list .care-resources-entry:last-child');
-        if (lastEntry) {
-          const typeField = lastEntry.querySelector('.care-resource-type');
-          const titleField = lastEntry.querySelector('.care-resource-title');
-          const contentField = lastEntry.querySelector('.care-resource-content');
+        
+        setTimeout(() => {
+          const careResourceEntries = document.querySelectorAll('#care-resources-list .care-resources-entry');
+          const lastEntry = careResourceEntries[careResourceEntries.length - 1];
+          
+          if (lastEntry) {
+            const typeField = lastEntry.querySelector('.care-resource-type');
+            const titleField = lastEntry.querySelector('.care-resource-title');
+            const contentField = lastEntry.querySelector('.care-resource-content');
+            
             if (typeField && (resource.type || resource.resource_type)) {
-            const resourceType = resource.type || resource.resource_type;
-            this.setDropdownValue(typeField, resourceType);
-            console.log(`✓ Set care resource type: "${resourceType}"`);
-          } else if (typeField) {
-            this.setDropdownValue(typeField, 'general');
-            console.log(`✓ Set care resource type to default "general"`);
+              const resourceType = resource.type || resource.resource_type;
+              this.setDropdownValue(typeField, resourceType);
+              console.log(`✓ Set care resource type: "${resourceType}"`);            } else if (typeField) {
+              // Ensure resource type always has a value, default to "general" if not specified
+              this.setDropdownValue(typeField, 'general');
+              console.log(`✓ Set care resource type to default "general"`);
+            }
+            if (titleField && resource.title) {
+              titleField.value = resource.title;
+              console.log(`✓ Set care resource title: "${resource.title}"`);
+            }
+            if (contentField && resource.content) {
+              contentField.value = resource.content;
+              console.log(`✓ Set care resource content: "${resource.content}"`);
+            }
+          } else {
+            console.warn(`Could not find care resource entry for index ${index}`);
           }
-          if (titleField && resource.title) {
-            titleField.value = resource.title;
-            console.log(`✓ Set care resource title: "${resource.title}"`);
-          }
-          if (contentField && resource.content) {
-            contentField.value = resource.content;
-            console.log(`✓ Set care resource content: "${resource.content}"`);
-          }
-        }
-      });
+        }, 50 * (index + 1));
+      });    
     }
     
-    // Populate care schedule
     if (pet.careSchedule && Array.isArray(pet.careSchedule)) {
       const validCareSchedule = pet.careSchedule.filter(schedule => 
         schedule && (schedule.activity || schedule.hour || schedule.frequency)
       );
       
+      console.log(`Found ${validCareSchedule.length} valid care schedule entries to populate`);
+      
       validCareSchedule.forEach((schedule, index) => {
         console.log(`Populating care schedule entry ${index + 1}:`, schedule);
         this.addCareScheduleEntry();
-        const lastEntry = document.querySelector('#care-schedule-list .care-schedule-entry:last-child');
-        if (lastEntry) {
-          const activityField = lastEntry.querySelector('.care-schedule-activity');
-          const hourField = lastEntry.querySelector('.care-schedule-hour');
-          const frequencyField = lastEntry.querySelector('.care-schedule-frequency');
+        
+        // Use a small delay to ensure DOM is updated and target the correct entry
+        setTimeout(() => {
+          const careScheduleEntries = document.querySelectorAll('#care-schedule-list .care-schedule-entry');
+          const targetEntry = careScheduleEntries[index]; // Target the entry at the current index, not the last one
           
-          if (activityField && schedule.activity) {
-            activityField.value = schedule.activity;
-            console.log(`✓ Set care schedule activity: "${schedule.activity}"`);
+          if (targetEntry) {
+            console.log(`Populating care schedule entry at index ${index}`, targetEntry);
+            
+            const activityField = targetEntry.querySelector('.care-schedule-activity');
+            const hourField = targetEntry.querySelector('.care-schedule-hour');
+            const frequencyField = targetEntry.querySelector('.care-schedule-frequency');
+            
+            if (activityField && schedule.activity) {
+              activityField.value = schedule.activity;
+              console.log(`✓ Set care schedule activity: "${schedule.activity}" at index ${index}`);
+            }
+            if (hourField && schedule.hour) {
+              hourField.value = schedule.hour;
+              console.log(`✓ Set care schedule hour: "${schedule.hour}" at index ${index}`);
+            }
+            if (frequencyField && schedule.frequency) {
+              this.setDropdownValue(frequencyField, schedule.frequency);
+              console.log(`✓ Set care schedule frequency: "${schedule.frequency}" at index ${index}`);
+            } else if (frequencyField) {
+              this.setDropdownValue(frequencyField, 'other');
+              console.log(`✓ Set care schedule frequency to default "other" at index ${index}`);
+            }
+          } else {
+            console.warn(`Could not find care schedule entry at index ${index}. Total entries: ${careScheduleEntries.length}`);
           }
-          if (hourField && schedule.hour) {
-            hourField.value = schedule.hour;
-            console.log(`✓ Set care schedule hour: "${schedule.hour}"`);
-          }          if (frequencyField && schedule.frequency) {
-            this.setDropdownValue(frequencyField, schedule.frequency);
-            console.log(`✓ Set care schedule frequency: "${schedule.frequency}"`);
-          } else if (frequencyField) {
-            this.setDropdownValue(frequencyField, 'other');
-            console.log(`✓ Set care schedule frequency to default "other"`);
-          }
-        }
+        }, 100 * (index + 1));
       });
     }
   }
@@ -514,7 +573,6 @@ class AddPetPage {
       }
       
       const submitFormData = new FormData();
-      
       Object.keys(petData).forEach(key => {
         if (key !== 'mediaFiles' && key !== 'medicalHistory' && key !== 'careResources' && key !== 'careSchedule') {
           if (petData[key] !== null && petData[key] !== undefined) {
@@ -573,12 +631,14 @@ class AddPetPage {
       description: formData.get('description'),
       relationWithOthers: formData.get('relationWithOthers'),
       adoptionStatus: 'available',
-      adoptionFee: formData.get('adoptionFee') ? parseFloat(formData.get('adoptionFee')) : null,      shelterId: this.tempUserId,
+      adoptionFee: formData.get('adoptionFee') ? parseFloat(formData.get('adoptionFee')) : null,
+      shelterId: this.tempUserId,
       tags: this.getSelectedTagsForSubmission(),
-      address: formData.get('address'),
-      city: formData.get('city'),
-      postalCode: formData.get('postalCode'),
-      country: formData.get('country'),
+      // Address fields as expected by backend
+      address: formData.get('address') || '',
+      city: formData.get('city') || '',
+      postalCode: formData.get('postalCode') || '',
+      country: formData.get('country') || '',
       mediaFiles: this.mediaFiles,
       profileImageIndex: this.profileImageIndex,
       medicalHistory: this.collectMedicalHistoryData(),
@@ -932,20 +992,33 @@ class AddPetPage {
       return;
     }
     
-    const loadingSpinner = submitBtn.querySelector('.loading-spinner');
-    const btnText = submitBtn.querySelector('.btn-text');
+    let loadingSpinner = submitBtn.querySelector('.loading-spinner');
+    let btnText = submitBtn.querySelector('.btn-text');
     
-    if (!loadingSpinner || !btnText) {
-      console.error('Button structure incomplete - missing spinner or text elements');
-      console.error('Submit button HTML:', submitBtn.outerHTML);
-      return;
+    // If elements don't exist, create them
+    if (!loadingSpinner) {
+      loadingSpinner = document.createElement('span');
+      loadingSpinner.className = 'loading-spinner';
+      loadingSpinner.style.display = 'none';
+      loadingSpinner.textContent = '⏳';
+      submitBtn.appendChild(loadingSpinner);
+    }
+      if (!btnText) {
+      // If .btn-text doesn't exist, wrap existing text content
+      const originalText = submitBtn.textContent.trim();
+      submitBtn.innerHTML = '';
+      btnText = document.createElement('span');
+      btnText.className = 'btn-text';
+      btnText.textContent = originalText || (this.isEditMode ? 'Update Pet' : 'Add Pet');
+      submitBtn.appendChild(btnText);
+      submitBtn.appendChild(loadingSpinner);
     }
 
     if (isLoading) {
       submitBtn.disabled = true;
       submitBtn.classList.add('loading');
-      loadingSpinner.style.display = 'block';
-      btnText.style.opacity = '0';
+      loadingSpinner.style.display = 'inline-block';
+      btnText.style.opacity = '0.5';
     } else {
       submitBtn.disabled = false;
       submitBtn.classList.remove('loading');
@@ -1039,7 +1112,7 @@ class AddPetPage {
       this.setTagModalLoading(false);
     }
   }
-  
+    
   setTagModalLoading(isLoading) {
     const submitBtn = document.getElementById('create-tag-btn');
     if (!submitBtn) {
@@ -1047,20 +1120,33 @@ class AddPetPage {
       return;
     }
     
-    const loadingSpinner = submitBtn.querySelector('.loading-spinner');
-    const btnText = submitBtn.querySelector('.btn-text');
+    let loadingSpinner = submitBtn.querySelector('.loading-spinner');
+    let btnText = submitBtn.querySelector('.btn-text');
     
-    if (!loadingSpinner || !btnText) {
-      console.error('Tag button structure incomplete - missing spinner or text elements');
-      console.error('Create tag button HTML:', submitBtn.outerHTML);
-      return;
+    // If elements don't exist, create them
+    if (!loadingSpinner) {
+      loadingSpinner = document.createElement('span');
+      loadingSpinner.className = 'loading-spinner';
+      loadingSpinner.style.display = 'none';
+      loadingSpinner.textContent = '⏳';
+      submitBtn.appendChild(loadingSpinner);
+    }
+      if (!btnText) {
+      // If .btn-text doesn't exist, wrap existing text content
+      const originalText = submitBtn.textContent.trim();
+      submitBtn.innerHTML = '';
+      btnText = document.createElement('span');
+      btnText.className = 'btn-text';
+      btnText.textContent = originalText || 'Create Tag';
+      submitBtn.appendChild(btnText);
+      submitBtn.appendChild(loadingSpinner);
     }
 
     if (isLoading) {
       submitBtn.disabled = true;
       submitBtn.classList.add('loading');
-      loadingSpinner.style.display = 'block';
-      btnText.style.opacity = '0';
+      loadingSpinner.style.display = 'inline-block';
+      btnText.style.opacity = '0.5';
     } else {
       submitBtn.disabled = false;
       submitBtn.classList.remove('loading');
@@ -1102,12 +1188,16 @@ class AddPetPage {
     if (uploadButton) {
       uploadButton.classList.add('empty');
     }
-    
-    mediaInput.addEventListener('change', (e) => {
+      mediaInput.addEventListener('change', (e) => {
+      // Clear existing object URLs only for new files
       this.mediaObjectURLs.forEach(url => URL.revokeObjectURL(url));
       this.mediaObjectURLs = [];
       this.mediaFiles = Array.from(e.target.files);
       this.profileImageIndex = 0;
+      
+      // Clear existing media paths when new files are selected
+      this.existingMediaPaths = [];
+      
       this.renderMediaPreview();
       
       if (uploadButton) {
@@ -1128,32 +1218,41 @@ class AddPetPage {
   renderMediaPreview() {
     const previewContainer = document.getElementById('media-preview');
     previewContainer.innerHTML = '';
-    if (!this.mediaFiles.length) return;
-    this.mediaObjectURLs = this.mediaFiles.map((file, idx) => {
-      if (this.mediaObjectURLs[idx]) return this.mediaObjectURLs[idx];
-      return URL.createObjectURL(file);
-    });
-    this.mediaFiles.forEach((file, idx) => {
-      const mediaWrapper = document.createElement('div');
-      mediaWrapper.className = 'media-thumb-wrapper' + (idx === this.profileImageIndex ? ' selected' : '');
-      let mediaElem;
-      if (file.type.startsWith('image/')) {
-        mediaElem = document.createElement('img');
-        mediaElem.src = this.mediaObjectURLs[idx];
-        mediaElem.className = 'media-thumb';
-      } else if (file.type.startsWith('video/')) {
-        mediaElem = document.createElement('video');
-        mediaElem.src = this.mediaObjectURLs[idx];
-        mediaElem.className = 'media-thumb';
-        mediaElem.controls = true;
-      }
-      mediaWrapper.appendChild(mediaElem);
-      mediaWrapper.addEventListener('click', () => {
-        this.profileImageIndex = idx;
-        this.renderMediaPreview();
+    
+    // Handle new files
+    if (this.mediaFiles.length) {
+      this.mediaObjectURLs = this.mediaFiles.map((file, idx) => {
+        if (this.mediaObjectURLs[idx]) return this.mediaObjectURLs[idx];
+        return URL.createObjectURL(file);
       });
-      previewContainer.appendChild(mediaWrapper);
-    });
+      this.mediaFiles.forEach((file, idx) => {
+        const mediaWrapper = document.createElement('div');
+        mediaWrapper.className = 'media-thumb-wrapper' + (idx === this.profileImageIndex ? ' selected' : '');
+        let mediaElem;
+        if (file.type.startsWith('image/')) {
+          mediaElem = document.createElement('img');
+          mediaElem.src = this.mediaObjectURLs[idx];
+          mediaElem.className = 'media-thumb';
+        } else if (file.type.startsWith('video/')) {
+          mediaElem = document.createElement('video');
+          mediaElem.src = this.mediaObjectURLs[idx];
+          mediaElem.className = 'media-thumb';
+          mediaElem.controls = true;
+        }
+        if (mediaElem) {
+          mediaWrapper.appendChild(mediaElem);
+          mediaWrapper.addEventListener('click', () => {
+            this.profileImageIndex = idx;
+            this.renderMediaPreview();
+          });
+          previewContainer.appendChild(mediaWrapper);
+        }
+      });
+    }
+    // Handle existing media (when no new files are selected)
+    else if (this.existingMediaPaths.length) {
+      this.displayExistingMedia(this.existingMediaPaths);
+    }
   }
 
   initMedicalSection() {
@@ -1221,11 +1320,22 @@ class AddPetPage {
     const template = document.querySelector('.care-resources-entry-template');
     const container = document.getElementById('care-resources-list');
     
-    if (!template || !container) return;
+    if (!template) {
+      console.error('Care resource template not found');
+      return;
+    }
+    if (!container) {
+      console.error('Care resource container not found');
+      return;
+    }
     
     const clone = template.cloneNode(true);
     clone.style.display = 'block';
+    clone.style.visibility = 'visible';
     clone.classList.remove('care-resources-entry-template');
+    clone.classList.add('care-resources-entry');
+    
+    console.log('Adding care resource entry to container');
     
     const type = clone.querySelector('.care-resource-type');
     const title = clone.querySelector('.care-resource-title');
@@ -1283,11 +1393,22 @@ class AddPetPage {
     const template = document.querySelector('.care-schedule-entry-template');
     const container = document.getElementById('care-schedule-list');
     
-    if (!template || !container) return;
+    if (!template) {
+      console.error('Care schedule template not found');
+      return;
+    }
+    if (!container) {
+      console.error('Care schedule container not found');
+      return;
+    }
     
     const clone = template.cloneNode(true);
     clone.style.display = 'block';
+    clone.style.visibility = 'visible';
     clone.classList.remove('care-schedule-entry-template');
+    clone.classList.add('care-schedule-entry');
+    
+    console.log('Adding care schedule entry to container');
     
     const activity = clone.querySelector('.care-schedule-activity');
     const hour = clone.querySelector('.care-schedule-hour');
@@ -1402,75 +1523,105 @@ class AddPetPage {
       attribution: '© OpenStreetMap contributors'
     }).addTo(this.map);
     
-    // Add initial marker if we have coordinates
     if (this.isEditMode && this.currentPetData && this.currentPetData.address) {
       const lat = parseFloat(this.currentPetData.address.latitude);
       const lng = parseFloat(this.currentPetData.address.longitude);
       if (!isNaN(lat) && !isNaN(lng)) {
         this.mapMarker = L.marker([lat, lng]).addTo(this.map);
       } else if (this.currentPetData.address.city && this.currentPetData.address.country) {
-        // Try to geocode the city/country if we don't have coordinates
         setTimeout(() => {
           this.geocodeAddress();
         }, 500);
       }
     }
     
-    // Add click event to map
     this.map.on('click', (e) => {
       this.setMapLocation(e.latlng.lat, e.latlng.lng);
     });
     
-    // Add locate button event
     if (locateBtn) {
       locateBtn.addEventListener('click', () => {
         this.locateOnMap();
       });
     }
-    
-    // Add event listeners to address fields for auto-geocoding
+
+    const addressField = document.getElementById('pet-address');
     const cityField = document.getElementById('pet-city');
     const countryField = document.getElementById('pet-country');
+    const postalCodeField = document.getElementById('pet-postal-code');
     
     if (cityField && countryField) {
       const debounceGeocoding = this.debounce(() => {
         this.geocodeAddress();
       }, 1000);
       
+      if (addressField) {
+        addressField.addEventListener('input', debounceGeocoding);
+      }
       cityField.addEventListener('input', debounceGeocoding);
       countryField.addEventListener('change', debounceGeocoding);
+      if (postalCodeField) {
+        postalCodeField.addEventListener('input', debounceGeocoding);
+      }
     }
   }
   
   setMapLocation(lat, lng) {
     if (!this.map) return;
     
-    // Remove existing marker
     if (this.mapMarker) {
       this.map.removeLayer(this.mapMarker);
     }
     
-    // Add new marker
     this.mapMarker = L.marker([lat, lng]).addTo(this.map);
     this.map.setView([lat, lng], 15);
-    
-    // Update the form with coordinates (you might want to add hidden fields for lat/lng)
     this.reverseGeocode(lat, lng);
   }
-  
+    
   async geocodeAddress() {
+    const address = document.getElementById('pet-address')?.value?.trim();
     const city = document.getElementById('pet-city')?.value?.trim();
     const country = document.getElementById('pet-country')?.value?.trim();
+    const postalCode = document.getElementById('pet-postal-code')?.value?.trim();
     
     if (!city || !country) return;
     
     try {
-      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city)}, ${encodeURIComponent(country)}&limit=1`);
+      let addressParts = [];
+      
+      if (address) {
+        addressParts.push(address);
+      }
+      if (city) {
+        addressParts.push(city);
+      }
+      if (postalCode) {
+        addressParts.push(postalCode);
+      }
+      if (country) {
+        addressParts.push(country);
+      }
+      
+      const fullAddress = addressParts.join(', ');
+      console.log('Geocoding address:', fullAddress);
+      
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fullAddress)}&limit=1&addressdetails=1`);
       const data = await response.json();
       
       if (data && data.length > 0) {
         const location = data[0];
+        console.log('Geocoding successful:', location);
         this.setMapLocation(parseFloat(location.lat), parseFloat(location.lon));
+      } else {
+        console.log('Full address geocoding failed, trying city + country');
+        const fallbackResponse = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city)}, ${encodeURIComponent(country)}&limit=1&addressdetails=1`);
+        const fallbackData = await fallbackResponse.json();
+        
+        if (fallbackData && fallbackData.length > 0) {
+          const location = fallbackData[0];
+          console.log('Fallback geocoding successful:', location);
+          this.setMapLocation(parseFloat(location.lat), parseFloat(location.lon));
+        }
       }
     } catch (error) {
       console.error('Error geocoding address:', error);
@@ -1479,50 +1630,59 @@ class AddPetPage {
   
   async reverseGeocode(lat, lng) {
     try {
-      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`);
       const data = await response.json();
       
       if (data && data.address) {
         const address = data.address;
+        console.log('Reverse geocoding result:', address);
         
-        // Update form fields with geocoded data
         const cityField = document.getElementById('pet-city');
         const countryField = document.getElementById('pet-country');
         const addressField = document.getElementById('pet-address');
         const postalField = document.getElementById('pet-postal-code');
         
         if (cityField && (address.city || address.town || address.village)) {
-          cityField.value = address.city || address.town || address.village;
+          const cityName = address.city || address.town || address.village;
+          cityField.value = cityName;
+          cityField.dispatchEvent(new Event('change', { bubbles: true }));
+          console.log(`✓ Updated city to: ${cityName}`);
         }
         
         if (countryField && address.country) {
           countryField.value = address.country;
+          countryField.dispatchEvent(new Event('change', { bubbles: true }));
+          console.log(`✓ Updated country to: ${address.country}`);
         }
         
         if (addressField && (address.road || address.house_number)) {
           const roadInfo = [address.house_number, address.road].filter(Boolean).join(' ');
           if (roadInfo && !addressField.value) {
             addressField.value = roadInfo;
+            addressField.dispatchEvent(new Event('change', { bubbles: true }));
+            console.log(`✓ Updated address to: ${roadInfo}`);
           }
         }
         
         if (postalField && address.postcode && !postalField.value) {
           postalField.value = address.postcode;
+          postalField.dispatchEvent(new Event('change', { bubbles: true }));
+          console.log(`✓ Updated postal code to: ${address.postcode}`);
         }
       }
     } catch (error) {
       console.error('Error reverse geocoding:', error);
     }
   }
-  
-  locateOnMap() {
+    locateOnMap() {
+    const address = document.getElementById('pet-address')?.value?.trim();
     const city = document.getElementById('pet-city')?.value?.trim();
     const country = document.getElementById('pet-country')?.value?.trim();
     
     if (city && country) {
       this.geocodeAddress();
     } else {
-      alert('Please enter city and country first');
+      alert('Please enter at least city and country first');
     }
   }
   
@@ -1537,7 +1697,47 @@ class AddPetPage {
       timeout = setTimeout(later, wait);
     };
   }
+  
+  setAsProfile(index) {
+    this.profileImageIndex = index;
+    
+    // Update selected class for existing media
+    if (this.existingMediaPaths.length) {
+      const mediaPreview = document.getElementById('media-preview');
+      const allWrappers = mediaPreview.querySelectorAll('.media-thumb-wrapper');
+      allWrappers.forEach((wrapper, idx) => {
+        wrapper.classList.toggle('selected', idx === index);
+      });
+      console.log(`Selected existing media ${index + 1} as profile image`);
+    }
+    // Update selected class for new files
+    else if (this.mediaFiles.length) {
+      this.renderMediaPreview();
+    }
+  }
 }
+
+// Global function for media profile selection
+window.setAsProfile = function(index) {
+  const mediaItems = document.querySelectorAll('.media-preview-item');
+  mediaItems.forEach((item, i) => {
+    item.classList.remove('profile-image');
+    const btn = item.querySelector('.set-profile-btn');
+    if (btn) {
+      btn.textContent = 'Set as Profile';
+      btn.classList.remove('active');
+    }
+  });
+  
+  if (mediaItems[index]) {
+    mediaItems[index].classList.add('profile-image');
+    const btn = mediaItems[index].querySelector('.set-profile-btn');
+    if (btn) {
+      btn.textContent = 'Profile';
+      btn.classList.add('active');
+    }
+  }
+};
 
 document.addEventListener('DOMContentLoaded', () => {
   setupMobileMenu();
