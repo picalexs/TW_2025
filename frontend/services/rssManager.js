@@ -433,35 +433,37 @@ class RSSManager {  constructor() {
   async shareOnSocial(platform) {
     console.log('RSSManager: Sharing on platform:', platform);
     console.log('RSSManager: Current share data:', this.currentShareData);
-    
     if (!this.currentShareData) {
       this.showNotification('No sharing data available. Please try clicking "Share" first.', 'error');
       return;
     }
-
     const socialLinks = this.currentShareData.socialSharing || this.currentShareData.socialLinks;
-    
     if (!socialLinks) {
       this.showNotification('Social sharing links not available', 'error');
       console.error('RSSManager: No social links found in data:', this.currentShareData);
       return;
     }
-
     const url = socialLinks[platform];
     console.log('RSSManager: Opening URL for', platform, ':', url);
-    
     if (url) {
       try {
+        let topOffset = 20;
+        const navbar = document.querySelector('.navbar, nav, header');
+        if (navbar) {
+          const rect = navbar.getBoundingClientRect();
+          topOffset = rect.bottom + window.scrollY + 16;
+        }
+        const left = window.innerWidth - 340;
+        const popupFeatures = `width=600,height=400,scrollbars=yes,resizable=yes,top=${topOffset},left=${left}`;
         if (platform === 'facebook' || platform === 'linkedin') {
           if (this.currentShareData.shareText) {
             await this.showShareTextDialog(this.currentShareData.shareText, platform, url);
           } else {
-            window.open(url, '_blank', 'width=600,height=400,scrollbars=yes,resizable=yes');
+            window.open(url, '_blank', popupFeatures);
           }
         } else {
-          window.open(url, '_blank', 'width=600,height=400,scrollbars=yes,resizable=yes');
+          window.open(url, '_blank', popupFeatures);
         }
-        
         const platformName = platform.charAt(0).toUpperCase() + platform.slice(1);
         this.showNotification(`Opening ${platformName} sharing window...`, 'success');
       } catch (error) {
@@ -476,7 +478,10 @@ class RSSManager {  constructor() {
 
   async showShareTextDialog(shareText, platform, shareUrl) {
     const platformName = platform === 'facebook' ? 'Facebook' : 'LinkedIn';
-    
+    let linkToShare = shareUrl;
+    if (this.currentShareData && this.currentShareData.links && this.currentShareData.links.rss) {
+      linkToShare = this.currentShareData.links.rss;
+    }
     const modal = document.createElement('div');
     modal.className = 'share-text-modal';
     modal.style.cssText = `
@@ -491,7 +496,6 @@ class RSSManager {  constructor() {
       align-items: center;
       z-index: 10000;
     `;
-    
     const modalContent = document.createElement('div');
     modalContent.style.cssText = `
       background: white;
@@ -505,7 +509,7 @@ class RSSManager {  constructor() {
     modalContent.innerHTML = `
       <h3 style="margin-top: 0; color: #333;">Share on ${platformName}</h3>
       <p style="color: #666; margin-bottom: 20px;">
-        Copy this text to share along with the link on ${platformName}:
+        Copy this text and the link to share on ${platformName}:
       </p>
       <textarea readonly style="
         width: 100%;
@@ -516,7 +520,7 @@ class RSSManager {  constructor() {
         font-family: inherit;
         resize: vertical;
         box-sizing: border-box;
-      ">${shareText}</textarea>
+      ">${shareText}\n${linkToShare}</textarea>
       <div style="margin-top: 20px; text-align: right;">
         <button id="copy-share-text" style="
           background: #007bff;
@@ -526,7 +530,7 @@ class RSSManager {  constructor() {
           border-radius: 4px;
           margin-right: 10px;
           cursor: pointer;
-        ">📋 Copy Text</button>
+        ">Copy Text</button>
         <button id="open-share-platform" style="
           background: #28a745;
           color: white;
@@ -549,19 +553,17 @@ class RSSManager {  constructor() {
     
     modal.appendChild(modalContent);
     document.body.appendChild(modal);
-    
     const copyBtn = modal.querySelector('#copy-share-text');
     const openBtn = modal.querySelector('#open-share-platform');
     const closeBtn = modal.querySelector('#close-share-modal');
     const textarea = modal.querySelector('textarea');
-    
     copyBtn.addEventListener('click', async () => {
       try {
-        await navigator.clipboard.writeText(shareText);
+        await navigator.clipboard.writeText(textarea.value);
         copyBtn.textContent = '✅ Copied!';
         copyBtn.style.background = '#28a745';
         setTimeout(() => {
-          copyBtn.innerHTML = '📋 Copy Text';
+          copyBtn.innerHTML = 'Copy Text';
           copyBtn.style.background = '#007bff';
         }, 2000);
       } catch (error) {
@@ -570,16 +572,13 @@ class RSSManager {  constructor() {
         this.showNotification('Please manually copy the selected text', 'info');
       }
     });
-    
     openBtn.addEventListener('click', () => {
       window.open(shareUrl, '_blank', 'width=600,height=400,scrollbars=yes,resizable=yes');
       modal.remove();
     });
-    
     closeBtn.addEventListener('click', () => {
       modal.remove();
     });
-    
     modal.addEventListener('click', (e) => {
       if (e.target === modal) {
         modal.remove();
@@ -715,10 +714,17 @@ class RSSManager {  constructor() {
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
     notification.textContent = message;
-    
+
+    // Position below navbar if present
+    let topOffset = 20;
+    const navbar = document.querySelector('.navbar, nav, header');
+    if (navbar) {
+      const rect = navbar.getBoundingClientRect();
+      topOffset = rect.bottom + window.scrollY + 16;
+    }
     Object.assign(notification.style, {
       position: 'fixed',
-      top: '20px',
+      top: `${topOffset}px`,
       right: '20px',
       padding: '12px 20px',
       borderRadius: '6px',
@@ -726,26 +732,20 @@ class RSSManager {  constructor() {
       fontSize: '14px',
       zIndex: '10000',
       maxWidth: '300px',
-      wordWrap: 'break-word'
+      wordWrap: 'break-word',
+      background: type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#17a2b8',
+      boxShadow: '0 0.5rem 1rem rgba(0,0,0,0.15)'
     });
-
-    switch (type) {
-      case 'success':
-        notification.style.backgroundColor = '#28a745';
-        break;
-      case 'error':
-        notification.style.backgroundColor = '#dc3545';
-        break;
-      default:
-        notification.style.backgroundColor = '#17a2b8';
-    }
 
     document.body.appendChild(notification);
 
     setTimeout(() => {
-      if (notification.parentNode) {
-        notification.parentNode.removeChild(notification);
-      }
+      notification.style.opacity = '0';
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.parentNode.removeChild(notification);
+        }
+      }, 300);
     }, 3000);
   }
 

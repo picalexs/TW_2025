@@ -1,7 +1,7 @@
 const abstractDTO = require("./abstractDTO");
 const oracledb = require("oracledb");
 const path = require("path");
-const { getConnection} = require("../db/dbConnection");
+const { getConnection, executeQuery } = require("../db/dbConnection");
 
 class petDTO extends abstractDTO {
   constructor() {
@@ -751,9 +751,8 @@ class petDTO extends abstractDTO {
   }
 
   async clearPetTags(petId) {
-    const connection = await getConnection();
     try {
-      await connection.execute(
+      await executeQuery(
         `DELETE FROM animal_tags WHERE animal_id = :petId`,
         [petId],
         { autoCommit: true }
@@ -761,15 +760,12 @@ class petDTO extends abstractDTO {
     } catch (error) {
       console.error('Error clearing pet tags:', error);
       throw error;
-    } finally {
-      await connection.close();
     }
   }
 
   async clearMedicalHistory(petId) {
-    const connection = await getConnection();
     try {
-      await connection.execute(
+      await executeQuery(
         `DELETE FROM medical_history WHERE animal_id = :petId`,
         [petId],
         { autoCommit: true }
@@ -777,15 +773,12 @@ class petDTO extends abstractDTO {
     } catch (error) {
       console.error('Error clearing medical history:', error);
       throw error;
-    } finally {
-      await connection.close();
     }
   }
 
   async clearCareResources(petId) {
-    const connection = await getConnection();
     try {
-      await connection.execute(
+      await executeQuery(
         `DELETE FROM care_resources WHERE animal_id = :petId`,
         [petId],
         { autoCommit: true }
@@ -793,15 +786,12 @@ class petDTO extends abstractDTO {
     } catch (error) {
       console.error('Error clearing care resources:', error);
       throw error;
-    } finally {
-      await connection.close();
     }
   }
 
   async clearCareSchedule(petId) {
-    const connection = await getConnection();
     try {
-      await connection.execute(
+      await executeQuery(
         `DELETE FROM care_schedule WHERE animal_id = :petId`,
         [petId],
         { autoCommit: true }
@@ -809,25 +799,19 @@ class petDTO extends abstractDTO {
     } catch (error) {
       console.error('Error clearing care schedule:', error);
       throw error;
-    } finally {
-      await connection.close();
     }
   }
 
   async clearCareScheduleForPet(petId) {
-    const connection = await getConnection();
     try {
-      await connection.execute(
+      await executeQuery(
         `DELETE FROM care_schedule WHERE animal_id = :petId`,
         [petId],
         { autoCommit: true }
       );
     } catch (error) {
       console.error('Error clearing care schedule:', error);
-      throw error;
-    } finally {
-      await connection.close();
-    }
+      throw error;    }
   }
 
   async update(id, entityData) {

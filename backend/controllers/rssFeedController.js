@@ -8,14 +8,33 @@ class RSSFeedController {
 
     async generateRSSFeed(req, res) {
         try {
-            const { type = 'recent', zone, breed, species, limit = 20 } = req.query;
+            const query = req.query || {};
+            let type = query.type || 'recent';
+            let zone = query.zone;
+            let breed = query.breed;
+            let species = query.species;
+            let limit = query.limit || 20;
+            let sortBy = query.sortBy;
+
+            if (!req.query || Object.keys(req.query).length === 0) {
+                if (req.url) {
+                    const url = new URL(req.url, `http://${req.headers.host}`);
+                    const searchParams = url.searchParams;
+                    type = searchParams.get('type') || 'recent';
+                    zone = searchParams.get('zone');
+                    breed = searchParams.get('breed');
+                    species = searchParams.get('species');
+                    limit = searchParams.get('limit') || '20';
+                    sortBy = searchParams.get('sortBy');
+                }
+            }
             
             const pets = await this.rssFeedModel.getPetsForRSSFeed({
                 type,
                 zone,
                 breed,
                 species,
-                limit
+                limit: parseInt(limit)
             });
             
             const rssXml = this.generateRSSXML(pets, type, { zone, breed, species });
@@ -37,10 +56,24 @@ class RSSFeedController {
 
     async generateTrendingRSSFeed(req, res) {
         try {
-            const { zone, radius = 50, limit = 20 } = req.query;
+            const query = req.query || {};
+            let zone = query.zone;
+            let radius = query.radius || 50;
+            let limit = query.limit || 20;
+
+            if (!req.query || Object.keys(req.query).length === 0) {
+                if (req.url) {
+                    const url = new URL(req.url, `http://${req.headers.host}`);
+                    const searchParams = url.searchParams;
+                    zone = searchParams.get('zone');
+                    radius = searchParams.get('radius') || '50';
+                    limit = searchParams.get('limit') || '20';
+                }
+            }
+            
             const pets = await this.rssFeedModel.getTrendingPets({
                 zone,
-                limit
+                limit: parseInt(limit)
             });
             
             const rssXml = this.generateTrendingRSSXML(pets, { zone, radius });
@@ -234,13 +267,22 @@ class RSSFeedController {
 
     async generateDemoRSSFeed(req, res) {
         try {
-            const url = new URL(req.url, `http://${req.headers.host}`);
-            const searchParams = url.searchParams;
-            
-            const type = searchParams.get('type') || 'recent';
-            const zone = searchParams.get('zone');
-            const breed = searchParams.get('breed');
-            const species = searchParams.get('species');
+            const query = req.query || {};
+            let type = query.type || 'recent';
+            let zone = query.zone;
+            let breed = query.breed;
+            let species = query.species;
+
+            if (!req.query || Object.keys(req.query).length === 0) {
+                if (req.url) {
+                    const url = new URL(req.url, `http://${req.headers.host}`);
+                    const searchParams = url.searchParams;
+                    type = searchParams.get('type') || 'recent';
+                    zone = searchParams.get('zone');
+                    breed = searchParams.get('breed');
+                    species = searchParams.get('species');
+                }
+            }
             
             const samplePets = [
                 {
