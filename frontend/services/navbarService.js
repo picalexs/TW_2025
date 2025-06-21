@@ -9,38 +9,25 @@ class NavbarService {
 
   async fetchGlobalComponents(bypassCache = false) {
     const cacheKey = this.globalComponentsPath;
-    
     if (this.cacheEnabled && !bypassCache) {
       const cached = this.cache.get(cacheKey);
       if (cached && cached.expiry > Date.now()) {
-        if (this.debug) {
-          console.log('Using cached global components');
-        }
         return cached.data;
       }
     }
     
     try {
-      if (this.debug) {
-        console.log('Fetching global components from:', this.globalComponentsPath);
-      }
-      
       const response = await fetch(this.globalComponentsPath);
-      
       if (!response.ok) {
         throw new Error(`Failed to fetch global components: ${response.status} ${response.statusText}`);
       }
-      
       const htmlContent = await response.text();
-      
-      // Store in cache if enabled
       if (this.cacheEnabled) {
         this.cache.set(cacheKey, {
           data: htmlContent,
           expiry: Date.now() + this.cacheExpiry
         });
       }
-      
       return htmlContent;
     } catch (error) {
       console.error('Error fetching global components:', error);

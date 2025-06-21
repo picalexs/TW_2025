@@ -5,7 +5,6 @@ let allPets = [];
 
 export async function fetchPets() {
   try {
-    console.log('Attempting to fetch pets from API...');
     const pets = await petService.getAllPets();
     allPets = pets;
     return pets;
@@ -248,9 +247,3 @@ export function showPetPlaceholders(containerId = 'pets-grid', count = 6) {
     container.appendChild(placeholder.firstChild || placeholder);
   }
 }
-
-window.testFilters = () => {
-  console.log('Current pets:', allPets);
-  console.log('Filter results:', filterPets());
-  console.log('Sorted results:', sortPets(filterPets()));
-};

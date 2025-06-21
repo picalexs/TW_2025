@@ -1,20 +1,20 @@
 import ApiService, { ApiError } from './api.min.js';
 
-class PetService {  constructor(options = {}) {
+class PetService {
+  constructor(options = {}) {
     this.apiService = options.apiService || new ApiService(options.baseURL, {
       debug: options.debug || false,
       timeout: 0,
       retryCount: options.retryCount || 999
     });
-    
     this.debug = options.debug || false;
     this.endpoints = {
       base: '/api/pets',
       detail: id => `/api/pets/${id}`
     };
-    
+
     if (this.debug) {
-      console.log('PetService initialized with API base URL:', this.apiService.baseURL);
+      console.log('PetService initialized with options:', options);
     }
   }
 
@@ -26,7 +26,6 @@ class PetService {  constructor(options = {}) {
       if (this.debug) {
         console.error('Error fetching pets, will retry:', error);
       }
-      
       throw error;
     }
   }
@@ -35,12 +34,8 @@ class PetService {  constructor(options = {}) {
     if (!id) {
       throw new Error('Pet ID is required');
     }
-    
     try {
       const pet = await this.apiService.get(this.endpoints.detail(id));
-      console.log('PetService - Pet data received:', pet);
-      console.log('PetService - Pet media:', pet.media);
-      console.log('PetService - Pet imagePath:', pet.imagePath);
       return pet;
     } catch (error) {
       if (this.debug) {
@@ -54,7 +49,6 @@ class PetService {  constructor(options = {}) {
     if (!petData) {
       throw new Error('Pet data is required');
     }
-    
     try {
       return await this.apiService.post(this.endpoints.base, petData);
     } catch (error) {
@@ -69,20 +63,19 @@ class PetService {  constructor(options = {}) {
     if (!formData) {
       throw new Error('Form data is required');
     }
-    
     try {
       if (this.debug) console.log('Adding pet with files...');
-      
+
       const response = await fetch(`${this.apiService.baseURL}${this.endpoints.base}`, {
         method: 'POST',
         body: formData
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
       }
-      
+
       return await response.json();
     } catch (error) {
       if (this.debug) {
@@ -96,11 +89,10 @@ class PetService {  constructor(options = {}) {
     if (!id) {
       throw new Error('Pet ID is required');
     }
-    
+
     if (!petData) {
       throw new Error('Pet data is required');
     }
-    
     try {
       return await this.apiService.put(this.endpoints.detail(id), petData);
     } catch (error) {
@@ -115,24 +107,23 @@ class PetService {  constructor(options = {}) {
     if (!id) {
       throw new Error('Pet ID is required');
     }
-    
+
     if (!formData) {
       throw new Error('Form data is required');
     }
-    
     try {
       if (this.debug) console.log('Updating pet with files...');
-      
+
       const response = await fetch(`${this.apiService.baseURL}${this.endpoints.detail(id)}`, {
         method: 'PUT',
         body: formData
       });
-      
+
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || `HTTP ${response.status}: ${response.statusText}`);
       }
-      
+
       return await response.json();
     } catch (error) {
       if (this.debug) {
@@ -146,7 +137,6 @@ class PetService {  constructor(options = {}) {
     if (!id) {
       throw new Error('Pet ID is required');
     }
-    
     try {
       return await this.apiService.delete(this.endpoints.detail(id));
     } catch (error) {
@@ -161,7 +151,6 @@ class PetService {  constructor(options = {}) {
     if (!shelterId) {
       throw new Error('Shelter ID is required');
     }
-    
     try {
       if (this.debug) console.log(`Fetching pets for shelter ID: ${shelterId}`);
       return await this.apiService.get(`/api/pets/shelter/${shelterId}`);
@@ -172,36 +161,36 @@ class PetService {  constructor(options = {}) {
       throw error;
     }
   }
-  
+
   async runDiagnostics() {
     const results = {
       timestamp: new Date().toISOString(),
       apiBaseUrl: this.apiService.baseURL,
       endpoints: {}
     };
-    
+
     try {
       const connectionTest = await this.apiService.testApiConnection();
       results.connectionTest = connectionTest;
     } catch (error) {
-      results.connectionTest = { 
-        success: false, 
-        error: error.message 
+      results.connectionTest = {
+        success: false,
+        error: error.message
       };
     }
-    
+
     const endpointsToTest = [
       this.endpoints.base,
       this.endpoints.detail(1)
     ];
-    
+
     for (const endpoint of endpointsToTest) {
       try {
         const response = await fetch(
-          `${this.apiService.baseURL}${endpoint}`, 
+          `${this.apiService.baseURL}${endpoint}`,
           { method: 'HEAD', signal: AbortSignal.timeout(3000) }
         );
-        
+
         results.endpoints[endpoint] = {
           status: response.status,
           statusText: response.statusText,
@@ -214,24 +203,24 @@ class PetService {  constructor(options = {}) {
         };
       }
     }
-    
+
     if (this.debug) {
       console.log('Pet API diagnostics results:', results);
     }
-    
+
     return results;
   }
-  
+
   _isCriticalNetworkError(error) {
     if (error instanceof ApiError) {
-      return error.code === 'NETWORK_ERROR' || 
-             error.code === 'REQUEST_TIMEOUT' ||
-             (error.details && error.details.status >= 500);
+      return error.code === 'NETWORK_ERROR' ||
+        error.code === 'REQUEST_TIMEOUT' ||
+        (error.details && error.details.status >= 500);
     }
-    
-    return error.status === 500 || 
+
+    return error.status === 500 ||
       (error.message && (
-        error.message.includes('Failed to fetch') || 
+        error.message.includes('Failed to fetch') ||
         error.message.includes('NetworkError') ||
         error.message.includes('timeout')
       ));

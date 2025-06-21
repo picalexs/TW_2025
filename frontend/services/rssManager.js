@@ -1,12 +1,11 @@
-class RSSManager {  constructor() {
+class RSSManager {  
+  constructor() {
     this.baseUrl = window.location.origin;
     if (window.location.port === '8080' || window.location.host.includes(':8080')) {
       this.apiBaseUrl = `${this.baseUrl}/api`;
     } else {
       this.apiBaseUrl = `http://localhost:8080/api`;
     }
-    
-    console.log('RSSManager: API Base URL:', this.apiBaseUrl);
   }
 
   init() {
@@ -20,14 +19,13 @@ class RSSManager {  constructor() {
     console.log('RSSManager: Creating RSS widget...');
     const existingWidget = document.getElementById('rss-sharing-widget');
     console.log('RSSManager: Existing widget found:', !!existingWidget);
-      if (existingWidget) {
+    if (existingWidget) {
       existingWidget.className = 'rss-sharing-widget';
       existingWidget.style.display = 'block';
       existingWidget.style.background = '#f0f8ff';
       existingWidget.style.border = '2px solid #007bff';
       existingWidget.style.padding = '10px';
       existingWidget.style.margin = '10px 0';
-      console.log('RSSManager: Setting innerHTML on existing widget...');
       existingWidget.innerHTML = `
       <div class="rss-widget-header">
         <h3 data-i18n="rssFeeds" data-i18n-fallback="RSS Feeds & Sharing">
@@ -151,11 +149,10 @@ class RSSManager {  constructor() {
           </div>        </div>
       </div>
     `;
-      console.log('RSSManager: Widget innerHTML set successfully');
+      console.log('RSSManager: Setting innerHTML on existing widget...');
       return;
     }
 
-    console.log('RSSManager: Creating new widget element (fallback)');
     const widget = document.createElement('div');
     widget.id = 'rss-sharing-widget';
     widget.className = 'rss-sharing-widget';
@@ -285,27 +282,19 @@ class RSSManager {  constructor() {
     `;
 
     const container = document.querySelector('.section-header') || document.querySelector('main');
-    console.log('RSSManager: Target container found:', !!container);
     if (container) {
       container.appendChild(widget);
-      console.log('RSSManager: Widget appended to container');
-    } else {
-      console.error('RSSManager: No suitable container found for widget');
     }
   }
 
   attachEventListeners() {
-    console.log('RSSManager: Attaching event listeners...');
     const toggleButton = document.getElementById('toggle-rss-widget');
-    console.log('RSSManager: Toggle button found:', !!toggleButton);
     if (toggleButton) {
       toggleButton.addEventListener('click', () => {
-        console.log('RSSManager: Toggle button clicked');
         const content = document.getElementById('rss-widget-content');
         if (content) {
           const isVisible = content.style.display !== 'none';
           content.style.display = isVisible ? 'none' : 'block';
-          console.log('RSSManager: Widget content toggled to:', content.style.display);
         }
       });
     }  
@@ -314,7 +303,6 @@ class RSSManager {  constructor() {
   async copyFeedUrl(type) {
     try {
       const url = this.getRSSFeedUrl(type);
-      console.log('RSSManager: Copying URL:', url);
       await navigator.clipboard.writeText(url);
       
       this.showNotification('RSS feed URL copied to clipboard!', 'success');
@@ -367,7 +355,6 @@ class RSSManager {  constructor() {
   }
   async shareFeed(type) {
     try {
-      console.log('RSSManager: Sharing feed of type:', type);
       let params = new URLSearchParams();
       
       if (type === 'trending') {
@@ -396,7 +383,6 @@ class RSSManager {  constructor() {
       }
       
       const apiUrl = `${this.apiBaseUrl}/rss/share?${params.toString()}`;
-      console.log('RSSManager: Using API URL:', apiUrl);
       
       this.showNotification('Loading sharing options...', 'info');
       const response = await fetch(apiUrl);
@@ -409,15 +395,12 @@ class RSSManager {  constructor() {
       }
       
       const data = await response.json();
-      console.log('RSSManager: API response:', data);
       
       if (data.success) {
         this.currentShareData = data.data;
-        console.log('RSSManager: Share data loaded:', this.currentShareData);
         
         if (data.data.socialSharing && !data.data.socialLinks) {
           this.currentShareData.socialLinks = data.data.socialSharing;
-          console.log('RSSManager: Mapped socialSharing to socialLinks for compatibility');
         }
         
         this.showSharingOptions();
@@ -436,8 +419,6 @@ class RSSManager {  constructor() {
   }
 
   showSharingOptions() {
-    console.log('RSSManager: Showing sharing options with data:', this.currentShareData);
-    
     const sharingOptions = document.getElementById('sharing-options');
     if (sharingOptions && this.currentShareData) {
       const embedTextarea = document.getElementById('embed-code');
@@ -448,7 +429,6 @@ class RSSManager {  constructor() {
           embedCode = `<!-- RSS Feed Widget -->\n<iframe src="https://rss.app/embed/v1/?src=${encodeURIComponent(rssUrl)}" style="width: 100%; height: 400px; border: none;"></iframe>\n\n<!-- Alternative: Direct RSS Link -->\n<a href="${rssUrl}" target="_blank">Subscribe to RSS Feed</a>`;
         }
         embedTextarea.value = embedCode || 'No embed code available';
-        console.log('RSSManager: Set embed code:', embedCode);
       }
       
       sharingOptions.style.display = 'block';
@@ -621,15 +601,12 @@ class RSSManager {  constructor() {
   async copyEmbedCode() {
     try {
       const embedTextarea = document.getElementById('embed-code');
-      console.log('RSSManager: Copying embed code, textarea found:', !!embedTextarea);
       
       if (embedTextarea && embedTextarea.value && embedTextarea.value.trim() !== '' && embedTextarea.value !== 'No embed code available') {
         await navigator.clipboard.writeText(embedTextarea.value);
         this.showNotification('Embed code copied to clipboard!', 'success');
-        console.log('RSSManager: Embed code copied successfully');
       } else {
         this.showNotification('No embed code available. Please try sharing a feed first.', 'error');
-        console.log('RSSManager: No valid embed code to copy');
       }
     } catch (error) {
       console.error('RSSManager: Failed to copy embed code:', error);
@@ -706,7 +683,6 @@ class RSSManager {  constructor() {
         testWindow.document.close();
         
         this.showNotification('Embed test page opened in new window', 'success');
-        console.log('RSSManager: Embed test page created');
       } else {
         this.showNotification('No embed code available. Please try sharing a feed first.', 'error');
       }
@@ -721,12 +697,10 @@ class RSSManager {  constructor() {
       if (this.currentShareData && this.currentShareData.links && this.currentShareData.links.rss) {
         await navigator.clipboard.writeText(this.currentShareData.links.rss);
         this.showNotification('RSS URL copied to clipboard!', 'success');
-        console.log('RSSManager: RSS URL copied successfully');
       } else {
         const demoUrl = `${this.apiBaseUrl}/rss/demo`;
         await navigator.clipboard.writeText(demoUrl);
         this.showNotification('Demo RSS URL copied to clipboard!', 'success');
-        console.log('RSSManager: Demo RSS URL copied as fallback');
       }
     } catch (error) {
       console.error('RSSManager: Failed to copy RSS URL:', error);
@@ -746,7 +720,6 @@ class RSSManager {  constructor() {
     notification.className = `notification notification-${type}`;
     notification.textContent = message;
 
-    // Position below navbar if present
     let topOffset = 20;
     const navbar = document.querySelector('.navbar, nav, header');
     if (navbar) {

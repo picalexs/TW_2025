@@ -33,7 +33,6 @@ async function handlePetRoutes(req, res) {
   const shelterPetsMatch = trimmedPath.match(/^api\/pets\/shelter\/(\d+)$/);
   if (shelterPetsMatch && method === "get") {
     const shelterId = parseInt(shelterPetsMatch[1]);
-    console.log(`Matched shelter pets route for shelter ID: ${shelterId}`);
     await petController.getPetsByShelter(req, res, shelterId);
     return true;
   }

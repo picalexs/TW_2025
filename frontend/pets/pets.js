@@ -11,8 +11,6 @@ async function fetchPets() {
         throw new Error('PetService not available yet');
       }
     }
-    
-    console.log('Attempting to fetch pets from API...');
     const pets = await petService.getAllPets();
     allPets = pets;
     return pets;

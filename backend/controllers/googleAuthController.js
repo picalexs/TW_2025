@@ -14,17 +14,13 @@ class GoogleAuthController {
         const parsedUrl = url.parse(req.url, true);
         const code = parsedUrl.query.code;
 
-        console.log('[GoogleAuth] Received callback with code:', code ? 'present' : 'missing');
-
         if (!code) {
             console.error('Google callback error: No authorization code received.');
             return sendResponse(res, 400, { success: false, message: 'Authorization code missing.' });
         }
 
         try {
-            console.log('[GoogleAuth] Exchanging code for tokens...');
-            const tokenResponse = await this._exchangeCodeForTokens(code);console.log('[GoogleAuth] Token response received:', tokenResponse);
-
+            const tokenResponse = await this._exchangeCodeForTokens(code);
             const { access_token, id_token } = tokenResponse;
 
             if (!access_token) {
@@ -32,37 +28,28 @@ class GoogleAuthController {
                 return sendResponse(res, 500, { success: false, message: 'Failed to obtain access token from Google.' });
             }
 
-             console.log('[GoogleAuth] Decoding Google ID token...');
             const googleUserInfo = this._decodeGoogleIdToken(id_token);
-            console.log('[GoogleAuth] Google User Info:', googleUserInfo);
-
             if (!googleUserInfo || !googleUserInfo.email) {
                 console.error('Failed to get user info from Google ID token.');
                 return sendResponse(res, 500, { success: false, message: 'Failed to get user profile from Google.' });
             }
 
             const { email, name, picture } = googleUserInfo;
-            console.log(`[GoogleAuth] User email: ${email}, name: ${name}`);
-
-            console.log(`[GoogleAuth] Searching for user by email: ${email}...`);
-            let user = await userModel.findByEmail(email); 
+            let user;
+            try {
+                user = await userModel.findByEmail(email);
+            } catch (err) {
+                console.error(`[GoogleAuth] Error searching for user by email: ${email}`, err);
+                return sendResponse(res, 500, { success: false, message: 'Database error during user lookup.' });
+            }
 
             if (!user) {
-                console.log(`[GoogleAuth] User not found, creating new user for ${email}...`);
-                user = await userModel.createUserFromGoogle({ 
-                    email: email, 
-                    username: name.replace(/\s/g, '').toLowerCase() + Math.floor(Math.random() * 10000),
-                    first_name: name.split(' ')[0],
-                    last_name: name.split(' ').slice(1).join(' '),
-                    profile_picture: picture,
-                });
-
-            console.log('[GoogleAuth] New user created:', user);
-            if (!user || !user.id) {
-                    throw new Error('User creation failed in database.');
+                try {
+                    user = await userModel.createUser({ email, name, picture });
+                } catch (err) {
+                    console.error('Error creating new user from Google profile:', err);
+                    return sendResponse(res, 500, { success: false, message: 'Failed to create user from Google profile.' });
                 }
-            } else {
-                console.log('[GoogleAuth] User found:', user);
             }
 
             console.log('[GoogleAuth] Generating app JWT...');
@@ -80,8 +67,8 @@ class GoogleAuthController {
             console.log(`[GoogleAuth] Redirecting to frontend: ${frontendHomeUrl}`);
 
         } catch (error) {
-            console.error('Google authentication failed:', error);
-            sendResponse(res, 500, { success: false, message: 'Google authentication failed.' });
+            console.error('[GoogleAuth] Error in handleGoogleCallback:', error);
+            return sendResponse(res, 500, { success: false, message: 'Internal server error during Google authentication.' });
         }
     }
 
@@ -157,17 +144,14 @@ class GoogleAuthController {
                                 return;
                             }
                         } catch (e) {
-                            console.error('[GoogleAuth] Failed to parse frontend URL API response as JSON:', data);
+                            console.error('Error parsing frontend URL response:', e);
                         }
                     } else {
-                        console.error('[GoogleAuth] Unexpected response from frontend URL API:', data);
+                        console.error('Failed to get frontend URL from API. Status:', res.statusCode, 'Content-Type:', contentType);
                     }
-                    console.warn('[GoogleAuth] Falling back to default frontend URL.');
-                    resolve(frontendUrl);
                 });
             }).on('error', (err) => {
-                console.error('[GoogleAuth] Error fetching frontend URL from API:', err);
-                resolve(frontendUrl);
+                console.error('HTTP error while fetching frontend base URL:', err);
             });
         });
     }

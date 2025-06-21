@@ -32,14 +32,6 @@ class ApiService {
     this.retryDelay = options.retryDelay ?? retry.initialDelay ?? 2000;
     
     this.pendingRequests = new Map();
-    if (this.debug) {
-      this._log('ApiService initialized', {
-        baseURL: this.baseURL,
-        timeout: this.timeout,
-        retryCount: this.retryCount,
-        usingConfigFile: !!window.APP_CONFIG
-      });
-    }
     
     this._initializeFromStorage();
   }
@@ -47,10 +39,8 @@ class ApiService {
   setAuthToken(token) {
     if (token) {
       this.defaultHeaders['Authorization'] = `Bearer ${token}`;
-      if (this.debug) this._log('Auth token set');
     } else {
       delete this.defaultHeaders['Authorization'];
-      if (this.debug) this._log('Auth token removed');
     }
   }
 
@@ -93,28 +83,12 @@ class ApiService {
 
   async testApiConnection() {
     try {
-      const endpoints = ['/api/status', '/api/pets'];
+      const response = await this.get('/api/status');
       
-      for (const endpoint of endpoints) {
-        try {
-          const response = await fetch(`${this.baseURL}${endpoint}`, {
-            method: 'GET',
-            mode: 'cors',
-            signal: AbortSignal.timeout(5000)
-          });
-          
-          return {
-            success: response.ok,
-            status: response.status,
-            statusText: response.statusText,
-            endpoint: endpoint
-          };
-        } catch (error) {
-          continue;
-        }
-      }
-      
-      throw new Error('All test endpoints failed');
+      return {
+        success: response && response.status === 'ok',
+        data: response
+      };
     } catch (error) {
       if (this.debug) {
         this._log('API connection test failed', error);
@@ -131,10 +105,6 @@ class ApiService {
       controller.abort();
     });
     this.pendingRequests.clear();
-    
-    if (this.debug) {
-      this._log('All pending requests aborted');
-    }
   }
 
   _buildUrl(endpoint, queryParams = {}) {
@@ -157,10 +127,6 @@ class ApiService {
       Object.keys(queryParams).forEach(key => 
         url.searchParams.append(key, queryParams[key])
       );
-      
-      if (this.debug) {
-        this._log('URL constructed', url.toString());
-      }
       
       return url.toString();
     } catch (error) {
@@ -323,7 +289,7 @@ class ApiService {
 
   _log(message, data) {
     if (this.debug) {
-      console.log(`[ApiService] ${message}`, data !== undefined ? data : '');
+      console.log(`[ApiService] ${message}`, data || '');
     }
   }
 

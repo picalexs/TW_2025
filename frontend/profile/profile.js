@@ -553,12 +553,6 @@ class ProfilePage {
     const name = document.getElementById("contact-name").value;
     const email = document.getElementById("contact-email").value;
     const message = document.getElementById("contact-message").value;
-    console.log("Contact form submitted:", {
-      name,
-      email,
-      message,
-      targetUserId: this.currentUserId,
-    });
 
     alert("Message sent successfully! The user will be notified.");
     this.hideContactModal();

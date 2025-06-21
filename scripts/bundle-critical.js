@@ -26,8 +26,6 @@ class JavaScriptBundler {
   }
 
   async createCriticalBundle() {
-    console.log('🎯 Creating critical JavaScript bundle...');
-
     const criticalFiles = [
       path.join(this.frontendDir, 'config.min.js'),
       path.join(this.frontendDir, 'utils', 'imagePathHandler.min.js')
@@ -48,13 +46,10 @@ class JavaScriptBundler {
 
     const outputPath = path.join(this.outputDir, 'critical.min.js');
     await fs.writeFile(outputPath, bundleContent);
-    console.log(`✅ Critical bundle created: ${path.relative(this.frontendDir, outputPath)}`);
     return outputPath;
   }
 
   async createUtilsBundle() {
-    console.log('🔧 Creating utils JavaScript bundle...');
-
     const utilsFiles = [
       path.join(this.frontendDir, 'utils', 'cardRenderer.min.js'),
       path.join(this.frontendDir, 'utils', 'carousel.min.js')
@@ -75,7 +70,6 @@ class JavaScriptBundler {
 
     const outputPath = path.join(this.outputDir, 'utils.min.js');
     await fs.writeFile(outputPath, bundleContent);
-    console.log(`✅ Utils bundle created: ${path.relative(this.frontendDir, outputPath)}`);
     return outputPath;
   }
 

@@ -280,19 +280,9 @@
         import RSSManager from '../services/rssManager.js';
 
         document.addEventListener('DOMContentLoaded', () => {
-            // Initialize RSS Manager for demo
             const rssManager = new RSSManager();
             rssManager.init();
-            
-            // Make it globally accessible for demo purposes
             window.rssManager = rssManager;
-            
-            console.log('RSS Feed Demo initialized!');
-            console.log('Available RSS endpoints:');
-            console.log('- Recent pets: /api/rss/pets?type=recent');
-            console.log('- Popular pets: /api/rss/pets?type=popular');
-            console.log('- Trending pets: /api/rss/trending');
-            console.log('- Share links: /api/rss/share');
         });
     </script>
 </body>

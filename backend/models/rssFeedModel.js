@@ -11,15 +11,12 @@ class RSSFeedModel extends AbstractModel {
         try {
             const validatedFilters = this.validateRSSFilters(filters);
             let pets = await this.rssFeedDTO.getPetsForRSSFeed(validatedFilters);
-            
             if (!pets || pets.length === 0) {
-                console.log('No pets found in database, using demo data for RSS feed');
                 pets = this.rssFeedDTO.getDemoPets(validatedFilters);
             }
             return this.processPetsForRSS(pets);
         } catch (error) {
             console.error('Error in RSSFeedModel.getPetsForRSSFeed:', error);
-            console.log('Database error, falling back to demo data for RSS feed');
             const validatedFilters = this.validateRSSFilters(filters);
             const demoPets = this.rssFeedDTO.getDemoPets(validatedFilters);
             return this.processPetsForRSS(demoPets);
@@ -30,16 +27,12 @@ class RSSFeedModel extends AbstractModel {
         try {
             const validatedFilters = this.validateTrendingFilters(filters);
             let pets = await this.rssFeedDTO.getTrendingPets(validatedFilters);
-            
             if (!pets || pets.length === 0) {
-                console.log('No trending pets found in database, using demo data');
                 pets = this.rssFeedDTO.getDemoPets({ ...validatedFilters, type: 'popular' });
             }
-            
             return this.processTrendingPets(pets);
         } catch (error) {
             console.error('Error in RSSFeedModel.getTrendingPets:', error);
-            console.log('Database error, falling back to demo data for trending pets');
             const validatedFilters = this.validateTrendingFilters(filters);
             const demoPets = this.rssFeedDTO.getDemoPets({ ...validatedFilters, type: 'popular' });
             return this.processTrendingPets(demoPets);

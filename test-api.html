@@ -102,31 +102,24 @@
             e.preventDefault();
             const resultDiv = document.getElementById('api-result');
             resultDiv.innerHTML = '<p>Testing API submission...</p>';
-            
             const formData = new FormData(e.target);
-            
-            // Add required JSON fields
             formData.append('tags', JSON.stringify([]));
             formData.append('medicalHistory', JSON.stringify([]));
             formData.append('careResources', JSON.stringify([]));
             formData.append('careSchedule', JSON.stringify([]));
             formData.append('profileImageIndex', '0');
-            
             try {
                 const response = await fetch('http://localhost:8080/api/pets', {
                     method: 'POST',
                     body: formData
                 });
-                
+
                 const result = await response.json();
-                
                 if (response.ok) {
                     resultDiv.innerHTML = '<h3 class="success">✅ API Success:</h3><pre>' + JSON.stringify(result, null, 2) + '</pre>';
                 } else {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
-                
-                console.log('Success:', result);
             } catch (error) {
                 resultDiv.innerHTML = '<h3 class="error">❌ API Error:</h3><pre>' + error.message + '</pre>';
                 console.error('Error:', error);
@@ -138,7 +131,6 @@
             resultDiv.innerHTML = '<p>Opening add pet form and testing...</p>';
             
             try {
-                // Open the add pet form in a new window/tab
                 const addPetWindow = window.open('http://127.0.0.1:5500/frontend/pets/add-pet/add-pet.html', '_blank');
                 
                 if (addPetWindow) {
@@ -150,8 +142,6 @@
                 resultDiv.innerHTML = '<h3 class="error">❌ Error:</h3><pre>' + error.message + '</pre>';
             }
         }
-
-        // Auto test API status on page load
         window.addEventListener('load', testAPIStatus);
     </script>
 </body>

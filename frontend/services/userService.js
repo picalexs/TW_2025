@@ -86,10 +86,6 @@ class UserService {
   logout() {
     this.apiService.setAuthToken(null);
     this._clearAuthState();
-    
-    if (this.debug) {
-      console.log('User logged out');
-    }
   }
 
   async register(userData) {

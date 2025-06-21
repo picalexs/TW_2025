@@ -30,13 +30,11 @@ class UserController {
       if (!req.user || req.user.role !== 'admin') {
         return sendResponse(res, 403, { success: false, message: "Forbidden: Only administrators can access this resource." });
       }
-
-      console.log('[UserController] Fetching all users.');
       const users = await userModel.getAllWithAdoptionCounts();
       if (users && users.length > 0) {
-        sendResponse(res, 200, { success: true, users: users });
+        sendResponse(res, 200, { success: true, users });
       } else {
-        sendResponse(res, 404, { success: false, message: "No users found." });
+        sendResponse(res, 404, { success: false, message: 'No users found.' });
       }
     } catch (error) {
       console.error("Error fetching all users:", error);
@@ -502,16 +500,11 @@ class UserController {
 
   async getAllUsersWithAdoptions(req, res) {
     try {
-      console.log(`[UserController] Fetching all users with adoptions (Public access).`); // Mesaj de log actualizat
       const users = await userModel.getAllWithAdoptionCounts();
-
-      console.log('[UserController] Raw result from model:', users); // Adaugă acest log pentru a vedea ce returnează modelul
 
       if (users && users.length > 0) {
         sendResponse(res, 200, { success: true, users: users });
-        console.log('[UserController] Successfully sent users with adoptions response.');
       } else {
-        console.log('[UserController] No users found with adoption counts or result is empty.');
         sendResponse(res, 404, { success: false, message: "No users found with adoption counts." });
       }
     } catch (error) {

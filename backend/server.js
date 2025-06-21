@@ -13,7 +13,6 @@ const handleConfigRoutes = require('./routes/configRoutes');
 const handleRSSRoutes = require('./routes/rssFeedRoutes');
 const { handleNotificationRoutes } = require('./routes/notificationRoutes');
 const handleFrontendRoutes = require('./routes/frontendRoutes');
-const { sendResponse } = require('./utils/helpers');
 
 const { verifyToken, checkRole } = require('./middleware/authMiddleware');
 
@@ -65,23 +64,17 @@ const compressResponse = (data, acceptEncoding) => {
 
 const sendCompressedResponse = (res, statusCode, data, contentType = 'application/json') => {
   let responseData;
-
   if (typeof data === 'object' && contentType === 'application/json') {
     responseData = JSON.stringify(data);
   } else {
     responseData = data;
   }
-
   const acceptEncoding = res.req ? res.req.headers['accept-encoding'] : '';
   const { data: compressedData, encoding } = compressResponse(responseData, acceptEncoding);
-
   res.setHeader('Content-Type', contentType);
-
   if (encoding) {
     res.setHeader('Content-Encoding', encoding);
-    console.log(`API Response compressed with ${encoding} (${Buffer.byteLength(responseData)} -> ${compressedData.length} bytes)`);
   }
-
   res.setHeader('Content-Length', Buffer.byteLength(compressedData));
   res.writeHead(statusCode);
   res.end(compressedData);

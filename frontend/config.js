@@ -27,7 +27,6 @@ async function loadConfig() {
     if (response.ok) {
       const config = await response.json();
       window.APP_CONFIG.api.baseURL = `http://${config.apiHost}:${config.apiPort}`;
-      console.log('Configuration loaded:', window.APP_CONFIG.api.baseURL);
     }
   } catch (error) {
     console.warn('Could not load dynamic config, using defaults:', error.message);
@@ -35,4 +34,3 @@ async function loadConfig() {
 }
 
 loadConfig();
-console.log('Application configuration loaded:', window.APP_CONFIG);

@@ -50,9 +50,7 @@ class AddPetPage {
     const urlParams = new URLSearchParams(window.location.search);
     this.isEditMode = urlParams.get('edit') === 'true';
     this.editPetId = urlParams.get('id');
-    
     if (this.isEditMode) {
-      console.log('Edit mode detected for pet ID:', this.editPetId);
       this.updateUIForEditMode();
     }
   }  

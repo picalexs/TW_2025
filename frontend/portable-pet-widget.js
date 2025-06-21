@@ -143,41 +143,8 @@
                 }
             })
             .catch(error => {
-                console.log('JSON API failed, trying RSS fallback:', error.message);
-                
-                fetch(rssUrl)
-                    .then(response => {
-                        if (!response.ok) throw new Error('RSS feed failed');
-                        return response.text();
-                    })
-                    .then(xmlText => {
-                        const parser = new DOMParser();
-                        const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
-                        const items = xmlDoc.querySelectorAll('item');
-                        
-                        const pets = Array.from(items).map(item => {
-                            const title = item.querySelector('title')?.textContent || '';
-                            const description = item.querySelector('description')?.textContent || '';
-                            
-                            const titleParts = title.split(' - ');
-                            const name = titleParts[0] || 'Unknown';
-                            const breed = titleParts[1] || '';
-                            
-                            return {
-                                name: name,
-                                breed: breed,
-                                species: breed.toLowerCase().includes('dog') ? 'Dog' : 
-                                        breed.toLowerCase().includes('cat') ? 'Cat' : '',
-                                description: description
-                            };
-                        });
-                        
-                        displayPets(pets);
-                    })
-                    .catch(rssError => {
-                        console.error('Both JSON and RSS feeds failed:', rssError);
-                        displayError('Unable to load pets at the moment');
-                    });
+                console.error('Error loading pets data:', error);
+                displayError('Failed to load pets data. Please try again later.');
             });
     }
     

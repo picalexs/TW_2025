@@ -44,7 +44,6 @@ if (!isMainThread) {
           
           childProcess.on('close', (code) => {
             if (code === 0) {
-              console.log(`✅ Minified: ${path.basename(inputPath)} -> ${path.basename(outputPath)}`);
               resolve();
             } else {
               const errorMsg = stderr || `Process exited with code ${code}`;

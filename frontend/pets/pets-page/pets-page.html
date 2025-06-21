@@ -226,7 +226,6 @@
                 initializeAdvancedFilters();
                 initializeFilterButtons();
                 
-                // Initialize RSS Manager
                 const rssManager = new RSSManager();
                 rssManager.init();
                 window.rssManager = rssManager;
@@ -237,11 +236,9 @@
                         if (pets && pets.length > 0) {
                             renderPets(pets);
                         } else {
-                            console.log("No pets received, retrying in 3 seconds...");
                             setTimeout(loadPetsWithRetry, 3000);
                         }
                     } catch (error) {
-                        console.log("Failed to load pets, retrying in 3 seconds...", error);
                         setTimeout(loadPetsWithRetry, 3000);
                     }
                 };

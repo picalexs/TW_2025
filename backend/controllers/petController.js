@@ -175,17 +175,12 @@ class PetController {
       if (contentType && contentType.includes('multipart/form-data')) {
         const fields = {};
         const files = [];
-        
         const busboy = Busboy({ headers: req.headers });
-        
         busboy.on('field', (fieldname, val) => {
           fields[fieldname] = val;
         });
-        
         busboy.on('file', (fieldname, file, info) => {
           const { filename, encoding, mimeType } = info;
-          console.log(`Received file for update: ${filename}, type: ${mimeType}`);
-          
           if (!filename) {
             file.resume();
             return;
@@ -203,11 +198,8 @@ class PetController {
             });
           });
         });
-          busboy.on('finish', async () => {
+        busboy.on('finish', async () => {
           try {
-            console.log('Update form fields:', fields);
-            console.log('Update files count:', files.length);
-            
             const result = await petModel.updatePet(id, fields, files);
             if (!result) {
               return sendResponse(res, 404, { error: "Pet not found for update" });
@@ -247,8 +239,8 @@ class PetController {
               sendResponse(res, 200, result);
             }
           } catch (error) {
-            console.error(`Error in update pet processing:`, error);
-            sendResponse(res, 500, { error: "Failed to update pet", message: error.message });
+            console.error('Error updating pet:', error);
+            sendResponse(res, 500, { error: 'Failed to update pet', message: error.message });
           }
         });
         
@@ -263,8 +255,8 @@ class PetController {
         }
       }
     } catch (error) {
-      console.error(`Error updating pet with ID ${id}:`, error);
-      sendResponse(res, 500, { error: "Failed to update pet", message: error.message });
+      console.error('Error in updatePet:', error);
+      sendResponse(res, 500, { error: 'Internal server error', message: error.message });
     }
   }
 
