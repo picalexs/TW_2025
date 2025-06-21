@@ -3,7 +3,7 @@ const RSSFeedModel = require('../models/rssFeedModel');
 
 class RSSFeedController {
     constructor() {
-        this.rssFeedModel = new RSSFeedModel();
+        this.rssFeedModel = RSSFeedModel;
     }
 
     async generateRSSFeed(req, res) {
