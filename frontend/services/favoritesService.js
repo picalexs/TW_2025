@@ -1,33 +1,25 @@
-function getAuthHeaders() {
-  const token = localStorage.getItem('authToken');
-  return token ? { 'Authorization': 'Bearer ' + token } : {};
-}
+import ApiService from './api.min.js';
 
 export default class FavoritesService {
   constructor(options = {}) {
-    this.baseUrl = options.baseUrl || '';
+    this.api = new ApiService(options.baseUrl);
   }
+
   async getFavorites(userId) {
-    const res = await fetch(`/api/favorites?user_id=${userId}`, {
-      headers: getAuthHeaders()
-    });
-    if (!res.ok) throw new Error('Eroare la încărcare favorite');
-    return res.json();
+    // GET /api/favorites?user_id=...
+    const response = await this.api.get('/api/favorites', { user_id: userId });
+    return response;
   }
+
   async addFavorite(userId, animalId) {
-    const res = await fetch(`/api/favorites?user_id=${userId}&animal_id=${animalId}`, {
-      method: 'POST',
-      headers: getAuthHeaders()
-    });
-    if (!res.ok) throw new Error('Eroare la adăugare favorite');
-    return res.json();
+    // POST /api/favorites?user_id=...&animal_id=...
+    const response = await this.api.post(`/api/favorites?user_id=${userId}&animal_id=${animalId}`);
+    return response;
   }
+
   async removeFavorite(userId, animalId) {
-    const res = await fetch(`/api/favorites?user_id=${userId}&animal_id=${animalId}`, {
-      method: 'DELETE',
-      headers: getAuthHeaders()
-    });
-    if (!res.ok) throw new Error('Eroare la ștergere favorite');
-    return res.json();
+    // DELETE /api/favorites?user_id=...&animal_id=...
+    const response = await this.api.delete(`/api/favorites?user_id=${userId}&animal_id=${animalId}`);
+    return response;
   }
 }
