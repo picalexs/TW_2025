@@ -54,7 +54,6 @@ async function handleLogin(event) {
   
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
-  //const rememberMe = document.querySelector('.form-options input[type="checkbox"]').checked;
   
   console.log('Login attempt:', { email, password: '****'});
 
