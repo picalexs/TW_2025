@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pet Adoption Widget Demo - External Site</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .demo-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .header p {
+            color: #666;
+            font-size: 1.2em;
+            margin: 0;
+        }
+        .content-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+        .content-section h2 {
+            color: #495057;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .demo-text {
+            background: white;
+            border-left: 4px solid #007bff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .widget-container {
+            background: white;
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .widget-container h3 {
+            margin-top: 0;
+            color: #6c757d;
+            font-size: 1.1em;
+        }
+        .note {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+            color: #856404;
+        }
+        .note strong {
+            color: #533f03;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #dee2e6;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="header">
+            <h1>🐾 Pawsome Pet Adoption Center</h1>
+            <p>Finding loving homes for animals in need</p>
+        </div>
+
+        <div class="content-section">
+            <h2>About Our Mission</h2>
+            <div class="demo-text">
+                <p>Welcome to our pet adoption website! We are dedicated to connecting loving families with animals in need of homes. Our mission is to reduce pet homelessness and ensure every animal finds a safe, loving environment.</p>
+                <p>We work with local shelters and rescue organizations to provide comprehensive care for animals while they wait for their forever homes.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Featured Pets Available for Adoption</h2>
+            <div class="note">
+                <strong>Live Feed:</strong> This widget displays real-time data from our pet adoption database. It automatically updates to show the latest available pets.
+            </div>
+            
+            <div class="widget-container">
+                <h3>🏠 Pets Looking for Homes</h3>
+                
+                <!-- EMBED CODE STARTS HERE - Copy this section to your website -->
+                <!-- Pet Adoption RSS Feed Widget -->
+<div id="pet-rss-widget" style="max-width: 600px; border: 1px solid #ddd; border-radius: 8px; padding: 16px; font-family: Arial, sans-serif; background: #fff;">
+    <div style="display: flex; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #eee; padding-bottom: 8px;">
+        <span style="font-size: 20px; margin-right: 8px;">🐾</span>
+        <h4 style="margin: 0; color: #333; font-size: 16px;">Recent Pets for Adoption</h4>
+    </div>
+    <div id="pet-rss-items" style="min-height: 100px;">
+        <div style="text-align: center; color: #666; padding: 20px;">
+            <div style="display: inline-block; width: 20px; height: 20px; border: 2px solid #ddd; border-top: 2px solid #007bff; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+            <p style="margin: 8px 0 0 0;">Loading pets...</p>
+        </div>
+    </div>
+    <div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid #eee;">
+        <a href="http://localhost:8080/api/rss/pets?type=recent&zone=&breed=&species=&limit=10" target="_blank" style="color: #007bff; text-decoration: none; font-size: 12px;">📡 RSS Feed</a>
+        <span style="color: #ccc; margin: 0 8px;">•</span>
+        <a href="http://localhost:8080/pets" target="_blank" style="color: #007bff; text-decoration: none; font-size: 12px;">View All Pets</a>
+    </div>
+</div>
+
+<style>
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+</style>
+
+<script>
+(function() {
+    // Try to load from JSON API first (better for local dev), fallback to RSS
+    const jsonApiUrl = 'http://localhost:8080/api/pets/feed?type=recent&zone=&breed=&species=&limit=10';
+    const rssUrl = 'http://localhost:8080/api/rss/pets?type=recent&zone=&breed=&species=&limit=10';
+    const container = document.getElementById('pet-rss-items');
+    
+    function displayError(message) {
+        container.innerHTML = '<p style="color: #999; text-align: center; padding: 20px; margin: 0;">' + message + '</p>';
+    }
+    
+    function displayPets(pets) {
+        if (!pets || pets.length === 0) {
+            displayError('No pets available at the moment');
+            return;
+        }
+        
+        container.innerHTML = pets.slice(0, 5).map(pet => {
+            const age = pet.age || pet.AGE || 'Unknown age';
+            const name = pet.name || pet.NAME || 'Unnamed pet';
+            const species = pet.species || pet.SPECIES || '';
+            const breed = pet.breed || pet.BREED || '';
+            const description = pet.description || pet.DESCRIPTION || '';
+            const city = pet.city || pet.CITY || '';
+            
+            const petInfo = [species, breed].filter(Boolean).join(' • ');
+            const location = city ? ' in ' + city : '';
+            const desc = description.length > 100 ? description.substring(0, 100) + '...' : description;
+            
+            return `
+                <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #f0f0f0;">
+                    <h5 style="margin: 0 0 4px 0; color: #333; font-size: 14px;">
+                        🐕 ${name} (${age})
+                    </h5>
+                    <p style="margin: 0 0 4px 0; font-size: 12px; color: #666;">
+                        ${petInfo}${location}
+                    </p>
+                    <p style="margin: 0; font-size: 12px; color: #888; line-height: 1.4;">
+                        ${desc}
+                    </p>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    // Try JSON API first
+    fetch(jsonApiUrl)
+        .then(response => {
+            if (!response.ok) throw new Error('JSON API failed');
+            return response.json();
+        })
+        .then(data => {
+            const pets = data.data || data.pets || data;
+            displayPets(Array.isArray(pets) ? pets : []);
+        })
+        .catch(() => {
+            // Fallback to RSS parsing
+            fetch(rssUrl)
+                .then(response => {
+                    if (!response.ok) throw new Error('RSS feed failed');
+                    return response.text();
+                })
+                .then(str => {
+                    const parser = new DOMParser();
+                    const xml = parser.parseFromString(str, "text/xml");
+                    const items = xml.querySelectorAll("item");
+                    
+                    const pets = Array.from(items).map(item => {
+                        const title = item.querySelector("title")?.textContent || '';
+                        const description = item.querySelector("description")?.textContent || '';
+                        
+                        // Extract name and age from title (format: "Name (Age)")
+                        const titleMatch = title.match(/^(.+?)\s*\((.+?)\)/);
+                        const name = titleMatch ? titleMatch[1] : title;
+                        const age = titleMatch ? titleMatch[2] : '';
+                        
+                        return { name, age, description, species: '', breed: '', city: '' };
+                    });
+                    
+                    displayPets(pets);
+                })
+                .catch(() => {
+                    displayError('Unable to load pet data. RSS feed may not be accessible.');
+                });
+        });
+})();
+</script>
+                <!-- EMBED CODE ENDS HERE -->
+                
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>How to Add This Widget to Your Website</h2>
+            <div class="demo-text">
+                <p><strong>Easy Integration:</strong> Simply copy the embed code from the widget above and paste it into your website's HTML. The widget is completely self-contained with its own styling and JavaScript.</p>
+                
+                <p><strong>Customizable:</strong> You can modify the widget's appearance by adjusting the inline styles, or customize the data by changing the API parameters (type, species, breed, zone, limit).</p>
+                
+                <p><strong>Live Data:</strong> The widget automatically fetches the latest pet adoption data from our servers and displays it in an attractive, responsive format.</p>
+                
+                <p><strong>Cross-Platform Compatible:</strong> Works on any website that supports HTML, CSS, and JavaScript - from simple static sites to complex web applications.</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <h2>Contact Information</h2>
+            <div class="demo-text">
+                <p><strong>Phone:</strong> (555) 123-PETS</p>
+                <p><strong>Email:</strong> adoptions@pawsomepets.com</p>
+                <p><strong>Address:</strong> 123 Pet Adoption Lane, Animal City, AC 12345</p>
+                <p><strong>Hours:</strong> Monday-Saturday 9:00 AM - 6:00 PM, Sunday 12:00 PM - 4:00 PM</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>🐾 This is a demonstration of the Pet Adoption RSS Widget 🐾</p>
+            <p>Widget powered by <strong>Pet Adoption API</strong> • <a href="http://localhost:8080/api/rss/demo" target="_blank">RSS Feed</a> • <a href="http://localhost:8080/pets" target="_blank">Browse All Pets</a></p>
+        </div>
+    </div>
+</body>
+</html>

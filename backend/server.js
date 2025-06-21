@@ -10,6 +10,7 @@ const { handleTestimonialRoutes } = require('./routes/testimonialRoutes');
 const { handleOwnerReviewRoutes } = require('./routes/ownerReviewRoutes');
 const handleStaticRoutes = require('./routes/staticRoutes');
 const handleConfigRoutes = require('./routes/configRoutes');
+const handleRSSRoutes = require('./routes/rssFeedRoutes');
 const { handleNotificationRoutes } = require('./routes/notificationRoutes');
 const handleFrontendRoutes = require('./routes/frontendRoutes');
 const { sendResponse } = require('./utils/helpers');
@@ -92,7 +93,10 @@ const server = http.createServer(async (req, res) => {
   const allowedOrigins = generateAllowedOrigins();
 
   const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
+  
+  if (req.url.includes('/api/pets/feed') || req.url.includes('/api/rss/')) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+  } else if (allowedOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);
   }
 
@@ -175,6 +179,10 @@ const server = http.createServer(async (req, res) => {
 
     if (!routeHandled) {
       routeHandled = await handleNotificationRoutes(req, res);
+    }
+
+    if (!routeHandled) {
+      routeHandled = await handleRSSRoutes(req, res);
     }
 
     if (!routeHandled) {

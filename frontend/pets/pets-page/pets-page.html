@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <title data-i18n="pageTitle" data-i18n-fallback="Available Pets"></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">        
-    
     <link rel="stylesheet" href="../../global/global.min.css">
     <link rel="stylesheet" href="../../global/pet-cards.css">
+    <link rel="stylesheet" href="../../global/rss-widget.css">
     <link rel="stylesheet" href="pets-page.min.css">
 </head>
 <body>
@@ -24,7 +24,7 @@
         </div>
       </div>
     </div>    
-    <main class="section-container">
+    <main class="section-container">        
         <div class="section-header">
             <h1 class="section-title" data-i18n="sectionTitle" data-i18n-fallback="Available Pets for Adoption"></h1>
             <button id="add-pet-btn" class="btn btn-primary add-pet-button" data-i18n="addPetButton" data-i18n-fallback="Add New Pet">
@@ -32,6 +32,10 @@
                 Add New Pet
             </button>
         </div>
+        
+        <!-- RSS Sharing Widget -->
+        <div id="rss-sharing-widget"></div>
+        
         <div id="recommendations-section" class="recommendations-section" style="display: none;">
             <div class="section-header">
                 <h2 class="section-subtitle" data-i18n="smartRecommendations" data-i18n-fallback="Smart Recommendations for You"></h2>
@@ -214,12 +218,18 @@
         import { fetchPets, renderPets, showPetLoadError, initializeViewToggle, initializeAdvancedFilters, initializeFilterButtons } from './pets-page.min.js';
         import '../../global/global.min.js'; 
         import languageManager from '../../languages/language.min.js';
+        import RSSManager from '../../services/rssManager.js';
 
         document.addEventListener('DOMContentLoaded', async () => {
             try {
                 initializeViewToggle();
                 initializeAdvancedFilters();
                 initializeFilterButtons();
+                
+                // Initialize RSS Manager
+                const rssManager = new RSSManager();
+                rssManager.init();
+                window.rssManager = rssManager;
                 
                 const loadPetsWithRetry = async () => {
                     try {

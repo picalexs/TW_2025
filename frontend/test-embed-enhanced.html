@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Embed Code Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-section h2 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .embed-preview {
+            border: 2px dashed #ccc;
+            padding: 20px;
+            margin: 15px 0;
+            background: #fafafa;
+        }
+        .controls {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .controls label {
+            display: inline-block;
+            width: 100px;
+            margin-right: 10px;
+        }
+        .controls input, .controls select {
+            margin: 5px;
+            padding: 5px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .code-block {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .status.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .status.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .status.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+    </style>
+</head>
+<body>
+    <h1>🐾 Enhanced RSS Embed Code Test</h1>
+    <p>This page tests the new self-contained JavaScript RSS embed widget that works with local development servers.</p>
+
+    <div class="test-section">
+        <h2>📋 Embed Code Generator</h2>
+        <div class="controls">
+            <div>
+                <label>Type:</label>
+                <select id="feedType">
+                    <option value="recent">Recent</option>
+                    <option value="popular">Popular</option>
+                    <option value="trending">Trending</option>
+                </select>
+            </div>
+            <div>
+                <label>Species:</label>
+                <input type="text" id="species" placeholder="e.g., dog, cat">
+            </div>
+            <div>
+                <label>Breed:</label>
+                <input type="text" id="breed" placeholder="e.g., Golden Retriever">
+            </div>
+            <div>
+                <label>Zone:</label>
+                <input type="text" id="zone" placeholder="e.g., New York">
+            </div>
+            <div>
+                <label>Limit:</label>
+                <input type="number" id="limit" value="5" min="1" max="20">
+            </div>
+        </div>
+        <button onclick="generateEmbedCode()">Generate Embed Code</button>
+        <button onclick="testEmbedCode()">Test Embed Code</button>
+        <button onclick="clearTest()">Clear Test</button>
+        
+        <div id="status"></div>
+        
+        <h3>Generated Embed Code:</h3>
+        <div id="embedCodeDisplay" class="code-block">Click "Generate Embed Code" to see the code here...</div>
+    </div>
+
+    <div class="test-section">
+        <h2>🎯 Live Embed Test</h2>
+        <p>This is where the embed code will be inserted and tested:</p>
+        <div id="embedTestArea" class="embed-preview">
+            <p style="text-align: center; color: #666;">No embed code loaded yet. Use the controls above to generate and test an embed.</p>
+        </div>
+    </div>
+
+    <div class="test-section">
+        <h2>🔗 API Endpoints Test</h2>
+        <button onclick="testJsonFeed()">Test JSON Feed</button>
+        <button onclick="testRSSFeed()">Test RSS Feed</button>
+        <button onclick="testShareAPI()">Test Share API</button>
+        
+        <div id="apiTestResults"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:8080/api';
+        let currentEmbedCode = '';
+
+        function showStatus(message, type = 'info') {
+            const statusDiv = document.getElementById('status');
+            statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        function buildQueryParams() {
+            const params = new URLSearchParams();
+            
+            const type = document.getElementById('feedType').value;
+            const species = document.getElementById('species').value.trim();
+            const breed = document.getElementById('breed').value.trim();
+            const zone = document.getElementById('zone').value.trim();
+            const limit = document.getElementById('limit').value;
+            
+            params.append('type', type);
+            if (species) params.append('species', species);
+            if (breed) params.append('breed', breed);
+            if (zone) params.append('zone', zone);
+            params.append('limit', limit);
+            
+            return params.toString();
+        }
+
+        async function generateEmbedCode() {
+            showStatus('Generating embed code...', 'info');
+            
+            try {
+                const queryParams = buildQueryParams();
+                const response = await fetch(`${API_BASE}/rss/share?${queryParams}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                if (data.success && data.data.embedCode) {
+                    currentEmbedCode = data.data.embedCode;
+                    document.getElementById('embedCodeDisplay').textContent = currentEmbedCode;
+                    showStatus('Embed code generated successfully!', 'success');
+                } else {
+                    throw new Error('Invalid response format');
+                }
+                
+            } catch (error) {
+                console.error('Error generating embed code:', error);
+                showStatus(`Error generating embed code: ${error.message}`, 'error');
+            }
+        }
+
+        function testEmbedCode() {
+            if (!currentEmbedCode) {
+                showStatus('Please generate embed code first!', 'error');
+                return;
+            }
+            
+            showStatus('Testing embed code...', 'info');
+            
+            const testArea = document.getElementById('embedTestArea');
+            testArea.innerHTML = currentEmbedCode;
+            
+            showStatus('Embed code inserted! Check the Live Embed Test section below.', 'success');
+        }
+
+        function clearTest() {
+            document.getElementById('embedTestArea').innerHTML = '<p style="text-align: center; color: #666;">No embed code loaded yet. Use the controls above to generate and test an embed.</p>';
+            document.getElementById('embedCodeDisplay').textContent = 'Click "Generate Embed Code" to see the code here...';
+            currentEmbedCode = '';
+            showStatus('Test area cleared.', 'info');
+        }
+
+        async function testJsonFeed() {
+            const resultsDiv = document.getElementById('apiTestResults');
+            resultsDiv.innerHTML = '<p>Testing JSON feed...</p>';
+            
+            try {
+                const queryParams = buildQueryParams();
+                const response = await fetch(`${API_BASE}/pets/feed?${queryParams}`);
+                const data = await response.json();
+                
+                resultsDiv.innerHTML = `
+                    <h4>JSON Feed Test Results:</h4>
+                    <div class="code-block">${JSON.stringify(data, null, 2)}</div>
+                `;
+            } catch (error) {
+                resultsDiv.innerHTML = `<p style="color: red;">JSON Feed Error: ${error.message}</p>`;
+            }
+        }
+
+        async function testRSSFeed() {
+            const resultsDiv = document.getElementById('apiTestResults');
+            resultsDiv.innerHTML = '<p>Testing RSS feed...</p>';
+            
+            try {
+                const queryParams = buildQueryParams();
+                const response = await fetch(`${API_BASE}/rss/demo?${queryParams}`);
+                const text = await response.text();
+                
+                resultsDiv.innerHTML = `
+                    <h4>RSS Feed Test Results:</h4>
+                    <div class="code-block">${text.substring(0, 1000)}${text.length > 1000 ? '...' : ''}</div>
+                `;
+            } catch (error) {
+                resultsDiv.innerHTML = `<p style="color: red;">RSS Feed Error: ${error.message}</p>`;
+            }
+        }
+
+        async function testShareAPI() {
+            const resultsDiv = document.getElementById('apiTestResults');
+            resultsDiv.innerHTML = '<p>Testing Share API...</p>';
+            
+            try {
+                const queryParams = buildQueryParams();
+                const response = await fetch(`${API_BASE}/rss/share?${queryParams}`);
+                const data = await response.json();
+                
+                resultsDiv.innerHTML = `
+                    <h4>Share API Test Results:</h4>
+                    <div class="code-block">${JSON.stringify(data, null, 2)}</div>
+                `;
+            } catch (error) {
+                resultsDiv.innerHTML = `<p style="color: red;">Share API Error: ${error.message}</p>`;
+            }
+        }
+
+        // Auto-generate embed code on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            showStatus('Page loaded. Ready to test embed codes!', 'success');
+        });
+    </script>
+</body>
+</html>
