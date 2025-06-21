@@ -1,9 +1,11 @@
 import PetService from '../../services/petService.min.js';
+import FavoritesService from '../../services/favoritesService.js';
 import { setupMobileMenu, initializePageLanguage, checkLoginStatusAndToggleNavButtons } from '../../global/global.min.js';
 
 class PetDetailsPage {
   constructor() {
     this.petService = new PetService();
+    this.favoritesService = new FavoritesService();
     this.currentPet = null;
     this.currentImageIndex = 0;
     this.map = null;
@@ -446,16 +448,28 @@ class PetDetailsPage {
     contactForm.addEventListener('submit', (e) => this.handleContactSubmission(e));
   }
 
-  toggleFavorite() {
+  async toggleFavorite() {
     const favoriteBtn = document.getElementById('favorite-btn');
     const heartIcon = favoriteBtn.querySelector('.heart-icon');
-    favoriteBtn.classList.toggle('favorited');
-    if (favoriteBtn.classList.contains('favorited')) {
-      heartIcon.textContent = '♥';
-    } else {
-      heartIcon.textContent = '♡';
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      alert('Trebuie să fii autentificat pentru a folosi favoritele!');
+      return;
     }
-    console.log('Toggle favorite for pet:', this.currentPet.id);
+    const isNowFavorite = !favoriteBtn.classList.contains('favorited');
+    try {
+      if (isNowFavorite) {
+        await this.favoritesService.addFavorite(userId, this.currentPet.id);
+      } else {
+        await this.favoritesService.removeFavorite(userId, this.currentPet.id);
+      }
+      favoriteBtn.classList.toggle('favorited', isNowFavorite);
+      if (heartIcon) {
+        heartIcon.textContent = isNowFavorite ? '♥' : '♡';
+      }
+    } catch (e) {
+      alert('Eroare la actualizarea favoritei!');
+    }
   }
 
   showContactModal() {

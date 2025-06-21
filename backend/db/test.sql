@@ -1,5 +1,6 @@
-select  * from users;
+select  * from favorites;
 
+select * from users;
 SELECT COUNT(*) FROM users WHERE UPPER(TRIM(username)) = UPPER(TRIM('geo19'));
 SELECT COUNT(*) FROM users WHERE UPPER(TRIM(email)) = UPPER(TRIM('geo19@yahoo.com'));
 
