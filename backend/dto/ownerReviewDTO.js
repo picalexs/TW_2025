@@ -20,8 +20,6 @@ class OwnerReviewDTO extends AbstractDTO {
             would_recommend: Boolean(data.WOULD_RECOMMEND || data.would_recommend),
             created_at: data.CREATED_AT || data.created_at,
             updated_at: data.UPDATED_AT || data.updated_at,
-
-            // Additional fields
             reviewer_first_name: data.REVIEWER_FIRST_NAME || data.reviewer_first_name,
             reviewer_last_name: data.REVIEWER_LAST_NAME || data.reviewer_last_name,
             reviewer_profile_picture: data.REVIEWER_PROFILE_PICTURE || data.reviewer_profile_picture,
@@ -33,7 +31,8 @@ class OwnerReviewDTO extends AbstractDTO {
             reviewed_owner_role: data.REVIEWED_OWNER_ROLE || data.reviewed_owner_role,
             animal_id: data.ANIMAL_ID || data.animal_id,
             animal_name: data.ANIMAL_NAME || data.animal_name,
-            animal_species: data.ANIMAL_SPECIES || data.animal_species
+            animal_species: data.ANIMAL_SPECIES || data.animal_species,
+            animal_image_path: data.ANIMAL_IMAGE_PATH || data.animal_image_path
         };
     }
 
@@ -65,7 +64,8 @@ class OwnerReviewDTO extends AbstractDTO {
             animal: {
                 id: entity.animal_id,
                 name: entity.animal_name,
-                species: entity.animal_species
+                species: entity.animal_species,
+                imagePath: entity.animal_image_path
             }
         };
     }
@@ -92,7 +92,8 @@ class OwnerReviewDTO extends AbstractDTO {
             animal: {
                 id: entity.animal_id,
                 name: entity.animal_name,
-                species: entity.animal_species
+                species: entity.animal_species,
+                imagePath: entity.animal_image_path
             }
         };
     }

@@ -482,22 +482,6 @@ class UserController {
     return this.authenticateUser(req, res);
   }
 
-  // async getAllUsersWithAdoptions(req, res) {
-  //   try {
-  //     const users = await userModel.getAllWithAdoptionCounts();
-  //     sendResponse(res, 200, users);
-  //   } catch (error) {
-  //     console.error("Error getting users with adoption counts:", error);
-  //     console.error("Error details:", {
-  //       message: error.message,
-  //       code: error.code,
-  //       status: error.status,
-  //       stack: error.stack
-  //     });
-  //     sendResponse(res, 500, { error: "Failed to fetch users with adoption data", message: error.message });
-  //   }
-  // }
-
   async getAllUsersWithAdoptions(req, res) {
     try {
       const users = await userModel.getAllWithAdoptionCounts();
@@ -515,14 +499,6 @@ class UserController {
 
   async getUserById(req, res, id) {
     try {
-      if (!req.user) {
-        return sendResponse(res, 401, { success: false, message: "Unauthorized: Please log in to view user details." });
-      }
-
-      if (req.user.id !== id && req.user.role !== 'admin') {
-        return sendResponse(res, 403, { success: false, message: "Forbidden: You can only view your own profile, unless you are an admin." });
-      }
-
       console.log(`[UserController] Fetching user by ID: ${id}`);
       const user = await userModel.getById(id);
       if (user) {

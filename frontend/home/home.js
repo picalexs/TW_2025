@@ -16,7 +16,6 @@ function initHomePage() {
   loadPets();
   addTestimonialsSection();
   fetchAndRenderUsers();
-  addEventListeners();
   
   document.addEventListener('languageChanged', () => {
     console.log('Language changed, re-rendering user cards');
@@ -330,7 +329,6 @@ async function fetchAndRenderUsers() {
             usersGrid.appendChild(userCard);
           });
         }
-        addEventListeners();
         if (window.languageManager) {
           window.languageManager.updateContent();
         }
@@ -344,17 +342,6 @@ async function fetchAndRenderUsers() {
     }
   };
   loadUsersWithRetry();
-
-//   function addEventListeners() {
-//   document.querySelectorAll('.view-user-btn').forEach(button => {
-//     button.addEventListener('click', (event) => {
-//       event.preventDefault();
-//       const userId = event.currentTarget.getAttribute('data-user-id');
-//       console.log(`Viewing user details for user ID: ${userId}`);
-//       window.location.href = `/frontend/profile/profile.html?id=${userId}`;
-//     });
-//   });
-// }
 }
 
 document.addEventListener('DOMContentLoaded', () => {

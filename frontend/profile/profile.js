@@ -346,20 +346,17 @@ class ProfilePage {
           Math.floor(review.process_rating)
         )}${"☆".repeat(5 - Math.floor(review.process_rating))}</span></span>`
       );
+    }    const animalName = review.animal?.name || "Unknown pet";
+    const animalSpecies = review.animal?.species || "Unknown species"
+    let profileImagePath;
+    if (review.animal?.media && review.animal.media.length > 0) {
+      const imageMedia = review.animal.media.find(media => media.type === 'image' || !media.type);
+      profileImagePath = imageMedia ? imageMedia.filePath : review.animal.imagePath;
+    } else {
+      profileImagePath = review.animal?.imagePath || review.animal?.image_path;
     }
-    const animalName = review.animal?.name || "Unknown pet";
-    const animalSpecies = review.animal?.species || "Unknown species";
-    const animalId = review.animal?.id;
-
-    const petImagePath = animalId
-      ? window.ImagePathHandler.processPetImagePath(
-          `images/${animalSpecies?.toLowerCase() || "cat"}/${animalId}.jpg`
-        )
-      : window.ImagePathHandler.processPetImagePath(null);
-
-    const reviewerProfilePic = window.ImagePathHandler.processUserImagePath(
-      review.reviewer?.profile_picture
-    );
+    
+    const petImagePath = window.ImagePathHandler.processPetImagePath(profileImagePath);
 
     return `
       <div class="review-card owner-review">

@@ -818,17 +818,20 @@ body {
 .adoption-info-container {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 1.5rem;
+  justify-content: center;
 }
 
 .pet-image-container {
   flex-shrink: 0;
+  display: flex;
+  justify-content: center;
 }
 
 .pet-avatar {
-  width: 3.125rem;
-  height: 3.125rem;
-  border-radius: 50%;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 0.75rem;
   object-fit: cover;
   border: 0.125rem solid rgba(40, 167, 69, 0.2);
   box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.1);
@@ -842,14 +845,19 @@ body {
 .adoption-details {
   flex-grow: 1;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .pet-name {
   font-weight: 600;
   color: #28a745;
   margin: 0 0 0.25rem 0;
-  font-size: 1rem;
+  font-size: 1.1rem;
   transition: color 0.3s ease;
+  text-align: center;
 }
 
 .adoption-context:hover .pet-name {
@@ -857,14 +865,19 @@ body {
 }
 
 .adoption-label {
-  font-size: 0.875rem;
+  font-size: 0.9rem;
   color: var(--secondary-color);
   margin: 0;
+  text-align: center;
 }
 
 .adopter-info {
   flex-shrink: 0;
-  text-align: right;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .adopter-info.clickable-adopter {
@@ -888,12 +901,14 @@ body {
   margin: 0 0 0.25rem 0;
   font-size: 0.9rem;
   transition: color 0.3s ease;
+  text-align: center;
 }
 
 .adopter-role {
   font-size: 0.8rem;
   color: var(--secondary-color);
   margin: 0;
+  text-align: center;
 }
 
 @media (max-width: 480px) {

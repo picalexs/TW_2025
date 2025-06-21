@@ -13,7 +13,6 @@ const handleConfigRoutes = require('./routes/configRoutes');
 const handleRSSRoutes = require('./routes/rssFeedRoutes');
 const { handleNotificationRoutes } = require('./routes/notificationRoutes');
 const handleFrontendRoutes = require('./routes/frontendRoutes');
-
 const { verifyToken, checkRole } = require('./middleware/authMiddleware');
 
 const PORT = process.env.API_PORT || 8080;
@@ -114,23 +113,31 @@ const server = http.createServer(async (req, res) => {
   }
   try {
     let routeHandled = false;
+    
     const publicRoutes = [
-  '/api/users/register',
-  '/api/users/verify-email',
-  '/api/auth/login',
-  '/api/config',
-  '/api/status',
-  '/api/static/',
-  '/home/home.html',
-  '/api/pets',                 
-  '/api/users/with-adoptions', 
-  '/api/testimonials',        
-  '/api/testimonials/random',
-  '/api/pets/random',
-  '/api/auth/google/callback'
-];
+      '/api/users/register',
+      '/api/users/verify-email',
+      '/api/auth/login',
+      '/api/config',
+      '/api/status',
+      '/api/static/',
+      '/home/home.html',
+      '/api/pets',                 
+      '/api/users/with-adoptions', 
+      '/api/testimonials',        
+      '/api/testimonials/random',
+      '/api/pets/random',
+      '/api/auth/google/callback',
+      '/api/owner-reviews/owner/',
+      '/api/owner-reviews/user/',
+      '/api/owner-reviews/adoption/',
+      '/api/owner-reviews/can-review/'
+    ];
 
-    const isPublicRoute = publicRoutes.some(route => req.url.startsWith(route));
+    const userProfileMatch = req.url.match(/^\/api\/users\/\d+(\?.*)?$/);
+    const isUserProfileGet = userProfileMatch && req.method.toLowerCase() === 'get';
+
+    const isPublicRoute = publicRoutes.some(route => req.url.startsWith(route)) || isUserProfileGet;
 
     const isFrontendAsset = !req.url.startsWith('/api/') && req.url !== '/' && !req.url.startsWith('/home/');
 

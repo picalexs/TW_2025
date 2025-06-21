@@ -52,14 +52,8 @@ async function handleUserRoutes(req, res) {
         const id = parseInt(userIdMatch[1]);
 
         if (method === "get") {
-            console.log(`[UserRoutes] Handling /api/users/${id} GET request (Protected)`);
-            await new Promise((resolve, reject) => {
-                verifyToken(req, res, async (err) => {
-                    if (err) return reject(err);
-                    await userController.getUserById(req, res, id);
-                    resolve();
-                });
-            });
+            console.log(`[UserRoutes] Handling /api/users/${id} GET request (Public)`);
+            await userController.getUserById(req, res, id);
             return true;
         } else if (method === "put") {
             console.log(`[UserRoutes] Handling /api/users/${id} PUT request (Protected)`);

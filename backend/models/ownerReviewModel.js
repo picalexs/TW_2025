@@ -66,11 +66,18 @@ class OwnerReviewModel extends AbstractModel {
                        u.username as reviewer_username,
                        a.animal_id,
                        an.name as animal_name,
-                       an.species as animal_species
+                       an.species as animal_species,
+                       m.file_path as animal_image_path
                 FROM ${this.tableName} ow
                 JOIN users u ON ow.reviewer_id = u.id
                 JOIN adoptions a ON ow.adoption_id = a.id
                 JOIN animals an ON a.animal_id = an.id
+                LEFT JOIN (
+                    SELECT animal_id, file_path, 
+                           ROW_NUMBER() OVER (PARTITION BY animal_id ORDER BY id) as rn
+                    FROM media 
+                    WHERE type = 'image' OR type IS NULL
+                ) m ON an.id = m.animal_id AND m.rn = 1
                 WHERE ow.reviewed_owner_id = :ownerId
                 ORDER BY ow.created_at DESC
             `;
@@ -100,11 +107,18 @@ class OwnerReviewModel extends AbstractModel {
                        u.role as reviewed_owner_role,
                        a.animal_id,
                        an.name as animal_name,
-                       an.species as animal_species
+                       an.species as animal_species,
+                       m.file_path as animal_image_path
                 FROM ${this.tableName} ow
                 JOIN users u ON ow.reviewed_owner_id = u.id
                 JOIN adoptions a ON ow.adoption_id = a.id
                 JOIN animals an ON a.animal_id = an.id
+                LEFT JOIN (
+                    SELECT animal_id, file_path, 
+                           ROW_NUMBER() OVER (PARTITION BY animal_id ORDER BY id) as rn
+                    FROM media 
+                    WHERE type = 'image' OR type IS NULL
+                ) m ON an.id = m.animal_id AND m.rn = 1
                 WHERE ow.reviewer_id = :reviewerId
                 ORDER BY ow.created_at DESC
             `;

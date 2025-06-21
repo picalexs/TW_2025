@@ -52,7 +52,8 @@ class UserService {
 
   async getUserById(userId) {
     try {
-      return await this.apiService.get(`/api/users/${userId}`);
+      const response = await this.apiService.get(`/api/users/${userId}`);
+      return response.user || response;
     } catch (error) {
       if (this.debug) {
         console.error('Get user by ID error:', error);
