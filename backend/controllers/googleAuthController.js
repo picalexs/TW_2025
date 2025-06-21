@@ -80,7 +80,9 @@ class GoogleAuthController {
             //     user: { id: user.id, username: user.username, email: user.email, role: user.role }
             // });
 
-            const frontendHomeUrl = `http://localhost:5500/home/home.html?token=${appJwt}&id=${user.id}&username=${user.username}&email=${user.email}&role=${user.role || 'user'}`;
+            // Helper to fetch frontend base URL from an API with error handling and fallback
+            const frontendBaseUrl = await this.getFrontendBaseUrlFromApi();
+            const frontendHomeUrl = `${frontendBaseUrl}/home/home.html?token=${appJwt}&id=${user.id}&username=${user.username}&email=${user.email}&role=${user.role || 'user'}`;
             res.writeHead(302, { 'Location': frontendHomeUrl });
             res.end();
             console.log(`[GoogleAuth] Redirecting to frontend: ${frontendHomeUrl}`);
@@ -141,6 +143,39 @@ class GoogleAuthController {
             console.error('Error decoding Google ID token:', error);
             return null;
         }
+    }
+
+    getFrontendBaseUrlFromApi() {
+        return new Promise((resolve) => {
+            const https = require('https');
+            const apiUrl = 'https://your-api.com/frontend-url'; // TODO: Replace with your real API endpoint
+            https.get(apiUrl, (res) => {
+                let data = '';
+                res.on('data', chunk => data += chunk);
+                res.on('end', () => {
+                    const contentType = res.headers['content-type'] || '';
+                    if (res.statusCode === 200 && contentType.includes('application/json')) {
+                        try {
+                            const result = JSON.parse(data);
+                            if (result && result.url) {
+                                resolve(result.url);
+                                return;
+                            }
+                        } catch (e) {
+                            console.error('[GoogleAuth] Failed to parse frontend URL API response as JSON:', data);
+                        }
+                    } else {
+                        console.error('[GoogleAuth] Unexpected response from frontend URL API:', data);
+                    }
+                    // Fallback to default if anything fails
+                    console.warn('[GoogleAuth] Falling back to default frontend URL.');
+                    resolve('http://127.0.0.1:5501/frontend');
+                });
+            }).on('error', (err) => {
+                console.error('[GoogleAuth] Error fetching frontend URL from API:', err);
+                resolve('http://127.0.0.1:5501/frontend');
+            });
+        });
     }
 }
 
