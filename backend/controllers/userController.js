@@ -44,7 +44,6 @@ class UserController {
     }
   }
 
-
   // async getUserById(req, res, id) {
   //   try {
   //     const user = await userModel.getById(id);
@@ -275,7 +274,6 @@ class UserController {
     } catch (error) {
       console.error('Error during email verification:', error);
 
-      // Enhanced Oracle-specific error handling for email verification
       if (error.errorNum) {
         switch (error.errorNum) {
           case 1403:
@@ -314,7 +312,6 @@ class UserController {
       }
     }
   }
-
 
   // async updateUser(req, res, id) {
   //   try {

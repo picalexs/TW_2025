@@ -51,14 +51,14 @@ class GoogleAuthController {
                 console.log(`[GoogleAuth] User not found, creating new user for ${email}...`);
                 user = await userModel.createUserFromGoogle({ 
                     email: email, 
-                    username: name.replace(/\s/g, '').toLowerCase() + Math.floor(Math.random() * 10000), // Generează un username unic
+                    username: name.replace(/\s/g, '').toLowerCase() + Math.floor(Math.random() * 10000),
                     first_name: name.split(' ')[0],
                     last_name: name.split(' ').slice(1).join(' '),
                     profile_picture: picture,
                 });
 
             console.log('[GoogleAuth] New user created:', user);
-            if (!user || !user.id) { // Verifică dacă user a fost creat cu succes
+            if (!user || !user.id) {
                     throw new Error('User creation failed in database.');
                 }
             } else {
@@ -73,14 +73,6 @@ class GoogleAuthController {
             );
             console.log('[GoogleAuth] App JWT generated.');
 
-            // sendResponse(res, 200, { 
-            //     success: true, 
-            //     message: 'Login successful with Google!', 
-            //     token: appJwt,
-            //     user: { id: user.id, username: user.username, email: user.email, role: user.role }
-            // });
-
-            // Helper to fetch frontend base URL from an API with error handling and fallback
             const frontendBaseUrl = await this.getFrontendBaseUrlFromApi();
             const frontendHomeUrl = `${frontendBaseUrl}/home/home.html?token=${appJwt}&id=${user.id}&username=${user.username}&email=${user.email}&role=${user.role || 'user'}`;
             res.writeHead(302, { 'Location': frontendHomeUrl });
@@ -148,7 +140,10 @@ class GoogleAuthController {
     getFrontendBaseUrlFromApi() {
         return new Promise((resolve) => {
             const http = require('http');
-            const apiUrl = 'http://localhost:8080/api/frontend-url'; 
+            const baseUrl = process.env.BASE_URL;
+            const apiUrl = `${baseUrl}/api/frontend-url`;
+            const frontendUrl = `${baseUrl}/frontend`;
+
             http.get(apiUrl, (res) => {
                 let data = '';
                 res.on('data', chunk => data += chunk);
@@ -167,13 +162,12 @@ class GoogleAuthController {
                     } else {
                         console.error('[GoogleAuth] Unexpected response from frontend URL API:', data);
                     }
-                    // Fallback to default if anything fails
                     console.warn('[GoogleAuth] Falling back to default frontend URL.');
-                    resolve('http://127.0.0.1:5501/frontend');
+                    resolve(frontendUrl);
                 });
             }).on('error', (err) => {
                 console.error('[GoogleAuth] Error fetching frontend URL from API:', err);
-                resolve('http://127.0.0.1:5501/frontend');
+                resolve(frontendUrl);
             });
         });
     }

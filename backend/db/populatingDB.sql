@@ -195,7 +195,6 @@ BEGIN
 END;
 /
 
-
 commit;
 
 insert into adoptions (id, user_id, animal_id, request_date, adoption_date, status) values (1, 1, 1, current_timestamp - 5, null, 'pending');
@@ -503,6 +502,64 @@ insert into media (id, animal_id, type, file_path) values (57, 28, 'image', '/im
 insert into media (id, animal_id, type, file_path) values (58, 28, 'image', '/images/profile/cat/8.jpg');
 insert into media (id, animal_id, type, file_path) values (59, 30, 'image', '/images/profile/cat/9.jpg');
 insert into media (id, animal_id, type, file_path) values (60, 30, 'image', '/images/profile/cat/10.jpg');
+insert into media (id, animal_id, type, file_path) values (61, 31, 'image', '/images/profile/dog/1.jpg');
+insert into media (id, animal_id, type, file_path) values (62, 31, 'image', '/images/profile/dog/2.jpg');
+insert into media (id, animal_id, type, file_path) values (63, 33, 'image', '/images/profile/dog/3.jpg');
+insert into media (id, animal_id, type, file_path) values (64, 33, 'image', '/images/profile/dog/4.jpg');
+insert into media (id, animal_id, type, file_path) values (65, 35, 'image', '/images/profile/dog/5.jpg');
+insert into media (id, animal_id, type, file_path) values (66, 35, 'image', '/images/profile/dog/6.jpg');
+insert into media (id, animal_id, type, file_path) values (67, 37, 'image', '/images/profile/dog/7.jpg');
+insert into media (id, animal_id, type, file_path) values (68, 37, 'image', '/images/profile/dog/8.jpg');
+insert into media (id, animal_id, type, file_path) values (69, 39, 'image', '/images/profile/dog/9.jpg');
+insert into media (id, animal_id, type, file_path) values (70, 39, 'image', '/images/profile/dog/10.jpg');
+insert into media (id, animal_id, type, file_path) values (71, 41, 'image', '/images/profile/dog/1.jpg');
+insert into media (id, animal_id, type, file_path) values (72, 41, 'image', '/images/profile/dog/2.jpg');
+insert into media (id, animal_id, type, file_path) values (73, 43, 'image', '/images/profile/dog/3.jpg');
+insert into media (id, animal_id, type, file_path) values (74, 43, 'image', '/images/profile/dog/4.jpg');
+insert into media (id, animal_id, type, file_path) values (75, 45, 'image', '/images/profile/dog/5.jpg');
+insert into media (id, animal_id, type, file_path) values (76, 45, 'image', '/images/profile/dog/6.jpg');
+insert into media (id, animal_id, type, file_path) values (77, 47, 'image', '/images/profile/dog/7.jpg');
+insert into media (id, animal_id, type, file_path) values (78, 47, 'image', '/images/profile/dog/8.jpg');
+insert into media (id, animal_id, type, file_path) values (79, 49, 'image', '/images/profile/dog/9.jpg');
+insert into media (id, animal_id, type, file_path) values (80, 49, 'image', '/images/profile/dog/10.jpg');
+insert into media (id, animal_id, type, file_path) values (81, 51, 'image', '/images/profile/dog/1.jpg');
+insert into media (id, animal_id, type, file_path) values (82, 51, 'image', '/images/profile/dog/2.jpg');
+insert into media (id, animal_id, type, file_path) values (83, 53, 'image', '/images/profile/dog/3.jpg');
+insert into media (id, animal_id, type, file_path) values (84, 53, 'image', '/images/profile/dog/4.jpg');
+insert into media (id, animal_id, type, file_path) values (85, 55, 'image', '/images/profile/dog/5.jpg');
+insert into media (id, animal_id, type, file_path) values (86, 55, 'image', '/images/profile/dog/6.jpg');
+insert into media (id, animal_id, type, file_path) values (87, 57, 'image', '/images/profile/dog/7.jpg');
+insert into media (id, animal_id, type, file_path) values (88, 57, 'image', '/images/profile/dog/8.jpg');
+insert into media (id, animal_id, type, file_path) values (89, 59, 'image', '/images/profile/dog/9.jpg');
+insert into media (id, animal_id, type, file_path) values (90, 59, 'image', '/images/profile/dog/10.jpg');
+insert into media (id, animal_id, type, file_path) values (91, 32, 'image', '/images/profile/cat/1.jpg');
+insert into media (id, animal_id, type, file_path) values (92, 32, 'image', '/images/profile/cat/2.jpg');
+insert into media (id, animal_id, type, file_path) values (93, 34, 'image', '/images/profile/cat/3.jpg');
+insert into media (id, animal_id, type, file_path) values (94, 34, 'image', '/images/profile/cat/4.jpg');
+insert into media (id, animal_id, type, file_path) values (95, 36, 'image', '/images/profile/cat/5.jpg');
+insert into media (id, animal_id, type, file_path) values (96, 36, 'image', '/images/profile/cat/6.jpg');
+insert into media (id, animal_id, type, file_path) values (97, 38, 'image', '/images/profile/cat/7.jpg');
+insert into media (id, animal_id, type, file_path) values (98, 38, 'image', '/images/profile/cat/8.jpg');
+insert into media (id, animal_id, type, file_path) values (99, 40, 'image', '/images/profile/cat/9.jpg');
+insert into media (id, animal_id, type, file_path) values (100, 40, 'image', '/images/profile/cat/10.jpg');
+insert into media (id, animal_id, type, file_path) values (101, 42, 'image', '/images/profile/cat/1.jpg');
+insert into media (id, animal_id, type, file_path) values (102, 42, 'image', '/images/profile/cat/2.jpg');
+insert into media (id, animal_id, type, file_path) values (103, 44, 'image', '/images/profile/cat/3.jpg');
+insert into media (id, animal_id, type, file_path) values (104, 44, 'image', '/images/profile/cat/4.jpg');
+insert into media (id, animal_id, type, file_path) values (105, 46, 'image', '/images/profile/cat/5.jpg');
+insert into media (id, animal_id, type, file_path) values (106, 46, 'image', '/images/profile/cat/6.jpg');
+insert into media (id, animal_id, type, file_path) values (107, 48, 'image', '/images/profile/cat/7.jpg');
+insert into media (id, animal_id, type, file_path) values (108, 48, 'image', '/images/profile/cat/8.jpg');
+insert into media (id, animal_id, type, file_path) values (109, 50, 'image', '/images/profile/cat/9.jpg');
+insert into media (id, animal_id, type, file_path) values (110, 50, 'image', '/images/profile/cat/10.jpg');
+insert into media (id, animal_id, type, file_path) values (111, 52, 'image', '/images/profile/cat/1.jpg');
+insert into media (id, animal_id, type, file_path) values (112, 52, 'image', '/images/profile/cat/2.jpg');
+insert into media (id, animal_id, type, file_path) values (113, 54, 'image', '/images/profile/cat/3.jpg');
+insert into media (id, animal_id, type, file_path) values (114, 54, 'image', '/images/profile/cat/4.jpg');
+insert into media (id, animal_id, type, file_path) values (115, 56, 'image', '/images/profile/cat/5.jpg');
+insert into media (id, animal_id, type, file_path) values (116, 56, 'image', '/images/profile/cat/6.jpg');
+insert into media (id, animal_id, type, file_path) values (117, 58, 'image', '/images/profile/cat/7.jpg');
+insert into media (id, animal_id, type, file_path) values (118, 58, 'image', '/images/profile/cat/8.jpg');
 /
 
 DECLARE
