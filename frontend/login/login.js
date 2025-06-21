@@ -64,7 +64,9 @@ async function handleLogin(event) {
     if (response && response.user) {
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('userData', JSON.stringify(response.user));
-
+      if (response.token) {
+        localStorage.setItem('authToken', response.token);
+      }
       showMessage('Login successful! Redirecting...', 'success');
       window.location.href = '../home/home.html';
     } else {

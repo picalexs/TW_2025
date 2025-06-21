@@ -1,13 +1,22 @@
 import FavoritesService from '../services/favoritesService.js';
 
-const userId = localStorage.getItem('userId');
+function getCurrentUserId() {
+  const userId = localStorage.getItem('userId');
+  const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+  return (userId && isLoggedIn) ? userId : null;
+}
+
 const favoritesService = new FavoritesService();
 
 async function renderFavorites() {
   const container = document.getElementById('favorites-list');
   container.innerHTML = '';
+  const userId = getCurrentUserId();
   if (!userId) {
-    container.innerHTML = '<p>Trebuie să fii autentificat pentru a vedea favoritele.</p>';
+    const missing = [];
+    if (!localStorage.getItem('userId')) missing.push('userId');
+    if (localStorage.getItem('isLoggedIn') !== 'true') missing.push('isLoggedIn');
+    container.innerHTML = `<p>Trebuie să fii autentificat pentru a vedea favoritele.<br>Missing: ${missing.join(', ')}</p>`;
     return;
   }
   let pets = [];
