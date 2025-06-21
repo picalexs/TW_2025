@@ -65,7 +65,11 @@ class ProfilePage {
       this.hideLoading();
     } catch (error) {
       console.error("Error loading user profile:", error);
-      this.showError("Failed to load user profile");
+      if (error && error.details && error.details.status === 403) {
+        this.showError("Nu ai voie să vezi acest profil.");
+      } else {
+        this.showError("Failed to load user profile");
+      }
     }
   }
 
