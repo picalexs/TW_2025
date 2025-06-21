@@ -287,23 +287,26 @@ async function fetchAndRenderUsers() {
     console.error("Featured users section not found in HTML");
     return;
   }
-  
+
   // Keep trying to load users without timeout
   const loadUsersWithRetry = async () => {
     try {
       const userService = new UserService({ debug: true });
-      const allUsers = await userService.getAllUsersWithAdoptions();
-      
+      const allUsersResponse = await userService.getAllUsersWithAdoptions();
+      // Use .users property if present, otherwise empty array
+      const allUsers = Array.isArray(allUsersResponse)
+        ? allUsersResponse
+        : (Array.isArray(allUsersResponse?.users) ? allUsersResponse.users : []);
+
       const usersWithAdoptions = allUsers.filter(user => 
         user.adoption_count && user.adoption_count > 0
       );
-      
+
       if (usersWithAdoptions.length > 0) {
         const shuffledUsers = [...usersWithAdoptions].sort(() => Math.random() - 0.5);
         
         const maxUsersPerRow = 4;
         const availableUsers = shuffledUsers.length;
-        
         let usersToShow;
         if (availableUsers >= maxUsersPerRow * 2) {
           usersToShow = maxUsersPerRow * 2;
@@ -312,12 +315,10 @@ async function fetchAndRenderUsers() {
         } else {
           usersToShow = availableUsers;
         }
-        
         const featuredUsers = shuffledUsers.slice(0, usersToShow);
         const usersGrid = usersSection.querySelector('.users-grid');
         if (usersGrid) {
           usersGrid.innerHTML = '';
-          
           featuredUsers.forEach(user => {
             const userCard = window.CardRenderer.createUserCard(user, {
               format: 'element',
@@ -325,15 +326,11 @@ async function fetchAndRenderUsers() {
               showStats: true,
               clickAction: 'navigate'
             });
-            
-            // Mark as loaded card for smooth animation
             userCard.classList.add('loaded');
             usersGrid.appendChild(userCard);
           });
         }
-        
         addEventListeners();
-        
         if (window.languageManager) {
           window.languageManager.updateContent();
         }
@@ -346,7 +343,7 @@ async function fetchAndRenderUsers() {
       setTimeout(() => loadUsersWithRetry(), 5000);
     }
   };
-    loadUsersWithRetry();
+  loadUsersWithRetry();
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -373,7 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
  localStorage.setItem('userEmail', email);
  localStorage.setItem('userRole', role); 
  localStorage.setItem('isLoggedIn', 'true'); 
- localStorage.setItem('userData', JSON.stringify({ id: userId, username, email, role }));
+
  console.log('Login Google reușit: Token-ul și informațiile utilizatorului au fost salvate în localStorage.');
  console.log('Token:', token.substring(0, 30) + '...'); 
  console.log('Utilizator:', { userId, username, email, role });
