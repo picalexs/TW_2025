@@ -1,7 +1,7 @@
 import PetService from '../../services/petService.min.js';
 import { setupMobileMenu, initializePageLanguage, checkLoginStatusAndToggleNavButtons } from '../../global/global.min.js';
 
-class AddPetPage {  
+class AddPetPage {
   constructor() {
     this.petService = new PetService();
     this.availableTags = [];
@@ -15,9 +15,11 @@ class AddPetPage {
     this.isEditMode = false;
     this.editPetId = null;
     this.currentPetData = null;
+    this.map = null;
+    this.mapMarker = null;
     this.init();
   }
-  
+
   async init() {
     try {
       this.checkEditMode();
@@ -32,6 +34,10 @@ class AddPetPage {
       
       if (this.isEditMode && this.editPetId) {
         await this.loadPetDataForEdit();
+        this.initMap();
+      } else {
+        // For new pets, initialize map with default location
+        this.initMap();
       }
     } catch (error) {
       console.error('Error initializing add pet page:', error);
@@ -103,7 +109,7 @@ class AddPetPage {
     this.setFieldValue('pet-relations', pet.relationWithOthers);
     
     // Health information
-    this.setFieldValue('pet-health-status', pet.healthStatus);
+    this.setFieldValue('pet-health-status', pet.healthStatus);      
     
     // Location information
     if (pet.address) {
@@ -116,11 +122,16 @@ class AddPetPage {
     // Adoption information
     this.setFieldValue('adoption-status', pet.adoptionStatus);
     this.setFieldValue('adoption-fee', pet.adoptionFee);
-    
-    // Tags
+      // Tags
     if (pet.tags && Array.isArray(pet.tags)) {
+      if (this.availableTags.length === 0) {
+        await this.loadTags();
+        this.renderTags();
+      }
+      
       pet.tags.forEach(tag => {
-        this.selectedTags.add(parseInt(tag.id));
+        const tagId = typeof tag === 'object' ? tag.id : tag;
+        this.selectedTags.add(parseInt(tagId));
       });
       this.renderTags(); // Re-render to show selected tags
     }
@@ -137,7 +148,14 @@ class AddPetPage {
   setFieldValue(fieldId, value) {
     const field = document.getElementById(fieldId);
     if (field && value !== null && value !== undefined) {
-      field.value = value;
+      if (field.tagName === 'SELECT') {
+        // Use the improved dropdown value setting method
+        this.setDropdownValue(field, value);
+      } else {
+        field.value = value;        field.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      
+      console.log(`✓ Set field "${fieldId}" to value "${value}"`);
     }
   }
 
@@ -171,7 +189,7 @@ class AddPetPage {
           <div class="media-controls">
             <span>Video</span>
           </div>
-        `;
+        `;      
       }
       
       mediaPreview.appendChild(mediaElement);
@@ -179,9 +197,173 @@ class AddPetPage {
   }
 
   populateMedicalData(pet) {
-    // For now, we'll skip populating complex nested data like medical history
-    // This can be implemented later if the backend provides this data
-    console.log('Medical data population not yet implemented');
+    console.log('Populating medical data:', pet);
+    
+    // Populate medical history entries
+    if (pet.medicalHistory && Array.isArray(pet.medicalHistory)) {
+      // Filter out empty entries
+      const validMedicalHistory = pet.medicalHistory.filter(entry => 
+        entry && (entry.description || entry.date || entry.record_date)
+      );
+      
+      validMedicalHistory.forEach((entry, index) => {
+        console.log(`Populating medical history entry ${index + 1}:`, entry);
+        this.addMedicalHistoryEntry();
+        const lastEntry = document.querySelector('#medical-history-list .medical-history-entry:last-child');
+        if (lastEntry) {
+          const descField = lastEntry.querySelector('.medical-history-description');
+          const dateField = lastEntry.querySelector('.medical-history-date');
+          
+          if (descField && entry.description) {
+            descField.value = entry.description;
+            console.log(`✓ Set medical history description: "${entry.description}"`);
+          }
+          if (dateField && entry.date) {
+            // Format date properly for input field
+            const date = new Date(entry.date);
+            if (!isNaN(date.getTime())) {
+              dateField.value = date.toISOString().split('T')[0];
+              console.log(`✓ Set medical history date: "${dateField.value}"`);
+            }
+          } else if (dateField && entry.record_date) {
+            // Handle alternative date field name
+            const date = new Date(entry.record_date);
+            if (!isNaN(date.getTime())) {
+              dateField.value = date.toISOString().split('T')[0];
+              console.log(`✓ Set medical history record_date: "${dateField.value}"`);
+            }
+          } else if (dateField && !entry.date && !entry.record_date) {
+            // Set today's date as fallback for entries without dates
+            const today = new Date().toISOString().split('T')[0];
+            dateField.value = today;
+            console.log(`✓ Set fallback date to today: "${today}"`);
+          }
+        }
+      });
+    }
+    
+    // Populate care resources
+    if (pet.careResources && Array.isArray(pet.careResources)) {
+      const validCareResources = pet.careResources.filter(resource => 
+        resource && (resource.type || resource.resource_type || resource.title || resource.content)
+      );
+      
+      validCareResources.forEach((resource, index) => {
+        console.log(`Populating care resource entry ${index + 1}:`, resource);
+        this.addCareResourceEntry();
+        const lastEntry = document.querySelector('#care-resources-list .care-resources-entry:last-child');
+        if (lastEntry) {
+          const typeField = lastEntry.querySelector('.care-resource-type');
+          const titleField = lastEntry.querySelector('.care-resource-title');
+          const contentField = lastEntry.querySelector('.care-resource-content');
+            if (typeField && (resource.type || resource.resource_type)) {
+            const resourceType = resource.type || resource.resource_type;
+            this.setDropdownValue(typeField, resourceType);
+            console.log(`✓ Set care resource type: "${resourceType}"`);
+          } else if (typeField) {
+            this.setDropdownValue(typeField, 'general');
+            console.log(`✓ Set care resource type to default "general"`);
+          }
+          if (titleField && resource.title) {
+            titleField.value = resource.title;
+            console.log(`✓ Set care resource title: "${resource.title}"`);
+          }
+          if (contentField && resource.content) {
+            contentField.value = resource.content;
+            console.log(`✓ Set care resource content: "${resource.content}"`);
+          }
+        }
+      });
+    }
+    
+    // Populate care schedule
+    if (pet.careSchedule && Array.isArray(pet.careSchedule)) {
+      const validCareSchedule = pet.careSchedule.filter(schedule => 
+        schedule && (schedule.activity || schedule.hour || schedule.frequency)
+      );
+      
+      validCareSchedule.forEach((schedule, index) => {
+        console.log(`Populating care schedule entry ${index + 1}:`, schedule);
+        this.addCareScheduleEntry();
+        const lastEntry = document.querySelector('#care-schedule-list .care-schedule-entry:last-child');
+        if (lastEntry) {
+          const activityField = lastEntry.querySelector('.care-schedule-activity');
+          const hourField = lastEntry.querySelector('.care-schedule-hour');
+          const frequencyField = lastEntry.querySelector('.care-schedule-frequency');
+          
+          if (activityField && schedule.activity) {
+            activityField.value = schedule.activity;
+            console.log(`✓ Set care schedule activity: "${schedule.activity}"`);
+          }
+          if (hourField && schedule.hour) {
+            hourField.value = schedule.hour;
+            console.log(`✓ Set care schedule hour: "${schedule.hour}"`);
+          }          if (frequencyField && schedule.frequency) {
+            this.setDropdownValue(frequencyField, schedule.frequency);
+            console.log(`✓ Set care schedule frequency: "${schedule.frequency}"`);
+          } else if (frequencyField) {
+            this.setDropdownValue(frequencyField, 'other');
+            console.log(`✓ Set care schedule frequency to default "other"`);
+          }
+        }
+      });
+    }
+  }
+
+  setDropdownValue(selectElement, value) {
+    if (!selectElement || !value) return;
+    
+    console.log(`Setting dropdown value "${value}" for element with options:`, 
+      Array.from(selectElement.options).map(opt => `"${opt.value}"`));
+    
+    let mappedValue = value;
+    
+    if (selectElement.id === 'pet-health-status') {
+      if (value.toLowerCase() === 'healthy') {
+        mappedValue = 'excellent';
+        console.log(`✓ Mapped "healthy" to "excellent" for health status`);      
+      } else if (value.toLowerCase() === 'needs medication') {
+        mappedValue = 'special needs';
+        console.log(`✓ Mapped "needs medication" to "special needs" for health status`);
+      }
+    }
+    
+    const directMatch = Array.from(selectElement.options).find(opt => opt.value === mappedValue);
+    if (directMatch) {
+      selectElement.value = mappedValue;
+      console.log(`✓ Direct match found for "${mappedValue}"`);
+      selectElement.dispatchEvent(new Event('change', { bubbles: true }));
+      return;
+    }
+    
+    const lowerValue = mappedValue.toString().toLowerCase().trim();
+    const fallbackOption = Array.from(selectElement.options).find(opt => {
+      const optValue = opt.value.toLowerCase().trim();
+      const optText = opt.textContent.toLowerCase().trim();
+      return optValue === lowerValue || optText === lowerValue ||
+             optValue.replace(/[_\s]/g, '') === lowerValue.replace(/[_\s]/g, '') ||
+             optText.replace(/[_\s]/g, '') === lowerValue.replace(/[_\s]/g, '');
+    });
+    
+    if (fallbackOption) {
+      selectElement.value = fallbackOption.value;
+      console.log(`✓ Fallback match found: "${mappedValue}" -> "${fallbackOption.value}"`);
+      selectElement.dispatchEvent(new Event('change', { bubbles: true }));
+      return;
+    }
+    
+    const otherOption = Array.from(selectElement.options).find(opt => 
+      opt.value.toLowerCase() === 'other'
+    );
+    
+    if (otherOption) {
+      selectElement.value = 'other';
+      console.log(`✓ No match found for "${mappedValue}", selected "other" option`);
+      selectElement.dispatchEvent(new Event('change', { bubbles: true }));
+    } else {
+      console.warn(`⚠ No matching option found for "${mappedValue}" and no "other" option available. Available options:`, 
+        Array.from(selectElement.options).map(opt => `"${opt.value}"`));
+    }
   }
 
   async loadTags() {
@@ -298,6 +480,22 @@ class AddPetPage {
           this.closeNewTagModal();
         }
       });
+    }
+    
+    if (this.map) {
+      const mapContainer = document.getElementById('pet-location-map');
+      if (mapContainer) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              setTimeout(() => {
+                this.map.invalidateSize();
+              }, 100);
+            }
+          });
+        });
+        observer.observe(mapContainer);
+      }
     }
   }
 
@@ -1176,6 +1374,168 @@ class AddPetPage {
     }
     
     return tagsForSubmission;
+  } 
+  
+  initMap() {
+    const mapContainer = document.getElementById('pet-location-map');
+    const locateBtn = document.getElementById('locate-on-map');
+    
+    if (!mapContainer) return;
+    
+    let initialLat = 44.4268;
+    let initialLng = 26.1025;
+    let initialZoom = 13;
+    
+    if (this.isEditMode && this.currentPetData && this.currentPetData.address) {
+      const lat = parseFloat(this.currentPetData.address.latitude);
+      const lng = parseFloat(this.currentPetData.address.longitude);
+      if (!isNaN(lat) && !isNaN(lng)) {
+        initialLat = lat;
+        initialLng = lng;
+        initialZoom = 15;
+      }
+    }
+    
+    this.map = L.map('pet-location-map').setView([initialLat, initialLng], initialZoom);
+    
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors'
+    }).addTo(this.map);
+    
+    // Add initial marker if we have coordinates
+    if (this.isEditMode && this.currentPetData && this.currentPetData.address) {
+      const lat = parseFloat(this.currentPetData.address.latitude);
+      const lng = parseFloat(this.currentPetData.address.longitude);
+      if (!isNaN(lat) && !isNaN(lng)) {
+        this.mapMarker = L.marker([lat, lng]).addTo(this.map);
+      } else if (this.currentPetData.address.city && this.currentPetData.address.country) {
+        // Try to geocode the city/country if we don't have coordinates
+        setTimeout(() => {
+          this.geocodeAddress();
+        }, 500);
+      }
+    }
+    
+    // Add click event to map
+    this.map.on('click', (e) => {
+      this.setMapLocation(e.latlng.lat, e.latlng.lng);
+    });
+    
+    // Add locate button event
+    if (locateBtn) {
+      locateBtn.addEventListener('click', () => {
+        this.locateOnMap();
+      });
+    }
+    
+    // Add event listeners to address fields for auto-geocoding
+    const cityField = document.getElementById('pet-city');
+    const countryField = document.getElementById('pet-country');
+    
+    if (cityField && countryField) {
+      const debounceGeocoding = this.debounce(() => {
+        this.geocodeAddress();
+      }, 1000);
+      
+      cityField.addEventListener('input', debounceGeocoding);
+      countryField.addEventListener('change', debounceGeocoding);
+    }
+  }
+  
+  setMapLocation(lat, lng) {
+    if (!this.map) return;
+    
+    // Remove existing marker
+    if (this.mapMarker) {
+      this.map.removeLayer(this.mapMarker);
+    }
+    
+    // Add new marker
+    this.mapMarker = L.marker([lat, lng]).addTo(this.map);
+    this.map.setView([lat, lng], 15);
+    
+    // Update the form with coordinates (you might want to add hidden fields for lat/lng)
+    this.reverseGeocode(lat, lng);
+  }
+  
+  async geocodeAddress() {
+    const city = document.getElementById('pet-city')?.value?.trim();
+    const country = document.getElementById('pet-country')?.value?.trim();
+    
+    if (!city || !country) return;
+    
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city)}, ${encodeURIComponent(country)}&limit=1`);
+      const data = await response.json();
+      
+      if (data && data.length > 0) {
+        const location = data[0];
+        this.setMapLocation(parseFloat(location.lat), parseFloat(location.lon));
+      }
+    } catch (error) {
+      console.error('Error geocoding address:', error);
+    }
+  }
+  
+  async reverseGeocode(lat, lng) {
+    try {
+      const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`);
+      const data = await response.json();
+      
+      if (data && data.address) {
+        const address = data.address;
+        
+        // Update form fields with geocoded data
+        const cityField = document.getElementById('pet-city');
+        const countryField = document.getElementById('pet-country');
+        const addressField = document.getElementById('pet-address');
+        const postalField = document.getElementById('pet-postal-code');
+        
+        if (cityField && (address.city || address.town || address.village)) {
+          cityField.value = address.city || address.town || address.village;
+        }
+        
+        if (countryField && address.country) {
+          countryField.value = address.country;
+        }
+        
+        if (addressField && (address.road || address.house_number)) {
+          const roadInfo = [address.house_number, address.road].filter(Boolean).join(' ');
+          if (roadInfo && !addressField.value) {
+            addressField.value = roadInfo;
+          }
+        }
+        
+        if (postalField && address.postcode && !postalField.value) {
+          postalField.value = address.postcode;
+        }
+      }
+    } catch (error) {
+      console.error('Error reverse geocoding:', error);
+    }
+  }
+  
+  locateOnMap() {
+    const city = document.getElementById('pet-city')?.value?.trim();
+    const country = document.getElementById('pet-country')?.value?.trim();
+    
+    if (city && country) {
+      this.geocodeAddress();
+    } else {
+      alert('Please enter city and country first');
+    }
+  }
+  
+  debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
   }
 }
 
