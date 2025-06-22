@@ -18,16 +18,18 @@ async function fetchUsers() {
 }
 
 function renderUsers(users) {
+  console.log('users array:', users); // debug
   usersTbody.innerHTML = '';
   if (!Array.isArray(users) || users.length === 0) {
     usersTbody.innerHTML = '<tr><td colspan="5">No users found.</td></tr>';
     return;
   }
   users.forEach(user => {
-    const id = user.id || user.ID || '';
-    const email = user.email || user.EMAIL || '';
-    const username = user.username || user.USERNAME || '';
-    const role = user.role || user.ROLE || '';
+    // user = [id, email, username, role]
+    const id = user[0] || '';
+    const email = user[1] || '';
+    const username = user[2] || '';
+    const role = user[3] || '';
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${id}</td>
