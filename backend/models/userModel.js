@@ -316,6 +316,36 @@ class UserModel extends AbstractModel {
       if (connection) await connection.close();
     }
   }
+
+  async getAll() {
+    let connection;
+    try {
+      connection = await db.getConnection();
+      const result = await connection.execute(
+        'SELECT id, email, username, role FROM users',
+        [],
+        { outFormat: db.OBJECT }
+      );
+      return result.rows;
+    } finally {
+      if (connection) await connection.close();
+    }
+  }
+
+  async delete(id) {
+    let connection;
+    try {
+      connection = await db.getConnection();
+      const result = await connection.execute(
+        'DELETE FROM users WHERE id = :id',
+        { id },
+        { autoCommit: true }
+      );
+      return result.rowsAffected > 0;
+    } finally {
+      if (connection) await connection.close();
+    }
+  }
 }
 
 module.exports = new UserModel();

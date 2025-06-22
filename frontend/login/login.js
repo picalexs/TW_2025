@@ -39,7 +39,10 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const clientId = config.googleAuth?.clientId; 
         const redirectUri = config.googleAuth?.redirectUri;
-
+        if (!clientId || !redirectUri) {
+          showMessage('Google login is not configured. Please contact support.', 'error');
+          return;
+        }
         const scope = 'openid profile email';
         const responseType = 'code';
         const accessType = 'offline';
@@ -92,7 +95,7 @@ async function handleLogin(event) {
       localStorage.removeItem('userId');
       localStorage.removeItem('userEmail');
       localStorage.removeItem('username');
-      localStorage.removeItem('userRole');
+      localStorage.removeItem('userRole', data.user.role);
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('userData', JSON.stringify(response.user));
       if (response.token) {

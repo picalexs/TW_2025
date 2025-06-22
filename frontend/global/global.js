@@ -46,11 +46,19 @@ function checkLoginStatusAndToggleNavButtons() {
         if (authButtonsLoggedIn) authButtonsLoggedIn.style.display = 'none';
         if (mobileAuthLoggedIn) mobileAuthLoggedIn.style.display = 'none';
     }
+
+    // Admin button logic
+    const adminNavItem = document.getElementById('admin-nav-item');
+    const userRole = localStorage.getItem('userRole');
+    if (isLoggedIn && userRole === 'admin') {
+        if (adminNavItem) adminNavItem.style.display = '';
+    } else {
+        if (adminNavItem) adminNavItem.style.display = 'none';
+    }
 }
 
 function handleLogout(event) {
     event.preventDefault();
-    // Remove all authentication-related keys for security and consistency
     localStorage.removeItem('authToken');
     localStorage.removeItem('userData');
     localStorage.removeItem('userId');

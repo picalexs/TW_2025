@@ -36,16 +36,29 @@ async function handleUserRoutes(req, res) {
         return true;
     }
 
-    if (trimmedPath === "api/users" || trimmedPath === "api/users/") {
-        if (method === "get") {
-            console.log('[UserRoutes] Handling /api/users GET request (Public)');
-            await userController.getAllUsers(req, res); 
-            return true;
-        } else {
-            sendResponse(res, 405, { error: "Method not allowed for /api/users." });
-            return true;
-        }
+    
+if (trimmedPath === "api/users" || trimmedPath === "api/users/") {
+    if (method === "get") {
+        console.log('[UserRoutes] Handling /api/users GET request (Protected - Admin Only)');
+      
+        await new Promise((resolve) => {
+            verifyToken(req, res, async (err) => {
+                if (err) return resolve(true); 
+                
+                checkRole('admin')(req, res, async (roleErr) => {
+                    if (roleErr) return resolve(true); 
+                    
+                    await userController.getAllUsers(req, res);
+                    resolve(true);
+                });
+            });
+        });
+        return true;
+    } else {
+        sendResponse(res, 405, { error: "Method not allowed for /api/users." });
+        return true;
     }
+}
 
     const userIdMatch = trimmedPath.match(/^api\/users\/(\d+)$/);
     if (userIdMatch) {

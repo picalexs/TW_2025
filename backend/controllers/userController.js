@@ -30,7 +30,7 @@ class UserController {
 
   async getAllUsers(req, res) {
     try {
-      if (!req.user) {
+      if (!req.user || req.user.role !== 'admin') {
         return sendResponse(res, 403, { success: false, message: "Forbidden: Only administrators can access this resource." });
       }
       const users = await userModel.getAllWithAdoptionCounts();
@@ -40,7 +40,7 @@ class UserController {
         sendResponse(res, 404, { success: false, message: 'No users found.' });
       }
     } catch (error) {
-      console.error("Error fetching all users:", error);
+      console.error("Error getting all users (admin):", error);
       sendResponse(res, 500, { success: false, message: "Internal server error." });
     }
   }
@@ -329,20 +329,6 @@ class UserController {
   //   }
   // }
 
-  // async deleteUser(req, res, id) {
-  //   try {
-  //     const deleted = await userModel.delete(id);
-  //     if (deleted) {
-  //       sendResponse(res, 204, {});
-  //     } else {
-  //       sendResponse(res, 404, { error: "User not found for deletion" });
-  //     }
-  //   } catch (error) {
-  //     console.error(`Error deleting user with ID ${id}:`, error);
-  //     sendResponse(res, 500, { error: "Failed to delete user", message: error.message });
-  //   }
-  // }
-
   async authenticateUser(req, res) {
     try {
       const { email, password } = await collectRequestData(req);
@@ -627,10 +613,9 @@ class UserController {
 
   async deleteUser(req, res, id) {
     try {
-      if (!req.user) {
+      if (!req.user || req.user.role !== 'admin') {
         return sendResponse(res, 403, { success: false, message: "Forbidden: Only administrators can delete users." });
       }
-
       console.log(`[UserController] Deleting user with ID: ${id}`);
       const result = await userModel.delete(id);
       if (result) {
