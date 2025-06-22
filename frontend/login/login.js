@@ -94,7 +94,8 @@ async function handleLogin(event) {
       localStorage.removeItem('userId');
       localStorage.removeItem('userEmail');
       localStorage.removeItem('username');
-      localStorage.removeItem('userRole', data.user.role);
+      localStorage.removeItem('userRole');
+      
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('userData', JSON.stringify(response.user));
       localStorage.setItem('userId', response.user.id.toString());
