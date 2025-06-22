@@ -311,6 +311,21 @@ class UserModel extends AbstractModel {
       if (connection) await connection.close();
     }
   }
+
+  // Get user preference tags for a user (by JWT)
+  async getUserPreferenceTags(userId) {
+    let connection;
+    try {
+      connection = await db.getConnection();
+      const result = await connection.execute(
+        'SELECT tag_id FROM user_preference_tags WHERE user_id = :userId',
+        { userId }
+      );
+      return result.rows.map(row => row.TAG_ID || row.tag_id);
+    } finally {
+      if (connection) await connection.close();
+    }
+  }
 }
 
 module.exports = new UserModel();

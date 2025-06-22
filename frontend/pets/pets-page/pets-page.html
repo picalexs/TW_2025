@@ -216,7 +216,7 @@
     <script src="../../bundles/utils.min.js" defer></script>
     
     <script type="module">
-        import { fetchPets, renderPets, showPetLoadError, initializeViewToggle, initializeAdvancedFilters, initializeFilterButtons } from './pets-page.min.js';
+        import { fetchPets, renderPets, showPetLoadError, initializeViewToggle, initializeAdvancedFilters, initializeFilterButtons, initializeMatchingButton } from './pets-page.min.js';
         import '../../global/global.min.js'; 
         import languageManager from '../../languages/language.min.js';
         import RSSManager from '../../services/rssManager.js';
@@ -226,6 +226,7 @@
                 initializeViewToggle();
                 initializeAdvancedFilters();
                 initializeFilterButtons();
+                initializeMatchingButton();
                 
                 const rssManager = new RSSManager();
                 rssManager.init();

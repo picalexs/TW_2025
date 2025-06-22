@@ -251,19 +251,33 @@ export function showPetPlaceholders(containerId = 'pets-grid', count = 6) {
 export function initializeMatchingButton() {
   const matchingBtn = document.getElementById('matching-btn');
   if (!matchingBtn) return;
-  matchingBtn.addEventListener('click', () => {
+  matchingBtn.addEventListener('click', async () => {
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true' && localStorage.getItem('authToken');
-    if (isLoggedIn) {
-      // User is logged in, do nothing for now
-      return;
-    } else {
-      // User is not logged in, show login modal/box
+    if (!isLoggedIn) {
       if (window.showLoginModal) {
         window.showLoginModal();
       } else {
-        // Fallback: redirect to login page
         window.location.href = '../../login/login.html?message=Please log in to use matching';
       }
+      return;
+    }
+    // If logged in, check if user has preference tags
+    try {
+      const apiBaseUrl = window.APP_CONFIG?.api?.baseURL || 'http://localhost:8080';
+      const response = await fetch(`${apiBaseUrl}/api/user/preferences/tags`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        }
+      });
+      const data = await response.json();
+      if (data && data.success && Array.isArray(data.tagIds) && data.tagIds.length === 0) {
+        window.location.href = '/frontend/matching/matching-test.html';
+      }
+      // else: already has tags, do nothing
+    } catch (err) {
+      console.error('Error checking user preference tags:', err);
+      // Optionally show error notification
     }
   });
 }

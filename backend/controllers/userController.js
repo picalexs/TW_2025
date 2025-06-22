@@ -671,6 +671,17 @@ class UserController {
       sendResponse(res, 500, { success: false, message: error.message || 'Server error.' });
     }
   }
+
+  // GET user preference tags for logged-in user
+  async getUserPreferenceTags(req, res) {
+    try {
+      const userId = req.user.id;
+      const tagIds = await userModel.getUserPreferenceTags(userId);
+      sendResponse(res, 200, { success: true, tagIds });
+    } catch (error) {
+      sendResponse(res, 500, { success: false, message: error.message || 'Failed to fetch user preference tags.' });
+    }
+  }
 }
 
 module.exports = new UserController();

@@ -104,6 +104,16 @@ async function handleUserRoutes(req, res) {
         });
     }
 
+    if (trimmedPath === "api/user/preferences/tags" && method === "get") {
+        return await new Promise((resolve, reject) => {
+            verifyToken(req, res, async (err) => {
+                if (err) return resolve(true);
+                await userController.getUserPreferenceTags(req, res);
+                resolve(true);
+            });
+        });
+    }
+
     console.log(`[UserRoutes] No user route matched: ${trimmedPath}`);
     return false;
 }
