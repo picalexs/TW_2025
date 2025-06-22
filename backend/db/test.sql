@@ -6,7 +6,7 @@ select * from tags;
 
 select * from USER_PREFERENCE_TAGS;
 
-select s.ID, s.username, t.TAG_ID from users s join USER_PREFERENCE_TAGS t on s.id = t.user_id;
+select s.ID, s.username, u.name from users s join USER_PREFERENCE_TAGS t on s.id = t.user_id join tags u on u.ID = t.tag_id order by s.ID;
 
 SELECT COUNT(*) FROM users WHERE UPPER(TRIM(username)) = UPPER(TRIM('geo19'));
 SELECT COUNT(*) FROM users WHERE UPPER(TRIM(email)) = UPPER(TRIM('geo19@yahoo.com'));

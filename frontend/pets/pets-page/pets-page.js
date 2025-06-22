@@ -261,7 +261,6 @@ export function initializeMatchingButton() {
       }
       return;
     }
-    // If logged in, check if user has preference tags
     try {
       const apiBaseUrl = window.APP_CONFIG?.api?.baseURL || 'http://localhost:8080';
       const response = await fetch(`${apiBaseUrl}/api/user/preferences/tags`, {
@@ -271,13 +270,47 @@ export function initializeMatchingButton() {
         }
       });
       const data = await response.json();
-      if (data && data.success && Array.isArray(data.tagIds) && data.tagIds.length === 0) {
-        window.location.href = '/frontend/matching/matching-test.html';
+      if (!data || !data.success || !Array.isArray(data.tagIds)) {
+        // fallback: show all pets
+        renderPets(allPets);
+        return;
       }
-      // else: already has tags, do nothing
+      if (data.tagIds.length === 0) {
+        window.location.href = '/frontend/matching/matching-test.html';
+        return;
+      }
+      // Matching logic: sort pets by tag overlap
+      
+      document.querySelectorAll('.filter-select').forEach(select => {
+        select.selectedIndex = 0;
+      });
+      
+      document.querySelectorAll('.filter-input').forEach(input => {
+        input.value = '';
+      });
+
+      const userTagIds = data.tagIds.map(Number);
+      let petsArray = allPets;
+      if (!allPets.length) {
+        petsArray = await fetchPets();
+      }
+      const petsWithOverlap = petsArray.map(pet => {
+        // Corect: extrage id-urile tag-urilor ca numere
+        const petTagIds = (pet.tags || []).map(tag => Number(tag.id));
+        const overlap = userTagIds.filter(id => petTagIds.includes(id)).length;
+        return { ...pet, _tagOverlap: overlap };
+      });
+      const sortedPets = petsWithOverlap
+        .filter(pet => pet._tagOverlap > 0)
+        .sort((a, b) => b._tagOverlap - a._tagOverlap);
+      if (sortedPets.length) {
+        renderPets(sortedPets);
+      } else {
+        renderPets(petsArray);
+      }
     } catch (err) {
       console.error('Error checking user preference tags:', err);
-      // Optionally show error notification
+      renderPets(allPets);
     }
   });
 }
