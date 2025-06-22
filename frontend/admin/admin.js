@@ -6,10 +6,11 @@ const adminMessage = document.getElementById('admin-message');
 
 async function fetchUsers() {
   try {
-    const users = await apiService.get('/api/users', {}, {
+    const response = await apiService.get('/api/users', {}, {
       headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
     });
-    renderUsers(users);
+  
+    renderUsers(response && Array.isArray(response.users) ? response.users : []);
   } catch (err) {
     adminMessage.textContent = 'Failed to load users.';
     adminMessage.style.color = 'red';
@@ -23,13 +24,17 @@ function renderUsers(users) {
     return;
   }
   users.forEach(user => {
+    const id = user.id || user.ID || '';
+    const email = user.email || user.EMAIL || '';
+    const username = user.username || user.USERNAME || '';
+    const role = user.role || user.ROLE || '';
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td>${user.id}</td>
-      <td>${user.email}</td>
-      <td>${user.username || ''}</td>
-      <td>${user.role || ''}</td>
-      <td><button class="admin-delete-btn" data-id="${user.id}">Delete</button></td>
+      <td>${id}</td>
+      <td>${email}</td>
+      <td>${username}</td>
+      <td>${role}</td>
+      <td><button class="admin-delete-btn" data-id="${id}">Delete</button></td>
     `;
     usersTbody.appendChild(tr);
   });
