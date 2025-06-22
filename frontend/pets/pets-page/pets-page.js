@@ -143,6 +143,17 @@ export function filterPets() {
   });
 }
 
+// Return only pets that have at least half of the user's tag IDs in common (rounded up)
+export function filterPetsByTagOverlap(pets, userTagIds) {
+  if (!Array.isArray(userTagIds) || !userTagIds.length) return [];
+  const minOverlap = Math.ceil(userTagIds.length / 2);
+  return pets.filter(pet => {
+    const petTagIds = Array.isArray(pet.tags) ? pet.tags.map(tag => Number(tag.id)) : [];
+    const overlap = userTagIds.filter(id => petTagIds.includes(id)).length;
+    return overlap >= minOverlap;
+  });
+}
+
 export function sortPets(pets) {
   const sortBy = document.getElementById('sort-filter')?.value || 'newest';
   
@@ -279,35 +290,20 @@ export function initializeMatchingButton() {
         window.location.href = '/frontend/matching/matching-test.html';
         return;
       }
-      
       document.querySelectorAll('.filter-select').forEach(select => {
         select.selectedIndex = 0;
       });
-      
       document.querySelectorAll('.filter-input').forEach(input => {
         input.value = '';
       });
-      
       const userTagIds = data.tagIds.map(Number);
       if (!allPets.length) await fetchPets();
-      const petsWithOverlap = allPets.map(pet => {
-        const petTagIds = (pet.tags || []).map(Number);
-        const overlap = userTagIds.filter(id => petTagIds.includes(id)).length;
-        return { ...pet, _tagOverlap: overlap };
-      });
-      const sortedPets = petsWithOverlap
-        .filter(pet => pet._tagOverlap > 0)
-        .sort((a, b) => b._tagOverlap - a._tagOverlap);
-      if (sortedPets.length) {
-        renderPets(sortedPets);
-      } else {
-        renderPets(allPets);
-      }
+  
+      const filteredPets = filterPetsByTagOverlap(allPets, userTagIds);
+      renderPets(filteredPets.length ? filteredPets : allPets);
     } catch (err) {
       console.error('Error checking user preference tags:', err);
       renderPets(allPets);
     }
   });
 }
-
-// Patch: call this in DOMContentLoaded in HTML
