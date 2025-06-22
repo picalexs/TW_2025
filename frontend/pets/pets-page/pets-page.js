@@ -325,6 +325,14 @@ export function initializeMatchingButton() {
       return;
     }
     try {
+      document.querySelectorAll('.filter-select').forEach(select => {
+        select.selectedIndex = 0;
+      });
+      
+      document.querySelectorAll('.filter-input').forEach(input => {
+        input.value = '';
+      });
+      
       const userId = getCurrentUserId();
       if (!userId) throw new Error('User ID not found');
       // Use backend matching endpoint

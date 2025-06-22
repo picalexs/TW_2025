@@ -4,6 +4,8 @@ select * from users;
 
 select * from tags;
 
+select * from ANIMALS;
+
 select * from USER_PREFERENCE_TAGS;
 
 select s.ID, s.username, u.name from users s join USER_PREFERENCE_TAGS t on s.id = t.user_id join tags u on u.ID = t.tag_id order by s.ID;
