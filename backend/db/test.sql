@@ -20,7 +20,7 @@ SELECT * FROM tags ORDER BY id;
 
 UPDATE users
 SET role = 'admin'
-WHERE username = 'admin';
+WHERE username = 'geo';
 
 
 SELECT * FROM users WHERE username = 'admin';

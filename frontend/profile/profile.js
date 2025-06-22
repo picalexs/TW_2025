@@ -777,6 +777,13 @@ class ProfilePage {
     this.initStatItemScrolling();
     
     this.initReviewsFilter();
+
+    const matchingTestBtn = document.getElementById("matching-test-btn");
+    if (matchingTestBtn) {
+      matchingTestBtn.addEventListener("click", () => {
+        window.location.href = "../matching/matching-test.html";
+      });
+    }
   }
 
   debounce(func, wait) {
@@ -944,6 +951,7 @@ class ProfilePage {
   updateProfileActions(user) {
     const contactBtn = document.getElementById("contact-user-btn");
     const editBtn = document.getElementById("edit-profile-btn");
+    const matchingTestBtn = document.getElementById("matching-test-btn");
     
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     const currentUserId = localStorage.getItem('userId');
@@ -953,9 +961,11 @@ class ProfilePage {
     if (isOwnProfile) {
       if (editBtn) editBtn.style.display = "inline-block";
       if (contactBtn) contactBtn.style.display = "none";
+      if (matchingTestBtn) matchingTestBtn.style.display = "inline-block";
     } else {
       if (editBtn) editBtn.style.display = "none";
       if (contactBtn) contactBtn.style.display = "inline-block";
+      if (matchingTestBtn) matchingTestBtn.style.display = "none";
     }
   }
 
