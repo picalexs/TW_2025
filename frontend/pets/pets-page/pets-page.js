@@ -325,36 +325,19 @@ export function initializeMatchingButton() {
       return;
     }
     try {
-      const apiBaseUrl = window.APP_CONFIG?.api?.baseURL || 'http://localhost:8080';
-      const response = await fetch(`${apiBaseUrl}/api/user/preferences/tags`, {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-        }
-      });
-      const data = await response.json();
-      if (!data || !data.success || !Array.isArray(data.tagIds)) {
-        // fallback: show all pets
+      const userId = getCurrentUserId();
+      if (!userId) throw new Error('User ID not found');
+      // Use backend matching endpoint
+      const result = await petService.getPetsByTagOverlap(userId, 20);
+      if (result && result.success && Array.isArray(result.data)) {
+        // Optionally, show matchingScore in UI (e.g., in pet card)
+        renderPets(result.data);
+        updateResultsCount(result.data.length);
+      } else {
         renderPets(allPets);
-        return;
       }
-      if (data.tagIds.length === 0) {
-        window.location.href = '/frontend/matching/matching-test.html';
-        return;
-      }
-      document.querySelectorAll('.filter-select').forEach(select => {
-        select.selectedIndex = 0;
-      });
-      document.querySelectorAll('.filter-input').forEach(input => {
-        input.value = '';
-      });
-      const userTagIds = data.tagIds.map(Number);
-      if (!allPets.length) await fetchPets();
-  
-      const filteredPets = filterPetsByTagOverlap(allPets, userTagIds);
-      renderPets(filteredPets.length ? filteredPets : allPets);
     } catch (err) {
-      console.error('Error checking user preference tags:', err);
+      console.error('Error fetching pets by tag overlap:', err);
       renderPets(allPets);
     }
   });

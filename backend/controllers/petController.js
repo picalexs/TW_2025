@@ -32,34 +32,34 @@ class PetController {
   async createPet(req, res) {
     try {
       const contentType = req.headers['content-type'];
-      
+
       if (!contentType || !contentType.includes('multipart/form-data')) {
         return sendResponse(res, 400, { error: "Content-Type must be multipart/form-data" });
       }
 
       const fields = {};
       const files = [];
-      
+
       const busboy = Busboy({ headers: req.headers });
-      
+
       busboy.on('field', (fieldname, val) => {
         fields[fieldname] = val;
       });
-      
+
       busboy.on('file', (fieldname, file, info) => {
         const { filename, encoding, mimeType } = info;
-        
+
         // Validate file type
         if (!mimeType.startsWith('image/') && !mimeType.startsWith('video/')) {
           file.resume(); // Consume the stream
           return;
         }
-        
+
         const chunks = [];
         file.on('data', (chunk) => {
           chunks.push(chunk);
         });
-        
+
         file.on('end', () => {
           files.push({
             fieldname,
@@ -69,18 +69,18 @@ class PetController {
             size: Buffer.concat(chunks).length
           });
         });
-      });      
-      
+      });
+
       busboy.on('finish', async () => {
         try {
           if (req.user && req.user.id) {
             fields.shelterId = req.user.id;
             fields.userId = req.user.id;
           }
-          
+
           const validatedData = petModel.validatePetCreationData(fields, files);
-          
-          const petId = await petModel.createPet(validatedData.petData);          
+
+          const petId = await petModel.createPet(validatedData.petData);
           let mediaPaths = [];
           if (files && files.length > 0) {
             mediaPaths = await this.saveMediaFiles(files, petId, validatedData.profileImageIndex);
@@ -93,38 +93,38 @@ class PetController {
               await petModel.saveTags(petId, processedTagIds);
             }
           }
-          
+
           if (validatedData.medicalHistory.length > 0) {
             await petModel.saveMedicalHistory(petId, validatedData.medicalHistory);
           }
-          
+
           if (validatedData.careResources.length > 0) {
             await petModel.saveCareResources(petId, validatedData.careResources);
           }
-          
+
           if (validatedData.careSchedule.length > 0) {
             await petModel.saveCareSchedule(petId, validatedData.careSchedule);
           }
-          
-          sendResponse(res, 201, { 
-            id: petId, 
+
+          sendResponse(res, 201, {
+            id: petId,
             message: "Pet created successfully",
             mediaPaths: mediaPaths
           });
-          
+
         } catch (error) {
           console.error("Error creating pet:", error);
           sendResponse(res, 400, { error: "Failed to create pet", message: error.message });
         }
       });
-      
+
       busboy.on('error', (error) => {
         console.error("Busboy parsing error:", error);
         sendResponse(res, 400, { error: "Failed to parse form data", message: error.message });
       });
-      
+
       req.pipe(busboy);
-      
+
     } catch (error) {
       console.error("Error creating pet:", error);
       sendResponse(res, 400, { error: "Failed to create pet", message: error.message });
@@ -133,21 +133,21 @@ class PetController {
 
   async saveMediaFiles(files, petId, profileImageIndex = 0) {
     const mediaDir = path.join(__dirname, '../../server/animal', petId.toString());
-    
+
     try {
       await fs.mkdir(mediaDir, { recursive: true });
     } catch (error) {
       console.error("Error creating directory:", error);
       throw new Error("Failed to create media directory");
     }
-    
+
     const mediaPaths = [];
-    
+
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
-      
+
       const ext = path.extname(file.originalname) || (file.mimetype.includes('image') ? '.jpg' : '.mp4');
-      
+
       let filename;
       if (i === profileImageIndex) {
         filename = `profile${ext}`;
@@ -155,10 +155,10 @@ class PetController {
         const fileNumber = i < profileImageIndex ? i + 1 : i;
         filename = `${fileNumber}${ext}`;
       }
-      
+
       const filepath = path.join(mediaDir, filename);
       const relativePath = `/server/animal/${petId}/${filename}`;
-      
+
       try {
         await fs.writeFile(filepath, file.buffer);
         mediaPaths.push({
@@ -171,14 +171,14 @@ class PetController {
         throw new Error(`Failed to save file ${filename}`);
       }
     }
-    
+
     return mediaPaths;
   }
 
   async updatePet(req, res, id) {
     try {
       const contentType = req.headers['content-type'];
-      
+
       if (contentType && contentType.includes('multipart/form-data')) {
         const fields = {};
         const files = [];
@@ -192,7 +192,7 @@ class PetController {
             file.resume();
             return;
           }
-          
+
           const chunks = [];
           file.on('data', chunk => chunks.push(chunk));
           file.on('end', () => {
@@ -211,13 +211,13 @@ class PetController {
             if (!result) {
               return sendResponse(res, 404, { error: "Pet not found for update" });
             }
-            
+
             if (result.pet && result.files) {
               if (result.files && result.files.length > 0) {
                 const mediaPaths = await this.saveMediaFiles(result.files, id, result.profileImageIndex);
                 await petModel.saveMediaPaths(id, mediaPaths);
               }
-              
+
               if (result.tags && result.tags.length > 0) {
                 const processedTagIds = await petModel.processAndCreateTags(result.tags);
                 if (processedTagIds.length > 0) {
@@ -225,22 +225,22 @@ class PetController {
                   await petModel.saveTags(id, processedTagIds);
                 }
               }
-              
+
               if (result.medicalHistory && result.medicalHistory.length > 0) {
                 await petModel.clearMedicalHistory(id);
                 await petModel.saveMedicalHistory(id, result.medicalHistory);
               }
-              
+
               if (result.careResources && result.careResources.length > 0) {
                 await petModel.clearCareResources(id);
                 await petModel.saveCareResources(id, result.careResources);
               }
-              
+
               if (result.careSchedule && result.careSchedule.length > 0) {
                 await petModel.clearCareSchedule(id);
                 await petModel.saveCareSchedule(id, result.careSchedule);
               }
-              
+
               sendResponse(res, 200, result.pet);
             } else {
               sendResponse(res, 200, result);
@@ -250,7 +250,7 @@ class PetController {
             sendResponse(res, 500, { error: 'Failed to update pet', message: error.message });
           }
         });
-        
+
         req.pipe(busboy);
       } else {
         const petData = await collectRequestData(req);
@@ -296,14 +296,14 @@ class PetController {
     try {
       const url = new URL(req.url, `http://${req.headers.host}`);
       const searchParams = url.searchParams;
-      
+
       const type = searchParams.get('type') || 'recent';
       const zone = searchParams.get('zone');
       const breed = searchParams.get('breed');
       const species = searchParams.get('species');
       const limit = parseInt(searchParams.get('limit')) || 20;
       const format = searchParams.get('format') || 'json';
-      
+
       // For demo purposes, create some sample pets if no database is available
       const demoPets = [
         {
@@ -379,19 +379,19 @@ class PetController {
 
       // Apply filters
       if (species) {
-        pets = pets.filter(pet => 
+        pets = pets.filter(pet =>
           (pet.species || pet.SPECIES || '').toLowerCase().includes(species.toLowerCase())
         );
       }
-      
+
       if (breed) {
-        pets = pets.filter(pet => 
+        pets = pets.filter(pet =>
           (pet.breed || pet.BREED || '').toLowerCase().includes(breed.toLowerCase())
         );
       }
-      
+
       if (zone) {
-        pets = pets.filter(pet => 
+        pets = pets.filter(pet =>
           (pet.city || pet.CITY || '').toLowerCase().includes(zone.toLowerCase())
         );
       }
@@ -425,10 +425,26 @@ class PetController {
 
     } catch (error) {
       console.error('Error getting pets feed:', error);
-      sendResponse(res, 500, { 
-        error: 'Failed to fetch pets feed', 
-        message: error.message 
+      sendResponse(res, 500, {
+        error: 'Failed to fetch pets feed',
+        message: error.message
       });
+    }
+  }
+
+  async getPetsByTagOverlap(req, res, userId) {
+    try {
+      const limit = parseInt(req.query.limit) || 20;
+
+      if (!userId) {
+        return sendResponse(res, 400, { error: 'User ID is required' });
+      }
+
+      const pets = await petModel.getPetsByTagOverlap(userId, limit);
+      sendResponse(res, 200, { success: true, data: pets, count: pets.length });
+    } catch (error) {
+      console.error('Error getting pets by tag overlap:', error);
+      sendResponse(res, 500, { error: 'Failed to fetch pets by tag overlap', message: error.message });
     }
   }
 }

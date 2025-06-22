@@ -943,5 +943,87 @@ class petDTO extends abstractDTO {
       });
     }
   }
+
+async getPetsByTagOverlap(userId, limit = 20) {
+    try {
+        const query = `
+            WITH animal_scores AS (
+                -- Pasul 1: Calculăm scorul pentru fiecare animal ID, fără a atinge coloanele CLOB
+                SELECT
+                    at.animal_id,
+                    COUNT(upt.tag_id) AS matching_score
+                FROM animal_tags at
+                INNER JOIN user_preference_tags upt ON at.tag_id = upt.tag_id
+                WHERE upt.user_id = :userId
+                GROUP BY at.animal_id
+            )
+            -- Pasul 2: Selectăm toate detaliile animalelor, le unim cu scorurile și le sortăm
+            SELECT 
+                a.*, 
+                NVL(s.matching_score, 0) AS matching_score -- Folosim NVL pentru a afișa 0 în loc de NULL dacă nu există scor
+            FROM animals a
+            LEFT JOIN animal_scores s ON a.id = s.animal_id
+            WHERE a.adoption_status = 'available'
+            ORDER BY matching_score DESC, a.created_at DESC
+            FETCH FIRST :limit ROWS ONLY
+        `;
+
+        const result = await this.executeCustomQuery(
+            query, 
+            { userId: Number(userId), limit: Number(limit) }, 
+            { 
+                outFormat: oracledb.OUT_FORMAT_OBJECT,
+                fetchInfo: {
+                    DESCRIPTION: { type: oracledb.STRING } // Important pentru a citi corect CLOB-ul
+                }
+            }
+        );
+        
+        // Procesarea rezultatelor pentru a adăuga imagini, tag-uri, etc. rămâne la fel
+        const pets = [];
+        for (const row of result.rows) {
+            const pet = this.mapToEntity(row);
+            pet.matchingScore = row.MATCHING_SCORE;
+
+            // Adaugă imaginea principală
+            try {
+                const mediaResult = await this.executeCustomQuery(
+                    `SELECT file_path FROM media WHERE animal_id = :id ORDER BY id FETCH FIRST 1 ROWS ONLY`,
+                    [pet.id],
+                    { outFormat: oracledb.OUT_FORMAT_OBJECT }
+                );
+                if (mediaResult.rows.length > 0) {
+                    pet.imagePath = mediaResult.rows[0].FILE_PATH;
+                }
+            } catch (e) {
+                pet.imagePath = null;
+            }
+
+            // Adaugă tag-urile
+            try {
+                const tagsResult = await this.executeCustomQuery(
+                    `SELECT t.id, t.name FROM tags t JOIN animal_tags at ON t.id = at.tag_id WHERE at.animal_id = :id`,
+                    [pet.id],
+                    { outFormat: oracledb.OUT_FORMAT_OBJECT }
+                );
+                pet.tags = tagsResult.rows.map(tag => ({ id: tag.ID, name: tag.NAME }));
+            } catch (e) {
+                pet.tags = [];
+            }
+            
+            pets.push(pet);
+        }
+        
+        return pets;
+
+    } catch (error) {
+        console.error("Error in getPetsByTagOverlap DTO:", error);
+        throw Object.assign(new Error(`Failed to fetch pets by tag overlap: ${error.message}`), {
+            code: "DB_ERROR",
+            status: 500,
+            originalError: error,
+        });
+    }
+}
 }
 module.exports = new petDTO();

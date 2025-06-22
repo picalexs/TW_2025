@@ -359,6 +359,13 @@ class PetModel extends AbstractModel {
   async clearCareSchedule(petId) {
     return await this.dto.clearCareSchedule(petId);
   }
+
+  /**
+   * Get pets sorted by tag overlap (matching score) for a user
+   */
+  async getPetsByTagOverlap(userId, limit = 20) {
+    return await this.dto.getPetsByTagOverlap(userId, limit);
+  }
 }
 
 module.exports = new PetModel();

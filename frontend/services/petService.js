@@ -176,6 +176,22 @@ class PetService {
       }
       throw error;
     }
+ }
+
+  /**
+   * Get pets sorted by tag overlap (matching score) for a user
+   */
+  async getPetsByTagOverlap(userId, limit = 20) {
+    if (!userId) throw new Error('User ID is required');
+    try {
+      const url = `/api/pets/match/${userId}?limit=${limit}`;
+      return await this.apiService.get(url);
+    } catch (error) {
+      if (this.debug) {
+        console.error('Error fetching pets by tag overlap:', error);
+      }
+      throw error;
+    }
   }
 
   async runDiagnostics() {

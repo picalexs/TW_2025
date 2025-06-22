@@ -59,6 +59,14 @@ async function handlePetRoutes(req, res) {
     return true;
   }
 
+  const matchPets = trimmedPath.match(/^api\/pets\/match\/(\d+)$/);
+  if (matchPets && method === "get") {
+    const userId = parseInt(matchPets[1]);
+    req.query = parsedUrl.query;
+    await petController.getPetsByTagOverlap(req, res, userId);
+    return true;
+  }
+
   return false;
 }
 module.exports = handlePetRoutes;
