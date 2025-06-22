@@ -1,0 +1,12 @@
+{
+  "matchingTitle": "Your Best Matches",
+  "matchingScore": "Matching Score",
+  "noMatches": "No matching pets found.",
+  "tryAdjustingPreferences": "Try adjusting your preferences for better results.",
+  "viewAll": "View All Pets",
+  "matchExplanation": "The matching score shows how many of your preferences match each pet's characteristics.",
+  "startMatchingTest": "Start Matching Test",
+  "updatePreferences": "Update Preferences",
+  "matchedPets": "Matched Pets",
+  "notEnoughPreferences": "Please set more preferences to get better matches."
+}

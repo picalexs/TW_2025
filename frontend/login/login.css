@@ -1,6 +1,4 @@
-/* -------------------------------------------
-  LAYOUT & GLOBAL STRUCTURE
-------------------------------------------- */
+
 body.login-page {
   background-color: var(--background-color);
   display: flex;
@@ -24,9 +22,7 @@ body.login-page .mobile-auth {
   background-size: cover;
 }
 
-/* -------------------------------------------
-  SLIDESHOW STYLES
-------------------------------------------- */
+
 .login-slideshow {
   position: absolute;
   top: 0;
@@ -73,9 +69,7 @@ body.login-page .mobile-auth {
   z-index: 0;
 }
 
-/* -------------------------------------------
-  LOGIN CONTAINER & FORM
-------------------------------------------- */
+
 .login-container {
   display: flex;
   justify-content: center;
@@ -86,7 +80,7 @@ body.login-page .mobile-auth {
   z-index: 2;
 }
 
-/* Glassmorphism form */
+
 .login-box {
   background: rgba(var(--light-color-rgb), 0.15);
   backdrop-filter: blur(12px);
@@ -105,9 +99,7 @@ body.login-page .mobile-auth {
   font-weight: 600;
 }
 
-/* -------------------------------------------
-  FORM ELEMENTS
-------------------------------------------- */
+
 .form-group {
   margin-bottom: 1.2rem;
 }
@@ -142,9 +134,7 @@ body.login-page .mobile-auth {
   color: var(--background-color);
 }
 
-/* -------------------------------------------
-  BUTTONS & LINKS
-------------------------------------------- */
+
 
 .redirect-link {
   text-align: center;
@@ -161,7 +151,7 @@ body.login-page .mobile-auth {
   text-decoration: underline;
 }
 
-/* Divider OR */
+
 .login-divider {
   display: flex;
   align-items: center;
@@ -179,7 +169,7 @@ body.login-page .mobile-auth {
   margin: 0 10px;
 }
 
-/* Forgot password */
+
 .forgot-password {
   text-align: center;
   margin-top: 1rem;
@@ -195,16 +185,11 @@ body.login-page .mobile-auth {
   text-decoration: underline;
 }
 
-/* -------------------------------------------
-  UTILITIES
-------------------------------------------- */
+
 .login-page-hide {
   display: none !important;
 }
 
-/* -------------------------------------------
-  RESPONSIVE STYLES
-------------------------------------------- */
 @media (max-width: 768px) {
   .login-box {
     max-width: 90%;

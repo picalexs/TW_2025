@@ -23,7 +23,7 @@ async function renderFavorites() {
   try {
     pets = await favoritesService.getFavorites();
   } catch (e) {
-    console.error('Error fetching favorites:', e); // Debug log
+    console.error('Error fetching favorites:', e); 
     container.innerHTML = `<p>Error loading favorites: ${e.message}</p>`;
     return;
   }

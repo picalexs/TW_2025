@@ -33,5 +33,14 @@
   "q8a2": "I prefer a pet with minimal needs.",
   "q9": "Do you live in a house or apartment?",
   "q9a1": "House with yard",
-  "q9a2": "Apartment, small flat"
+  "q9a2": "Apartment, small flat",
+  "error": {
+    "selectAtLeastOne": "Please select at least one answer!",
+    "mustBeLoggedIn": "You must be logged in to save preferences!",
+    "saveFailed": "Error saving preferences!",
+    "network": "Network error!"
+  },
+  "success": {
+    "preferencesSaved": "Preferences saved successfully!"
+  }
 }

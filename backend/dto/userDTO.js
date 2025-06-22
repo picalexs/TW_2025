@@ -268,7 +268,6 @@ class userDTO extends abstractDTO {
         try {
             const { username, email, first_name, last_name, profile_picture, auth_provider } = userData;
 
-            // Generate a default password hash for Google users
             const defaultPasswordHash = await bcrypt.hash('google_auth_user', 10);
 
             const sql = `INSERT INTO users (username, email, is_verified, first_name, last_name, profile_picture, role, password_hash, auth_provider)

@@ -1,6 +1,3 @@
-/* -------------------------------------------
-  ROOT VARIABLES
-------------------------------------------- */
 :root { 
     /* Main color palette*/
     --primary-color: #333446;
@@ -39,9 +36,6 @@
     --skeleton-highlight: #f1f5f9;
 }
 
-/* -------------------------------------------
-  RESET & BASE STYLES
-------------------------------------------- */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -69,9 +63,7 @@ main, #content-container {
     contain: layout style;
 }
 
-/* -------------------------------------------
-  TYPOGRAPHY - HEADINGS
-------------------------------------------- */
+
 h1 {
     font-size: 2rem;
 }
@@ -83,9 +75,7 @@ nav h1 {
     font-size: 2rem;
 }
 
-/* -------------------------------------------
-  HEADER & NAVIGATION
-------------------------------------------- */
+
 #global-navbar {
     min-height: 4.5rem;
     background-color: var(--light-color);
@@ -263,9 +253,7 @@ header {
     color: var(--primary-color);
 }
 
-/* -------------------------------------------
-  AUTH CONTAINER & BUTTONS
-------------------------------------------- */
+
 .auth-container {
     display: flex;
     align-items: center;
@@ -280,9 +268,7 @@ header {
     margin-left: 0.625rem;
 }
 
-/* -------------------------------------------
-  LANGUAGE DROPDOWN
-------------------------------------------- */
+
 .language-dropdown {
     position: relative;
     margin-left: 0.625rem;
@@ -366,9 +352,6 @@ header {
     color: var(--background-color);
 }
 
-/* -------------------------------------------
-  BUTTONS & COMMON UI ELEMENTS
-------------------------------------------- */
 .btn {
     display: inline-block;
     padding: 0.5rem 1rem;
@@ -718,9 +701,7 @@ header {
     height: 18px;
 }
 
-/* -------------------------------------------
-  UNIVERSAL FOCUS STYLES
-------------------------------------------- */
+
 input:focus, 
 textarea:focus, 
 select:focus, 
@@ -779,9 +760,7 @@ a:focus-visible,
     outline-offset: 2px;
 }
 
-/* -------------------------------------------
-  SECTION LAYOUTS & COMMON COMPONENTS
-------------------------------------------- */
+
 .section-container {
     max-width: 90%;
     margin: 0 auto;
@@ -807,9 +786,7 @@ a:focus-visible,
     font-size: 0.8rem;
 }
 
-/* -------------------------------------------
-  CARDS & GRID LAYOUTS
-------------------------------------------- */
+
 .pets-grid, .users-grid, .testimonials-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -854,9 +831,7 @@ a:focus-visible,
     margin-bottom: 1rem;
 }
 
-/* -------------------------------------------
-  FOOTER STYLES
-------------------------------------------- */
+
 footer {
     background-color: var(--dark-color);
     color: var(--light-color);
@@ -904,9 +879,7 @@ footer {
     border-top: 0.063rem solid rgba(255, 255, 255, 0.1);
 }
 
-/* -------------------------------------------
-  MOBILE MENU STYLES
-------------------------------------------- */
+
 .mobile-menu-toggle {
     display: none;
     flex-direction: column;
@@ -1068,9 +1041,7 @@ footer {
     margin-right: 0.5rem;
 }
 
-/* -------------------------------------------
-  CARD PLACEHOLDER STYLES
-------------------------------------------- */
+
 .card-placeholder, .testimonial-card.placeholder, .review-card.placeholder, .pet-card.placeholder, .user-card.placeholder {
   background: linear-gradient(135deg, var(--skeleton-highlight) 0%, var(--skeleton-base) 100%);
   border-radius: 16px;
@@ -1089,7 +1060,6 @@ footer {
   cursor: pointer;
 }
 
-/* Removed complex sweep and shimmer effects - keeping it simple */
 
 .card-placeholder .placeholder-content,
 .card-placeholder .placeholder-author,
@@ -1254,9 +1224,7 @@ img {
   contain: layout;
 }
 
-/* -------------------------------------------
-  RESPONSIVE STYLES
-------------------------------------------- */
+
 @media (max-width: 920px) {
     .header-container {
         padding: 0 0.5rem;
@@ -1290,9 +1258,7 @@ img {
     .logo h1 {
         font-size: 1.2rem;    }
 }
-/* -------------------------------------------
-  NAVIGATION ELEMENTS
-------------------------------------------- */
+
 .navigation-header {
   margin-bottom: 2rem;
 }
@@ -1315,9 +1281,7 @@ img {
   font-size: 1.2rem;
 }
 
-/* -------------------------------------------
-  UNIVERSAL STAR RATING STYLES
-------------------------------------------- */
+
 .stars {
   color: var(--warning-color);
   font-size: 1.5rem;

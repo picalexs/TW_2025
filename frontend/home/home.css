@@ -1,6 +1,4 @@
-/* -------------------------------------------
-  HOME PAGE SPECIFIC LAYOUT
-------------------------------------------- */
+
 #content-container {
   background: var(--secondary-color);
   display: flex;
@@ -31,9 +29,7 @@ section:focus {
   width: 100%;
 }
 
-/* -------------------------------------------
-  HERO SECTION
-------------------------------------------- */
+
 .hero {
   position: relative;
   min-height: 80vh;
@@ -200,9 +196,7 @@ section:focus {
   z-index: 2;
 }
 
-/* -------------------------------------------
-  FEATURED PETS SECTION
-------------------------------------------- */
+
 .featured-pets {
   order: 4 !important;
   position: relative;
@@ -215,9 +209,7 @@ section:focus {
   contain: layout style;
 }
 
-/* -------------------------------------------
-  FEATURED USERS SECTION
-------------------------------------------- */
+
 .featured-users {
   order: 3;
   position: relative;
@@ -234,9 +226,7 @@ section:focus {
   margin-bottom: 3rem;
 }
 
-/* -------------------------------------------
-  ABOUT SECTION
-------------------------------------------- */
+
 .about-content {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(18.75rem, 1fr));
@@ -244,9 +234,7 @@ section:focus {
   margin-top: 2rem;
 }
 
-/* -------------------------------------------
-  LOADING STATES & MESSAGES
-------------------------------------------- */
+
 .loading-spinner {
   text-align: center;
   padding: 2rem;

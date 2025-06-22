@@ -15,13 +15,13 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
     if (!tags.size) {
-      messageDiv.textContent = 'Selectează cel puțin un răspuns!';
+      messageDiv.textContent = window.languageManager.translate('error.selectAtLeastOne', 'Please select at least one answer!');
       return;
     }
     // Check login
     const authToken = localStorage.getItem('authToken');
     if (!authToken) {
-      messageDiv.textContent = 'Trebuie să fii autentificat pentru a salva preferințele!';
+      messageDiv.textContent = window.languageManager.translate('error.mustBeLoggedIn', 'You must be logged in to save preferences!');
       return;
     }
     try {
@@ -36,13 +36,13 @@ document.addEventListener('DOMContentLoaded', function() {
         body: JSON.stringify({ tags: tagArray })
       });
       if (res.ok) {
-        messageDiv.textContent = 'Preferințele au fost salvate cu succes!';
+        messageDiv.textContent = window.languageManager.translate('success.preferencesSaved', 'Preferences saved successfully!');
       } else {
         const data = await res.json().catch(() => ({}));
-        messageDiv.textContent = data.message || 'Eroare la salvare!';
+        messageDiv.textContent = data.message || window.languageManager.translate('error.saveFailed', 'Error saving preferences!');
       }
     } catch (err) {
-      messageDiv.textContent = 'Eroare de rețea!';
+      messageDiv.textContent = window.languageManager.translate('error.network', 'Network error!');
     }
   });
 });

@@ -167,8 +167,7 @@ class ProfilePage {
     try {
       const petsContainer = document.getElementById("pets-container");
       petsContainer.innerHTML = this.createPetsLoadingState();      
-      
-      // Load pets for any user - whether they're a shelter or regular user
+     
       try {
         const allPets = await this.petService.getPetsByShelter(userId);
         

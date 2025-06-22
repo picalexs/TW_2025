@@ -3,7 +3,7 @@ const db = require("../db/dbConnection");
 
 class ProfileDTO extends abstractDTO {
   constructor() {
-    super("users"); // Assuming profile data is in the users table
+    super("users"); 
   }
 
   async getById(userId) {
@@ -13,7 +13,7 @@ class ProfileDTO extends abstractDTO {
   }
 
   async update(userId, data) {
-    // Example: update name and email
+   
     const sql = `UPDATE users SET name = :name, email = :email WHERE id = :userId`;
     await db.execute(sql, [data.name, data.email, userId]);
     return { success: true };

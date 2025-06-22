@@ -33,5 +33,14 @@
   "q8a2": "Prefer un animal cu nevoi minime.",
   "q9": "Locuiești la bloc sau la curte?",
   "q9a1": "La curte",
-  "q9a2": "La bloc, apartament mic"
+  "q9a2": "La bloc, apartament mic",
+  "error": {
+    "selectAtLeastOne": "Selectează cel puțin un răspuns!",
+    "mustBeLoggedIn": "Trebuie să fii autentificat pentru a salva preferințele!",
+    "saveFailed": "Eroare la salvare!",
+    "network": "Eroare de rețea!"
+  },
+  "success": {
+    "preferencesSaved": "Preferințele au fost salvate cu succes!"
+  }
 }

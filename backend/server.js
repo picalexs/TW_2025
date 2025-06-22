@@ -83,7 +83,6 @@ const sendCompressedResponse = (res, statusCode, data, contentType = 'applicatio
 };
 
 const server = http.createServer(async (req, res) => {
-  // Debug logging for all incoming requests
   console.log(`[${new Date().toISOString()}] Incoming request: ${req.method} ${req.url}`);
   res.req = req;
 
@@ -157,7 +156,7 @@ const server = http.createServer(async (req, res) => {
       });
     }
 
-    // API route handlers first
+    
     routeHandled = await handleConfigRoutes(req, res);
     if (!routeHandled) {
       routeHandled = await handleUserRoutes(req, res);
@@ -183,7 +182,7 @@ const server = http.createServer(async (req, res) => {
     if (!routeHandled) {
       routeHandled = await handleRSSRoutes(req, res);
     }
-    // Static and frontend routes LAST
+   
     if (!routeHandled) {
       routeHandled = await handleStaticRoutes(req, res);
     }

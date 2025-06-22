@@ -18,14 +18,14 @@ async function fetchUsers() {
 }
 
 function renderUsers(users) {
-  console.log('users array:', users); // debug
+  console.log('users array:', users); 
   usersTbody.innerHTML = '';
   if (!Array.isArray(users) || users.length === 0) {
     usersTbody.innerHTML = '<tr><td colspan="5">No users found.</td></tr>';
     return;
   }
   users.forEach(user => {
-    // user = [id, email, username, role]
+   
     const id = user[0] || '';
     const email = user[1] || '';
     const username = user[2] || '';
@@ -59,7 +59,7 @@ async function deleteUser(userId) {
     adminMessage.style.color = 'green';
     fetchUsers();
   } catch (err) {
-    // Show backend error message if available
+   
     const backendMsg = err?.data?.message || err?.message || 'Failed to delete user.';
     adminMessage.textContent = backendMsg;
     adminMessage.style.color = 'red';

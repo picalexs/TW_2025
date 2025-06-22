@@ -1,6 +1,4 @@
-/* -------------------------------------------
-  PROFILE PAGE LAYOUT
-------------------------------------------- */
+
 body {
   background: var(--light-color);
 }
@@ -13,9 +11,7 @@ body {
   background: var(--light-color);
 }
 
-/* -------------------------------------------
-  LOADING & ERROR STATES
-------------------------------------------- */
+
 .loading-container,
 .error-container {
   display: flex;
@@ -50,9 +46,6 @@ body {
   margin-bottom: 2rem;
 }
 
-/* -------------------------------------------
-  PROFILE HEADER
-------------------------------------------- */
 .profile-header {
   margin-bottom: 3rem;
 }
@@ -256,9 +249,6 @@ body {
   flex-wrap: wrap;
 }
 
-/* -------------------------------------------
-  PROFILE DETAILS SECTION
-------------------------------------------- */
 .profile-details {
   background: var(--background-color);
   border-radius: 1.25rem;
@@ -332,9 +322,6 @@ body {
   line-height: 1.4;
 }
 
-/* -------------------------------------------
-  REVIEWS SECTION
-------------------------------------------- */
 .reviews-container {
   display: flex;
   flex-direction: column;
@@ -398,9 +385,7 @@ body {
   padding: 3rem;
 }
 
-/* -------------------------------------------
-  PETS SECTION
-------------------------------------------- */
+
 #pets-section {
   overflow: visible;
   padding: 2.5rem;
@@ -447,9 +432,7 @@ body {
   visibility: visible;
 }
 
-/* -------------------------------------------
-  PETS SIMPLE GRID
-------------------------------------------- */
+
 .pets-simple-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -659,9 +642,7 @@ body {
   grid-column: 1 / -1;
 }
 
-/* -------------------------------------------
-  MODAL STYLES
-------------------------------------------- */
+
 .modal {
   display: none;
   position: fixed;
@@ -772,9 +753,7 @@ body {
     min-width: 6.875rem;
 }
 
-/* -------------------------------------------
-  OWNER REVIEWS SPECIFIC STYLES
-------------------------------------------- */
+
 .owner-review {
   border-left: 0.25rem solid var(--primary-color);
   background: var(--light-color);
@@ -1097,9 +1076,7 @@ body {
   border-radius: 0.5rem;
 }
 
-/* -------------------------------------------
-  RESPONSIVE DESIGN
-------------------------------------------- */
+
 @media (max-width: 1200px) {
   .profile-container {
     max-width: 95%;
@@ -1133,7 +1110,7 @@ body {
   }
 }
 
-/* Large tablet/small laptop breakpoint */
+
 @media (max-width: 1024px) and (min-width: 993px) {
   .rating-category {
     min-width: 145px;
@@ -1433,9 +1410,7 @@ body {
   }
 }
 
-/* -------------------------------------------
-  REVIEWS FILTER SECTION
-------------------------------------------- */
+
 .section-header-with-filter {
   display: flex;
   justify-content: space-between;
@@ -1541,7 +1516,7 @@ body {
   color: var(--primary-color);
 }
 
-/* Compact grid layout for larger screens */
+
 .filter-sections-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1552,7 +1527,7 @@ body {
   grid-column: 1 / -1;
 }
 
-/* Detailed ratings in a more compact layout */
+
 .detailed-ratings-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -1929,7 +1904,7 @@ body {
   animation-delay: 0.6s;
 }
 
-/* Carousel hover behavior for better UX */
+
 .pets-carousel {
   transition: all 0.3s ease;
 }
@@ -1992,9 +1967,7 @@ body {
   transform: none !important;
 }
 
-/* -------------------------------------------
-  PET SECTION CONTENT STATES
-------------------------------------------- */
+
 .adoption-info {
   text-align: center;
   padding: 2rem 1.5rem;
@@ -2046,9 +2019,7 @@ body {
   font-style: italic;
 }
 
-/* -------------------------------------------
-  ENHANCED PET CARDS IN PROFILE
-------------------------------------------- */
+
 .pets-row .pet-card {
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   will-change: transform;
@@ -2084,9 +2055,7 @@ body {
   max-width: 26rem;
 }
 
-/* -------------------------------------------
-  COMPACT PROFILE EDIT STYLES
-------------------------------------------- */
+
 .form-row {
   display: flex;
   flex-wrap: wrap;
@@ -2125,9 +2094,7 @@ body {
   }
 }
 
-/* -------------------------------------------
-  NOTIFICATION SYSTEM
-------------------------------------------- */
+
 .notification-popup {
   position: fixed;
   top: 20px;
@@ -2185,7 +2152,7 @@ body {
   background-color: rgba(0, 0, 0, 0.1);
 }
 
-/* Notification Types */
+
 .notification-success {
   border-left: 4px solid #28a745;
 }
@@ -2218,7 +2185,7 @@ body {
   color: #17a2b8;
 }
 
-/* Animations */
+
 @keyframes slideInNotification {
   from {
     transform: translateX(100%);

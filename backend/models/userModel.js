@@ -276,17 +276,17 @@ class UserModel extends AbstractModel {
     let connection;
     try {
       connection = await db.getConnection();
-      // 1. Log received tag IDs
+    
       const receivedTagIds = tags.map(tag => Number(tag.id));
       console.log('Received tag IDs for user', userId, ':', receivedTagIds);
     
-      // 3. Delete old tags
+      
       await connection.execute(
         'DELETE FROM user_preference_tags WHERE user_id = :userId',
         { userId },
         { autoCommit: false }
       );
-      // 4. Insert new tags by ID
+     
       for (const tagId of receivedTagIds) {
         await connection.execute(
           'INSERT INTO user_preference_tags (user_id, tag_id) VALUES (:userId, :tagId)',
@@ -304,7 +304,7 @@ class UserModel extends AbstractModel {
     }
   }
 
-  // Get user preference tags for a user (by JWT)
+  
   async getUserPreferenceTags(userId) {
     let connection;
     try {

@@ -47,7 +47,6 @@ function checkLoginStatusAndToggleNavButtons() {
         if (mobileAuthLoggedIn) mobileAuthLoggedIn.style.display = 'none';
     }
 
-    // Admin button logic
     const adminNavItem = document.getElementById('admin-nav-item');
     const userRole = localStorage.getItem('userRole');
     if (isLoggedIn && userRole === 'admin') {

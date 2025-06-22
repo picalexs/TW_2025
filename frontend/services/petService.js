@@ -178,9 +178,6 @@ class PetService {
     }
  }
 
-  /**
-   * Get pets sorted by tag overlap (matching score) for a user
-   */
   async getPetsByTagOverlap(userId, limit = 20) {
     if (!userId) throw new Error('User ID is required');
     try {

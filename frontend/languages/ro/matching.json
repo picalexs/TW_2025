@@ -1,0 +1,12 @@
+{
+  "matchingTitle": "Cele mai bune potriviri",
+  "matchingScore": "Scor de potrivire",
+  "noMatches": "Nu s-au găsit animale potrivite.",
+  "tryAdjustingPreferences": "Încearcă să ajustezi preferințele pentru rezultate mai bune.",
+  "viewAll": "Vezi toate animalele",
+  "matchExplanation": "Scorul de potrivire arată câte dintre preferințele tale se regăsesc la fiecare animal.",
+  "startMatchingTest": "Începe testul de matching",
+  "updatePreferences": "Actualizează preferințele",
+  "matchedPets": "Animale potrivite",
+  "notEnoughPreferences": "Te rugăm să setezi mai multe preferințe pentru potriviri mai bune."
+}
