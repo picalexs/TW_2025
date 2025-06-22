@@ -28,6 +28,9 @@ class ProfilePage {
       petConditionRating: 0,
       processRating: 0
     };
+    
+    window.currentProfilePage = this;
+    
     this.init();
   }
 
@@ -1240,4 +1243,20 @@ document.addEventListener("DOMContentLoaded", () => {
   initializePageLanguage();
   checkLoginStatusAndToggleNavButtons();
   new ProfilePage();
+});
+
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) {
+    checkLoginStatusAndToggleNavButtons();
+    if (window.currentProfilePage && window.currentProfilePage.currentUser) {
+      window.currentProfilePage.updateProfileActions(window.currentProfilePage.currentUser);
+    }
+  }
+});
+
+window.addEventListener('focus', () => {
+  checkLoginStatusAndToggleNavButtons();
+  if (window.currentProfilePage && window.currentProfilePage.currentUser) {
+    window.currentProfilePage.updateProfileActions(window.currentProfilePage.currentUser);
+  }
 });

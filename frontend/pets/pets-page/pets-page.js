@@ -47,6 +47,8 @@ function toggleAddPetButton() {
   }
 }
 
+export { toggleAddPetButton };
+
 export async function fetchPets() {
   try {
     const pets = await petService.getAllPets();
@@ -359,6 +361,18 @@ export function initializeMatchingButton() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  checkLoginStatusAndToggleNavButtons();
+  toggleAddPetButton();
+});
+
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) {
+    checkLoginStatusAndToggleNavButtons();
+    toggleAddPetButton();
+  }
+});
+
+window.addEventListener('focus', () => {
   checkLoginStatusAndToggleNavButtons();
   toggleAddPetButton();
 });

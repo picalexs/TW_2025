@@ -68,29 +68,24 @@ class UserService {
     
     try {
       const data = await this.apiService.post(this.endpoints.login, { email, password });
-      
+
+      localStorage.removeItem('userEmail');
+      localStorage.removeItem('username');
+      localStorage.removeItem('userRole');
+      localStorage.removeItem('userData');
+      localStorage.removeItem('userId');
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('isLoggedIn');
+
       if (data && data.user && data.token) {
-        // Clean up any legacy/extra keys for consistency
-        localStorage.removeItem('userId');
-        localStorage.removeItem('userEmail');
-        localStorage.removeItem('username');
-        localStorage.removeItem('userRole');
-        
-        localStorage.setItem('userData', JSON.stringify(data.user));
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('authToken', data.token); // Store JWT for ApiService
-        this.apiService.setAuthToken(data.token); // Set for immediate use
+        this._setAuthState(data.token, data.user);
         return data;
       } else if (data && data.user) {
-        // fallback for legacy backend: try to extract token from headers or elsewhere if needed
         localStorage.setItem('userData', JSON.stringify(data.user));
         localStorage.setItem('isLoggedIn', 'true');
-        
-        if (data.token) {
-          localStorage.setItem('authToken', data.token);
-          this.apiService.setAuthToken(data.token);
+        if (data.user.id) {
+          localStorage.setItem('userId', data.user.id.toString());
         }
-        
         return data;
       } else {
         throw new Error('Invalid login response: missing user data');
@@ -116,7 +111,6 @@ class UserService {
     try {
       const result = await this.apiService.post(this.endpoints.register, userData);
       
-      // Auto-login if registration returns a token
       if (result && result.token) {
         this._setAuthState(result.token, result.user);
       }
@@ -199,21 +193,26 @@ class UserService {
     
     this.apiService.setAuthToken(token);
     localStorage.setItem('authToken', token);
+    localStorage.setItem('isLoggedIn', 'true');
     
     if (user) {
       localStorage.setItem('userData', JSON.stringify(user));
+      localStorage.setItem('userId', user.id.toString());
     }
     
     if (this.debug) {
       console.log('Authentication state set');
     }
   }
-  
+
   _clearAuthState() {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userData');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('isLoggedIn');
   }
-    _restoreAuthState() {
+
+  _restoreAuthState() {
     try {
       const token = localStorage.getItem('authToken');
       if (token) {

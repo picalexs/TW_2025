@@ -1,124 +1,130 @@
-import { fetchPets, renderPets} from '../pets/pets-page/pets-page.min.js';
-import { setupMobileMenu, initializePageLanguage, checkLoginStatusAndToggleNavButtons, navigateToProfile } from '../global/global.min.js';
-import ApiService from '../services/api.min.js';
-import UserService from '../services/userService.min.js';
+import { fetchPets, renderPets } from "../pets/pets-page/pets-page.min.js";
+import {
+  setupMobileMenu,
+  initializePageLanguage,
+  checkLoginStatusAndToggleNavButtons,
+  navigateToProfile,
+} from "../global/global.min.js";
+import ApiService from "../services/api.min.js";
+import UserService from "../services/userService.min.js";
 const apiService = new ApiService();
 
 window.navigateToProfile = navigateToProfile;
 
 function initHomePage() {
   initHeroSection();
-  
+
   setupMobileMenu();
   initializePageLanguage();
-  checkLoginStatusAndToggleNavButtons()
-  
+  checkLoginStatusAndToggleNavButtons();
+
   loadPets();
   addTestimonialsSection();
   fetchAndRenderUsers();
-  
-  document.addEventListener('languageChanged', () => {
-    console.log('Language changed, re-rendering user cards');
+
+  document.addEventListener("languageChanged", () => {
+    console.log("Language changed, re-rendering user cards");
     fetchAndRenderUsers();
   });
 }
 
 function initHeroSection() {
-  const heroSection = document.querySelector('.hero');
+  const heroSection = document.querySelector(".hero");
   if (!heroSection) {
     console.error("Hero section not found");
     return;
   }
-  
-  heroSection.classList.add('hero-section');
-  
-  let slideshowContainer = heroSection.querySelector('.hero-slideshow');
+
+  heroSection.classList.add("hero-section");
+
+  let slideshowContainer = heroSection.querySelector(".hero-slideshow");
   if (!slideshowContainer) {
     console.log("Creating slideshow container as it was not found");
-    slideshowContainer = document.createElement('div');
-    slideshowContainer.className = 'hero-slideshow';
+    slideshowContainer = document.createElement("div");
+    slideshowContainer.className = "hero-slideshow";
     heroSection.insertBefore(slideshowContainer, heroSection.firstChild);
   }
 
-  slideshowContainer.innerHTML = '';
+  slideshowContainer.innerHTML = "";
   createManualSlideshow(slideshowContainer);
 }
 
 function createManualSlideshow(container) {
   const slideImages = [
-    '../assets/hero-bg.jpg',
-    '../assets/hero-bg2.jpg',
-    '../assets/hero-bg3.jpg',
-    '../assets/hero-bg4.jpg',
-    '../assets/hero-bg5.jpg',
-    '../assets/hero-bg6.jpg',
-    '../assets/hero-bg7.jpg',
-    '../assets/hero-bg8.jpg'
+    "../assets/hero-bg.jpg",
+    "../assets/hero-bg2.jpg",
+    "../assets/hero-bg3.jpg",
+    "../assets/hero-bg4.jpg",
+    "../assets/hero-bg5.jpg",
+    "../assets/hero-bg6.jpg",
+    "../assets/hero-bg7.jpg",
+    "../assets/hero-bg8.jpg",
   ];
-  
+
   const uniqueImages = [...new Set(slideImages)];
   console.log(`Loading ${uniqueImages.length} unique slideshow images`);
-  
-  const fallbackSlide = document.createElement('div');
-  fallbackSlide.className = 'hero-slide initial active';
+
+  const fallbackSlide = document.createElement("div");
+  fallbackSlide.className = "hero-slide initial active";
   fallbackSlide.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('${uniqueImages[0]}')`;
   container.appendChild(fallbackSlide);
-  
+
   const loadedSlides = [fallbackSlide];
-  
+
   setTimeout(() => {
     for (let i = 1; i < uniqueImages.length; i++) {
       const imgPath = uniqueImages[i];
-      const slide = document.createElement('div');
-      slide.className = 'hero-slide';
+      const slide = document.createElement("div");
+      slide.className = "hero-slide";
       slide.style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('${imgPath}')`;
       container.appendChild(slide);
       loadedSlides.push(slide);
     }
-    
+
     startSlideRotation(container);
     setTimeout(() => {
-      fallbackSlide.classList.remove('initial');
+      fallbackSlide.classList.remove("initial");
     }, 2000);
   }, 100);
 }
 
 function startSlideRotation(container) {
-  const slides = container.querySelectorAll('.hero-slide');
+  const slides = container.querySelectorAll(".hero-slide");
   if (slides.length <= 1) {
-    console.log('Not enough slides for rotation');
+    console.log("Not enough slides for rotation");
     return;
   }
-  
+
   let currentIndex = 0;
   const SLIDE_DURATION = 5000;
-  
+
   const interval = setInterval(() => {
-    slides[currentIndex].classList.remove('active');
+    slides[currentIndex].classList.remove("active");
     currentIndex = (currentIndex + 1) % slides.length;
-    slides[currentIndex].classList.add('active');
+    slides[currentIndex].classList.add("active");
   }, SLIDE_DURATION);
-  
-  window.addEventListener('beforeunload', () => {
+
+  window.addEventListener("beforeunload", () => {
     clearInterval(interval);
   });
 }
 
 async function addTestimonialsSection() {
-  const testimonialsSection = document.getElementById('testimonials');
+  const testimonialsSection = document.getElementById("testimonials");
   if (!testimonialsSection) {
     console.error("Testimonials section not found in HTML");
     return;
   }
-  
+
   const loadTestimonialsWithRetry = async () => {
     try {
       const testimonials = await fetchTestimonials();
       if (testimonials && testimonials.length > 0) {
         window.currentTestimonials = testimonials;
-        testimonialsSection.innerHTML = createTestimonialsCarousel(testimonials);
+        testimonialsSection.innerHTML =
+          createTestimonialsCarousel(testimonials);
         initTestimonialsCarousel();
-        
+
         if (window.languageManager) {
           window.languageManager.updateContent();
         }
@@ -127,16 +133,19 @@ async function addTestimonialsSection() {
         setTimeout(() => loadTestimonialsWithRetry(), 5000);
       }
     } catch (error) {
-      console.log("Failed to load testimonials, retrying in 5 seconds...", error);
+      console.log(
+        "Failed to load testimonials, retrying in 5 seconds...",
+        error
+      );
       setTimeout(() => loadTestimonialsWithRetry(), 5000);
     }
   };
-  
+
   loadTestimonialsWithRetry();
 }
 
 function createPlaceholderCard() {
-  return window.CardRenderer.createPlaceholderCard('testimonial');
+  return window.CardRenderer.createPlaceholderCard("testimonial");
 }
 
 function createTestimonialsCarousel(testimonials) {
@@ -181,7 +190,10 @@ function getCardsPerSlide() {
 }
 
 function createSlides(testimonials, cardsPerSlide) {
-  return window.CarouselHelpers.createCarouselSlides(testimonials, () => cardsPerSlide);
+  return window.CarouselHelpers.createCarouselSlides(
+    testimonials,
+    () => cardsPerSlide
+  );
 }
 
 let testimonialsCarousel = null;
@@ -190,21 +202,25 @@ function initTestimonialsCarousel() {
   if (testimonialsCarousel) {
     testimonialsCarousel.destroy();
   }
-  
-  const config = window.CarouselHelpers.createTestimonialsCarouselConfig('.testimonials-carousel');
-  
+
+  const config = window.CarouselHelpers.createTestimonialsCarouselConfig(
+    ".testimonials-carousel"
+  );
+
   config.onSlideChange = (currentSlide, previousSlide, carousel) => {
-    console.log(`Testimonials carousel moved from slide ${previousSlide} to ${currentSlide}`);
+    console.log(
+      `Testimonials carousel moved from slide ${previousSlide} to ${currentSlide}`
+    );
   };
-  
+
   config.onInit = (carousel) => {
-    console.log('Testimonials carousel initialized successfully');
+    console.log("Testimonials carousel initialized successfully");
   };
-  
+
   testimonialsCarousel = new window.Carousel(config);
 }
 
-window.addEventListener('beforeunload', () => {
+window.addEventListener("beforeunload", () => {
   if (testimonialsCarousel) {
     testimonialsCarousel.destroy();
   }
@@ -212,61 +228,63 @@ window.addEventListener('beforeunload', () => {
 
 async function fetchTestimonials(count) {
   try {
-    const endpoint = count ? `/api/testimonials/random?count=${count}` : '/api/testimonials';
+    const endpoint = count
+      ? `/api/testimonials/random?count=${count}`
+      : "/api/testimonials";
     const response = await apiService.get(endpoint);
     return response;
   } catch (error) {
-    console.error('Error fetching testimonials:', error);
+    console.error("Error fetching testimonials:", error);
     throw error;
   }
 }
 
 function createStarsHTML(rating) {
   const numRating = parseFloat(rating) || 5;
-  
+
   const fullStars = Math.floor(numRating);
-  const hasHalfStar = (numRating % 1) >= 0.5;
+  const hasHalfStar = numRating % 1 >= 0.5;
   const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-  
-  let starsHTML = '';
-  
+
+  let starsHTML = "";
+
   for (let i = 0; i < fullStars; i++) {
     starsHTML += '<span class="star star-full">★</span>';
   }
-  
+
   if (hasHalfStar) {
     starsHTML += '<span class="star star-half">★</span>';
   }
-  
+
   for (let i = 0; i < emptyStars; i++) {
     starsHTML += '<span class="star star-empty">☆</span>';
   }
-  
+
   return starsHTML;
 }
 
 function createTestimonialHTML(testimonial) {
   return window.CardRenderer.createTestimonialCard(testimonial, {
-    format: 'html',
-    variant: 'default',
+    format: "html",
+    variant: "default",
     showAuthor: true,
-    clickAction: 'navigate'
+    clickAction: "navigate",
   });
 }
 
 async function loadPets() {
-  const petsGrid = document.getElementById('pets-grid');
+  const petsGrid = document.getElementById("pets-grid");
   if (!petsGrid) {
     console.error("Pets grid container not found");
     return;
   }
-  
+
   const loadPetsWithRetry = async () => {
     try {
       console.log("Fetching pets data from API service...");
       const pets = await fetchPets();
       if (pets && pets.length > 0) {
-        renderPets(pets, 'pets-grid');
+        renderPets(pets, "pets-grid");
       } else {
         console.log("No pets received, retrying in 5 seconds...");
         setTimeout(() => loadPetsWithRetry(), 5000);
@@ -276,12 +294,12 @@ async function loadPets() {
       setTimeout(() => loadPetsWithRetry(), 5000);
     }
   };
-  
+
   loadPetsWithRetry();
 }
 
 async function fetchAndRenderUsers() {
-  const usersSection = document.getElementById('featured-users');
+  const usersSection = document.getElementById("featured-users");
   if (!usersSection) {
     console.error("Featured users section not found in HTML");
     return;
@@ -293,15 +311,19 @@ async function fetchAndRenderUsers() {
       const allUsersResponse = await userService.getAllUsersWithAdoptions();
       const allUsers = Array.isArray(allUsersResponse)
         ? allUsersResponse
-        : (Array.isArray(allUsersResponse?.users) ? allUsersResponse.users : []);
+        : Array.isArray(allUsersResponse?.users)
+        ? allUsersResponse.users
+        : [];
 
-      const usersWithAdoptions = allUsers.filter(user => 
-        user.adoption_count && user.adoption_count > 0
+      const usersWithAdoptions = allUsers.filter(
+        (user) => user.adoption_count && user.adoption_count > 0
       );
 
       if (usersWithAdoptions.length > 0) {
-        const shuffledUsers = [...usersWithAdoptions].sort(() => Math.random() - 0.5);
-        
+        const shuffledUsers = [...usersWithAdoptions].sort(
+          () => Math.random() - 0.5
+        );
+
         const maxUsersPerRow = 4;
         const availableUsers = shuffledUsers.length;
         let usersToShow;
@@ -313,17 +335,17 @@ async function fetchAndRenderUsers() {
           usersToShow = availableUsers;
         }
         const featuredUsers = shuffledUsers.slice(0, usersToShow);
-        const usersGrid = usersSection.querySelector('.users-grid');
+        const usersGrid = usersSection.querySelector(".users-grid");
         if (usersGrid) {
-          usersGrid.innerHTML = '';
-          featuredUsers.forEach(user => {
+          usersGrid.innerHTML = "";
+          featuredUsers.forEach((user) => {
             const userCard = window.CardRenderer.createUserCard(user, {
-              format: 'element',
-              variant: 'featured',
+              format: "element",
+              variant: "featured",
               showStats: true,
-              clickAction: 'navigate'
+              clickAction: "navigate",
             });
-            userCard.classList.add('loaded');
+            userCard.classList.add("loaded");
             usersGrid.appendChild(userCard);
           });
         }
@@ -342,48 +364,51 @@ async function fetchAndRenderUsers() {
   loadUsersWithRetry();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
- console.log("DOM loaded - starting home page initialization");
-  
- if (document.body.classList.contains('home-initialized')) {
-   console.log('Home page already initialized');
- return; }
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("DOM loaded - starting home page initialization");
 
- document.body.classList.add('home-initialized');
- document.body.classList.add('home_page');
+  if (document.body.classList.contains("home-initialized")) {
+    console.log("Home page already initialized");
+    return;
+  }
 
- const urlParams = new URLSearchParams(window.location.search);
- const token = urlParams.get('token');
- const userId = urlParams.get('id');
- const username = urlParams.get('username');
- const email = urlParams.get('email'); 
- const role = urlParams.get('role'); 
+  document.body.classList.add("home-initialized");
+  document.body.classList.add("home_page");
 
- if (token) {
-  // Clean up any legacy/extra keys for consistency
-  localStorage.removeItem('userId');
-  localStorage.removeItem('userEmail');
-  localStorage.removeItem('username');
-  localStorage.removeItem('userRole');
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get("token");
+  const userId = urlParams.get("id");
+  const username = urlParams.get("username");
+  const email = urlParams.get("email");
+  const role = urlParams.get("role");
 
-  localStorage.setItem('authToken', token);
-  localStorage.setItem('isLoggedIn', 'true');
-  localStorage.setItem('userData', JSON.stringify({ id: userId, username, email, role }));
+  if (token) {
+    localStorage.removeItem("userEmail");
+    localStorage.removeItem("username");
+    localStorage.removeItem("userRole");
 
-  console.log('Google login successful: Token and user information saved in localStorage.');
-  console.log('Token:', token.substring(0, 30) + '...'); 
-  console.log('User:', { userId, username, email, role });
+    localStorage.setItem("authToken", token);
+    localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem(
+      "userData",
+      JSON.stringify({ id: userId, username, email, role })
+    );
+    localStorage.setItem("userId", userId.toString());
 
-  window.history.replaceState({}, document.title, window.location.pathname);
+    console.log(
+      "Google login successful: Token and user information saved in localStorage."
+    );
+    console.log("Token:", token.substring(0, 30) + "...");
+    console.log("User:", { userId, username, email, role });
 
-  // Update navbar/profile link
-  checkLoginStatusAndToggleNavButtons();
- } else if (localStorage.getItem('isLoggedIn') === 'true') {
- console.log("User already logged in, checking existing session.");
- } else {
- console.log("No token or user information in the URL for Google Login. We continue with normal page initialization.");
- }
-
- initHomePage();
+    window.history.replaceState({}, document.title, window.location.pathname);
+    checkLoginStatusAndToggleNavButtons();
+  } else if (localStorage.getItem("isLoggedIn") === "true") {
+    console.log("User already logged in, checking existing session.");
+  } else {
+    console.log(
+      "No token or user information in the URL for Google Login. We continue with normal page initialization."
+    );
+  }
+  initHomePage();
 });
-
