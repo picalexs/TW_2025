@@ -275,19 +275,9 @@ class UserModel extends AbstractModel {
     try {
       connection = await db.getConnection();
       // 1. Log received tag IDs
-      const receivedTagIds = tags.map(tag => tag.id);
+      const receivedTagIds = tags.map(tag => Number(tag.id));
       console.log('Received tag IDs for user', userId, ':', receivedTagIds);
-      // 2. Check which tag IDs exist in TAGS table
-      const result = await connection.execute(
-        `SELECT id FROM tags WHERE id IN (${receivedTagIds.map((_, i) => ':id' + i).join(',')})`,
-        Object.fromEntries(receivedTagIds.map((id, i) => ['id' + i, id]))
-      );
-      const existingTagIds = result.rows.map(row => row.ID || row.id);
-      const missingTagIds = receivedTagIds.filter(id => !existingTagIds.includes(id));
-      if (missingTagIds.length > 0) {
-        console.error('Missing tag IDs in TAGS table:', missingTagIds);
-        return { success: false, message: 'Some tag IDs do not exist in TAGS table', missingTagIds };
-      }
+    
       // 3. Delete old tags
       await connection.execute(
         'DELETE FROM user_preference_tags WHERE user_id = :userId',

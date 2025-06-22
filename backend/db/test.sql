@@ -20,3 +20,6 @@ SELECT constraint_name, constraint_type, search_condition
 FROM user_constraints
 WHERE table_name = 'USERS';
 
+SELECT id, DUMP(id), name FROM tags WHERE id IN (5, 12);
+SELECT * FROM tags ORDER BY id;
+
