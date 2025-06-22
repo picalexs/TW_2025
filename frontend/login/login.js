@@ -100,6 +100,7 @@ async function handleLogin(event) {
       localStorage.setItem('userData', JSON.stringify(response.user));
       localStorage.setItem('userId', response.user.id.toString());
       localStorage.setItem('currentUserId', response.user.id.toString());
+      localStorage.setItem('userRole', response.user.role); 
 
       if (response.token) {
         localStorage.setItem('authToken', response.token);

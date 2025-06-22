@@ -33,31 +33,19 @@ class UserController {
       if (!req.user || req.user.role !== 'admin') {
         return sendResponse(res, 403, { success: false, message: "Forbidden: Only administrators can access this resource." });
       }
-      const users = await userModel.getAllWithAdoptionCounts();
-      if (users && users.length > 0) {
-        sendResponse(res, 200, { success: true, users });
-      } else {
-        sendResponse(res, 404, { success: false, message: 'No users found.' });
-      }
+      // const users = await userModel.getAllWithAdoptionCounts();
+      // if (users && users.length > 0) {
+      //   sendResponse(res, 200, { success: true, users });
+      // } else {
+      //   sendResponse(res, 404, { success: false, message: 'No users found.' });
+      // }
+      const users = await userModel.getAll();
+      sendResponse(res, 200, { success: true, users });
     } catch (error) {
       console.error("Error getting all users (admin):", error);
       sendResponse(res, 500, { success: false, message: "Internal server error." });
     }
   }
-
-  // async getUserById(req, res, id) {
-  //   try {
-  //     const user = await userModel.getById(id);
-  //     if (user) {
-  //       sendResponse(res, 200, user);
-  //     } else {
-  //       sendResponse(res, 404, { error: "User not found" });
-  //     }
-  //   } catch (error) {
-  //     console.error(`Error getting user by ID ${id}:`, error);
-  //     sendResponse(res, 500, { error: "Failed to fetch user", message: error.message });
-  //   }
-  // }
 
   async createUser(req, res) {
     try {
@@ -314,21 +302,6 @@ class UserController {
     }
   }
 
-  // async updateUser(req, res, id) {
-  //   try {
-  //     const userData = await collectRequestData(req);
-  //     const updatedUser = await userModel.updateUser(id, userData);
-  //     if (updatedUser) {
-  //       sendResponse(res, 200, updatedUser);
-  //     } else {
-  //       sendResponse(res, 404, { error: "User not found for update" });
-  //     }
-  //   } catch (error) {
-  //     console.error(`Error updating user with ID ${id}:`, error);
-  //     sendResponse(res, 500, { error: "Failed to update user", message: error.message });
-  //   }
-  // }
-
   async authenticateUser(req, res) {
     try {
       const { email, password } = await collectRequestData(req);
@@ -443,29 +416,6 @@ class UserController {
       }
     }
   }
-
-  // async login(req, res) {
-  //   try {
-  //     const body = await collectRequestData(req);
-  //     const { email, password } = JSON.parse(body);
-
-  //     if (!email || !password) {
-  //       return sendResponse(res, 400, { error: "Bad Request", message: "Email și parolă sunt obligatorii." });
-  //     }
-
-  //     const authResult = await userModel.authenticate(email, password);
-
-  //     if (authResult.success) {
-  //       sendResponse(res, 200, { message: authResult.message, user: authResult.user });
-  //     } else {
-  //       sendResponse(res, 401, { error: "Unauthorized", message: authResult.message });
-  //     }
-
-  //   } catch (error) {
-  //     console.error("Error during user login:", error);
-  //     sendResponse(res, 500, { error: "Server Error", message: "Eroare internă a serverului în timpul autentificării." });
-  //   }
-  // }
 
   async login(req, res) {
     return this.authenticateUser(req, res);
@@ -657,7 +607,6 @@ class UserController {
     }
   }
 
-  // GET user preference tags for logged-in user
   async getUserPreferenceTags(req, res) {
     try {
       const userId = req.user.id;

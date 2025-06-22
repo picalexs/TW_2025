@@ -10,6 +10,7 @@ class userDTO extends abstractDTO {
   }
 
   mapToEntity(dbRow) {
+    console.log('[DEBUG] mapToEntity user row:', dbRow);
     return {
       id: dbRow.ID,
       username: dbRow.USERNAME,

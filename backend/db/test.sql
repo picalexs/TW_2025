@@ -20,7 +20,16 @@ SELECT * FROM tags ORDER BY id;
 
 UPDATE users
 SET role = 'admin'
+WHERE username = 'admin';
+COMMIT;
+
+SELECT * FROM users WHERE username = 'admin';
+
+UPDATE users
+SET role = 'admin'
 WHERE username = 'geo';
 
 
-SELECT * FROM users WHERE username = 'admin';
+SELECT * FROM users WHERE username = 'geo';
+
+SELECT ID, USERNAME, PASSWORD_HASH, EMAIL, IS_VERIFIED, ROLE FROM users WHERE email = 'admin@admin.com';

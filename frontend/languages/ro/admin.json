@@ -1,0 +1,14 @@
+{
+  "title": "Panou Admin",
+  "userTable": {
+    "id": "ID",
+    "email": "Email",
+    "username": "Utilizator",
+    "role": "Rol",
+    "actions": "Acțiuni"
+  },
+  "deleteConfirm": "Sigur vrei să ștergi acest utilizator?",
+  "deleteSuccess": "Utilizator șters.",
+  "deleteFail": "Ștergerea utilizatorului a eșuat.",
+  "noUsers": "Niciun utilizator găsit."
+}

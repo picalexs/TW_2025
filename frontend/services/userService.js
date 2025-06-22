@@ -198,6 +198,7 @@ class UserService {
     if (user) {
       localStorage.setItem('userData', JSON.stringify(user));
       localStorage.setItem('userId', user.id.toString());
+      localStorage.setItem('userRole', user.role); 
     }
     
     if (this.debug) {
