@@ -1,17 +1,21 @@
-const db = require('../db/dbConnection');
 const favoritesDTO = require('../dto/favoritesDTO');
+const AbstractModel = require('./abstractModel');
 
-class FavoritesModel {
+class FavoritesModel extends AbstractModel {
+  constructor() {
+    super(favoritesDTO);
+  }
+
   async getAllByUser(userId) {
-    return await favoritesDTO.getAllByUser(userId);
+    return await this.dto.getAllByUser(userId);
   }
 
   async add(userId, animalId) {
-    return await favoritesDTO.add(userId, animalId);
+    return await this.dto.add(userId, animalId);
   }
 
   async remove(userId, animalId) {
-    return await favoritesDTO.remove(userId, animalId);
+    return await this.dto.remove(userId, animalId);
   }
 }
 

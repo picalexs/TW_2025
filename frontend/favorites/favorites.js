@@ -9,7 +9,6 @@ function getCurrentUserId() {
 
 async function renderFavorites() {
   const favoritesService = new FavoritesService({ baseURL: window.APP_CONFIG?.api?.baseURL });
-  favoritesService.apiService._refreshAuthToken(); // asigură tokenul la fiecare request
   const container = document.getElementById('favorites-list');
   container.innerHTML = '';
   const userId = getCurrentUserId();
@@ -24,7 +23,8 @@ async function renderFavorites() {
   try {
     pets = await favoritesService.getFavorites();
   } catch (e) {
-    container.innerHTML = '<p>Error loading favorites.</p>';
+    console.error('Error fetching favorites:', e); // Debug log
+    container.innerHTML = `<p>Error loading favorites: ${e.message}</p>`;
     return;
   }
   if (!pets || pets.length === 0) {
@@ -34,9 +34,24 @@ async function renderFavorites() {
   pets.forEach(pet => {
     const petDiv = document.createElement('div');
     petDiv.className = 'favorite-pet-card';
+    const imagePath = window.ImagePathHandler ? 
+      window.ImagePathHandler.processPetImagePath(pet.imagePath) :
+      (pet.imagePath || '/frontend/assets/default-pet-profile.jpg');
+    
     petDiv.innerHTML = `
-      <h3>${pet.name}</h3>
-      <img src="${pet.imagePath}" alt="${pet.name}" width="120">
+      <a href="../pets/pet-details/pet-details.html?id=${pet.id}" class="favorite-pet-link">
+        <div class="favorite-pet-image-wrapper">
+          <img src="${imagePath}" alt="${pet.name || 'Pet'}" class="favorite-pet-image" onerror="this.src='/frontend/assets/default-pet-profile.jpg'">
+        </div>
+        <div class="favorite-pet-info">
+          <h3 class="favorite-pet-name">${pet.name || 'Unknown Pet'}</h3>
+          <div class="favorite-pet-fields">
+            <span><strong>Species:</strong> ${pet.species || 'Unknown'}</span>
+            <span><strong>Age:</strong> ${pet.age ? pet.age + ' years' : 'Unknown'}</span>
+            <span><strong>Location:</strong> ${pet.city || 'Unknown'}, ${pet.country || ''}</span>
+          </div>
+        </div>
+      </a>
       <button class="remove-favorite" data-pet-id="${pet.id}">Remove</button>
     `;
     container.appendChild(petDiv);
@@ -50,7 +65,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const petId = e.target.getAttribute('data-pet-id');
       try {
         const favoritesService = new FavoritesService({ baseURL: window.APP_CONFIG?.api?.baseURL });
-        favoritesService.apiService._refreshAuthToken();
         await favoritesService.removeFavorite(petId);
         renderFavorites();
       } catch (err) {

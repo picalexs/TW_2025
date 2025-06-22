@@ -36,18 +36,6 @@ class ApiService {
     this._initializeFromStorage();
   }
 
-  _refreshAuthToken() {
-    const token = localStorage.getItem('authToken');
-    if (this.debug) {
-      console.log('[ApiService] _refreshAuthToken: token in localStorage:', token);
-    }
-    if (token) {
-      this.setAuthToken(token);
-    } else {
-      this.setAuthToken(null);
-    }
-  }
-
   setAuthToken(token) {
     if (token) {
       this.defaultHeaders['Authorization'] = `Bearer ${token}`;
@@ -59,7 +47,6 @@ class ApiService {
   }
 
   async get(endpoint, queryParams = {}, options = {}) {
-    this._refreshAuthToken();
     const url = this._buildUrl(endpoint, queryParams);
     return this._executeRequest(url, { 
       ...options, 
@@ -69,7 +56,6 @@ class ApiService {
   }
 
   async post(endpoint, data, options = {}) {
-    this._refreshAuthToken();
     const url = this._buildUrl(endpoint);
     return this._executeRequest(url, {
       ...options,
@@ -80,7 +66,6 @@ class ApiService {
   }
 
   async put(endpoint, data, options = {}) {
-    this._refreshAuthToken();
     const url = this._buildUrl(endpoint);
     return this._executeRequest(url, {
       ...options,
@@ -91,7 +76,6 @@ class ApiService {
   }
 
   async delete(endpoint, options = {}) {
-    this._refreshAuthToken();
     const url = this._buildUrl(endpoint);
     return this._executeRequest(url, {
       ...options,

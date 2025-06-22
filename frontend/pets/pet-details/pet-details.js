@@ -62,6 +62,7 @@ class PetDetailsPage {
     this.renderLocationTab(pet);
     this.renderAdoptionTab(pet);
     this.checkPetOwnership(pet);
+    this.initializeFavoriteState(pet);
   }
   
   renderPetHeader(pet) {
@@ -451,24 +452,90 @@ class PetDetailsPage {
   async toggleFavorite() {
     const favoriteBtn = document.getElementById('favorite-btn');
     const heartIcon = favoriteBtn.querySelector('.heart-icon');
-    const userId = localStorage.getItem('userId');
-    if (!userId) {
+    
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    if (!isLoggedIn) {
       alert('Trebuie să fii autentificat pentru a folosi favoritele!');
       return;
     }
-    const isNowFavorite = !favoriteBtn.classList.contains('favorited');
+    
+    const isCurrentlyFavorite = favoriteBtn.classList.contains('favorited');
+    const willBeFavorite = !isCurrentlyFavorite;
+    
+    favoriteBtn.disabled = true;
+    
     try {
-      if (isNowFavorite) {
-        await this.favoritesService.addFavorite(userId, this.currentPet.id);
+      if (willBeFavorite) {
+        await this.favoritesService.addFavorite(this.currentPet.id);
+        favoriteBtn.classList.add('favorited');
+        if (heartIcon) {
+          heartIcon.textContent = '♥';
+        }
       } else {
-        await this.favoritesService.removeFavorite(userId, this.currentPet.id);
+        await this.favoritesService.removeFavorite(this.currentPet.id);
+        favoriteBtn.classList.remove('favorited');
+        if (heartIcon) {
+          heartIcon.textContent = '♡';
+        }
       }
-      favoriteBtn.classList.toggle('favorited', isNowFavorite);
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+      
+      if (error.message && error.message.includes('already exists')) {
+        favoriteBtn.classList.add('favorited');
+        if (heartIcon) {
+          heartIcon.textContent = '♥';
+        }
+      } else if (error.message && error.message.includes('not found')) {
+        favoriteBtn.classList.remove('favorited');
+        if (heartIcon) {
+          heartIcon.textContent = '♡';
+        }
+      } else {
+        alert('Eroare la actualizarea favoritei! Vă rugăm încercați din nou.');
+      }
+    } finally {
+      favoriteBtn.disabled = false;
+    }
+  }
+
+  async initializeFavoriteState(pet) {
+    const favoriteBtn = document.getElementById('favorite-btn');
+    const heartIcon = favoriteBtn.querySelector('.heart-icon');
+    
+    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    if (!isLoggedIn) {
+      favoriteBtn.style.display = 'none';
+      return;
+    }
+
+    try {
+      const userFavorites = await this.favoritesService.getFavorites();
+      const isFavorited = userFavorites.some(favorite => 
+        favorite.id === pet.id || favorite.ID === pet.id
+      );
+      
+      if (isFavorited) {
+        favoriteBtn.classList.add('favorited');
+        if (heartIcon) {
+          heartIcon.textContent = '♥';
+        }
+      } else {
+        favoriteBtn.classList.remove('favorited');
+        if (heartIcon) {
+          heartIcon.textContent = '♡';
+        }
+      }
+      
+      favoriteBtn.style.display = 'flex';
+      
+    } catch (error) {
+      console.error('Error checking favorite state:', error);
+      favoriteBtn.classList.remove('favorited');
       if (heartIcon) {
-        heartIcon.textContent = isNowFavorite ? '♥' : '♡';
+        heartIcon.textContent = '♡';
       }
-    } catch (e) {
-      alert('Eroare la actualizarea favoritei!');
+      favoriteBtn.style.display = 'flex';
     }
   }
 
