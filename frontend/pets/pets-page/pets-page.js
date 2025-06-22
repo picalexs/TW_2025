@@ -279,7 +279,6 @@ export function initializeMatchingButton() {
         window.location.href = '/frontend/matching/matching-test.html';
         return;
       }
-      // Matching logic: sort pets by tag overlap
       
       document.querySelectorAll('.filter-select').forEach(select => {
         select.selectedIndex = 0;
@@ -288,15 +287,11 @@ export function initializeMatchingButton() {
       document.querySelectorAll('.filter-input').forEach(input => {
         input.value = '';
       });
-
+      
       const userTagIds = data.tagIds.map(Number);
-      let petsArray = allPets;
-      if (!allPets.length) {
-        petsArray = await fetchPets();
-      }
-      const petsWithOverlap = petsArray.map(pet => {
-        // Corect: extrage id-urile tag-urilor ca numere
-        const petTagIds = (pet.tags || []).map(tag => Number(tag.id));
+      if (!allPets.length) await fetchPets();
+      const petsWithOverlap = allPets.map(pet => {
+        const petTagIds = (pet.tags || []).map(Number);
         const overlap = userTagIds.filter(id => petTagIds.includes(id)).length;
         return { ...pet, _tagOverlap: overlap };
       });
@@ -306,7 +301,7 @@ export function initializeMatchingButton() {
       if (sortedPets.length) {
         renderPets(sortedPets);
       } else {
-        renderPets(petsArray);
+        renderPets(allPets);
       }
     } catch (err) {
       console.error('Error checking user preference tags:', err);
