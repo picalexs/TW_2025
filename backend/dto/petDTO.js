@@ -265,8 +265,6 @@ class petDTO extends abstractDTO {
           filePath: media.FILE_PATH,
         }));
         
-        // Set the profile image from the first media item for backward compatibility
-        // The frontend will use pet.media[0] as the profile image
         if (pet.media.length > 0) {
           pet.imagePath = pet.media[0].filePath;
         }
@@ -520,9 +518,6 @@ class petDTO extends abstractDTO {
       );      
       
       const petId = result.outBinds.id[0];
-
-      // Tags are now handled separately by the controller
-      // No longer processing tags in the DTO create method
 
       return petId;
     } catch (error) {
@@ -974,18 +969,16 @@ async getPetsByTagOverlap(userId, limit = 20) {
             { 
                 outFormat: oracledb.OUT_FORMAT_OBJECT,
                 fetchInfo: {
-                    DESCRIPTION: { type: oracledb.STRING } // Important pentru a citi corect CLOB-ul
+                    DESCRIPTION: { type: oracledb.STRING } 
                 }
             }
         );
         
-        // Procesarea rezultatelor pentru a adăuga imagini, tag-uri, etc. rămâne la fel
         const pets = [];
         for (const row of result.rows) {
             const pet = this.mapToEntity(row);
             pet.matchingScore = row.MATCHING_SCORE;
 
-            // Adaugă imaginea principală
             try {
                 const mediaResult = await this.executeCustomQuery(
                     `SELECT file_path FROM media WHERE animal_id = :id ORDER BY id FETCH FIRST 1 ROWS ONLY`,
@@ -999,7 +992,6 @@ async getPetsByTagOverlap(userId, limit = 20) {
                 pet.imagePath = null;
             }
 
-            // Adaugă tag-urile
             try {
                 const tagsResult = await this.executeCustomQuery(
                     `SELECT t.id, t.name FROM tags t JOIN animal_tags at ON t.id = at.tag_id WHERE at.animal_id = :id`,

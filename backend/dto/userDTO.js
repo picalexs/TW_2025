@@ -288,7 +288,7 @@ class userDTO extends abstractDTO {
             const result = await connection.execute(sql, binds, options);
 
             if (result.rowsAffected > 0) {
-                // Fetch and return the newly created user
+               
                 const newUser = await this.findByEmail(connection, email);
                 return newUser;
             } else {
