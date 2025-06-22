@@ -56,7 +56,7 @@ async function handleSignup(event) {
     if (response.ok) {
       alert(data.message);
     } else {
-      alert(data.message || data.error || 'Signup failed.');
+      alert('This email or username is already in use.');
     }
   } catch (error) {
     console.error('Error during signup:', error);

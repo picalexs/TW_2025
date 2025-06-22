@@ -107,11 +107,11 @@ async function handleLogin(event) {
       showMessage('Login successful! Redirecting...', 'success');
       window.location.href = '../home/home.html';
     } else {
-      showMessage(`Login failed: ${response.message || 'Invalid credentials.'}`, 'error');
+    
+      showMessage('Your email or password are wrong', 'error');
     }
   } catch (error) {
-    console.error("Error during login API call:", error);
-    showMessage(`Login failed: ${error.message || 'An unexpected error occurred.'}`, 'error');
+    showMessage('Your email or password are wrong', 'error');
   }
 }
 
