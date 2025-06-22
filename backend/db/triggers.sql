@@ -9,6 +9,7 @@ DROP TRIGGER trg_animal_popularity_tracker;
 DROP TRIGGER trg_care_schedule_notifications;
 DROP TRIGGER trg_security_audit;
 DROP TRIGGER trg_notification_cleanup;
+COMMIT;
 
 
 CREATE OR REPLACE TRIGGER trg_users_before_insert

@@ -59,7 +59,9 @@ async function deleteUser(userId) {
     adminMessage.style.color = 'green';
     fetchUsers();
   } catch (err) {
-    adminMessage.textContent = 'Failed to delete user.';
+    // Show backend error message if available
+    const backendMsg = err?.data?.message || err?.message || 'Failed to delete user.';
+    adminMessage.textContent = backendMsg;
     adminMessage.style.color = 'red';
   }
 }
