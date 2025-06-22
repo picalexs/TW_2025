@@ -52,7 +52,7 @@ class PetModel extends AbstractModel {
       relationWithOthers: fields.relationWithOthers,
       adoptionStatus: fields.adoptionStatus || 'available',
       adoptionFee: fields.adoptionFee ? parseFloat(fields.adoptionFee) : null,
-      shelterId: fields.shelterId || 4,
+      shelterId: fields.shelterId || fields.userId || parseInt(fields.shelterId) || null,
       city: fields.city,
       postalCode: fields.postalCode,
       country: fields.country,

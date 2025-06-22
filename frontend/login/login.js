@@ -91,13 +91,15 @@ async function handleLogin(event) {
       const response = await userService.login(email, password);
 
     if (response && response.user) {
-      // Clean up any legacy/extra keys for consistenta
       localStorage.removeItem('userId');
       localStorage.removeItem('userEmail');
       localStorage.removeItem('username');
       localStorage.removeItem('userRole', data.user.role);
       localStorage.setItem('isLoggedIn', 'true');
       localStorage.setItem('userData', JSON.stringify(response.user));
+      localStorage.setItem('userId', response.user.id.toString());
+      localStorage.setItem('currentUserId', response.user.id.toString());
+
       if (response.token) {
         localStorage.setItem('authToken', response.token);
       }

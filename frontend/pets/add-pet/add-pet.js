@@ -1,12 +1,12 @@
 import PetService from '../../services/petService.min.js';
-import { setupMobileMenu, initializePageLanguage, checkLoginStatusAndToggleNavButtons } from '../../global/global.min.js';
+import { setupMobileMenu, initializePageLanguage, checkLoginStatusAndToggleNavButtons, isLoggedIn } from '../../global/global.min.js';
 
 class AddPetPage {
   constructor() {
     this.petService = new PetService();
     this.availableTags = [];
     this.selectedTags = new Set();
-    this.tempUserId = 4;
+    this.currentUserId = this.getCurrentUserId();
     this.nextTagId = 16;
     this.touchedFields = new Set();
     this.mediaFiles = [];
@@ -20,9 +20,40 @@ class AddPetPage {
     this.mapMarker = null;
     this.init();
   }
+  getCurrentUserId() {
+    let userId = localStorage.getItem('currentUserId');
+    if (userId) {
+      return parseInt(userId);
+    }
+    
+    try {
+      const userData = localStorage.getItem('userData');
+      if (userData) {
+        const user = JSON.parse(userData);
+        return user.id ? parseInt(user.id) : null;
+      }
+    } catch (error) {
+      console.error('Error parsing userData:', error);
+    }
+    
+    return null;
+  }
+
+  checkUserAuthentication() {
+    if (!isLoggedIn || !this.currentUserId) {
+      alert('You must be logged in to add a pet.');
+      window.location.href = '../login/login.html';
+      return false;
+    }
+    return true;
+  }
 
   async init() {
     try {
+      if (!this.checkUserAuthentication()) {
+        return;
+      }
+
       this.checkEditMode();
       
       await this.loadTags();
@@ -630,7 +661,7 @@ class AddPetPage {
       relationWithOthers: formData.get('relationWithOthers'),
       adoptionStatus: 'available',
       adoptionFee: formData.get('adoptionFee') ? parseFloat(formData.get('adoptionFee')) : null,
-      shelterId: this.tempUserId,
+      shelterId: this.currentUserId,
       tags: this.getSelectedTagsForSubmission(),
       // Address fields as expected by backend
       address: formData.get('address') || '',

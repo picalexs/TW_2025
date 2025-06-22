@@ -61,7 +61,7 @@ class UserService {
       throw error;
     }
   }
-
+  
   async login(email, password) {
     if (!email) throw new Error('Email is required');
     if (!password) throw new Error('Password is required');
@@ -85,6 +85,12 @@ class UserService {
         // fallback for legacy backend: try to extract token from headers or elsewhere if needed
         localStorage.setItem('userData', JSON.stringify(data.user));
         localStorage.setItem('isLoggedIn', 'true');
+        
+        if (data.token) {
+          localStorage.setItem('authToken', data.token);
+          this.apiService.setAuthToken(data.token);
+        }
+        
         return data;
       } else {
         throw new Error('Invalid login response: missing user data');

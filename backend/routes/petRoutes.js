@@ -1,6 +1,7 @@
 const petController = require("../controllers/petController");
 const url = require("url");
 const { sendResponse, collectRequestData } = require("../utils/helpers");
+const { verifyToken } = require("../middleware/authMiddleware");
 
 async function handlePetRoutes(req, res) {
   const parsedUrl = url.parse(req.url, true);
@@ -13,7 +14,9 @@ async function handlePetRoutes(req, res) {
     if (method === "get") {
       await petController.getAllPets(req, res);
     } else if (method === "post") {
-      await petController.createPet(req, res);
+      verifyToken(req, res, async () => {
+        await petController.createPet(req, res);
+      });
     } else {
       sendResponse(res, 405, { error: "Method not allowed" });
     }
@@ -43,9 +46,13 @@ async function handlePetRoutes(req, res) {
     if (method === "get") {
       await petController.getPetById(req, res, id);
     } else if (method === "put") {
-      await petController.updatePet(req, res, id);
+      verifyToken(req, res, async () => {
+        await petController.updatePet(req, res, id);
+      });
     } else if (method === "delete") {
-      await petController.deletePet(req, res, id);
+      verifyToken(req, res, async () => {
+        await petController.deletePet(req, res, id);
+      });
     } else {
       sendResponse(res, 405, { error: "Method not allowed" });
     }
