@@ -33,18 +33,13 @@ function toggleAddPetButton() {
   if (addPetBtn) {
     const loggedIn = isUserLoggedIn();
     const userId = getCurrentUserId();
-    console.log('Checking add pet button visibility - logged in:', loggedIn, 'user ID:', userId);
     
     if (loggedIn && userId) {
       addPetBtn.style.display = 'flex';
       addPetBtn.style.visibility = 'visible';
-      console.log('Showing add pet button');
     } else {
       addPetBtn.style.display = 'none';
-      console.log('Hiding add pet button');
     }
-  } else {
-    console.log('Add pet button not found in DOM');
   }
 }
 

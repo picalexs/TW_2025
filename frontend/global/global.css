@@ -1226,17 +1226,7 @@ img {
   contain: layout;
 }
 
-
-@media (max-width: 920px) {
-    .header-container {
-        padding: 0 0.5rem;
-    }
-    .nav-item {
-        margin: 0 0.7rem;
-    }
-}
-
-@media (max-width: 768px) {
+@media (max-width: 1120px) {
     .mobile-menu-toggle {
         display: flex;
     }

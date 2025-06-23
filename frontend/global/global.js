@@ -4,7 +4,6 @@ export let isLoggedIn = false;
 
 function checkLoginStatusAndToggleNavButtons() {
     isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    console.log('User login status:', isLoggedIn);
 
     const authButtonsLoggedOut = document.getElementById('auth-buttons-logged-out');
     const authButtonsLoggedIn = document.getElementById('auth-buttons-logged-in');
@@ -14,7 +13,6 @@ function checkLoginStatusAndToggleNavButtons() {
     const logoutButton = document.querySelector('.nav-logout-btn');
     const mobileLogoutLink = document.querySelector('.mobile-nav-logout');
 
-    // Dynamically set profile link if logged in
     const profileBtn = document.querySelector('.nav-profile-btn');
     if (isLoggedIn && profileBtn) {
         const userId = localStorage.getItem('userId');
@@ -66,7 +64,6 @@ function handleLogout(event) {
     localStorage.removeItem('userRole');
     localStorage.removeItem('isLoggedIn');
     isLoggedIn = false;
-    console.log('User logged out. Updating UI and redirecting...');
     checkLoginStatusAndToggleNavButtons();
     window.location.href = '/frontend/home/home.html';
 }
@@ -80,8 +77,6 @@ function setupLanguageDropdown() {
         console.warn('Language dropdown elements not found during setupLanguageDropdown');
         return;
     }
-
-    console.log('Setting up language dropdown with options:', languageOptions.length);
 
     const currentLang = localStorage.getItem('language') || 'en';
     updateCurrentLanguage(currentLang);
@@ -98,8 +93,6 @@ function setupLanguageDropdown() {
 
         newOption.addEventListener('click', (e) => {
             e.preventDefault();
-            console.log(`Language option clicked: ${lang}`);
-
             updateCurrentLanguage(lang);
 
             document.querySelectorAll('.language-option').forEach(opt => {
@@ -120,8 +113,6 @@ function setupLanguageDropdown() {
     function updateCurrentLanguage(lang) {
         const flagSpan = currentLangButton.querySelector('.flag-icon');
         const textSpan = currentLangButton.querySelector('span:not(.flag-icon):not(.dropdown-arrow)');
-
-        console.log(`Updating language UI to ${lang}`);
 
         if (!flagSpan || !textSpan) return;
 
@@ -153,7 +144,6 @@ function setupMobileMenu() {
     if (!toggle.dataset.listenerAttached) {
         toggle.addEventListener('click', (e) => {
             e.stopPropagation();
-            console.log('Mobile menu toggle clicked!');
             toggle.classList.toggle('active');
             container.classList.toggle('active');
             overlay.classList.toggle('active');
@@ -164,7 +154,6 @@ function setupMobileMenu() {
 
     if (!overlay.dataset.listenerAttached) {
         overlay.addEventListener('click', () => {
-            console.log('Overlay clicked - closing menu');
             toggle.classList.remove('active');
             container.classList.remove('active');
             overlay.classList.remove('active');
@@ -207,7 +196,6 @@ function setupMobileMenu() {
         const activeOption = document.querySelector(`.mobile-language-option[data-lang="${lang}"]`);
         if (activeOption) {
             activeOption.classList.add('active');
-            console.log(`Active mobile language set to: ${lang}`);
         } else {
             console.warn(`No mobile language option found for: ${lang}`);
         }
@@ -287,7 +275,6 @@ function createSlideshow(options = {}) {
 }
 
 function initSlideshow(options = {}) {
-    console.log('Initializing slideshow with options:', options);
     const slideshowContainer = document.querySelector(options.containerSelector || '.hero-slideshow');
 
     if (!slideshowContainer) {
@@ -322,7 +309,6 @@ function initializePageLanguage() {
 
     const currentPath = window.location.pathname;
     const pageName = currentPath.split('/').pop().replace('.html', '');
-    console.log(`Initializing language for page: ${pageName}`);
 
     if (languageManager) {
         languageManager.updateContent();
@@ -332,7 +318,6 @@ function initializePageLanguage() {
 }
 
 function initBasicFunctionality() {
-    console.log("Initializing basic functionality (language, menu, slideshow, login status)");
     setupLanguageDropdown();
     setupMobileMenu();
     initSlideshow();
@@ -344,7 +329,6 @@ function initBasicFunctionality() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('global.min.js: DOMContentLoaded fired.');
     const navbarContainer = document.getElementById('global-navbar');
     const footerContainer = document.getElementById('global-footer');
 
@@ -357,7 +341,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (isSignupPage) {
         document.body.setAttribute('data-page', 'signupPage');
     }    if (navbarContainer || footerContainer) {
-      console.log('global.min.js: Attempting to fetch global.html...');
         const currentPath = window.location.pathname;
         let globalHtmlPath = '../global/global.html';
         
