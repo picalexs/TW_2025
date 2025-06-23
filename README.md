@@ -8,7 +8,7 @@ A modern web application with optimized build pipeline and performance optimizat
 ```bash
 npm run dev
 ```
-- Starts development server on http://localhost:8080
+- Starts development server on http://localhost:80
 - Watches for file changes and auto-minifies CSS/JS
 - Auto-bundles critical JavaScript files
 - Serves original files for easier debugging

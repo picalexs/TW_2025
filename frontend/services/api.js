@@ -21,7 +21,7 @@ class ApiService {
     const timeouts = config.timeouts || {};
     const retry = config.retry || {};
     
-    this.baseURL = baseURL || window.APP_CONFIG?.api?.baseURL || 'http://localhost:8080';
+    this.baseURL = baseURL || 'http://localhost:80';
     this.defaultHeaders = {
       'Content-Type': 'application/json',
       ...options.headers

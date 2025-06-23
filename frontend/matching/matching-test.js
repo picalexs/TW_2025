@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
     try {
-      const apiBase = window.APP_CONFIG?.api?.baseURL || 'http://localhost:8080';
+      const apiBase = window.APP_CONFIG?.api?.baseURL || 'http://localhost:80';
       const tagArray = Array.from(tags.entries()).map(([id, name]) => ({ id: Number(id), name }));
       
       // Save preferences

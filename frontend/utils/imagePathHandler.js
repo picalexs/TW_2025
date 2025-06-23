@@ -1,6 +1,6 @@
 class ImagePathHandler {
     static get API_BASE_URL() {
-        return window.APP_CONFIG?.api?.baseURL || 'http://localhost:8080';
+        return window.APP_CONFIG?.api?.baseURL || 'http://localhost:80';
     }    
     
     static get DEFAULTS() {

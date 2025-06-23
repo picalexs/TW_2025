@@ -1,8 +1,7 @@
 (function() {
     'use strict';
-    
-    window.PetWidgetConfig = window.PetWidgetConfig || {
-        apiUrl: 'http://localhost:8080',
+      window.PetWidgetConfig = window.PetWidgetConfig || {
+        apiUrl: 'http://localhost:80',
         limit: 10,
         showTitle: true,
         title: 'Recent Pets for Adoption',
