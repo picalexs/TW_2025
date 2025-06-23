@@ -1,155 +1,666 @@
 <!DOCTYPE html>
-<html lang="ro">
+<html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scholarly HTML</title>
-    <link rel="stylesheet" href="about-me.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SRS - Pet Adoption Center</title>
+  <link rel="stylesheet" href="../global/global.min.css">
+  <link rel="stylesheet" href="about-me.css">
 </head>
+
 <body>
+  <div data-component="header"></div>
+  <main class="document">
+    <h1>Software Requirements Specification for Pet Adoption Center v1.0</h1>
 
-    <main class="document">
-        <h1>Scholarly HTML</h1>
+    <nav class="toc">
+      <h2>Table of Contents</h2>
+      <ul>
+        <li><a href="#srs-1">Introduction</a>
+          <ul>
+            <li><a href="#srs-1-1">Purpose</a></li>
+            <li><a href="#srs-1-2">Document Conventions</a></li>
+            <li><a href="#srs-1-3">Intended Audience and Reading Suggestions</a></li>
+            <li><a href="#srs-1-4">Product Scope</a></li>
+            <li><a href="#srs-1-5">References</a></li>
+            <li><a href="#srs-1-6">Core Technology Rationale</a></li>
+          </ul>
+        </li>
+        <li><a href="#srs-2">Overall Description</a>
+          <ul>
+            <li><a href="#srs-2-1">Product Perspective</a></li>
+            <li><a href="#srs-2-2">Product Functions</a></li>
+            <li><a href="#srs-2-3">User Classes and Characteristics</a></li>
+            <li><a href="#srs-2-4">Operating Environment</a></li>
+            <li><a href="#srs-2-5">Design and Implementation Constraints</a></li>
+            <li><a href="#srs-2-6">User Documentation</a></li>
+            <li><a href="#srs-2-7">Assumptions and Dependencies</a></li>
+          </ul>
+        </li>
+        <li><a href="#srs-3">External Interface Requirements</a>
+          <ul>
+            <li><a href="#srs-3-1">User Interfaces</a></li>
+            <li><a href="#srs-3-2">Hardware Interfaces</a></li>
+            <li><a href="#srs-3-3">Software Interfaces</a></li>
+            <li><a href="#srs-3-4">Communications Interfaces</a></li>
+          </ul>
+        </li>
+        <li><a href="#srs-4">System Features</a>
+          <ul>
+            <li><a href="#srs-4-1">User Authentication and Authorization</a></li>
+            <li><a href="#srs-4-2">Pet Management</a></li>
+            <li><a href="#srs-4-3">Favorites and Matching</a></li>
+            <li><a href="#srs-4-4">Admin Panel</a></li>
+          </ul>
+        </li>
+        <li><a href="#srs-5">Other Nonfunctional Requirements</a>
+          <ul>
+            <li><a href="#srs-5-1">Performance Requirements</a></li>
+            <li><a href="#srs-5-2">Safety Requirements</a></li>
+            <li><a href="#srs-5-3">Security Requirements</a></li>
+            <li><a href="#srs-5-4">Software Quality Attributes</a></li>
+            <li><a href="#srs-5-5">Business Rules</a></li>
+          </ul>
+        </li>
+        <li><a href="#srs-6">Other Requirements</a></li>
+        <li><a href="#appendix-a">Appendix A: Glossary</a></li>
+        <li><a href="#appendix-b">Appendix B: Analysis Models</a></li>
+        <li><a href="#appendix-c">Appendix C: To Be Determined List</a></li>
+      </ul>
+    </nav>
 
-        <nav class="toc">
-            <h2>Table of Contents</h2>
+    <div class="meta-info">
+      <p><strong>Project:</strong> Pet Adoption Center</p>
+      <p><strong>Version:</strong> 1.0</p>
+      <p><strong>Authors:</strong> Student Development Team (Web Technologies Seminar)</p>
+      <p><strong>Date:</strong> June 23, 2025</p>
+    </div>
+
+    <section id="srs-1">
+      <h2>1. Introduction</h2>
+
+      <article id="srs-1-1">
+        <h3>1.1 Purpose</h3>
+        <p>This document describes the software requirements for the web application <strong>Pet Adoption
+            Center</strong>, version 1.0. This document covers all primary functionalities of the system, including the
+          user registration/authentication process, publishing and viewing adoption listings, pet management, the
+          compatibility test, and the sharing and review features.</p>
+      </article>
+
+      <article id="srs-1-2">
+        <h3>1.2 Document Conventions</h3>
+        <p>In this document, functional requirements are marked with the prefix "FR-" (e.g., FR-1), and non-functional
+          requirements are marked with "NFR-".</p>
+        <p>All critical requirements are highlighted in <strong>bold</strong>, and technical terms are written in
+          <em>italics</em>.
+        </p>
+        <p>This document is structured according to the IEEE standard for SRS.</p>
+      </article>
+
+      <article id="srs-1-3">
+        <h3>1.3 Intended Audience and Reading Suggestions</h3>
+        <p>This document is intended for the development team (composed of two students) and the supervising professor
+          for the seminar, for the purpose of evaluating and validating the requirements of the Pet Adoption Center
+          application. The document provides a detailed overview of the planned functionalities and the technical and
+          non-technical requirements that will guide the project's implementation.</p>
+        <p>The following reading order is suggested:</p>
+        <ul>
+          <li><strong>Section 1</strong> for a general overview of the application's purpose and context.</li>
+          <li><strong>Section 2</strong> for an understanding of the product's overall structure.</li>
+          <li><strong>Section 3 and onwards</strong> for a detailed breakdown of functional and non-functional
+            requirements.</li>
+        </ul>
+      </article>
+
+      <article id="srs-1-4">
+        <h3>1.4 Product Scope</h3>
+        <p><strong>Pet Adoption Center</strong> is a web application designed to facilitate the pet adoption process.
+          The application allows authenticated users to publish listings for pets available for adoption, search for
+          animals based on location, breed, or other relevant factors, and receive personalized suggestions based on a
+          compatibility test. The application's goal is to digitize and streamline the process of adopting and caring
+          for animals, promoting social responsibility and animal welfare.</p>
+      </article>
+
+      <article id="srs-1-5">
+        <h3>1.5 References</h3>
+        <ol>
+          <li><strong>IEEE Std 830-1998</strong> - IEEE Recommended Practice for Software Requirements Specifications.
+            Used as the basic structure for this document.</li>
+          <li><strong>Google Identity Services – Sign in with Google.</strong> Official documentation for integrating
+            Google authentication in web applications. <a href="https://developers.google.com/identity/gsi/web"
+              target="_blank">https://developers.google.com/identity/gsi/web</a></li>
+          <li><strong>Using OAuth 2.0 to Access Google APIs.</strong> Explains the use of OAuth 2.0 for authentication
+            and secure access to Google services. <a href="https://developers.google.com/identity/protocols/oauth2"
+              target="_blank">https://developers.google.com/identity/protocols/oauth2</a></li>
+          <li><strong>Node.js HTTP Module – W3Schools.</strong> Introduction to Node.js without frameworks, using only
+            the native HTTP module. <a href="https://www.w3schools.com/nodejs/nodejs_http.asp"
+              target="_blank">https://www.w3schools.com/nodejs/nodejs_http.asp</a></li>
+          <li><strong>How to Use Node.js Without Frameworks – LogRocket.</strong> Tutorial on building a simple backend
+            application in Node.js without Express or other frameworks. <a
+              href="https://blog.logrocket.com/complete-guide-node-js-http-module/"
+              target="_blank">https://blog.logrocket.com/complete-guide-node-js-http-module/</a></li>
+          <li><strong>How to Create an RSS Feed with Node.js.</strong> Tutorial explaining how to generate an RSS feed
+            in a Node.js application. <a href="https://dev.to/syedmohsin/how-to-create-an-rss-feed-with-nodejs-1mdp"
+              target="_blank">https://dev.to/syedmohsin/how-to-create-an-rss-feed-with-nodejs-1mdp</a></li>
+          <li><strong>Web Technologies Courses – "Alexandru Ioan Cuza" University of Iași.</strong> Support materials
+            for the Web Technologies discipline. <a href="https://profs.info.uaic.ro/cosmin.varlan/pagini/tw.html"
+              target="_blank">https://profs.info.uaic.ro/cosmin.varlan/pagini/tw.html</a></li>
+          <li><strong>W3Schools – HTML, CSS, and JavaScript.</strong> Useful resources for quickly learning basic web
+            technologies. <a href="https://www.w3schools.com" target="_blank">https://www.w3schools.com</a></li>
+          <li><strong>Nodemailer & MailDev.</strong> Services for sending emails. <a href="https://nodemailer.com"
+              target="_blank">https://nodemailer.com</a>, <a href="https://github.com/maildev/maildev"
+              target="_blank">https://github.com/maildev/maildev</a></li>
+        </ol>
+      </article>
+
+      <article id="srs-1-6">
+        <h3>1.6 Core Technology Rationale</h3>
+        <ol>
+          <h4>Design Rationale: Colors, Fonts & UI Choices</h4>
+          <ul>
+            <li><strong>Colors:</strong> The palette uses shades of blue, gray, and white to create a professional,
+              calm, and friendly atmosphere. The light backgrounds (#f7f9fa, #f0f4f8) reduce visual fatigue, while blue
+              accents (#3498db, #2a3a4a) convey trust and clarity—qualities suitable for social and educational
+              applications.</li>
+            <li><strong>Fonts:</strong> <em>Segoe UI</em> (with Arial, sans-serif as fallback) was chosen for its
+              excellent readability on all devices, modern look, and wide compatibility. This font is standard on
+              Windows and widely used in professional web applications.</li>
+            <li><strong>Contrast & Accessibility:</strong> Strong contrast between text and background ensures
+              readability, including for users with visual impairments. Font sizes are generous, and interactive
+              elements (links, buttons) have visible hover/focus states.</li>
+            <li><strong>Structure & Spacing:</strong> Margins, padding, and border-radius are used to clearly separate
+              sections, provide breathing room, and create a pleasant, uncluttered visual experience.</li>
+            <li><strong>Responsiveness:</strong> The layout and styles are optimized for both desktop and mobile, with
+              media queries for font and spacing, ensuring a consistent experience on any screen.</li>
+            <li><strong>Visual Consistency:</strong> All components (ToC, meta-info, tables, code) use the same modern
+              style for a unified and professional visual identity.</li>
+          </ul>
+        </ol>
+        <ol>
+          <h4>Design Rationale: Use of JavaScript</h4>
+          <ul>
+            <li><strong>Universality:</strong> JavaScript is the only programming language natively supported by all
+              modern web browsers, making it the standard for client-side interactivity and dynamic content.</li>
+            <li><strong>Interactivity:</strong> JavaScript enables dynamic features such as language switching,
+              navigation highlighting, form validation, and asynchronous API calls, all of which are essential for a
+              modern, user-friendly web application.</li>
+            <li><strong>Framework-Free Approach:</strong> The project requirements explicitly prohibit the use of
+              frameworks (like React, Angular, Vue), so JavaScript is used in its native form ("vanilla JS") to
+              implement all dynamic behaviors, ensuring transparency and full control over the codebase.</li>
+            <li><strong>Maintainability & Modularity:</strong> JavaScript allows for modular code organization (separate
+              files for language management, routing, widgets, etc.), making the application easier to maintain and
+              extend.</li>
+            <li><strong>Performance:</strong> Native JavaScript is lightweight and fast, with no dependency overhead,
+              which helps the application load quickly and run efficiently on all devices.</li>
+            <li><strong>Accessibility & Standards:</strong> JavaScript is used to enhance, not replace, semantic HTML.
+              All dynamic features are implemented with accessibility in mind, ensuring keyboard navigation and ARIA
+              support where needed.</li>
+          </ul>
+        </ol>
+      </article>
+    </section>
+
+    <section id="srs-2">
+      <h2>2. Overall Description</h2>
+      <article id="srs-2-1">
+        <h3>2.1 Product Perspective</h3>
+        <p>The Pet Adoption Center application is a new software product, developed as an educational project for the
+          Web Technologies course. It is not part of an existing product family and does not replace any functioning
+          systems. It is a self-contained web application that manages the pet adoption process.</p>
+        <p>The system consists of two main components:</p>
+        <ul>
+          <li><strong>Web Frontend</strong> – the graphical user interface.</li>
+          <li><strong>Backend API</strong> – which manages application logic and communication with the database.</li>
+        </ul>
+        <p>The application will communicate with:</p>
+        <ul>
+          <li>External authentication services (e.g., Google OAuth 2.0).</li>
+          <li>RSS sharing systems.</li>
+          <li>An Oracle database that stores information about users, animals, and their history.</li>
+        </ul>
+      </article>
+
+      <article id="srs-2-2">
+        <h3>2.2 Product Functions</h3>
+        <ul>
+          <li>User authentication and registration (including Google Auth, email verification).</li>
+          <li>User profile management (view, edit, upload photo).</li>
+          <li>Add, edit, and view animals (with images, details, tags).</li>
+          <li>Favorites system (users can save favorite animals).</li>
+          <li>Matching between users and animals (based on preference tags).</li>
+          <li>Matching test (user completes a test, preferences are saved).</li>
+          <li>Animal recommendations (based on matching score).</li>
+          <li>Reviews (users can leave reviews for owners).</li>
+          <li>Notification system (notifications for relevant actions).</li>
+          <li>User administration (admin can view and delete users, with protection for admins + export tables).</li>
+          <li>RSS Feed (export and view RSS feed with animals).</li>
+          <li>Multi-language interface (EN/RO, with a complete translation system).</li>
+          <li>Portable pet widget (can be integrated into external websites).</li>
+          <li>Presentation and demo pages (about, home, test, etc.).</li>
+        </ul>
+      </article>
+
+      <article id="srs-2-3">
+        <h3>2.3 User Classes and Characteristics</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>User Class</th>
+              <th>Characteristics</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Authenticated Users</strong> (families / individuals)</td>
+              <td>Access main functions: adoptions, adding listings, viewing animals, matching test. Technical level:
+                low/medium.</td>
+            </tr>
+            <tr>
+              <td><strong>Administrator</strong></td>
+              <td>Has access to moderation functions (delete accounts, export all tables). Technical level: medium/high.
+              </td>
+            </tr>
+            <tr>
+              <td><strong>Unauthenticated Visitors</strong></td>
+              <td>Can only view public listings and access the RSS feed. Cannot interact actively.</td>
+            </tr>
+          </tbody>
+        </table>
+      </article>
+
+      <article id="srs-2-4">
+        <h3>2.4 Operating Environment</h3>
+        <dl>
+          <dt>Backend</dt>
+          <dd>Node.js (custom Express-like router), running on a server (e.g., <code>localhost:8080</code>).</dd>
+          <dt>Frontend</dt>
+          <dd>HTML, CSS, JavaScript (without modern JS frameworks).</dd>
+          <dt>Database</dt>
+          <dd>Oracle Database (uses the <code>oracledb</code> package for Node.js).</dd>
+          <dt>File System</dt>
+          <dd>Separate structure for backend and frontend.</dd>
+          <dt>Email</dt>
+          <dd>Nodemailer for sending emails (e.g., account confirmation).</dd>
+          <dt>Development Environment</dt>
+          <dd>Local (Windows), but portable to any system with Node.js and Oracle DB.</dd>
+        </dl>
+      </article>
+
+      <article id="srs-2-5">
+        <h3>2.5 Design and Implementation Constraints</h3>
+        <ul>
+          <li><strong>No Web Frameworks:</strong> The use of modern frameworks on both the client-side (e.g., React,
+            Angular, Vue) and server-side (e.g., Express, NestJS) is not permitted. The code must be written using
+            native technologies.</li>
+          <li><strong>Web Services-Based Architecture:</strong> All application functionalities will be exposed through
+            API-type services. Their invocation by the client interface will be done asynchronously, using technologies
+            from the Ajax suite (<code>XMLHttpRequest</code> or <code>fetch()</code> in JavaScript).</li>
+          <li><strong>Valid HTML5/CSS3 Interface:</strong> The HTML code will be written according to W3C standards for
+            HTML5. The CSS will follow best practices.</li>
+          <li><strong>Open License:</strong> Only technologies, languages, and platforms that adopt open licenses will
+            be used (e.g., Node.js, Oracle Express Edition, JavaScript).</li>
+          <li><strong>Flexible Database:</strong> For data storage and management, the system will use an Oracle
+            relational database, queried via SQL.</li>
+          <li><strong>Templates and Configurability:</strong> The application will use templates for presentation and
+            include simple configuration and administration methods (e.g., <code>.env</code> files for configuration
+            variables).</li>
+          <li><strong>Full Requirement Fulfillment:</strong> The application must meet all functional and non-functional
+            requirements specified in the project statement.</li>
+        </ul>
+      </article>
+
+      <article id="srs-2-6">
+        <h3>2.6 User Documentation</h3>
+        <p>The following support materials will be delivered:</p>
+        <ul>
+          <li>A demonstration video.</li>
+        </ul>
+      </article>
+
+      <article id="srs-2-7">
+        <h3>2.7 Assumptions and Dependencies</h3>
+        <ul>
+          <li>Depends on <strong>Node.js</strong> and npm packages: <code>oracledb</code>, <code>nodemailer</code>,
+            <code>dotenv</code>, etc.
+          </li>
+          <li>Depends on an <strong>Oracle Database</strong> instance (requires user, password, and connect string
+            configured in <code>.env</code>).</li>
+          <li>An assumption is that <strong>no frameworks</strong> (React, Vue, Angular, etc.) will be used.</li>
+          <li>The <strong>translation system</strong> assumes the existence of JSON files for each language and page.
+          </li>
+          <li><strong>Animal and user images</strong> are stored locally on the server's file system.</li>
+          <li><strong>Emails</strong> are sent only if the environment variables are correctly configured.</li>
+          <li>Access to <strong>admin functions</strong> is restricted by roles in the database.</li>
+          <li>There are <strong>no dependencies on cloud or external services</strong>, except for email and Google
+            Auth.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section id="srs-3">
+      <h2>3. External Interface Requirements</h2>
+      <article id="srs-3-1">
+        <h3>3.1 User Interfaces</h3>
+        <ul>
+          <li><strong>Technologies Used:</strong> HTML5, CSS3, Vanilla JavaScript. CSS is modularized by page/feature.
+            The interface language is managed through JSON files.</li>
+          <li><strong>Typical Page Structure:</strong>
             <ul>
-                <li><a href="#abstract">1. Abstract</a></li>
-                <li><a href="#introduction">2. Introduction</a></li>
-                <li><a href="#structure">3. Structure</a></li>
-                <li><a href="#semantics">4. Semantics Overlay</a></li>
-                <li><a href="#vocabulary">5. Scholarly Article Vocabulary</a></li>
-                <li><a href="#hypermedia">6. Hypermedia Controls</a></li>
-                <li><a href="#processing">7. Processing Model</a></li>
-                <li><a href="#acknowledgements">8. Acknowledgements</a></li>
-                <li><a href="#references">9. References</a></li>
+              <li><strong>Global Header:</strong> with logo, navigation, authentication buttons, and language switcher.
+              </li>
+              <li><strong>Main Content:</strong> sections for listing animals, pet details, matching, favorites,
+                profile, admin, etc.</li>
+              <li><strong>Global Footer:</strong> with contact information, useful links, copyright.</li>
             </ul>
-        </nav>
+          </li>
+          <li><strong>Common Elements:</strong> Reusable navbar and footer. Cards for animals, users, reviews.
+            Consistently styled buttons. Internationalized feedback and error messages.</li>
+          <li><strong>Responsiveness:</strong> CSS Grid and Flexbox for an adaptive layout. Media queries for
+            optimization on mobile/tablet.</li>
+          <li><strong>Accessibility:</strong> Semantic use of HTML tags (<code>header</code>, <code>nav</code>,
+            <code>main</code>, <code>footer</code>). Good contrast, legible fonts, visible focus on interactive
+            elements. Keyboard navigation and form labels.
+          </li>
+        </ul>
+      </article>
 
-        <div class="meta-info">
-            <p><strong>Authors:</strong> Tzviya Siegman (Wiley) &amp; Robin Berjon (science.ai)</p>
-            <p><strong>Bugs & Feedback:</strong> Issues and PRs welcome!</p>
-            <p><strong>Discussion Group:</strong> The Scholarly HTML Community Group at W3C</p>
-            <p><strong>License:</strong> CC-BY</p>
-        </div>
+      <article id="srs-3-2">
+        <h3>3.2 Hardware Interfaces</h3>
+        <p>The application is a purely software solution with no dedicated hardware components. It operates on standard
+          client and server hardware.</p>
+        <ul>
+          <li><strong>Client:</strong> A modern web browser on any desktop or mobile device.</li>
+          <li><strong>Server:</strong> A standard server or cloud VM capable of running Node.js and an Oracle DB client.
+          </li>
+        </ul>
+      </article>
 
-        <section id="abstract">
-            <h2>1. Abstract</h2>
-            <p>Scholarly HTML is a domain-specific rich document format built entirely on open standards that enables the interoperable exchange of scholarly articles in a manner that is compatible with off-the-shelf browsers. This document describes how Scholarly HTML works and how it is encoded.</p>
-        </section>
+      <article id="srs-3-3">
+        <h3>3.3 Software Interfaces</h3>
+        <p>The application interacts with the following software components:</p>
+        <ul>
+          <li><strong>Database:</strong> Oracle Database, accessed via the <code>oracledb</code> Node.js package.</li>
+          <li><strong>Environment Variables:</strong> Used for DB credentials and other secrets, loaded via a
+            <code>.env</code> file.
+          </li>
+          <li><strong>Node.js APIs:</strong> Standard Node.js modules are used to build the backend.</li>
+          <li><strong>Frontend/Backend API:</strong> A RESTful API is used for communication. Endpoints for users, pets,
+            favorites, etc., are consumed by the frontend JavaScript.</li>
+          <li><strong>Portable Widget:</strong> Can be embedded on external sites via a JavaScript file.</li>
+        </ul>
+      </article>
 
-        <section id="introduction">
-            <h2>2. Introduction</h2>
-            <p>Scholarly articles are still primarily published as unstructured data in which most of the information created by the research and the practice of authoring is lost. Document technology has reached a level of maturity and universality that makes this situation no longer tenable.</p>
-            <p>Our high-level goals are to:</p>
-            <ul>
-                <li>Enable structured metadata, accessibility, and internationalisation.</li>
-                <li>Be fully funcitioning on modern Web browsers.</li>
-                <li>Be customizable for inclusion in arbitrary Web sites, while remaining easy to process and interoperable.</li>
-                <li>Build on top of open, royalty-free standards.</li>
-                <li>Long-term viability as a data format.</li>
-            </ul>
-        </section>
+      <article id="srs-3-4">
+        <h3>3.4 Communications Interfaces</h3>
+        <ul>
+          <li><strong>HTTP/HTTPS:</strong> All communication between the client and server is via HTTP(S). JSON is the
+            primary data format for API requests and responses.</li>
+          <li><strong>CORS:</strong> The server is configured to allow cross-origin requests to support the portable
+            widget and frontend.</li>
+          <li><strong>Web Embedding:</strong> The portable widget can be embedded on third-party sites, communicating
+            with the backend via HTTP(S).</li>
+        </ul>
+      </article>
+    </section>
 
-        <section id="structure">
-            <h2>3. Structure</h2>
-            <p>A Scholarly HTML document is a valid HTML document that follows some additional rules to specialize its meaning and make it predictable to processors wishing to produce or consume scholarly articles.</p>
+    <section id="srs-4">
+      <h2>4. System Features</h2>
+      <article id="srs-4-1">
+        <h4>4.1 User Authentication and Authorization</h4>
+        <p><strong>Description and Priority:</strong> Provides secure user registration, login, and role-based access.
+          <strong>Priority: High.</strong>
+        </p>
+        <p><strong>Stimulus/Response Sequences:</strong></p>
+        <ul>
+          <li>User submits registration form → System validates and creates the user or returns an error (e.g.,
+            username/email exists).</li>
+          <li>User submits login form → System authenticates and returns a session/token or an error.</li>
+        </ul>
+        <p><strong>Functional Requirements:</strong></p>
+        <ol>
+          <li><strong>FR-1.1:</strong> The system must validate unique usernames and emails.</li>
+          <li><strong>FR-1.2:</strong> The system must hash and securely store passwords.</li>
+          <li><strong>FR-1.3:</strong> The system must provide JWT or session-based authentication.</li>
+          <li><strong>FR-1.4:</strong> The system must restrict access to protected routes based on user roles (user,
+            admin).</li>
+          <li><strong>FR-1.5:</strong> The system must return clear error messages for invalid credentials or duplicate
+            accounts.</li>
+        </ol>
+      </article>
 
-            <h3>3.1 The root and head</h3>
-            <p>The document must be encoded in UTF-8. The <code>head</code> must contain <code>&lt;meta charset="utf-8"&gt;</code> element and a <code>title</code> element.</p>
+      <article id="srs-4-2">
+        <h4>4.2 Pet Management</h4>
+        <p><strong>Description and Priority:</strong> Allows users and admins to add, edit, view, and delete pet
+          profiles. <strong>Priority: High.</strong></p>
+        <p><strong>Stimulus/Response Sequences:</strong></p>
+        <ul>
+          <li>Admin/user submits a new pet form → System validates and saves the pet data.</li>
+          <li>User views the pet list → System returns paginated and filterable pet data.</li>
+        </ul>
+        <p><strong>Functional Requirements:</strong></p>
+        <ol>
+          <li><strong>FR-2.1:</strong> The system must allow authenticated users to perform CRUD operations for pet
+            profiles.</li>
+          <li><strong>FR-2.2:</strong> The system must validate all required fields (e.g., name, species, age) and their
+            data types.</li>
+          <li><strong>FR-2.3:</strong> The system must prevent the deletion of a pet if it is referenced in other
+            records (e.g., adoption history).</li>
+          <li><strong>FR-2.4:</strong> The system must support image uploads and display for pet profiles.</li>
+        </ol>
+      </article>
 
-            <h3>3.2 The article</h3>
-            <p>The first child of <code>article</code> must be <code>header</code>. The header should contain an <code>h1</code> with the title of the document. The following element must be a <code>div</code> with the role of <code>contentinfo</code> containing author and affiliation information.</p>
-            <pre><code>&lt;section&gt;      
-  &lt;h6&gt;Granular Details about Zoology&lt;/h6&gt;
-    &lt;p&gt;…&lt;/p&gt;
-  &lt;section&gt;    
-    &lt;h6 aria-level="7"&gt;Even More Information!&lt;/h6&gt;
-  &lt;/section&gt;
-&lt;/section&gt;</code></pre>
+      <article id="srs-4-3">
+        <h4>4.3 Favorites and Matching</h4>
+        <p><strong>Description and Priority:</strong> Users can favorite pets and receive recommendations based on a
+          tag-matching algorithm. <strong>Priority: High.</strong></p>
+        <p><strong>Stimulus/Response Sequences:</strong></p>
+        <ul>
+          <li>User clicks the "favorite" button on a pet → System adds/removes the pet from the user's favorites list.
+          </li>
+          <li>User requests recommendations → System returns a list of pets sorted by their matching score.</li>
+        </ul>
+        <p><strong>Functional Requirements:</strong></p>
+        <ol>
+          <li><strong>FR-3.1:</strong> The system must allow users to add or remove pets from their personal favorites
+            list.</li>
+          <li><strong>FR-3.2:</strong> The system must calculate and return a matching score based on overlapping tags
+            between user preferences and pet characteristics.</li>
+          <li><strong>FR-3.3:</strong> The system must handle errors for invalid or missing data gracefully.</li>
+        </ol>
+      </article>
 
-            <h3>3.3 Hunk Elements</h3>
-            <p>Hunk elements are the meaningful blocks from which sections are built. They contain text and inline elements. The most common hunk element is <code>p</code>.</p>
-            
-            <h4>3.3.1 Figures</h4>
-            <p>The <code>figure</code> element is a general container for self-contained content units. Common uses for <code>figure</code> are as a container for images, tables, equations, and computer code.</p>
+      <article id="srs-4-4">
+        <h4>4.4 Admin Panel</h4>
+        <p><strong>Description and Priority:</strong> Admins can manage users, pets, and system data via a dedicated
+          interface. <strong>Priority: Medium.</strong></p>
+        <p><strong>Stimulus/Response Sequences:</strong></p>
+        <ul>
+          <li>Admin logs in → System displays the admin dashboard with relevant statistics and management tools.</li>
+          <li>Admin deletes a user → System checks for dependencies and confirms the deletion.</li>
+        </ul>
+        <p><strong>Functional Requirements:</strong></p>
+        <ol>
+          <li><strong>FR-4.1:</strong> The system must provide a secure admin dashboard accessible only to users with
+            the 'admin' role.</li>
+          <li><strong>FR-4.2:</strong> The system must allow admins to perform CRUD operations on all users and pets.
+          </li>
+          <li><strong>FR-4.3:</strong> The system must allow admins to export data from main tables (e.g., Users, Pets)
+            into a downloadable format (e.g., CSV).</li>
+        </ol>
+      </article>
+    </section>
 
-            <h3>3.4 Inline Elements</h3>
-            <p>Inline elements decorate, describe, and enrich text. They can be used inside of hunk elements, heading elements, and captioning elements.</p>
-            <pre><code>&lt;p&gt;
-  If we should weep when clowns put on their show,
-  if we should stumble when musicians play,
-  &lt;math display="block"&gt;
-    &lt;semantics&gt;
-      &lt;mrow&gt;
-        &lt;mi&gt;Δ&lt;/mi&gt;&lt;msup&gt;&lt;mi&gt;E&lt;/mi&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/msup&gt;
-        &lt;mspace width="0.222em"&gt;&lt;/mspace&gt;
-        &lt;mo&gt;=&lt;/mo&gt;
-      &lt;/mrow&gt;
-    &lt;/semantics&gt;
-  &lt;/math&gt;
-  time can say nothing but I told you so.
-&lt;/p&gt;</code></pre>
-            
-            <h3>3.5 References</h3>
-            <p>The References section requires specific semantic overlays as well as strict content structure. Apart from a (required) <code>hx</code> element, it must contain only one <code>ol</code> or <code>dl</code> element.</p>
+    <section id="srs-5">
+      <h2>5. Other Nonfunctional Requirements</h2>
+      <article id="srs-5-1">
+        <h3>5.1 Performance Requirements</h3>
+        <ul>
+          <li>The system must support at least 50 concurrent users without significant degradation in response time
+            (target: &lt;1s for standard queries, &lt;3s for complex reports).</li>
+          <li>The backend shall establish and manage a connection pool to the Oracle database for efficient query
+            execution.</li>
+          <li>The frontend must load and render the main user interface in under 2 seconds on a standard broadband
+            connection.</li>
+          <li>Widget and API responses should be delivered within 1 second under normal load.</li>
+        </ul>
+      </article>
 
-            <h3>3.6 Interactive Elements</h3>
-            <p>Information about iframes to come.</p>
+      <article id="srs-5-2">
+        <h3>5.2 Safety Requirements</h3>
+        <ul>
+          <li>The application must prevent data loss by using transactions for critical database operations (e.g., user
+            registration, pet adoption).</li>
+          <li>Only authorized users can perform destructive actions (e.g., deleting pets or users).</li>
+          <li>The system must log all errors and critical events for auditing and recovery purposes.</li>
+          <li>File uploads must be validated to prevent the storage of malicious content.</li>
+        </ul>
+      </article>
 
-            <h3>3.7 HTML Roles</h3>
-            <p>It is possible to provide information about an HTML element by decorating it with the <code>role</code> attribute.</p>
+      <article id="srs-5-3">
+        <h3>5.3 Security Requirements</h3>
+        <ul>
+          <li>All user passwords must be securely hashed and never stored in plain text.</li>
+          <li>User authentication is required for all protected routes; JWT or session tokens shall be used.</li>
+          <li>Sensitive operations (e.g., admin actions, data deletion) require elevated privileges (admin role).</li>
+          <li>The system must validate all user input to prevent common web vulnerabilities like SQL Injection, XSS, and
+            CSRF.</li>
+          <li>Database credentials and other secrets must be stored in environment variables, not in the source code.
+          </li>
+          <li>The system should comply with data privacy best practices (e.g., allowing users to delete their own
+            account and associated data).</li>
+        </ul>
+      </article>
 
-            <h3>3.8 Validation</h3>
-            <p>The only validation requirement for Scholarly HTML at this point is that the HTML is valid.</p>
-        </section>
+      <article id="srs-5-4">
+        <h3>5.4 Software Quality Attributes</h3>
+        <dl>
+          <dt>Availability</dt>
+          <dd>The system should be available 99% of the time, excluding scheduled maintenance.</dd>
+          <dt>Reliability</dt>
+          <dd>All critical operations must be robust against database or network errors, providing clear error messages
+            and fallback behavior.</dd>
+          <dt>Maintainability</dt>
+          <dd>The codebase is modular, with a clear separation of concerns between frontend, backend, and database
+            logic.</dd>
+          <dt>Portability</dt>
+          <dd>The frontend is browser-agnostic and responsive; the backend can run on any Node.js-compatible
+            environment.</dd>
+          <dt>Usability</dt>
+          <dd>The UI is designed to be intuitive, with clear navigation, user feedback, and accessibility features
+            (ARIA, keyboard navigation).</dd>
+          <dt>Testability</dt>
+          <dd>The system's modular design supports unit and integration testing for both backend and frontend logic.
+          </dd>
+          <dt>Interoperability</dt>
+          <dd>The portable widget can be embedded on external sites and communicates via a standard HTTP API.</dd>
+        </dl>
+      </article>
 
-        <section id="semantics">
-            <h2>4. Semantics Overlay</h2>
-            <p>HTML provides an excellent backbone with which to capture the structure of a given text but is evidently limited when it comes to capturing more domain-specific concepts. Scholarly HTML makes use of two standard mechanisms that overlay additional semantics atop the HTML DOM: role-based semantics and semantics rooted in structured data as captured by RDFa.</p>
-        </section>
+      <article id="srs-5-5">
+        <h3>5.5 Business Rules</h3>
+        <ul>
+          <li>Only authenticated users can add pets to favorites, adopt pets, or access their profile.</li>
+          <li>Only admins can manage all users, all pets, and system-wide data.</li>
+          <li>Each user must have a unique email and username.</li>
+          <li>Pets cannot be deleted if they are referenced in other records (e.g., adoption history), enforced by
+            referential integrity.</li>
+          <li>The portable widget may only display public pet data; sensitive user data is never exposed externally.
+          </li>
+          <li>All user actions are subject to role-based access control.</li>
+        </ul>
+      </article>
+    </section>
 
-        <section id="vocabulary">
-            <h2>5. Scholarly Article Vocabulary</h2>
-            <p>A limited number of classes and properties are currently not available from schema.org. In most if not all cases it would be desirable to make them available there, but while work is progressing it is simpler to define them ourselves.</p>
-        </section>
+    <section id="srs-6">
+      <h2>6. Other Requirements</h2>
+      <h3>Database Requirements</h3>
+      <ul>
+        <li>The application uses Oracle Database as the primary DBMS, accessed via the Node.js <code>oracledb</code>
+          driver.</li>
+        <li>The database schema enforces referential integrity, unique constraints, and data validation through triggers
+          and constraints.</li>
+      </ul>
+      <h3>Internationalization Requirements</h3>
+      <ul>
+        <li>The frontend supports multiple languages (at least English and Romanian) using JSON files for all
+          user-facing text.</li>
+        <li>The language can be switched dynamically by the user, and the system remembers the preference.</li>
+      </ul>
+      <h3>Legal Requirements</h3>
+      <ul>
+        <li>User data is handled in compliance with privacy best practices.</li>
+        <li>Open-source libraries are used in accordance with their respective licenses.</li>
+      </ul>
+      <h3>Reuse Objectives</h3>
+      <ul>
+        <li>The portable pet widget is designed for easy integration on external websites.</li>
+        <li>Backend logic is modular (controllers, models, DTOs, utilities) to facilitate future feature expansion and
+          code reuse.</li>
+      </ul>
+      <h3>Accessibility Requirements</h3>
+      <ul>
+        <li>The frontend uses semantic HTML and ARIA attributes where appropriate to ensure accessibility.</li>
+        <li>Color contrast and font sizes are chosen for readability.</li>
+        <li>All interactive components are keyboard-accessible.</li>
+      </ul>
+    </section>
 
-        <section id="hypermedia">
-            <h2>6. Hypermedia Controls</h2>
-            <p>Details to come.</p>
-        </section>
+    <section id="appendix-a">
+      <h2>Appendix A: Glossary</h2>
+      <dl>
+        <dt>API</dt>
+        <dd>Application Programming Interface. A set of endpoints for communication between frontend and backend.</dd>
+        <dt>CRUD</dt>
+        <dd>Create, Read, Update, Delete. Basic operations for data management.</dd>
+        <dt>DBMS</dt>
+        <dd>Database Management System. In this project, Oracle Database.</dd>
+        <dt>DTO</dt>
+        <dd>Data Transfer Object. A design pattern for transferring data between software application subsystems.</dd>
+        <dt>i18n</dt>
+        <dd>Internationalization. The process of designing an application to support multiple languages.</dd>
+        <dt>JWT</dt>
+        <dd>JSON Web Token. Used for secure user authentication.</dd>
+        <dt>SRS</dt>
+        <dd>Software Requirements Specification.</dd>
+        <dt>Widget</dt>
+        <dd>A portable component that can be embedded on external websites to display data.</dd>
+      </dl>
+    </section>
 
-        <section id="processing">
-            <h2>7. Processing Model</h2>
-            <p>Details to come.</p>
-        </section>
+    <section id="appendix-b">
+      <h2>Appendix B: Analysis Models</h2>
+      <dl>
+        <dt>Entity-Relationship Diagram (ERD)</dt>
+        <dd>The project uses an Oracle database with entities such as User, Pet, Favorite, and Review, and relationships
+          like user-pet favorites, user-pet reviews, and pet ownership.</dd>
+        <dt>Data Flow</dt>
+        <dd>
+          <ol>
+            <li>The user interacts with the frontend (HTML/JS/CSS).</li>
+            <li>The frontend sends asynchronous requests to the backend API endpoints.</li>
+            <li>The backend processes requests, interacts with the Oracle DB, and returns JSON responses.</li>
+            <li>For the widget, an external site loads the widget script, which then fetches and displays pet data from
+              the backend API.</li>
+          </ol>
+        </dd>
+      </dl>
+    </section>
 
-        <section id="acknowledgements">
-            <h2>8. Acknowledgements</h2>
-            <p>Scholarly HTML would like to thank Scholarly HTML (you read that right) for blazing the trail perhaps a few years too soon. Dan Brickley was kind enough to drop by the office to chat about our usage of schema.org even though he was tired and hungry. We also received very useful feedback and pointers from: Kjetil Kjernsmo, Silvio Peroni, Justin Johansson, Alf Eaton, and others.</p>
-        </section>
+    <section id="appendix-c">
+      <h2>Appendix C: To Be Determined List</h2>
+      <ol>
+        <li>[TBD] Final performance benchmarks for high-load scenarios.</li>
+        <li>[TBD] Final list of supported languages for internationalization beyond EN/RO.</li>
+        <li>[TBD] Formal accessibility audit and certification compliance.</li>
+        <li>[TBD] Automated test coverage targets and tooling.</li>
+        <li>[TBD] Integration plan with additional external partner sites for the widget.</li>
+      </ol>
+    </section>
 
-        <section id="references">
-            <h2>9. References</h2>
-            <dl>
-                <dt>NYT</dt>
-                <dd>The Full New York Times Innovation Report, by New York Times ; 2014 Mar.</dd>
-                <dt>HTML</dt>
-                <dd>One of the HTML Specifications.</dd>
-                <dt>WAI-ARIA</dt>
-                <dd>Accessible Rich Internet Applications (WAI-ARIA) 1.0.</dd>
-                <dt>DPUB-ARIA</dt>
-                <dd>Digital Publishing WAI-ARIA Module 1.0.</dd>
-                <dt>RDFa</dt>
-                <dd>RDFa 1.1 Primer.</dd>
-                <dt>schema.org</dt>
-                <dd>schema.org.</dd>
-                <dt>CSL</dt>
-                <dd>Citation Styles Language.</dd>
-            </dl>
-        </section>
-
-    </main>
-
+  </main>
+  <div data-component="footer"></div>
+  <script src="../global/inject-navbar.js" type="module"></script>
 </body>
+
 </html>
