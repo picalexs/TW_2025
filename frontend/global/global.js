@@ -364,6 +364,35 @@ function initBasicFunctionality() {
     if (window.languageManager) {
         window.languageManager.updateContent();
     }
+    setTimeout(ensureMobileMenuWorks, 200);
+}
+
+function ensureMobileMenuWorks() {
+    console.log('ensureMobileMenuWorks called');
+    
+    const toggle = document.querySelector('.mobile-menu-toggle');
+    const container = document.querySelector('.mobile-menu-container');
+    const overlay = document.querySelector('.mobile-overlay');
+    
+    console.log('Mobile menu elements check:', {
+        toggle: !!toggle,
+        container: !!container,
+        overlay: !!overlay,
+        toggleHasListener: toggle ? toggle.dataset.listenerAttached : 'N/A'
+    });
+    
+    if (!toggle || !container || !overlay) {
+        console.log('Mobile menu elements not found, retrying in 100ms');
+        setTimeout(ensureMobileMenuWorks, 100);
+        return;
+    }
+    
+    if (!toggle.dataset.listenerAttached) {
+        console.log('Mobile menu elements found but not initialized, setting up now');
+        setupMobileMenu();
+    } else {
+        console.log('Mobile menu already initialized');
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -410,17 +439,38 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (footer && footerContainer) {
                     footerContainer.innerHTML = '';
                     footerContainer.appendChild(footer);
-                }
+                } 
                 initBasicFunctionality();
+                
+                setTimeout(() => {
+                    const toggle = document.querySelector('.mobile-menu-toggle');
+                    const container = document.querySelector('.mobile-menu-container');
+                    const overlay = document.querySelector('.mobile-overlay');
+                    
+                    console.log('Post-injection mobile menu check:', {
+                        toggle: !!toggle,
+                        container: !!container,
+                        overlay: !!overlay,
+                        toggleHasListener: toggle ? toggle.dataset.listenerAttached : 'N/A'
+                    });
+                    
+                    if (toggle && !toggle.dataset.listenerAttached) {
+                        console.log('Forcing mobile menu setup');
+                        setupMobileMenu();
+                    }
+                }, 100);
+                
+                setTimeout(ensureMobileMenuWorks, 500);
             })
             .catch(err => {
                 console.error('Error fetching or injecting global components:', err);
                 const errorMessage = '<div class="error-loading" style="color: red; text-align: center; padding: 20px;">Failed to load navigation. Please try refreshing the page.</div>';
                 if (navbarContainer) navbarContainer.innerHTML = errorMessage;
                 if (footerContainer) footerContainer.innerHTML = errorMessage;
-            });
-    } else {
+            });    } else {
+        console.log('No navbar/footer containers found, calling initBasicFunctionality directly');
         initBasicFunctionality();
+        setTimeout(ensureMobileMenuWorks, 300);
     }
 });
 
@@ -432,4 +482,4 @@ export function navigateToProfile(userId) {
   
   window.location.href = `/frontend/profile/profile.html?id=${userId}`;
 }
-export { setupLanguageDropdown, setupMobileMenu, initSlideshow, createSlideshow, initializePageLanguage, checkLoginStatusAndToggleNavButtons};
+export { setupLanguageDropdown, setupMobileMenu, initSlideshow, createSlideshow, initializePageLanguage, checkLoginStatusAndToggleNavButtons, ensureMobileMenuWorks};

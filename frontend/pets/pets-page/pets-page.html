@@ -210,15 +210,15 @@
                 <div class="placeholder-content"></div>
             </div>
         </div>
-    </main>    
+    </main>      
     <div id="global-footer"></div>
     <script src="../../bundles/critical.min.js" defer></script>
     <script src="../../bundles/utils.min.js" defer></script>
+    <script type="module" src="../../global/global.min.js"></script>
+    <script type="module" src="../../languages/language.min.js"></script>
     
     <script type="module">
         import { fetchPets, renderPets, showPetLoadError, initializeViewToggle, initializeAdvancedFilters, initializeFilterButtons, initializeMatchingButton } from './pets-page.min.js';
-        import '../../global/global.min.js'; 
-        import languageManager from '../../languages/language.min.js';
         import RSSManager from '../../services/rssManager.js';
 
         document.addEventListener('DOMContentLoaded', async () => {
