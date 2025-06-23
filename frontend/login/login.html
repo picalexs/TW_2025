@@ -8,12 +8,8 @@
   <style>
     body { visibility: hidden; }
   </style>
-  <link rel="preload" href="../global/global.min.css" as="style" onload="this.rel='stylesheet'">
-  <link rel="preload" href="./login.min.css" as="style" onload="this.rel='stylesheet'">
-  <noscript>
-    <link rel="stylesheet" href="../global/global.min.css" />
-    <link rel="stylesheet" href="./login.min.css" />
-  </noscript>
+  <link rel="stylesheet" href="../global/global.min.css">
+  <link rel="stylesheet" href="./login.min.css">
   <script>
     window.addEventListener('DOMContentLoaded', function() {
       document.body.style.visibility = 'visible';
@@ -44,12 +40,12 @@
 
         <div class="form-group">
           <label for="email" data-i18n="emailLabel">Email</label>
-          <input type="email" id="email" data-i18n-placeholder="emailPlaceholder" required />
+          <input type="email" id="email" data-i18n-placeholder="emailPlaceholder" data-i18n-placeholder-fallback="Enter your email" placeholder="Enter your email" required />
         </div>
 
         <div class="form-group">
           <label for="password" data-i18n="passwordLabel">Password</label>
-          <input type="password" id="password" data-i18n-placeholder="passwordPlaceholder" required />
+          <input type="password" id="password" data-i18n-placeholder="passwordPlaceholder" data-i18n-placeholder-fallback="Enter your password" placeholder="Enter your password" required />
         </div>
 
         <div class="form-options">

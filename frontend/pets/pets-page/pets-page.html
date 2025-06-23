@@ -4,16 +4,10 @@
     <meta charset="UTF-8">
     <title data-i18n="pageTitle" data-i18n-fallback="Available Pets"></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">        
-    <link rel="preload" href="../../global/global.min.css" as="style" onload="this.rel='stylesheet'">
-    <link rel="preload" href="../../global/pet-cards.css" as="style" onload="this.rel='stylesheet'">
-    <link rel="preload" href="../../global/rss-widget.css" as="style" onload="this.rel='stylesheet'">
-    <link rel="preload" href="pets-page.min.css" as="style" onload="this.rel='stylesheet'">
-    <noscript>
-      <link rel="stylesheet" href="../../global/global.min.css" />
-      <link rel="stylesheet" href="../../global/pet-cards.css" />
-      <link rel="stylesheet" href="../../global/rss-widget.css" />
-      <link rel="stylesheet" href="pets-page.min.css" />
-    </noscript>
+    <link rel="stylesheet" href="../../global/global.min.css" />
+    <link rel="stylesheet" href="../../global/pet-cards.css" />
+    <link rel="stylesheet" href="../../global/rss-widget.css" />
+    <link rel="stylesheet" href="pets-page.min.css" />
 </head>
 <body>
     <div id="global-navbar">
@@ -155,12 +149,12 @@
                   <div class="filters-row">
                     <div class="filter-group">
                         <label class="filter-label" data-i18n="searchName" data-i18n-fallback="Search by Name"></label>
-                        <input type="text" id="name-search" class="filter-input" placeholder="Enter pet name...">
+                        <input type="text" id="name-search" class="filter-input" placeholder="Enter pet name..." data-i18n-placeholder="searchName" data-i18n-placeholder-fallback="Enter pet name...">
                     </div>
                     
                     <div class="filter-group">
                         <label class="filter-label" data-i18n="searchTag" data-i18n-fallback="Search by Tag"></label>
-                        <input type="text" id="tag-search" class="filter-input" placeholder="Enter tag name...">
+                        <input type="text" id="tag-search" class="filter-input" placeholder="Enter tag name..." data-i18n-placeholder="searchTag" data-i18n-placeholder-fallback="Enter tag name...">
                     </div>
                 </div>
             </div>

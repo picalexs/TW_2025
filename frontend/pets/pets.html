@@ -4,16 +4,10 @@
     <meta charset="UTF-8">
     <title data-i18n="pageTitle" data-i18n-fallback="Available Pets"></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">      
-    <link rel="preload" href="../global/global.min.css" as="style" onload="this.rel='stylesheet'">
-    <link rel="preload" href="../global/pet-cards.css" as="style" onload="this.rel='stylesheet'">
-    <link rel="preload" href="../global/rss-widget.css" as="style" onload="this.rel='stylesheet'">
-    <link rel="preload" href="pets.min.css" as="style" onload="this.rel='stylesheet'">
-    <noscript>
-      <link rel="stylesheet" href="../global/global.min.css" />
-      <link rel="stylesheet" href="../global/pet-cards.css" />
-      <link rel="stylesheet" href="../global/rss-widget.css" />
-      <link rel="stylesheet" href="pets.min.css" />
-    </noscript>
+    <link rel="stylesheet" href="../global/global.min.css" />
+    <link rel="stylesheet" href="../global/pet-cards.css" />
+    <link rel="stylesheet" href="../global/rss-widget.css" />
+    <link rel="stylesheet" href="pets.min.css" />
 </head>
 <body>
     <div id="global-navbar">
@@ -151,12 +145,12 @@
                 <div class="filters-row">
                     <div class="filter-group">
                         <label class="filter-label" data-i18n="searchName" data-i18n-fallback="Search by Name">Search by Name</label>
-                        <input type="text" id="name-search" class="filter-input" placeholder="Enter pet name...">
+                        <input type="text" id="name-search" class="filter-input" placeholder="Enter pet name..." data-i18n-placeholder="searchName" data-i18n-placeholder-fallback="Enter pet name...">
                     </div>
                     
                     <div class="filter-group">
                         <label class="filter-label" data-i18n="maxDistance" data-i18n-fallback="Max Distance (km)">Max Distance (km)</label>
-                        <input type="number" id="distance-filter" class="filter-input" placeholder="50" min="1" max="500">
+                        <input type="number" id="distance-filter" class="filter-input" placeholder="50" min="1" max="500" data-i18n-placeholder="maxDistance" data-i18n-placeholder-fallback="50">
                     </div>
                 </div>
             </div>
