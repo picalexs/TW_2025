@@ -49,7 +49,7 @@ class UserController {
         },
       });
 
-      const verificationLink = `${process.env.BASE_URL || `${process.env.API_PROTOCOL || 'http'}://${process.env.API_HOST || 'localhost'}:${process.env.API_PORT || 8080}`}/api/users/verify-email?token=${emailToken}`;
+      const verificationLink = `http://${process.env.API_HOST || 'localhost'}:${process.env.API_PORT}/api/users/verify-email?token=${emailToken}`;
       const mailOptions = {
         from: `"Your App" <${process.env.EMAIL_USER}>`,
         to: email,

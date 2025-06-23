@@ -164,8 +164,7 @@ class GoogleAuthController {
         return `${baseUsername}${randomSuffix}`;
     }    
     getBaseUrl() {
-        return process.env.BASE_URL || 
-               `${process.env.FRONTEND_PROTOCOL || 'http'}://${process.env.FRONTEND_HOST || 'localhost'}:${process.env.FRONTEND_PORTS?.split(',')[0] || '5500'}`;
+        return process.env.BASE_URL || 'http://127.0.0.1:5500';
     }
       
     getFrontendBaseUrlFromApi() {

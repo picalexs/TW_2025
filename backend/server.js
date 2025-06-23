@@ -1,8 +1,6 @@
 require("dotenv").config();
 
 const http = require('http');
-const https = require('https');
-const fs = require('fs');
 const zlib = require('zlib');
 const db = require('./db/dbConnection');
 const handleUserRoutes = require('./routes/userRoutes');
@@ -16,32 +14,11 @@ const handleRSSRoutes = require('./routes/rssFeedRoutes');
 const { handleNotificationRoutes } = require('./routes/notificationRoutes');
 const handleFrontendRoutes = require('./routes/frontendRoutes');
 const handleAdminRoutes = require('./routes/adminRoutes');
-const { sendResponse } = require('./utils/helpers');
 const handleFavoriteRoutes = require('./routes/favoriteRoutes');
 
 const { verifyToken, checkRole } = require('./middleware/authMiddleware');
 
 const PORT = process.env.API_PORT || 8080;
-const HOST = process.env.API_HOST || 'localhost';
-const PROTOCOL = process.env.API_PROTOCOL || 'http';
-const HTTPS_ENABLED = process.env.HTTPS_ENABLED === 'true';
-
-const BASE_URL = process.env.BASE_URL || `${PROTOCOL}://${HOST}:${PORT}`;
-let serverOptions = {};
-if (HTTPS_ENABLED) {
-  try {
-    serverOptions = {
-      key: fs.readFileSync(process.env.SSL_KEY_PATH),
-      cert: fs.readFileSync(process.env.SSL_CERT_PATH)
-    };
-    if (process.env.SSL_CA_PATH) {
-      serverOptions.ca = fs.readFileSync(process.env.SSL_CA_PATH);
-    }
-  } catch (error) {
-    console.error('Error reading SSL certificates:', error);
-    process.exit(1);
-  }
-}
 
 const generateAllowedOrigins = () => {
   const frontendPorts = process.env.FRONTEND_PORTS ?
@@ -105,15 +82,7 @@ const sendCompressedResponse = (res, statusCode, data, contentType = 'applicatio
   res.end(compressedData);
 };
 
-const server = HTTPS_ENABLED 
-  ? https.createServer(serverOptions, async (req, res) => {
-      await handleRequest(req, res);
-    })
-  : http.createServer(async (req, res) => {
-      await handleRequest(req, res);
-    });
-
-async function handleRequest(req, res) {
+const server = http.createServer(async (req, res) => {
   console.log(`[${new Date().toISOString()}] Incoming request: ${req.method} ${req.url}`);
   res.req = req;
 
@@ -241,15 +210,16 @@ async function handleRequest(req, res) {
       });
     }
   }
-}
+});
 
 async function startServer() {
   try {
-    const poolInitialized = await db.initialize();    if (poolInitialized) {
-      server.listen(PORT, HOST, () => {
-        const protocol = HTTPS_ENABLED ? 'https' : 'http';
-        console.log(`[${new Date().toISOString()}] ${HTTPS_ENABLED ? 'HTTPS' : 'HTTP'} Server running on ${protocol}://${HOST}:${PORT}`);
-        console.log(`API available at ${protocol}://${HOST}:${PORT}/api/status`);
+    const poolInitialized = await db.initialize();
+
+    if (poolInitialized) {
+      server.listen(PORT, () => {
+        console.log(`[${new Date().toISOString()}] Server running on port ${PORT}`);
+        console.log(`API available at http://localhost:${PORT}/api/status`);
       });
 
       process.on('SIGINT', async () => {
