@@ -220,6 +220,23 @@ function initTestimonialsCarousel() {
   testimonialsCarousel = new window.Carousel(config);
 }
 
+let resizeTimeout;
+window.addEventListener('resize', () => {
+  if (testimonialsCarousel && window.currentTestimonials) {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      const testimonialsSection = document.getElementById("testimonials");
+      if (testimonialsSection && window.currentTestimonials) {
+        testimonialsSection.innerHTML = createTestimonialsCarousel(window.currentTestimonials);
+        initTestimonialsCarousel();
+        if (window.languageManager) {
+          window.languageManager.updateContent();
+        }
+      }
+    }, 250);
+  }
+});
+
 window.addEventListener("beforeunload", () => {
   if (testimonialsCarousel) {
     testimonialsCarousel.destroy();

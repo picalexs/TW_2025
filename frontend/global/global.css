@@ -793,7 +793,7 @@ a:focus-visible,
 }
 
 
-.pets-grid, .users-grid, .testimonials-grid {
+.pets-grid, .users-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 2rem;
