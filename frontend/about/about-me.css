@@ -124,6 +124,14 @@ th {
   margin-bottom: 0.7rem;
   border-bottom: none;
 }
+.toc > ul:first-of-type {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 0.7rem;
+}
+.toc > ul:first-of-type li {
+  margin-bottom: 0.2rem;
+}
 .toc ul {
   list-style: decimal inside;
   padding-left: 0;
