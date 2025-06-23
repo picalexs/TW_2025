@@ -369,9 +369,12 @@ class Carousel {
                 }
                 break;
         }
-    }
-
+    }    
     handleResize() {
+        if (this.track) {
+            this.track.style.transition = 'none';
+        }
+        
         this.checkResponsiveState();
         
         if (this.containerSelector === '.testimonials-carousel') {
@@ -381,6 +384,12 @@ class Carousel {
         if (!this.isDisabled) {
             this.updateCarousel();
         }
+        
+        setTimeout(() => {
+            if (this.track) {
+                this.track.style.transition = `transform ${this.animationConfig.duration}ms ${this.animationConfig.easing}`;
+            }
+        }, 50);
     }
 
     recalculateTestimonialsSlides() {

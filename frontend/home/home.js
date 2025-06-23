@@ -197,10 +197,29 @@ function createSlides(testimonials, cardsPerSlide) {
 }
 
 let testimonialsCarousel = null;
+let testimonialsAutoScrollTimer = null;
+
+function startTestimonialsAutoScroll() {
+  clearTestimonialsAutoScroll();
+  if (!testimonialsCarousel) return;
+  testimonialsAutoScrollTimer = setInterval(() => {
+    if (testimonialsCarousel && !testimonialsCarousel.isDisabled) {
+      testimonialsCarousel.goToSlide(testimonialsCarousel.currentSlide + 1);
+    }
+  }, 6000);
+}
+
+function clearTestimonialsAutoScroll() {
+  if (testimonialsAutoScrollTimer) {
+    clearInterval(testimonialsAutoScrollTimer);
+    testimonialsAutoScrollTimer = null;
+  }
+}
 
 function initTestimonialsCarousel() {
   if (testimonialsCarousel) {
     testimonialsCarousel.destroy();
+    clearTestimonialsAutoScroll();
   }
 
   const config = window.CarouselHelpers.createTestimonialsCarouselConfig(
@@ -208,12 +227,24 @@ function initTestimonialsCarousel() {
   );
 
   config.onSlideChange = (currentSlide, previousSlide, carousel) => {
+    startTestimonialsAutoScroll();
     console.log(
       `Testimonials carousel moved from slide ${previousSlide} to ${currentSlide}`
     );
   };
 
   config.onInit = (carousel) => {
+    if (carousel && typeof carousel.goToSlide === 'function') {
+      carousel.goToSlide(1, false);
+    }
+    startTestimonialsAutoScroll();
+    const container = document.querySelector('.testimonials-carousel');
+    if (container) {
+      container.addEventListener('mouseenter', clearTestimonialsAutoScroll);
+      container.addEventListener('mouseleave', startTestimonialsAutoScroll);
+      container.addEventListener('touchstart', clearTestimonialsAutoScroll, {passive:true});
+      container.addEventListener('touchend', startTestimonialsAutoScroll, {passive:true});
+    }
     console.log("Testimonials carousel initialized successfully");
   };
 
@@ -224,14 +255,23 @@ let resizeTimeout;
 window.addEventListener('resize', () => {
   if (testimonialsCarousel && window.currentTestimonials) {
     clearTimeout(resizeTimeout);
+    
+    const testimonialsSection = document.getElementById("testimonials");
+    if (testimonialsSection) {
+      testimonialsSection.classList.add('resizing');
+    }
+    
     resizeTimeout = setTimeout(() => {
-      const testimonialsSection = document.getElementById("testimonials");
       if (testimonialsSection && window.currentTestimonials) {
         testimonialsSection.innerHTML = createTestimonialsCarousel(window.currentTestimonials);
         initTestimonialsCarousel();
         if (window.languageManager) {
           window.languageManager.updateContent();
         }
+        
+        setTimeout(() => {
+          testimonialsSection.classList.remove('resizing');
+        }, 50);
       }
     }, 250);
   }
