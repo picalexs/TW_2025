@@ -148,7 +148,6 @@ function createPetCard(pet) {
     } catch (err) {
       console.error('Error updating favorite:', err);
       if (err.message && err.message.includes('already exists')) {
-        // If favorite already exists, just update the UI
         heartBtn.classList.add('favorited');
         heartIcon.classList.add('favorited');
         pet.isFavorite = true;
@@ -210,8 +209,19 @@ export function filterPets() {
   const goodWithKids = document.getElementById('kids-filter')?.value;
   const goodWithPets = document.getElementById('pets-filter')?.value;
   const energyLevel = document.getElementById('energy-filter')?.value;
+  const tagSearch = document.getElementById('tag-search')?.value.toLowerCase();
+  const adoptionStatus = document.getElementById('adoption-status-filter')?.value;
   
   return allPets.filter(pet => {
+    if (adoptionStatus) {
+      if (pet.adoptionStatus?.toLowerCase() !== adoptionStatus.toLowerCase()) return false;
+    } else {
+      const statusFilter = document.getElementById('adoption-status-filter');
+      if (!statusFilter || statusFilter.value === 'available') {
+        if (pet.adoptionStatus?.toLowerCase() !== 'available') return false;
+      }
+    }
+    
     if (species && pet.species && pet.species.toLowerCase() !== species.toLowerCase()) return false;
     
     if (age) {
@@ -248,6 +258,20 @@ export function filterPets() {
       const hasEnergyLevel = pet.description.toLowerCase().includes(energyLevel.toLowerCase());
       if (!hasEnergyLevel) return false;
     }
+
+    if (tagSearch) {
+      const petTags = Array.isArray(pet.tags) ? pet.tags : [];
+      console.log(`Searching for tag "${tagSearch}" in pet "${pet.name}":`, petTags);
+      const hasMatchingTag = petTags.some(tag => {
+        const tagName = typeof tag === 'object' ? (tag.name || tag.NAME || '') : (tag || '');
+        const matches = tagName.toLowerCase().includes(tagSearch);
+        console.log(`  Tag "${tagName}" matches: ${matches}`);
+        return matches;
+      });
+      console.log(`  Has matching tag: ${hasMatchingTag}`);
+      if (!hasMatchingTag) return false;
+    }
+    
     return true;
   });
 }
@@ -323,14 +347,44 @@ export function initializeFilterButtons() {
   const resetBtn = document.getElementById('reset-filters');
   
   toggleAddPetButton();
-    if (applyBtn) {
+  
+  const nameSearchInput = document.getElementById('name-search');
+  const tagSearchInput = document.getElementById('tag-search');
+  const adoptionStatusFilter = document.getElementById('adoption-status-filter');
+  
+  if (nameSearchInput) {
+    nameSearchInput.addEventListener('input', async () => {
+      const filteredPets = filterPets();
+      const sortedPets = sortPets(filteredPets);
+      await renderPets(sortedPets);
+    });
+  }
+  
+  if (tagSearchInput) {
+    tagSearchInput.addEventListener('input', async () => {
+      const filteredPets = filterPets();
+      const sortedPets = sortPets(filteredPets);
+      await renderPets(sortedPets);
+    });
+  }
+  
+  if (adoptionStatusFilter) {
+    adoptionStatusFilter.addEventListener('change', async () => {
+      const filteredPets = filterPets();
+      const sortedPets = sortPets(filteredPets);
+      await renderPets(sortedPets);
+    });
+  }
+  
+  if (applyBtn) {
     applyBtn.addEventListener('click', async () => {
       const filteredPets = filterPets();
       const sortedPets = sortPets(filteredPets);
       await renderPets(sortedPets);
     });
   }
-    if (resetBtn) {
+    
+  if (resetBtn) {
     resetBtn.addEventListener('click', async () => {
       document.querySelectorAll('.filter-select').forEach(select => {
         select.selectedIndex = 0;
@@ -340,7 +394,14 @@ export function initializeFilterButtons() {
         input.value = '';
       });
       
-      await renderPets(allPets);
+      const adoptionStatusFilter = document.getElementById('adoption-status-filter');
+      if (adoptionStatusFilter) {
+        adoptionStatusFilter.value = 'available';
+      }
+      
+      const filteredPets = filterPets();
+      const sortedPets = sortPets(filteredPets);
+      await renderPets(sortedPets);
     });
   }
   

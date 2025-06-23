@@ -329,6 +329,13 @@ function createTestimonialHTML(testimonial) {
   });
 }
 
+function getMaxHomePets() {
+  if (window.innerWidth <= 768) {
+    return 5;
+  }
+  return 12;
+}
+
 async function loadPets() {
   const petsGrid = document.getElementById("pets-grid");
   if (!petsGrid) {
@@ -341,7 +348,11 @@ async function loadPets() {
       console.log("Fetching pets data from API service...");
       const pets = await fetchPets();
       if (pets && pets.length > 0) {
-        renderPets(pets, "pets-grid");
+        const availablePets = pets.filter(pet => 
+          pet.adoptionStatus?.toLowerCase() === 'available'
+        );
+        const maxPets = getMaxHomePets();
+        renderPets(pets.slice(0, maxPets), "pets-grid");
       } else {
         console.log("No pets received, retrying in 5 seconds...");
         setTimeout(() => loadPetsWithRetry(), 5000);
