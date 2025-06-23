@@ -78,7 +78,7 @@
     <div class="meta-info">
       <p><strong>Project:</strong> Pet Adoption Center</p>
       <p><strong>Version:</strong> 1.0</p>
-      <p><strong>Authors:</strong> Student Development Team (Web Technologies Seminar)</p>
+      <p><strong>Authors:</strong> Bostan Georgiana | Picioroaga Alexandru - 2A2 (Web Technologies Seminar)</p>
       <p><strong>Date:</strong> June 23, 2025</p>
     </div>
 
@@ -98,7 +98,7 @@
             <td>2025-06-23</td>
             <td>1.0</td>
             <td>Initial version of the SRS document.</td>
-            <td>Student Development Team</td>
+            <td>Bostan Georgiana | Picioroaga Alexandru - 2A2</td>
           </tr>
         </tbody>
       </table>
@@ -211,8 +211,6 @@
               sections, provide breathing room, and create a pleasant, uncluttered visual experience.</li>
             <li><strong>Responsiveness:</strong> The layout and styles are optimized for both desktop and mobile, with
               media queries for font and spacing, ensuring a consistent experience on any screen.</li>
-            <li><strong>Visual Consistency:</strong> All components (ToC, meta-info, tables, code) use the same modern
-              style for a unified and professional visual identity.</li>
           </ul>
         </ol>
         <ol>
@@ -232,8 +230,7 @@
             <li><strong>Performance:</strong> Native JavaScript is lightweight and fast, with no dependency overhead,
               which helps the application load quickly and run efficiently on all devices.</li>
             <li><strong>Accessibility & Standards:</strong> JavaScript is used to enhance, not replace, semantic HTML.
-              All dynamic features are implemented with accessibility in mind, ensuring keyboard navigation and ARIA
-              support where needed.</li>
+              All dynamic features are implemented with accessibility in mind, ensuring keyboard navigation.</li>
           </ul>
         </ol>
       </article>
@@ -311,7 +308,7 @@
         <h3>2.4 Operating Environment</h3>
         <dl>
           <dt>Backend</dt>
-          <dd>Node.js (custom Express-like router), running on a server (e.g., <code>localhost:8080</code>).</dd>
+          <dd>Node.js running on a server (e.g., <code>localhost:8080</code>).</dd>
           <dt>Frontend</dt>
           <dd>HTML, CSS, JavaScript (without modern JS frameworks).</dd>
           <dt>Database</dt>
@@ -333,7 +330,7 @@
             native technologies.</li>
           <li><strong>Web Services-Based Architecture:</strong> All application functionalities will be exposed through
             API-type services. Their invocation by the client interface will be done asynchronously, using technologies
-            from the Ajax suite (<code>XMLHttpRequest</code> or <code>fetch()</code> in JavaScript).</li>
+            from the Ajax suite (<code> HttpRequest</code> or <code>fetch()</code> in JavaScript).</li>
           <li><strong>Valid HTML5/CSS3 Interface:</strong> The HTML code will be written according to W3C standards for
             HTML5. The CSS will follow best practices.</li>
           <li><strong>Open License:</strong> Only technologies, languages, and platforms that adopt open licenses will
@@ -409,7 +406,7 @@
           client and server hardware.</p>
         <ul>
           <li><strong>Client:</strong> A modern web browser on any desktop or mobile device.</li>
-          <li><strong>Server:</strong> A standard server or cloud VM capable of running Node.js and an Oracle DB client.
+          <li><strong>Server:</strong> A standard server capable of running Node.js and an Oracle DB client.
           </li>
         </ul>
       </article>
@@ -534,8 +531,6 @@
       <article id="srs-5-1">
         <h3>5.1 Performance Requirements</h3>
         <ul>
-          <li>The system must support at least 50 concurrent users without significant degradation in response time
-            (target: &lt;1s for standard queries, &lt;3s for complex reports).</li>
           <li>The backend shall establish and manage a connection pool to the Oracle database for efficient query
             execution.</li>
           <li>The frontend must load and render the main user interface in under 2 seconds on a standard broadband
@@ -550,8 +545,6 @@
           <li>The application must prevent data loss by using transactions for critical database operations (e.g., user
             registration, pet adoption).</li>
           <li>Only authorized users can perform destructive actions (e.g., deleting pets or users).</li>
-          <li>The system must log all errors and critical events for auditing and recovery purposes.</li>
-          <li>File uploads must be validated to prevent the storage of malicious content.</li>
         </ul>
       </article>
 
@@ -586,10 +579,7 @@
             environment.</dd>
           <dt>Usability</dt>
           <dd>The UI is designed to be intuitive, with clear navigation, user feedback, and accessibility features
-            (ARIA, keyboard navigation).</dd>
-          <dt>Testability</dt>
-          <dd>The system's modular design supports unit and integration testing for both backend and frontend logic.
-          </dd>
+            (keyboard navigation).</dd>
           <dt>Interoperability</dt>
           <dd>The portable widget can be embedded on external sites and communicates via a standard HTTP API.</dd>
         </dl>
