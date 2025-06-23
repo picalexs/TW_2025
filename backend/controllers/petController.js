@@ -167,6 +167,7 @@ class PetController {
       const outputPath = path.join(mediaDir, filename);
 
       try {
+        const mimetype = file.mimetype || '';
         const processPromise = ImageProcessor.processAndSaveFile(file, outputPath, {
           type: isProfile ? 'profilePicture' : 'petMedia'
         });
@@ -177,12 +178,16 @@ class PetController {
 
         const result = await Promise.race([processPromise, timeoutPromise]);
 
+        if (!result || !result.path) {
+          throw new Error('Image processor did not return a valid path');
+        }
+
         const relativePath = `/server/animal/${petId}/${path.basename(result.path)}`;
 
         return {
           success: true,
           data: {
-            type: file.mimetype.startsWith('image') ? 'image' : 'video',
+            type: mimetype.startsWith('image') ? 'image' : (mimetype.startsWith('video') ? 'video' : 'unknown'),
             path: relativePath,
             isProfile: isProfile,
             originalSize: result.originalSize,
@@ -193,25 +198,21 @@ class PetController {
 
       } catch (error) {
         console.error(`Error processing file ${filename}:`, error);
-        
-        const ext = path.extname(file.originalname) || (file.mimetype.includes('image') ? '.jpg' : '.mp4');
+        const ext = (file.originalname && path.extname(file.originalname)) || (file.mimetype && file.mimetype.includes('image') ? '.jpg' : (file.mimetype && file.mimetype.includes('video') ? '.mp4' : '.bin'));
         const fallbackPath = path.join(mediaDir, `${filename}${ext}`);
-        
         try {
           await fs.writeFile(fallbackPath, file.buffer);
           const relativePath = `/server/animal/${petId}/${filename}${ext}`;
-          
           return {
             success: true,
             data: {
-              type: file.mimetype.startsWith('image') ? 'image' : 'video',
+              type: (file.mimetype && file.mimetype.startsWith('image')) ? 'image' : ((file.mimetype && file.mimetype.startsWith('video')) ? 'video' : 'unknown'),
               path: relativePath,
               isProfile: isProfile,
               processed: false,
               error: error.message
             }
           };
-          
         } catch (fallbackError) {
           console.error(`Failed to save even original file:`, fallbackError);
           return {

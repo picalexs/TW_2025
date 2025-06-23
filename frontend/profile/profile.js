@@ -19,15 +19,6 @@ class ProfilePage {
     this.currentUserId = null;
     this.currentAvailablePets = null;
     this.originalReviewsData = null;
-    this.currentFilters = {
-      sortBy: 'date-desc',
-      minRating: 0,
-      recommendation: 'all',
-      animalType: 'all',
-      communicationRating: 0,
-      petConditionRating: 0,
-      processRating: 0
-    };
     
     window.currentProfilePage = this;
     
@@ -145,7 +136,7 @@ class ProfilePage {
         ownerReviewsData.reviews.length > 0
       ) {
         this.originalReviewsData = ownerReviewsData;
-        this.applyFiltersAndRender();
+        this.renderReviewsOnly();
       } else {
         this.renderNoReviews(reviewsContainer);
       }
@@ -153,6 +144,26 @@ class ProfilePage {
       console.error("Error loading owner reviews:", error);
       this.renderNoReviews(document.getElementById("reviews-container"));
     }
+  }
+
+  renderReviewsOnly() {
+    if (!this.originalReviewsData || !this.originalReviewsData.reviews) {
+      return;
+    }
+    const reviews = this.originalReviewsData.reviews;
+    const reviewsContainer = document.getElementById("reviews-container");
+    const reviewsHTML = reviews
+      .map((review) => this.createOwnerReviewHTML(review))
+      .join("");
+    const statsHTML = this.createReviewStatsHTML(
+      this.originalReviewsData.statistics
+    );
+    reviewsContainer.innerHTML = `
+      ${statsHTML}
+      <div class="reviews-list">
+        ${reviewsHTML}
+      </div>
+    `;
   }
 
   renderNoReviews(container) {
@@ -778,8 +789,6 @@ class ProfilePage {
 
     this.initStatItemScrolling();
     
-    this.initReviewsFilter();
-
     const matchingTestBtn = document.getElementById("matching-test-btn");
     if (matchingTestBtn) {
       matchingTestBtn.addEventListener("click", () => {
@@ -982,7 +991,8 @@ class ProfilePage {
       if (btnText) {
         btnText.style.opacity = "1";
       }
-    }  }
+    }  
+  }
 
   async handleDeleteProfile() {
     const confirmed = confirm('Are you sure you want to delete your profile? This action cannot be undone.');
@@ -1009,7 +1019,8 @@ class ProfilePage {
       this.showErrorNotification(`Error deleting profile: ${error.message}`);
     }
   }
-    updateProfileActions(user) {
+
+  updateProfileActions(user) {
     const contactBtn = document.getElementById("contact-user-btn");
     const editBtn = document.getElementById("edit-profile-btn");
     const deleteBtn = document.getElementById("delete-profile-btn");
@@ -1075,6 +1086,7 @@ class ProfilePage {
     }
     errorState.style.display = "flex";
   }
+
   initStatItemScrolling() {
     const statItems = document.querySelectorAll('.stat-item[data-scroll-target]');
     
@@ -1102,216 +1114,7 @@ class ProfilePage {
         block: 'start'
       });
     }
-  }  applyFiltersAndRender() {
-    if (!this.originalReviewsData || !this.originalReviewsData.reviews) {
-      return;
-    }
-
-    let filteredReviews = [...this.originalReviewsData.reviews];
-    filteredReviews = this.filterReviews(filteredReviews);
-    filteredReviews = this.sortReviews(filteredReviews);
-    const reviewsContainer = document.getElementById("reviews-container");
-    const reviewsHTML = filteredReviews
-      .map((review) => this.createOwnerReviewHTML(review))
-      .join("");
-    const statsHTML = this.createReviewStatsHTML(
-      this.originalReviewsData.statistics
-    );
-
-    const totalReviews = this.originalReviewsData.reviews.length;
-    const filteredCount = filteredReviews.length;
-    let filterResultsInfo = '';
-    
-    if (filteredCount !== totalReviews) {
-      filterResultsInfo = `
-        <div class="filter-results-info">
-          <p>Showing ${filteredCount} of ${totalReviews} reviews</p>
-        </div>
-      `;
-    }
-
-    reviewsContainer.innerHTML = `
-      ${statsHTML}
-      ${filterResultsInfo}
-      <div class="reviews-list">
-        ${reviewsHTML}
-      </div>
-    `;
-
-    this.updateActiveFiltersIndicator();
-  }
-
-  filterReviews(reviews) {
-    return reviews.filter(review => {
-      if (this.currentFilters.minRating > 0 && (review.rating || 0) < this.currentFilters.minRating) {
-        return false;
-      }
-
-      if (this.currentFilters.recommendation === 'recommended' && !review.would_recommend) {
-        return false;
-      }
-      if (this.currentFilters.recommendation === 'not-recommended' && review.would_recommend) {
-        return false;
-      }
-
-      if (this.currentFilters.animalType !== 'all') {
-        const animalSpecies = review.animal?.species?.toLowerCase() || 'unknown';
-        if (this.currentFilters.animalType === 'other') {
-          if (animalSpecies === 'dog' || animalSpecies === 'cat') {
-            return false;
-          }
-        } else if (animalSpecies !== this.currentFilters.animalType) {
-          return false;
-        }
-      }
-
-      if (this.currentFilters.communicationRating > 0 && 
-          (review.communication_rating || 0) < this.currentFilters.communicationRating) {
-        return false;
-      }
-      if (this.currentFilters.petConditionRating > 0 && 
-          (review.pet_condition_rating || 0) < this.currentFilters.petConditionRating) {
-        return false;
-      }
-      if (this.currentFilters.processRating > 0 && 
-          (review.process_rating || 0) < this.currentFilters.processRating) {
-        return false;
-      }
-
-      return true;
-    });
-  }
-
-  sortReviews(reviews) {
-    return reviews.sort((a, b) => {
-      switch (this.currentFilters.sortBy) {
-        case 'date-desc':
-          return new Date(b.created_at || 0) - new Date(a.created_at || 0);
-        case 'date-asc':
-          return new Date(a.created_at || 0) - new Date(b.created_at || 0);
-        case 'rating-desc':
-          return (b.rating || 0) - (a.rating || 0);
-        case 'rating-asc':
-          return (a.rating || 0) - (b.rating || 0);
-        default:
-          return 0;
-      }
-    });
-  }
-
-  initReviewsFilter() {
-    const filterBtn = document.getElementById('filter-reviews-btn');
-    const filterModal = document.getElementById('reviews-filter-modal');
-    const filterForm = document.getElementById('reviews-filter-form');
-    const resetBtn = document.getElementById('reset-filters-btn');
-    const closeButtons = filterModal ? filterModal.querySelectorAll('.modal-close') : [];
-
-    if (filterBtn) {
-      filterBtn.addEventListener('click', () => {
-        this.showFilterModal();
-      });
-    }
-
-    closeButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        this.hideFilterModal();
-      });
-    });
-
-    if (filterModal) {
-      filterModal.addEventListener('click', (e) => {
-        if (e.target === filterModal) {
-          this.hideFilterModal();
-        }
-      });
-    }
-
-    if (filterForm) {
-      filterForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        this.applyFilters();
-      });
-    }
-
-    if (resetBtn) {
-      resetBtn.addEventListener('click', () => {
-        this.resetFilters();
-      });
-    }
-  }
-
-  showFilterModal() {
-    const modal = document.getElementById('reviews-filter-modal');
-    if (modal) {
-      this.populateFilterForm();
-      modal.style.display = 'flex';
-      document.body.style.overflow = 'hidden';
-    }
-  }
-
-  hideFilterModal() {
-    const modal = document.getElementById('reviews-filter-modal');
-    if (modal) {
-      modal.style.display = 'none';
-      document.body.style.overflow = 'auto';
-    }
-  }
-
-  populateFilterForm() {
-    document.getElementById('sort-by').value = this.currentFilters.sortBy;
-    document.getElementById('min-rating').value = this.currentFilters.minRating;
-    document.getElementById('recommendation-filter').value = this.currentFilters.recommendation;
-    document.getElementById('animal-type-filter').value = this.currentFilters.animalType;
-    document.getElementById('communication-rating').value = this.currentFilters.communicationRating;
-    document.getElementById('pet-condition-rating').value = this.currentFilters.petConditionRating;
-    document.getElementById('process-rating').value = this.currentFilters.processRating;
-  }
-  applyFilters() {
-    this.currentFilters.sortBy = document.getElementById('sort-by').value;
-    this.currentFilters.minRating = parseInt(document.getElementById('min-rating').value);
-    this.currentFilters.recommendation = document.getElementById('recommendation-filter').value;
-    this.currentFilters.animalType = document.getElementById('animal-type-filter').value;
-    this.currentFilters.communicationRating = parseInt(document.getElementById('communication-rating').value);
-    this.currentFilters.petConditionRating = parseInt(document.getElementById('pet-condition-rating').value);
-    this.currentFilters.processRating = parseInt(document.getElementById('process-rating').value);
-
-    this.applyFiltersAndRender();
-    this.updateActiveFiltersIndicator();
-    this.hideFilterModal();
-  }
-  resetFilters() {
-    this.currentFilters = {
-      sortBy: 'date-desc',
-      minRating: 0,
-      recommendation: 'all',
-      animalType: 'all',
-      communicationRating: 0,
-      petConditionRating: 0,
-      processRating: 0
-    };
-
-    this.populateFilterForm();
-    this.applyFiltersAndRender();
-    this.updateActiveFiltersIndicator();
-  }
-
-  updateActiveFiltersIndicator() {
-    const indicator = document.getElementById('active-filters-indicator');
-    if (!indicator) return;
-
-    const hasActiveFilters = 
-      this.currentFilters.sortBy !== 'date-desc' ||
-      this.currentFilters.minRating > 0 ||
-      this.currentFilters.recommendation !== 'all' ||
-      this.currentFilters.animalType !== 'all' ||
-      this.currentFilters.communicationRating > 0 ||
-      this.currentFilters.petConditionRating > 0 ||
-      this.currentFilters.processRating > 0;
-
-    indicator.style.display = hasActiveFilters ? 'inline' : 'none';  
-  }
-  petsCarousel = null;
-  
+  }  
 }
 
 document.addEventListener("DOMContentLoaded", () => {

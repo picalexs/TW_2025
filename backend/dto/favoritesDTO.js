@@ -1,5 +1,6 @@
 const abstractDTO = require("./abstractDTO");
 const oracledb = require("oracledb");
+const validator = require("validator");
 
 class FavoritesDTO extends abstractDTO {
   constructor() {
@@ -77,8 +78,10 @@ class FavoritesDTO extends abstractDTO {
 
   async add(userId, animalId) {
     try {
+      const safeUserId = typeof userId === 'string' ? validator.escape(userId) : userId;
+      const safeAnimalId = typeof animalId === 'string' ? validator.escape(animalId) : animalId;
       const sql = `INSERT INTO favorites (user_id, animal_id) VALUES (:userId, :animalId)`;
-      await this.executeCustomQuery(sql, [userId, animalId], { autoCommit: true });
+      await this.executeCustomQuery(sql, [safeUserId, safeAnimalId], { autoCommit: true });
       return { success: true };
     } catch (error) {
       if (error.errorNum === 1) {

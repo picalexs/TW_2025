@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const oracledb = require("oracledb");
 const { executeQuery } = require("../db/dbConnection");
 const ImagePathHandler = require("../utils/imagePathHandler");
+const validator = require("validator");
 
 class userDTO extends abstractDTO {
   constructor() {
@@ -30,7 +31,11 @@ class userDTO extends abstractDTO {
 
   async create(connection, userData) {
     try {
-      const { username, password_hash, email, email_token, token_expires } = userData;
+      const username = validator.escape(userData.username || "");
+      const password_hash = userData.password_hash;
+      const email = validator.normalizeEmail(userData.email || "");
+      const email_token = userData.email_token ? validator.escape(userData.email_token) : null;
+      const token_expires = userData.token_expires;
 
       if (!username || !password_hash || !email) {
         const error = new Error(
@@ -266,22 +271,25 @@ class userDTO extends abstractDTO {
         return null;
     }async createGoogleUser(connection, userData) {
         try {
-            const { username, email, first_name, last_name, profile_picture, auth_provider } = userData;
+            const username = validator.escape(userData.username || "");
+            const email = validator.normalizeEmail(userData.email || "");
+            const first_name = userData.first_name ? validator.escape(userData.first_name) : null;
+            const last_name = userData.last_name ? validator.escape(userData.last_name) : null;
+            const profile_picture = userData.profile_picture ? validator.escape(userData.profile_picture) : null;
+            const auth_provider = userData.auth_provider ? validator.escape(userData.auth_provider) : 'google';
 
             const defaultPasswordHash = await bcrypt.hash('google_auth_user', 10);
-
             const sql = `INSERT INTO users (username, email, is_verified, first_name, last_name, profile_picture, role, password_hash, auth_provider)
                          VALUES (:username, :email, 1, :first_name, :last_name, :profile_picture, :role, :password_hash, :auth_provider)`;
-            
-            const binds = { 
-                username, 
-                email, 
-                first_name, 
-                last_name, 
-                profile_picture, 
+            const binds = {
+                username,
+                email,
+                first_name,
+                last_name,
+                profile_picture,
                 role: 'user',
                 password_hash: defaultPasswordHash,
-                auth_provider: auth_provider || 'google'
+                auth_provider
             };
             
             const options = { autoCommit: true };
@@ -326,31 +334,31 @@ class userDTO extends abstractDTO {
 
       if (userData.first_name !== undefined) {
         updates.push("first_name = :first_name");
-        binds.first_name = userData.first_name;
+        binds.first_name = validator.escape(userData.first_name);
       }
       if (userData.last_name !== undefined) {
         updates.push("last_name = :last_name");
-        binds.last_name = userData.last_name;
+        binds.last_name = validator.escape(userData.last_name);
       }
       if (userData.username !== undefined) {
         updates.push("username = :username");
-        binds.username = userData.username;
+        binds.username = validator.escape(userData.username);
       }
       if (userData.email !== undefined) {
         updates.push("email = :email");
-        binds.email = userData.email;
+        binds.email = validator.normalizeEmail(userData.email);
       }
       if (userData.phone_number !== undefined) {
         updates.push("phone = :phone_number");
-        binds.phone_number = userData.phone_number;
+        binds.phone_number = validator.escape(userData.phone_number);
       }
       if (userData.role !== undefined) {
         updates.push("role = :role");
-        binds.role = userData.role;
+        binds.role = validator.escape(userData.role);
       }
       if (userData.profile_picture !== undefined) {
         updates.push("profile_picture = :profile_picture");
-        binds.profile_picture = userData.profile_picture;
+        binds.profile_picture = validator.escape(userData.profile_picture);
       }
 
       if (updates.length === 0) {

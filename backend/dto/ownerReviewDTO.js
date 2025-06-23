@@ -2,6 +2,7 @@ const AbstractDTO = require('./abstractDTO');
 const ImagePathHandler = require("../utils/imagePathHandler");
 const { executeQuery } = require('../db/dbConnection');
 const oracledb = require('oracledb');
+const validator = require('validator');
 
 class OwnerReviewDTO extends AbstractDTO {
     constructor() {
@@ -70,12 +71,14 @@ class OwnerReviewDTO extends AbstractDTO {
                 RETURNING id INTO :id
             `;
 
+            const safeReviewText = review_text ? validator.escape(review_text) : null;
+
             const binds = {
                 reviewer_id,
                 reviewed_owner_id,
                 adoption_id,
                 rating,
-                review_text,
+                review_text: safeReviewText,
                 communication_rating,
                 pet_condition_rating,
                 process_rating,
@@ -336,26 +339,42 @@ class OwnerReviewDTO extends AbstractDTO {
         } = reviewData;
 
         try {
-            const query = `
-                UPDATE ${this.tableName} 
-                SET rating = :rating, review_text = :review_text, communication_rating = :communication_rating, 
-                    pet_condition_rating = :pet_condition_rating, process_rating = :process_rating, would_recommend = :would_recommend,
-                    updated_at = CURRENT_TIMESTAMP
-                WHERE id = :id
-            `;
-
-            const binds = {
-                rating,
-                review_text,
-                communication_rating,
-                pet_condition_rating,
-                process_rating,
-                would_recommend,
-                id
-            };
-
-            await executeQuery(query, binds, { autoCommit: true });
-            return await this.getById(id);
+            const updates = [];
+            const binds = { id };
+            if (rating !== undefined) {
+                updates.push("rating = :rating");
+                binds.rating = rating;
+            }
+            if (review_text !== undefined) {
+                updates.push("review_text = :review_text");
+                binds.review_text = validator.escape(review_text);
+            }
+            if (communication_rating !== undefined) {
+                updates.push("communication_rating = :communication_rating");
+                binds.communication_rating = communication_rating;
+            }
+            if (pet_condition_rating !== undefined) {
+                updates.push("pet_condition_rating = :pet_condition_rating");
+                binds.pet_condition_rating = pet_condition_rating;
+            }
+            if (process_rating !== undefined) {
+                updates.push("process_rating = :process_rating");
+                binds.process_rating = process_rating;
+            }
+            if (would_recommend !== undefined) {
+                updates.push("would_recommend = :would_recommend");
+                binds.would_recommend = would_recommend;
+            }
+            if (updates.length === 0) {
+                throw new Error("No fields to update");
+            }
+            updates.push("updated_at = CURRENT_TIMESTAMP");
+            const query = `UPDATE ${this.tableName} SET ${updates.join(", ")} WHERE id = :id`;
+            const result = await executeQuery(query, binds);
+            if (result.rowsAffected === 0) {
+                throw new Error("Review not found or not updated");
+            }
+            return { success: true, rowsAffected: result.rowsAffected };
         } catch (error) {
             console.error('Error in OwnerReviewDTO.update:', error);
             throw error;

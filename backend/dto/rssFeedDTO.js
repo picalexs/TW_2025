@@ -1,6 +1,7 @@
 const AbstractDTO = require('./abstractDTO');
 const { executeQuery } = require('../db/dbConnection');
 const oracledb = require('oracledb');
+const validator = require('validator');
 
 class RSSFeedDTO extends AbstractDTO {
     constructor() {
@@ -58,7 +59,10 @@ class RSSFeedDTO extends AbstractDTO {
 
         try {
             let query;
-            let params = {};            
+            let params = {};
+            const safeZone = zone ? validator.escape(zone) : undefined;
+            const safeBreed = breed ? validator.escape(breed) : undefined;
+            const safeSpecies = species ? validator.escape(species) : undefined;
             if (type === 'popular') {
                 query = `
                     SELECT 
@@ -77,17 +81,17 @@ class RSSFeedDTO extends AbstractDTO {
                     WHERE 1=1
                 `;
                 
-                if (zone) {
+                if (safeZone) {
                     query += ` AND UPPER(addr.city) LIKE UPPER(:zone)`;
-                    params.zone = `%${zone}%`;
+                    params.zone = `%${safeZone}%`;
                 }
-                if (breed) {
+                if (safeBreed) {
                     query += ` AND UPPER(a.breed) LIKE UPPER(:breed)`;
-                    params.breed = `%${breed}%`;
+                    params.breed = `%${safeBreed}%`;
                 }
-                if (species) {
+                if (safeSpecies) {
                     query += ` AND UPPER(a.species) = UPPER(:species)`;
-                    params.species = species;
+                    params.species = safeSpecies;
                 }
                 
                 query += ` ORDER BY POPULARITY_SCORE DESC`;
@@ -109,17 +113,17 @@ class RSSFeedDTO extends AbstractDTO {
                     WHERE 1=1
                 `;
                 
-                if (zone) {
+                if (safeZone) {
                     query += ` AND UPPER(addr.city) LIKE UPPER(:zone)`;
-                    params.zone = `%${zone}%`;
+                    params.zone = `%${safeZone}%`;
                 }
-                if (breed) {
+                if (safeBreed) {
                     query += ` AND UPPER(a.breed) LIKE UPPER(:breed)`;
-                    params.breed = `%${breed}%`;
+                    params.breed = `%${safeBreed}%`;
                 }
-                if (species) {
+                if (safeSpecies) {
                     query += ` AND UPPER(a.species) = UPPER(:species)`;
-                    params.species = species;
+                    params.species = safeSpecies;
                 }
                 query += ` ORDER BY a.created_at DESC`;
             }              

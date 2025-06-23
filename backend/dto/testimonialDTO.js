@@ -1,6 +1,7 @@
 const abstractDTO = require("./abstractDTO");
 const { executeQuery } = require('../db/dbConnection');
 const oracledb = require('oracledb');
+const validator = require('validator');
 
 class TestimonialDTO extends abstractDTO {
   constructor() {
@@ -124,6 +125,9 @@ class TestimonialDTO extends abstractDTO {
         throw error;
       }
 
+      const safeText = validator.escape(testimonial_text);
+      const safeLocation = location ? validator.escape(location) : null;
+
       const query = `
         INSERT INTO ${this.tableName} (user_id, testimonial_text, rating, location, created_at, updated_at)
         VALUES (:user_id, :testimonial_text, :rating, :location, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
@@ -132,9 +136,9 @@ class TestimonialDTO extends abstractDTO {
 
       const binds = {
         user_id,
-        testimonial_text,
+        testimonial_text: safeText,
         rating,
-        location,
+        location: safeLocation,
         id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER }
       };
 
@@ -162,7 +166,7 @@ class TestimonialDTO extends abstractDTO {
       }
       if (testimonialData.testimonial_text !== undefined) {
         updates.push("testimonial_text = :testimonial_text");
-        binds.testimonial_text = testimonialData.testimonial_text;
+        binds.testimonial_text = validator.escape(testimonialData.testimonial_text);
       }
       if (testimonialData.rating !== undefined) {
         updates.push("rating = :rating");
@@ -170,7 +174,7 @@ class TestimonialDTO extends abstractDTO {
       }
       if (testimonialData.location !== undefined) {
         updates.push("location = :location");
-        binds.location = testimonialData.location;
+        binds.location = validator.escape(testimonialData.location);
       }
 
       if (updates.length === 0) {

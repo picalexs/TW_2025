@@ -2,6 +2,7 @@ const abstractDTO = require("./abstractDTO");
 const oracledb = require("oracledb");
 const path = require("path");
 const { getConnection, executeQuery } = require("../db/dbConnection");
+const validator = require("validator");
 
 class petDTO extends abstractDTO {
   constructor() {
@@ -442,7 +443,22 @@ class petDTO extends abstractDTO {
         postalCode
       } = petData;
 
-      if (!name || !species) {
+      const safeName = name ? validator.escape(name) : null;
+      const safeSpecies = species ? validator.escape(species) : null;
+      const safeBreed = breed ? validator.escape(breed) : null;
+      const safeGender = gender ? validator.escape(gender) : null;
+      const safeSizeCategory = sizeCategory ? validator.escape(sizeCategory) : null;
+      const safeColor = color ? validator.escape(color) : null;
+      const safeHealthStatus = healthStatus ? validator.escape(healthStatus) : null;
+      const safeDescription = description ? validator.escape(description) : null;
+      const safeAdoptionStatus = adoptionStatus ? validator.escape(adoptionStatus) : null;
+      const safeRelationWithOthers = relationWithOthers ? validator.escape(relationWithOthers) : null;
+      const safeCity = city ? validator.escape(city) : null;
+      const safeCountry = country ? validator.escape(country) : null;
+      const safeAddress = address ? validator.escape(address) : null;
+      const safePostalCode = postalCode ? validator.escape(postalCode) : null;
+
+      if (!safeName || !safeSpecies) {
         throw Object.assign(
           new Error(
             "Missing required pet fields: name and species are mandatory"
@@ -452,12 +468,12 @@ class petDTO extends abstractDTO {
       }
 
       let addressId = null;
-      if (city && country) {
+      if (safeCity && safeCountry) {
         addressId = await this.createAddress({
-          street: address,
-          city,
-          country,
-          postalCode
+          street: safeAddress,
+          city: safeCity,
+          country: safeCountry,
+          postalCode: safePostalCode
         });
       }
 
@@ -498,19 +514,19 @@ class petDTO extends abstractDTO {
         )
         RETURNING id INTO :id`,
         {
-          name,
-          species,
-          breed,
+          name: safeName,
+          species: safeSpecies,
+          breed: safeBreed,
           age,
-          gender,
-          sizeCategory,
+          gender: safeGender,
+          sizeCategory: safeSizeCategory,
           weightKg,
-          color,
-          healthStatus,
-          description,
-          adoptionStatus,
+          color: safeColor,
+          healthStatus: safeHealthStatus,
+          description: safeDescription,
+          adoptionStatus: safeAdoptionStatus,
           adoptionFee,
-          relationWithOthers,
+          relationWithOthers: safeRelationWithOthers,
           addressId,
           shelterId,
           id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
@@ -608,9 +624,10 @@ class petDTO extends abstractDTO {
   async saveMedicalHistory(petId, medicalHistory) {
     try {
       for (const entry of medicalHistory) {
+        const safeDescription = entry.description ? validator.escape(entry.description) : null;
         await this.executeCustomQuery(
           `INSERT INTO medical_history (animal_id, description, record_date) VALUES (:petId, :description, :recordDate)`,
-          [petId, entry.description, entry.date || new Date()],
+          [petId, safeDescription, entry.date || new Date()],
           { autoCommit: true }
         );
       }
@@ -627,9 +644,12 @@ class petDTO extends abstractDTO {
   async saveCareResources(petId, careResources) {
     try {
       for (const resource of careResources) {
+        const safeType = resource.type ? validator.escape(resource.type) : null;
+        const safeTitle = resource.title ? validator.escape(resource.title) : null;
+        const safeContent = resource.content ? validator.escape(resource.content) : null;
         await this.executeCustomQuery(
           `INSERT INTO care_resources (animal_id, resource_type, title, content) VALUES (:petId, :resourceType, :title, :content)`,
-          [petId, resource.type, resource.title, resource.content],
+          [petId, safeType, safeTitle, safeContent],
           { autoCommit: true }
         );
       }
@@ -646,9 +666,11 @@ class petDTO extends abstractDTO {
   async saveCareSchedule(petId, careSchedule) {
     try {
       for (const schedule of careSchedule) {
+        const safeActivity = schedule.activity ? validator.escape(schedule.activity) : null;
+        const safeFrequency = schedule.frequency ? validator.escape(schedule.frequency) : null;
         await this.executeCustomQuery(
           `INSERT INTO care_schedule (animal_id, activity, hour, frequency) VALUES (:petId, :activity, :hour, :frequency)`,
-          [petId, schedule.activity, schedule.hour, schedule.frequency],
+          [petId, safeActivity, schedule.hour, safeFrequency],
           { autoCommit: true }
         );
       }
@@ -680,9 +702,10 @@ class petDTO extends abstractDTO {
 
   async createTag(tagName) {
     try {
+      const safeTagName = tagName ? validator.escape(tagName) : null;
       const existingResult = await this.executeCustomQuery(
         `SELECT id FROM tags WHERE LOWER(name) = LOWER(:tagName)`,
-        [tagName],
+        [safeTagName],
         { outFormat: oracledb.OUT_FORMAT_OBJECT }
       );
 
@@ -693,7 +716,7 @@ class petDTO extends abstractDTO {
       const result = await this.executeCustomQuery(
         `INSERT INTO tags (name) VALUES (:tagName) RETURNING id INTO :id`,
         {
-          tagName: tagName,
+          tagName: safeTagName,
           id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER }
         },
         { autoCommit: true }
@@ -713,23 +736,25 @@ class petDTO extends abstractDTO {
   async createAddress(addressData) {
     try {
       const { street, city, country, postalCode } = addressData;
-      
-      if (!city || !country) {
+      const safeStreet = street ? validator.escape(street) : null;
+      const safeCity = city ? validator.escape(city) : null;
+      const safeCountry = country ? validator.escape(country) : null;
+      const safePostalCode = postalCode ? validator.escape(postalCode) : null;
+      if (!safeCity || !safeCountry) {
         throw Object.assign(
           new Error("City and country are required for address"),
           { code: "VALIDATION_ERROR", status: 400 }
         );
       }
-
       const result = await this.executeCustomQuery(
         `INSERT INTO address (street, city, country, postal_code) 
          VALUES (:street, :city, :country, :postalCode) 
          RETURNING id INTO :id`,
         {
-          street: street || null,
-          city,
-          country,
-          postalCode: postalCode || null,
+          street: safeStreet,
+          city: safeCity,
+          country: safeCountry,
+          postalCode: safePostalCode,
           id: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER }
         },
         { autoCommit: true }
@@ -807,7 +832,8 @@ class petDTO extends abstractDTO {
       );
     } catch (error) {
       console.error('Error clearing care schedule:', error);
-      throw error;    }
+      throw error;    
+    }
   }
 
   async update(id, entityData) {
@@ -819,7 +845,6 @@ class petDTO extends abstractDTO {
         });
       }
       
-      // Check if pet exists
       const checkExists = await this.getById(id);
       if (!checkExists) {
         throw Object.assign(new Error(`Pet with id ${id} not found`), {
@@ -831,18 +856,15 @@ class petDTO extends abstractDTO {
       const updates = [];
       const binds = { id };
       let addressId = null;
-
       const addressFields = ['address', 'city', 'country', 'postalCode'];
       const hasAddressFields = addressFields.some(field => entityData[field] !== undefined);
-      
       if (hasAddressFields) {
         const addressData = {
-          street: entityData.address,
-          city: entityData.city,
-          country: entityData.country,
-          postalCode: entityData.postalCode
+          street: entityData.address ? validator.escape(entityData.address) : null,
+          city: entityData.city ? validator.escape(entityData.city) : null,
+          country: entityData.country ? validator.escape(entityData.country) : null,
+          postalCode: entityData.postalCode ? validator.escape(entityData.postalCode) : null
         };
-        
         if (addressData.city && addressData.country) {
           addressId = await this.createAddress(addressData);
           updates.push(`address_id = :addressId`);
@@ -870,11 +892,14 @@ class petDTO extends abstractDTO {
       Object.entries(entityData).forEach(([key, value]) => {
         if (value !== undefined && key !== 'id' && !addressFields.includes(key)) {
           const columnName = fieldMapping[key] || key;
+          if (typeof value === 'string') {
+            binds[key] = validator.escape(value);
+          } else {
+            binds[key] = value;
+          }
           updates.push(`${columnName} = :${key}`);
-          binds[key] = value;
         }
       });
-
       if (updates.length === 0) {
         throw Object.assign(new Error("No fields to update"), {
           code: "VALIDATION_ERROR",
@@ -883,7 +908,6 @@ class petDTO extends abstractDTO {
       }
 
       const query = `UPDATE animals SET ${updates.join(", ")} WHERE id = :id`;
-
       await this.executeCustomQuery(query, binds, { autoCommit: true });
       return this.getById(id);
     } catch (error) {

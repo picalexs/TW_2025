@@ -1,5 +1,6 @@
 const abstractDTO = require("./abstractDTO");
 const { executeQuery } = require("../db/dbConnection");
+const validator = require("validator");
 
 class AdminDTO extends abstractDTO {
   constructor() {
@@ -31,8 +32,10 @@ class AdminDTO extends abstractDTO {
 
   async getTableSchema(tableName) {
     try {
+      if (typeof tableName !== 'string') throw new Error('Invalid table name');
+      const safeTableName = validator.escape(tableName);
       const allowedTables = await this.getAvailableTables();
-      if (!allowedTables.includes(tableName.toUpperCase())) {
+      if (!allowedTables.includes(safeTableName.toUpperCase())) {
         throw new Error('Invalid table name');
       }
       const query = `
@@ -47,7 +50,7 @@ class AdminDTO extends abstractDTO {
         WHERE table_name = :tableName
         ORDER BY column_id
       `;
-      const result = await executeQuery(query, [tableName.toUpperCase()]);
+      const result = await executeQuery(query, [safeTableName.toUpperCase()]);
       return result.rows.map(row => ({
         columnName: row[0],
         dataType: row[1],
@@ -64,14 +67,15 @@ class AdminDTO extends abstractDTO {
 
   async getTableData(tableName, limit = null) {
     try {
+      if (typeof tableName !== 'string') throw new Error('Invalid table name');
+      const safeTableName = validator.escape(tableName);
       const allowedTables = await this.getAvailableTables();
-      const safeTableName = tableName.toUpperCase();
-      if (!allowedTables.includes(safeTableName)) {
+      if (!allowedTables.includes(safeTableName.toUpperCase())) {
         throw new Error('Invalid table name');
       }
       const schema = await this.getTableSchema(safeTableName);
       const columnNames = schema.map(col => col.columnName);
-      let query = `SELECT * FROM "${safeTableName}"`;
+      let query = `SELECT * FROM "${safeTableName.toUpperCase()}"`;
       let params = [];
       if (limit && limit > 0) {
         query += ` ORDER BY 1 FETCH FIRST :limit ROWS ONLY`;
@@ -79,7 +83,7 @@ class AdminDTO extends abstractDTO {
       }
       const result = await executeQuery(query, params);
       return {
-        tableName: safeTableName,
+        tableName: safeTableName.toUpperCase(),
         columns: columnNames,
         rows: result.rows,
         totalRows: result.rows.length
@@ -92,12 +96,13 @@ class AdminDTO extends abstractDTO {
 
   async getTableStats(tableName) {
     try {
+      if (typeof tableName !== 'string') throw new Error('Invalid table name');
+      const safeTableName = validator.escape(tableName);
       const allowedTables = await this.getAvailableTables();
-      const safeTableName = tableName.toUpperCase();
-      if (!allowedTables.includes(safeTableName)) {
+      if (!allowedTables.includes(safeTableName.toUpperCase())) {
         throw new Error('Invalid table name');
       }
-      const countQuery = `SELECT COUNT(*) FROM "${safeTableName}"`;
+      const countQuery = `SELECT COUNT(*) FROM "${safeTableName.toUpperCase()}"`;
       const countResult = await executeQuery(countQuery);
       const rowCount = countResult.rows[0][0];
       const sizeQuery = `
@@ -109,10 +114,10 @@ class AdminDTO extends abstractDTO {
         LEFT JOIN user_segments s ON t.table_name = s.segment_name
         WHERE t.table_name = :tableName
       `;
-      const sizeResult = await executeQuery(sizeQuery, [safeTableName]);
+      const sizeResult = await executeQuery(sizeQuery, [safeTableName.toUpperCase()]);
       const sizeInfo = sizeResult.rows[0] || [0, rowCount, null];
       return {
-        tableName: safeTableName,
+        tableName: safeTableName.toUpperCase(),
         rowCount: rowCount,
         sizeMB: sizeInfo[0] || 0,
         lastAnalyzed: sizeInfo[2]
