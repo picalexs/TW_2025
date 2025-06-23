@@ -184,6 +184,27 @@ class UserService {
     }
   }
 
+  async deleteProfile() {
+    try {
+      this._restoreAuthState();
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+        throw new Error('No user ID found');
+      }
+      
+      if (this.debug) {
+        console.log('Deleting profile for user ID:', userId);
+      }
+      
+      return await this.apiService.delete('/api/users/delete-profile');
+    } catch (error) {
+      if (this.debug) {
+        console.error('Profile delete error:', error);
+      }
+      throw error;
+    }
+  }
+
   isAuthenticated() {
     return !!localStorage.getItem('authToken');
   }

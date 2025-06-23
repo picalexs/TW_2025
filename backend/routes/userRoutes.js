@@ -125,6 +125,19 @@ async function handleUserRoutes(req, res) {
             });
         });
     }
+
+    if (trimmedPath === "api/users/delete-profile" && method === "delete") {
+        console.log('[UserRoutes] Handling /api/users/delete-profile DELETE request (Protected)');
+        await new Promise((resolve) => {
+            verifyToken(req, res, async (err) => {
+                if (err) return resolve(true);
+                await userController.deleteOwnProfile(req, res);
+                resolve(true);
+            });
+        });
+        return true;
+    }
+
     return false;
 }
 module.exports = handleUserRoutes;

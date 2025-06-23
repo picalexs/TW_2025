@@ -567,6 +567,26 @@ class UserController {
     }
   }
 
+  async deleteOwnProfile(req, res) {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        return sendResponse(res, 401, { success: false, message: "Unauthorized." });
+      }
+      
+      console.log(`[UserController] User ${userId} deleting own profile`);
+      const result = await userModel.delete(userId);
+      if (result) {
+        sendResponse(res, 200, { success: true, message: "Profile deleted successfully." });
+      } else {
+        sendResponse(res, 404, { success: false, message: "Profile not found." });
+      }
+    } catch (error) {
+      console.error(`Error deleting own profile:`, error);
+      sendResponse(res, 500, { success: false, message: "Internal server error." });
+    }
+  }
+
   async saveUserPreferenceTags(req, res) {
     try {
       const userId = req.user.id;

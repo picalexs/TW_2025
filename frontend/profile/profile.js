@@ -722,11 +722,14 @@ class ProfilePage {
     const contactBtn = document.getElementById("contact-user-btn");
     if (contactBtn) {
       contactBtn.addEventListener("click", () => this.showContactModal());
-    }
-
-    const editBtn = document.getElementById("edit-profile-btn");
+    }    const editBtn = document.getElementById("edit-profile-btn");
     if (editBtn) {
       editBtn.addEventListener("click", () => this.showEditProfileModal());
+    }
+
+    const deleteBtn = document.getElementById("delete-profile-btn");
+    if (deleteBtn) {
+      deleteBtn.addEventListener("click", () => this.handleDeleteProfile());
     }
 
     const modal = document.getElementById("contact-modal");
@@ -979,12 +982,37 @@ class ProfilePage {
       if (btnText) {
         btnText.style.opacity = "1";
       }
+    }  }
+
+  async handleDeleteProfile() {
+    const confirmed = confirm('Are you sure you want to delete your profile? This action cannot be undone.');
+    
+    if (!confirmed) {
+      return;
+    }
+    
+    try {
+      this.showInfoNotification('Deleting profile...');
+      
+      await this.userService.deleteProfile();
+      
+      this.userService.logout();
+      
+      this.showSuccessNotification('Profile deleted successfully. Redirecting to home page...');
+      
+      setTimeout(() => {
+        window.location.href = '../home/home.html';
+      }, 2000);
+      
+    } catch (error) {
+      console.error('Error deleting profile:', error);
+      this.showErrorNotification(`Error deleting profile: ${error.message}`);
     }
   }
-  
-  updateProfileActions(user) {
+    updateProfileActions(user) {
     const contactBtn = document.getElementById("contact-user-btn");
     const editBtn = document.getElementById("edit-profile-btn");
+    const deleteBtn = document.getElementById("delete-profile-btn");
     const matchingTestBtn = document.getElementById("matching-test-btn");
     
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
@@ -994,10 +1022,12 @@ class ProfilePage {
     
     if (isOwnProfile) {
       if (editBtn) editBtn.style.display = "inline-block";
+      if (deleteBtn) deleteBtn.style.display = "inline-block";
       if (contactBtn) contactBtn.style.display = "none";
       if (matchingTestBtn) matchingTestBtn.style.display = "inline-block";
     } else {
       if (editBtn) editBtn.style.display = "none";
+      if (deleteBtn) deleteBtn.style.display = "none";
       if (contactBtn) contactBtn.style.display = "inline-block";
       if (matchingTestBtn) matchingTestBtn.style.display = "none";
     }

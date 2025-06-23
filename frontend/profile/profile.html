@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title data-i18n="profilePageTitle" data-i18n-fallback="User Profile"></title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">      
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../global/global.min.css">
     <link rel="stylesheet" href="../global/pet-cards.css">
     <link rel="stylesheet" href="profile.min.css">
@@ -12,18 +12,18 @@
 
 <body>
     <div id="global-navbar">
-      <div class="navbar-skeleton">
-        <div class="skeleton-logo"></div>
-        <div class="skeleton-nav">
-          <div class="skeleton-nav-item"></div>
-          <div class="skeleton-nav-item"></div>
-          <div class="skeleton-nav-item"></div>
+        <div class="navbar-skeleton">
+            <div class="skeleton-logo"></div>
+            <div class="skeleton-nav">
+                <div class="skeleton-nav-item"></div>
+                <div class="skeleton-nav-item"></div>
+                <div class="skeleton-nav-item"></div>
+            </div>
+            <div class="skeleton-auth">
+                <div class="skeleton-auth-btn"></div>
+                <div class="skeleton-auth-btn"></div>
+            </div>
         </div>
-        <div class="skeleton-auth">
-          <div class="skeleton-auth-btn"></div>
-          <div class="skeleton-auth-btn"></div>
-        </div>
-      </div>
     </div>
 
     <main class="profile-container">
@@ -62,22 +62,26 @@
                     <div class="profile-basic-info">
                         <h1 id="user-name" class="profile-name"></h1>
                         <p id="username" class="username"></p>
-                        
-                        <div class="profile-stats-actions">                            
+
+                        <div class="profile-stats-actions">
                             <div class="profile-stats">
-                                <div class="stat-item" data-scroll-target="pets-section" role="button" tabindex="0" aria-label="Click to view available pets">
+                                <div class="stat-item" data-scroll-target="pets-section" role="button" tabindex="0"
+                                    aria-label="Click to view available pets">
                                     <span class="stat-number" id="adoption-count">0</span>
                                     <span class="stat-label" data-i18n="adoptions"
                                         data-i18n-fallback="Adoptions"></span>
                                 </div>
-                                <div class="stat-item" data-scroll-target="reviews-section" role="button" tabindex="0" aria-label="Click to view reviews and testimonials">
+                                <div class="stat-item" data-scroll-target="reviews-section" role="button" tabindex="0"
+                                    aria-label="Click to view reviews and testimonials">
                                     <span class="stat-number" id="pets-helped">0</span>
-                                    <span class="stat-label" data-i18n="petsHelped" data-i18n-fallback="Pets Helped"></span>
+                                    <span class="stat-label" data-i18n="petsHelped"
+                                        data-i18n-fallback="Pets Helped"></span>
                                 </div>
-                            </div>                            
+                            </div>
                             <div class="profile-actions">
                                 <button id="contact-user-btn" class="btn btn-primary" data-i18n="contactUser"
-                                    data-i18n-fallback="Contact User"></button>                                  <button id="delete-profile-btn" class="btn btn-outline-danger" data-i18n="deleteProfile"
+                                    data-i18n-fallback="Contact User"></button>
+                                <button id="delete-profile-btn" class="btn btn-outline-danger" data-i18n="deleteProfile"
                                     data-i18n-fallback="Delete Profile">
                                     <span class="delete-icon" aria-hidden="true" style="margin-right: 0.5em;">🗑️</span>
                                     Delete Profile
@@ -87,7 +91,8 @@
                                     <span class="edit-icon" aria-hidden="true" style="margin-right: 0.5em;">✏️</span>
                                     <span class="edit-label" style="display:none;">Edit Profile</span>
                                 </button>
-                                <button id="matching-test-btn" class="btn btn-outline-primary" style="display: none; margin-left: 0.5em;">
+                                <button id="matching-test-btn" class="btn btn-outline-primary"
+                                    style="display: none; margin-left: 0.5em;">
                                     <span class="edit-label" style="display:none;">Matching Test</span>
                                     Matching Test
                                 </button>
@@ -105,11 +110,12 @@
                             <p id="member-since" class="info-value"></p>
                         </div>
                     </div>
-                </div>                
+                </div>
                 <div class="detail-section" id="reviews-section">
                     <div class="section-header-with-filter">
-                        <h3 data-i18n="userReviews" data-i18n-fallback="Reviews & Testimonials"></h3>                        
-                        <button id="filter-reviews-btn" class="btn btn-primary filter-btn" data-i18n="filterReviews" data-i18n-fallback="Filter Reviews">
+                        <h3 data-i18n="userReviews" data-i18n-fallback="Reviews & Testimonials"></h3>
+                        <button id="filter-reviews-btn" class="btn btn-primary filter-btn" data-i18n="filterReviews"
+                            data-i18n-fallback="Filter Reviews">
                             <span class="filter-icon">⚙</span>
                             Filter
                             <span id="active-filters-indicator" class="filter-indicator" style="display: none;">●</span>
@@ -144,7 +150,8 @@
                     </div>
                     <div class="form-group">
                         <label for="contact-message" data-i18n="message" data-i18n-fallback="Message"></label>
-                        <textarea id="contact-message" rows="4" required placeholder="Enter your message" title="Message"></textarea>
+                        <textarea id="contact-message" rows="4" required placeholder="Enter your message"
+                            title="Message"></textarea>
                     </div>
                     <div class="form-actions">
                         <button type="button" class="btn btn-secondary modal-close" data-i18n="cancel"
@@ -153,7 +160,7 @@
                             data-i18n-fallback="Send Message"></button>
                     </div>
                 </form>
-            </div>        
+            </div>
         </div>
     </div>
 
@@ -167,11 +174,15 @@
             <div class="modal-body">
                 <form id="edit-profile-form">
                     <div class="form-row profile-image-row">
-                        <div class="form-group profile-image-upload" style="flex:1;align-items:center;justify-content:center;">
+                        <div class="form-group profile-image-upload"
+                            style="flex:1;align-items:center;justify-content:center;">
                             <label data-i18n="profilePicture" data-i18n-fallback="Profile Picture"></label>
-                            <img id="edit-profile-image-preview" src="" alt="Profile preview" class="profile-preview" style="width:120px;height:120px;border-radius:50%;object-fit:cover;margin-bottom:0.5em;display:block;margin-left:auto;margin-right:auto;">
-                            <input type="file" id="edit-profile-image" name="profile_picture" accept="image/*" style="display:none;">
-                            <label for="edit-profile-image" class="btn btn-outline-primary" style="margin-bottom:0.5em;">Change Photo</label>
+                            <img id="edit-profile-image-preview" src="" alt="Profile preview" class="profile-preview"
+                                style="width:120px;height:120px;border-radius:50%;object-fit:cover;margin-bottom:0.5em;display:block;margin-left:auto;margin-right:auto;">
+                            <input type="file" id="edit-profile-image" name="profile_picture" accept="image/*"
+                                style="display:none;">
+                            <label for="edit-profile-image" class="btn btn-outline-primary"
+                                style="margin-bottom:0.5em;">Change Photo</label>
                         </div>
                     </div>
                     <div class="form-row compact-fields">
@@ -203,7 +214,8 @@
                             <label data-i18n="role" data-i18n-fallback="Role"></label>
                             <select id="edit-role" name="role">
                                 <option value="user" data-i18n="userRole" data-i18n-fallback="User">User</option>
-                                <option value="shelter" data-i18n="shelterRole" data-i18n-fallback="Shelter">Shelter</option>
+                                <option value="shelter" data-i18n="shelterRole" data-i18n-fallback="Shelter">Shelter
+                                </option>
                             </select>
                         </div>
                     </div>
@@ -217,7 +229,7 @@
                         </button>
                     </div>
                 </form>
-            </div>        
+            </div>
         </div>
     </div>
 
@@ -227,22 +239,26 @@
             <div class="modal-header">
                 <h3 data-i18n="filterReviews" data-i18n-fallback="Filter Reviews"></h3>
                 <button class="modal-close">&times;</button>
-            </div>            
+            </div>
             <div class="modal-body">
-                <form id="reviews-filter-form">                    
+                <form id="reviews-filter-form">
                     <div class="filter-sections-grid">
                         <div class="filter-section">
                             <h4 data-i18n="sortBy" data-i18n-fallback="Sort By"></h4>
                             <div class="form-group">
                                 <label for="sort-by">Sort by</label>
                                 <select id="sort-by" class="form-select" title="Sort by">
-                                    <option value="date-desc" data-i18n="sortDateNewest" data-i18n-fallback="Date (Newest First)"></option>
-                                    <option value="date-asc" data-i18n="sortDateOldest" data-i18n-fallback="Date (Oldest First)"></option>
-                                    <option value="rating-desc" data-i18n="sortRatingHighest" data-i18n-fallback="Rating (Highest First)"></option>
-                                    <option value="rating-asc" data-i18n="sortRatingLowest" data-i18n-fallback="Rating (Lowest First)"></option>
+                                    <option value="date-desc" data-i18n="sortDateNewest"
+                                        data-i18n-fallback="Date (Newest First)"></option>
+                                    <option value="date-asc" data-i18n="sortDateOldest"
+                                        data-i18n-fallback="Date (Oldest First)"></option>
+                                    <option value="rating-desc" data-i18n="sortRatingHighest"
+                                        data-i18n-fallback="Rating (Highest First)"></option>
+                                    <option value="rating-asc" data-i18n="sortRatingLowest"
+                                        data-i18n-fallback="Rating (Lowest First)"></option>
                                 </select>
                             </div>
-                        </div>                        
+                        </div>
                         <div class="filter-section">
                             <h4 data-i18n="filterByRating" data-i18n-fallback="Filter by Rating"></h4>
                             <div class="form-group">
@@ -263,9 +279,12 @@
                             <div class="form-group">
                                 <label for="recommendation-filter">Recommendation</label>
                                 <select id="recommendation-filter" class="form-select" title="Recommendation">
-                                    <option value="all" data-i18n="allReviews" data-i18n-fallback="All Reviews"></option>
-                                    <option value="recommended" data-i18n="recommendedOnly" data-i18n-fallback="Recommended Only"></option>
-                                    <option value="not-recommended" data-i18n="notRecommendedOnly" data-i18n-fallback="Not Recommended Only"></option>
+                                    <option value="all" data-i18n="allReviews" data-i18n-fallback="All Reviews">
+                                    </option>
+                                    <option value="recommended" data-i18n="recommendedOnly"
+                                        data-i18n-fallback="Recommended Only"></option>
+                                    <option value="not-recommended" data-i18n="notRecommendedOnly"
+                                        data-i18n-fallback="Not Recommended Only"></option>
                                 </select>
                             </div>
                         </div>
@@ -275,86 +294,95 @@
                             <div class="form-group">
                                 <label for="animal-type-filter">Animal Type</label>
                                 <select id="animal-type-filter" class="form-select" title="Animal Type">
-                                    <option value="all" data-i18n="allAnimals" data-i18n-fallback="All Animals"></option>
+                                    <option value="all" data-i18n="allAnimals" data-i18n-fallback="All Animals">
+                                    </option>
                                     <option value="dog" data-i18n="dogsOnly" data-i18n-fallback="Dogs Only"></option>
                                     <option value="cat" data-i18n="catsOnly" data-i18n-fallback="Cats Only"></option>
-                                    <option value="other" data-i18n="otherAnimals" data-i18n-fallback="Other Animals"></option>
+                                    <option value="other" data-i18n="otherAnimals" data-i18n-fallback="Other Animals">
+                                    </option>
                                 </select>
                             </div>
                         </div>
 
-                    <div class="filter-section detailed-ratings-section">
-                        <h4 data-i18n="filterByDetailedRatings" data-i18n-fallback="Filter by Detailed Ratings"></h4>
-                        <div class="detailed-ratings-grid">
-                            <div class="form-group">
-                                <label for="communication-rating" data-i18n="minCommunicationRating" data-i18n-fallback="Communication"></label>
-                                <select id="communication-rating" class="form-select" title="Communication">
-                                    <option value="0" data-i18n="anyRating" data-i18n-fallback="Any"></option>
-                                    <option value="1">1★</option>
-                                    <option value="2">2★</option>
-                                    <option value="3">3★</option>
-                                    <option value="4">4★</option>
-                                    <option value="5">5★</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="pet-condition-rating" data-i18n="minPetConditionRating" data-i18n-fallback="Pet Condition"></label>
-                                <select id="pet-condition-rating" class="form-select" title="Pet Condition">
-                                    <option value="0" data-i18n="anyRating" data-i18n-fallback="Any"></option>
-                                    <option value="1">1★</option>
-                                    <option value="2">2★</option>
-                                    <option value="3">3★</option>
-                                    <option value="4">4★</option>
-                                    <option value="5">5★</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="process-rating" data-i18n="minProcessRating" data-i18n-fallback="Process"></label>
-                                <select id="process-rating" class="form-select" title="Process">
-                                    <option value="0" data-i18n="anyRating" data-i18n-fallback="Any"></option>
-                                    <option value="1">1★</option>
-                                    <option value="2">2★</option>
-                                    <option value="3">3★</option>
-                                    <option value="4">4★</option>
-                                    <option value="5">5★</option>
-                                </select>
+                        <div class="filter-section detailed-ratings-section">
+                            <h4 data-i18n="filterByDetailedRatings" data-i18n-fallback="Filter by Detailed Ratings">
+                            </h4>
+                            <div class="detailed-ratings-grid">
+                                <div class="form-group">
+                                    <label for="communication-rating" data-i18n="minCommunicationRating"
+                                        data-i18n-fallback="Communication"></label>
+                                    <select id="communication-rating" class="form-select" title="Communication">
+                                        <option value="0" data-i18n="anyRating" data-i18n-fallback="Any"></option>
+                                        <option value="1">1★</option>
+                                        <option value="2">2★</option>
+                                        <option value="3">3★</option>
+                                        <option value="4">4★</option>
+                                        <option value="5">5★</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="pet-condition-rating" data-i18n="minPetConditionRating"
+                                        data-i18n-fallback="Pet Condition"></label>
+                                    <select id="pet-condition-rating" class="form-select" title="Pet Condition">
+                                        <option value="0" data-i18n="anyRating" data-i18n-fallback="Any"></option>
+                                        <option value="1">1★</option>
+                                        <option value="2">2★</option>
+                                        <option value="3">3★</option>
+                                        <option value="4">4★</option>
+                                        <option value="5">5★</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="process-rating" data-i18n="minProcessRating"
+                                        data-i18n-fallback="Process"></label>
+                                    <select id="process-rating" class="form-select" title="Process">
+                                        <option value="0" data-i18n="anyRating" data-i18n-fallback="Any"></option>
+                                        <option value="1">1★</option>
+                                        <option value="2">2★</option>
+                                        <option value="3">3★</option>
+                                        <option value="4">4★</option>
+                                        <option value="5">5★</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    </div>                    
                     <div class="form-actions">
-                        <button type="button" id="reset-filters-btn" class="btn btn-outline-secondary" data-i18n="resetFilters" data-i18n-fallback="Reset Filters"></button>
-                        <button type="button" class="btn btn-outline-danger modal-close cancel-btn" data-i18n="cancel" data-i18n-fallback="Cancel"></button>
-                        <button type="submit" class="btn btn-primary" data-i18n="applyFilters" data-i18n-fallback="Apply Filters"></button>
+                        <button type="button" id="reset-filters-btn" class="btn btn-outline-secondary"
+                            data-i18n="resetFilters" data-i18n-fallback="Reset Filters"></button>
+                        <button type="button" class="btn btn-outline-danger modal-close cancel-btn" data-i18n="cancel"
+                            data-i18n-fallback="Cancel"></button>
+                        <button type="submit" class="btn btn-primary" data-i18n="applyFilters"
+                            data-i18n-fallback="Apply Filters"></button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    
-    <div id="global-footer"></div>      
+
+    <div id="global-footer"></div>
     <script src="../bundles/critical.min.js" defer></script>
     <script src="../bundles/utils.min.js" defer></script>
     <script type="module" src="../global/global.min.js"></script>
     <script type="module" src="../languages/language.min.js"></script>
-    <script type="module" src="profile.min.js"></script>
+    <script type="module" src="profile.js"></script>
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const fileInput = document.getElementById('edit-profile-image');
-        const previewImg = document.getElementById('edit-profile-image-preview');
-        if (fileInput && previewImg) {
-          fileInput.addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-              const reader = new FileReader();
-              reader.onload = function(ev) {
-                previewImg.src = ev.target.result;
-              };
-              reader.readAsDataURL(file);
+        document.addEventListener('DOMContentLoaded', function () {
+            const fileInput = document.getElementById('edit-profile-image');
+            const previewImg = document.getElementById('edit-profile-image-preview');
+            if (fileInput && previewImg) {
+                fileInput.addEventListener('change', function (e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = function (ev) {
+                            previewImg.src = ev.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
             }
-          });
-        }
-      });
+        });
     </script>
     <script src="../utils/clientImageProcessor.js"></script>
 </body>
