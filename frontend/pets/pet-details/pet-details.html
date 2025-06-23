@@ -4,16 +4,10 @@
     <meta charset="UTF-8">
     <title data-i18n="petDetailsPageTitle" data-i18n-fallback="Pet Details"></title>    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">      
-    <link rel="preload" href="../../global/global.min.css" as="style" onload="this.rel='stylesheet'">
-    <link rel="preload" href="../pets-page/pets-page.min.css" as="style" onload="this.rel='stylesheet'">
-    <link rel="preload" href="pet-details.min.css" as="style" onload="this.rel='stylesheet'">
-    <link rel="preload" href="https://unpkg.com/leaflet/dist/leaflet.css" as="style" onload="this.rel='stylesheet'">
-    <noscript>
-      <link rel="stylesheet" href="../../global/global.min.css" />
-      <link rel="stylesheet" href="../pets-page/pets-page.min.css" />
-      <link rel="stylesheet" href="pet-details.min.css" />
-      <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    </noscript>
+    <link rel="stylesheet" href="../../global/global.min.css">
+    <link rel="stylesheet" href="../pets-page/pets-page.min.css">
+    <link rel="stylesheet" href="pet-details.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
 </head>
 <body>
     <div id="global-navbar">
@@ -215,15 +209,15 @@
                 <form id="contact-form">
                     <div class="form-group">
                         <label data-i18n="yourName" data-i18n-fallback="Your Name:"></label>
-                        <input type="text" id="contact-name" required>
+                        <input type="text" id="contact-name" required placeholder="Your Name">
                     </div>
                     <div class="form-group">
                         <label data-i18n="yourEmail" data-i18n-fallback="Your Email:"></label>
-                        <input type="email" id="contact-email" required>
+                        <input type="email" id="contact-email" required placeholder="Your Email">
                     </div>
                     <div class="form-group">
                         <label data-i18n="message" data-i18n-fallback="Message:"></label>
-                        <textarea id="contact-message" rows="4" required></textarea>
+                        <textarea id="contact-message" rows="4" required placeholder="Message"></textarea>
                     </div>
                     <div class="form-actions">
                         <button type="button" class="btn btn-secondary modal-close" data-i18n="cancel" data-i18n-fallback="Cancel"></button>

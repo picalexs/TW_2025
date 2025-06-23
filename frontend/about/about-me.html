@@ -5,12 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SRS - Pet Adoption Center</title>
-  <link rel="preload" href="../global/global.min.css" as="style" onload="this.rel='stylesheet'">
-  <link rel="preload" href="about-me.css" as="style" onload="this.rel='stylesheet'">
-  <noscript>
-    <link rel="stylesheet" href="../global/global.min.css" />
-    <link rel="stylesheet" href="about-me.css" />
-  </noscript>
+  <link rel="stylesheet" href="../global/global.min.css" />
+  <link rel="stylesheet" href="about-me.css" />
 </head>
 
 <body>
@@ -26,17 +22,19 @@
         <li><a href="#diagrams">Diagrams</a></li>
       </ul>
       <ul>
-        <li><a href="#srs-1">Introduction</a></li>
-        <ul>
-          <li><a href="#srs-1-1">Purpose</a></li>
-          <li><a href="#srs-1-2">Document Conventions</a></li>
-          <li><a href="#srs-1-3">Intended Audience and Reading Suggestions</a></li>
-          <li><a href="#srs-1-4">Product Scope</a></li>
-          <li><a href="#srs-1-5">References</a></li>
-          <li><a href="#srs-1-6">Core Technology Rationale</a></li>
-        </ul>
+        <li>
+          <a href="#srs-1">Introduction</a>
+          <ul>
+            <li><a href="#srs-1-1">Purpose</a></li>
+            <li><a href="#srs-1-2">Document Conventions</a></li>
+            <li><a href="#srs-1-3">Intended Audience and Reading Suggestions</a></li>
+            <li><a href="#srs-1-4">Product Scope</a></li>
+            <li><a href="#srs-1-5">References</a></li>
+            <li><a href="#srs-1-6">Core Technology Rationale</a></li>
+          </ul>
         </li>
-        <li><a href="#srs-2">Overall Description</a>
+        <li>
+          <a href="#srs-2">Overall Description</a>
           <ul>
             <li><a href="#srs-2-1">Product Perspective</a></li>
             <li><a href="#srs-2-2">Product Functions</a></li>
@@ -47,7 +45,8 @@
             <li><a href="#srs-2-7">Assumptions and Dependencies</a></li>
           </ul>
         </li>
-        <li><a href="#srs-3">External Interface Requirements</a>
+        <li>
+          <a href="#srs-3">External Interface Requirements</a>
           <ul>
             <li><a href="#srs-3-1">User Interfaces</a></li>
             <li><a href="#srs-3-2">Hardware Interfaces</a></li>
@@ -55,7 +54,8 @@
             <li><a href="#srs-3-4">Communications Interfaces</a></li>
           </ul>
         </li>
-        <li><a href="#srs-4">System Features</a>
+        <li>
+          <a href="#srs-4">System Features</a>
           <ul>
             <li><a href="#srs-4-1">User Authentication and Authorization</a></li>
             <li><a href="#srs-4-2">Pet Management</a></li>
@@ -63,7 +63,8 @@
             <li><a href="#srs-4-4">Admin Panel</a></li>
           </ul>
         </li>
-        <li><a href="#srs-5">Other Nonfunctional Requirements</a>
+        <li>
+          <a href="#srs-5">Other Nonfunctional Requirements</a>
           <ul>
             <li><a href="#srs-5-1">Performance Requirements</a></li>
             <li><a href="#srs-5-2">Safety Requirements</a></li>
@@ -198,8 +199,8 @@
 
       <article id="srs-1-6">
         <h3>1.6 Core Technology Rationale</h3>
-        <ol>
-          <h4>Design Rationale: Colors, Fonts & UI Choices</h4>
+        <div>
+          <h4>Design Rationale: Colors, Fonts &amp; UI Choices</h4>
           <ul>
             <li><strong>Colors:</strong> The palette uses shades of blue, gray, and white to create a professional,
               calm, and friendly atmosphere. The light backgrounds (#f7f9fa, #f0f4f8) reduce visual fatigue, while blue
@@ -208,16 +209,16 @@
             <li><strong>Fonts:</strong> <em>Segoe UI</em> (with Arial, sans-serif as fallback) was chosen for its
               excellent readability on all devices, modern look, and wide compatibility. This font is standard on
               Windows and widely used in professional web applications.</li>
-            <li><strong>Contrast & Accessibility:</strong> Strong contrast between text and background ensures
+            <li><strong>Contrast &amp; Accessibility:</strong> Strong contrast between text and background ensures
               readability, including for users with visual impairments. Font sizes are generous, and interactive
               elements (links, buttons) have visible hover/focus states.</li>
-            <li><strong>Structure & Spacing:</strong> Margins, padding, and border-radius are used to clearly separate
+            <li><strong>Structure &amp; Spacing:</strong> Margins, padding, and border-radius are used to clearly separate
               sections, provide breathing room, and create a pleasant, uncluttered visual experience.</li>
             <li><strong>Responsiveness:</strong> The layout and styles are optimized for both desktop and mobile, with
               media queries for font and spacing, ensuring a consistent experience on any screen.</li>
           </ul>
-        </ol>
-        <ol>
+        </div>
+        <div>
           <h4>Design Rationale: Use of JavaScript</h4>
           <ul>
             <li><strong>Universality:</strong> JavaScript is the only programming language natively supported by all
@@ -228,15 +229,15 @@
             <li><strong>Framework-Free Approach:</strong> The project requirements explicitly prohibit the use of
               frameworks (like React, Angular, Vue), so JavaScript is used in its native form ("vanilla JS") to
               implement all dynamic behaviors, ensuring transparency and full control over the codebase.</li>
-            <li><strong>Maintainability & Modularity:</strong> JavaScript allows for modular code organization (separate
+            <li><strong>Maintainability &amp; Modularity:</strong> JavaScript allows for modular code organization (separate
               files for language management, routing, widgets, etc.), making the application easier to maintain and
               extend.</li>
             <li><strong>Performance:</strong> Native JavaScript is lightweight and fast, with no dependency overhead,
               which helps the application load quickly and run efficiently on all devices.</li>
-            <li><strong>Accessibility & Standards:</strong> JavaScript is used to enhance, not replace, semantic HTML.
+            <li><strong>Accessibility &amp; Standards:</strong> JavaScript is used to enhance, not replace, semantic HTML.
               All dynamic features are implemented with accessibility in mind, ensuring keyboard navigation.</li>
           </ul>
-        </ol>
+        </div>
       </article>
     </section>
 
