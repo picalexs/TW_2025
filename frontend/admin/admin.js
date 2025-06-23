@@ -102,6 +102,15 @@ document.addEventListener('DOMContentLoaded', () => {
   fetchUsers();
   loadAvailableTables();
   setupExportEventListeners();
+  if (window.languageManager) {
+    window.languageManager.updateContent();
+  }
+});
+
+document.addEventListener('languageChanged', () => {
+  if (window.languageManager) {
+    window.languageManager.updateContent();
+  }
 });
 
 async function loadAvailableTables() {

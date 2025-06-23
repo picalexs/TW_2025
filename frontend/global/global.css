@@ -55,11 +55,12 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    padding-top: 4.5rem;
 }
 
 main, #content-container {
     flex: 1 0 auto;
-    min-height: 100vh;
+    min-height: calc(100vh - 4.5rem);
     contain: layout style;
 }
 
@@ -80,9 +81,12 @@ nav h1 {
     min-height: 4.5rem;
     background-color: var(--light-color);
     box-shadow: 0 0.125rem 0.313rem var(--shadow-color);
-    position: sticky;
+    position: fixed;
     top: 0;
-    z-index: 100;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1000;
     contain: layout style;
 }
 
@@ -181,13 +185,15 @@ header {
     background-color: var(--light-color);
     box-shadow: 0 0.125rem 0.313rem var(--shadow-color);
     padding: 1rem 0;
-    position: sticky;
+    position: fixed;
     top: 0;
-    z-index: 100;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1000;
     min-height: 4.5rem;
     display: flex;
     align-items: center;
-    width: 100%;
     box-sizing: border-box;
 }
 

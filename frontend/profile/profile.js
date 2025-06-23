@@ -12,7 +12,7 @@ window.navigateToProfile = navigateToProfile;
 
 class ProfilePage {
   constructor() {
-    this.userService = new UserService({ debug: true });
+    this.userService = new UserService();
     this.petService = new PetService();
     this.ownerReviewService = new OwnerReviewService();
     this.currentUser = null;

@@ -307,7 +307,7 @@ async function fetchAndRenderUsers() {
 
   const loadUsersWithRetry = async () => {
     try {
-      const userService = new UserService({ debug: true });
+      const userService = new UserService();
       const allUsersResponse = await userService.getAllUsersWithAdoptions();
       const allUsers = Array.isArray(allUsersResponse)
         ? allUsersResponse

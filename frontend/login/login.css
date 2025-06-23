@@ -1,9 +1,9 @@
-
 body.login-page {
   background-color: var(--background-color);
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  padding-top: 4.5rem;
 }
 
 body.login-page .auth-buttons,

@@ -2,47 +2,46 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admin Panel</title>
+  <title data-i18n="admin.title" data-i18n-fallback="Admin Panel"></title>
   <link rel="stylesheet" href="../global/global.min.css">
   <link rel="stylesheet" href="admin.css">
 </head>
 <body>
   <div id="global-navbar"></div>
   <main class="section-container">
-    <h1 class="admin-header">Admin Panel</h1>
+    <h1 class="admin-header" data-i18n="admin.title" data-i18n-fallback="Admin Panel"></h1>
     
     <!-- Export Section -->
     <section class="admin-section">
-      <h2>Database Management</h2>
+      <h2 data-i18n="admin.databaseManagement" data-i18n-fallback="Database Management"></h2>
       <div class="export-controls">
         <div class="form-group">
-          <label for="table-select">Select Table:</label>
+          <label for="table-select" data-i18n="admin.selectTable" data-i18n-fallback="Select Table:"></label>
           <select id="table-select" class="form-control"></select>
         </div>
         <div class="form-group">
-          <label for="format-select">Export Format:</label>
+          <label for="format-select" data-i18n="admin.exportFormat" data-i18n-fallback="Export Format:"></label>
           <select id="format-select" class="form-control">
-            <option value="csv">CSV</option>
-            <option value="json">JSON</option>
-            <option value="xml">XML</option>
-            <option value="txt">TXT (Tab-separated)</option>
+            <option value="csv" data-i18n="admin.format.csv" data-i18n-fallback="CSV"></option>
+            <option value="json" data-i18n="admin.format.json" data-i18n-fallback="JSON"></option>
+            <option value="xml" data-i18n="admin.format.xml" data-i18n-fallback="XML"></option>
+            <option value="txt" data-i18n="admin.format.txt" data-i18n-fallback="TXT (Tab-separated)"></option>
           </select>
         </div>
         <div class="form-group">
-          <label for="limit-input">Limit Records (optional):</label>
-          <input type="number" id="limit-input" class="form-control" min="1" placeholder="All records">
-        </div>        
+          <label for="limit-input" data-i18n="admin.limitRecords" data-i18n-fallback="Limit Records (optional):"></label>
+          <input type="number" id="limit-input" class="form-control" min="1" placeholder="All records" data-i18n-placeholder="admin.allRecords" data-i18n-placeholder-fallback="All records">
+        </div>
         <div class="form-group">
-          <label for="import-file">Import File:</label>
+          <label for="import-file" data-i18n="admin.importFile" data-i18n-fallback="Import File:"></label>
           <input type="file" id="import-file" class="form-control" accept=".csv,.json,.xml,.txt">
         </div>
         <div class="export-btn-row">
-          <button id="export-btn" class="btn btn-primary">Export Data</button>
-          <button id="preview-btn" class="btn btn-secondary">Preview</button>
-          <button id="import-btn" class="btn btn-success">Import Data</button>
+          <button id="export-btn" class="btn btn-primary" data-i18n="admin.exportData" data-i18n-fallback="Export Data"></button>
+          <button id="preview-btn" class="btn btn-secondary" data-i18n="admin.preview" data-i18n-fallback="Preview"></button>
+          <button id="import-btn" class="btn btn-success" data-i18n="admin.importData" data-i18n-fallback="Import Data"></button>
         </div>
       </div>
-      
       <div id="export-status" class="export-status"></div>
       <div id="table-info" class="table-info"></div>
       <div id="export-preview" class="export-preview"></div>
@@ -50,20 +49,20 @@
     
     <!-- User Management Section -->
     <section class="admin-section">
-      <h2>User Management</h2>
+      <h2 data-i18n="admin.userManagement" data-i18n-fallback="User Management"></h2>
       <div class="user-search-bar">
-        <input type="text" id="user-search-input" class="form-control" placeholder="Search users by ID, username, email ...">
+        <input type="text" id="user-search-input" class="form-control" placeholder="Search users by ID, username, email ..." data-i18n-placeholder="admin.searchUsers" data-i18n-placeholder-fallback="Search users by ID, username, email ...">
       </div>
       <div id="admin-message"></div>
       <div class="admin-table-container">
         <table class="admin-table" id="users-table">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Email</th>
-              <th>Username</th>
-              <th>Role</th>
-              <th>Actions</th>
+              <th data-i18n="admin.id" data-i18n-fallback="ID"></th>
+              <th data-i18n="admin.email" data-i18n-fallback="Email"></th>
+              <th data-i18n="admin.username" data-i18n-fallback="Username"></th>
+              <th data-i18n="admin.role" data-i18n-fallback="Role"></th>
+              <th data-i18n="admin.actions" data-i18n-fallback="Actions"></th>
             </tr>
           </thead>
           <tbody id="users-tbody">
@@ -74,7 +73,22 @@
   </main>
   <script src="../config.js"></script>
   <script type="module" src="../global/inject-navbar.js"></script>
+  <script type="module" src="../languages/language.min.js"></script>
   <script type="module" src="admin.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (window.initializePageLanguage) {
+        window.initializePageLanguage();
+      } else if (window.languageManager) {
+        window.languageManager.updateContent();
+      }
+    });
+    document.addEventListener('languageChanged', function() {
+      if (window.languageManager) {
+        window.languageManager.updateContent();
+      }
+    });
+  </script>
   <div id="global-footer"></div>
 </body>
 </html>

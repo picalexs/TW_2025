@@ -248,8 +248,6 @@ class UserModel extends AbstractModel {
     try {
       connection = await db.getConnection();
       const user = await this.dto.findByEmail(connection, email);
-     
-      console.log('[DEBUG] userModel.findByEmail result:', user);
       return user;
     } finally {
       if (connection) {

@@ -2,6 +2,7 @@ body.signup-page {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  padding-top: 4.5rem;
 }
 
 body.signup-page .auth-buttons,
@@ -24,7 +25,7 @@ body.signup-page .mobile-auth {
   justify-content: center;
   align-items: center;
   padding: 4rem 1rem;
-  min-height: calc(100vh - 5rem);
+  min-height: calc(100vh - 9rem);
 }
 
 .signup-box {

@@ -72,5 +72,4 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
-  console.log('[DEBUG] authToken in localStorage:', localStorage.getItem('authToken'));
 });
