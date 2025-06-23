@@ -15,6 +15,8 @@ const exportStatus = document.getElementById('export-status');
 const tableInfo = document.getElementById('table-info');
 const exportPreview = document.getElementById('export-preview');
 const exportUtility = new ExportUtility();
+const userSearchInput = document.getElementById('user-search-input');
+let allUsers = [];
 
 async function fetchUsers() {
   try {
@@ -22,7 +24,8 @@ async function fetchUsers() {
       headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` }
     });
   
-    renderUsers(response && Array.isArray(response.users) ? response.users : []);
+    allUsers = response && Array.isArray(response.users) ? response.users : [];
+    renderUsers(allUsers);
   } catch (err) {
     adminMessage.textContent = 'Failed to load users.';
     adminMessage.style.color = 'red';
@@ -30,7 +33,6 @@ async function fetchUsers() {
 }
 
 function renderUsers(users) {
-  console.log('users array:', users); 
   usersTbody.innerHTML = '';
   if (!Array.isArray(users) || users.length === 0) {
     usersTbody.innerHTML = '<tr><td colspan="5">No users found.</td></tr>';
@@ -61,6 +63,24 @@ function renderUsers(users) {
     });
   });
 }
+
+function filterUsers(query) {
+  if (!query) return allUsers;
+  const q = query.trim().toLowerCase();
+  return allUsers.filter(user => {
+    return (
+      (user[0] && String(user[0]).toLowerCase().includes(q)) ||
+      (user[1] && user[1].toLowerCase().includes(q)) ||
+      (user[2] && user[2].toLowerCase().includes(q)) ||
+      (user[3] && user[3].toLowerCase().includes(q))
+    );
+  });
+}
+
+userSearchInput.addEventListener('input', (e) => {
+  const filtered = filterUsers(e.target.value);
+  renderUsers(filtered);
+});
 
 async function deleteUser(userId) {
   try {

@@ -182,6 +182,32 @@
   background: #c0392b;
 }
 
+.form-group input[type="file"].form-control {
+  padding: 0.7rem 1.2rem;
+  border-radius: 0.6rem;
+  border: 1px solid var(--border-color, #e3e8ee);
+  background: #fff;
+  font-size: 1.08rem;
+  color: #333;
+  width: 100%;
+  margin-top: 0.2rem;
+}
+
+.user-search-bar {
+  margin-bottom: 1.2rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.user-search-bar .form-control {
+  max-width: 350px;
+  width: 100%;
+  font-size: 1.08rem;
+  padding: 0.7rem 1.2rem;
+  border-radius: 0.6rem;
+  border: 1px solid var(--border-color, #e3e8ee);
+}
+
 @media (max-width: 768px) {
   .export-controls {
     grid-template-columns: 1fr;
