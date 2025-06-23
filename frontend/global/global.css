@@ -60,7 +60,7 @@ body {
 
 main, #content-container {
     flex: 1 0 auto;
-    min-height: calc(100vh - 4.5rem);
+    min-height: 0;
     contain: layout style;
 }
 
@@ -846,6 +846,11 @@ footer {
     margin-top: auto;
 }
 
+#main-footer {
+  flex-shrink: 0;
+  width: 100%;
+}
+
 .footer-container {
     max-width: 90%;
     margin: 0 auto;
@@ -1308,4 +1313,64 @@ img {
   white-space: nowrap;
   line-height: 1;
   vertical-align: baseline;
+}
+
+.page-title {
+  margin-top: 2rem;
+  margin-bottom: 2.5rem;
+  text-align: center;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--primary-color);
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  background: none;
+  -webkit-background-clip: initial;
+  -webkit-text-fill-color: initial;
+  background-clip: initial;
+  max-width: 700px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+@media (max-width: 600px) {
+  .page-title {
+    font-size: 1.5rem;
+    margin-top: 5.5rem;
+    margin-bottom: 1.5rem;
+    max-width: 95vw;
+    width: 95vw;
+  }
+}
+
+.favorite-btn {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: var(--background-color);
+  border: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 0.125rem 0.5rem var(--shadow-color);
+  z-index: 3;
+}
+.favorite-btn:hover {
+  background: var(--light-color);
+  transform: scale(1.1);
+}
+.favorite-btn.favorited .heart-icon {
+  color: var(--danger-color) !important;
+}
+.heart-icon {
+  font-size: 1.5rem;
+  color: var(--secondary-color);
+  transition: color 0.3s;
 }

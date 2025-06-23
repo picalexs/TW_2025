@@ -14,6 +14,8 @@ body {
   align-items: flex-start;
   min-height: 300px;
   margin-bottom: 2rem;
+  padding-left: 2vw;
+  padding-right: 2vw;
 }
 
 .favorite-pet-card {
@@ -97,20 +99,31 @@ body {
   background: #b02a37;
 }
 
-[data-component="footer"] {
-  flex-shrink: 0;
-  width: 100%;
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  background: #fff;
-  border-top: 1px solid #e0e0e0;
-  z-index: 100;
-  padding: 1rem 0;
+.favorites-title {
+  margin-top: 2rem;
+  margin-bottom: 2.5rem;
   text-align: center;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--primary-color);
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  background: none;
+  -webkit-background-clip: initial;
+  -webkit-text-fill-color: initial;
+  background-clip: initial;
+  max-width: 700px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
 }
 
 @media (max-width: 600px) {
+  #favorites-list {
+    padding-left: 2vw;
+    padding-right: 2vw;
+  }
   .favorite-pet-card {
     width: 95vw;
     min-width: 0;
@@ -119,5 +132,12 @@ body {
   .favorite-pet-image-wrapper {
     width: 90px;
     height: 90px;
+  }
+  .favorites-title {
+    font-size: 1.5rem;
+    margin-top: 5.5rem;
+    margin-bottom: 1.5rem;
+    max-width: 95vw;
+    width: 95vw;
   }
 }

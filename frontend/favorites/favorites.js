@@ -28,7 +28,16 @@ async function renderFavorites() {
     return;
   }
   if (!pets || pets.length === 0) {
-    container.innerHTML = '<p>You have no favorite pets.</p>';
+    container.innerHTML = `
+      <div class="no-favorites-message" style="text-align:center; margin: 3rem auto; max-width: 400px;">
+        <p style="font-size:1.15rem; color: var(--primary-color); font-weight: 600; margin-bottom: 1.5rem;">
+          You have no favorite pets yet.<br>Discover some amazing animals!
+        </p>
+        <a href="../pets/pets-page/pets-page.html" class="discover-pets-btn" style="display:inline-block; padding:0.75rem 2rem; background:var(--primary-color); color:#fff; border-radius:2rem; font-size:1.1rem; font-weight:700; text-decoration:none; transition:background 0.2s;">
+          Discover Pets
+        </a>
+      </div>
+    `;
     return;
   }
   pets.forEach(pet => {

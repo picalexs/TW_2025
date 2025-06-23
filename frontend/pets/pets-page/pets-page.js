@@ -1,9 +1,15 @@
 import PetService from '../../services/petService.min.js';
+import FavoritesService from '../../services/favoritesService.js';
 import { checkLoginStatusAndToggleNavButtons } from '../../global/global.min.js';
 
 const petService = new PetService();
+const favoritesService = new FavoritesService();
 
 let allPets = [];
+
+function isUserLoggedIn() {
+  return localStorage.getItem('isLoggedIn') === 'true';
+}
 
 function getCurrentUserId() {
   let userId = localStorage.getItem('currentUserId');
@@ -22,10 +28,6 @@ function getCurrentUserId() {
   }
   
   return null;
-}
-
-function isUserLoggedIn() {
-  return localStorage.getItem('isLoggedIn') === 'true';
 }
 
 function toggleAddPetButton() {
@@ -56,7 +58,7 @@ export async function fetchPets() {
   }
 }
 
-export function renderPets(pets, containerId = 'pets-grid') {
+export async function renderPets(pets, containerId = 'pets-grid') {
   const container = document.getElementById(containerId);
   if (!container) {
     console.error(`Container with id '${containerId}' not found`);
@@ -66,7 +68,18 @@ export function renderPets(pets, containerId = 'pets-grid') {
   if (pets && pets.length > 0) {
     container.innerHTML = '';
     
+    let favoriteIds = [];
+    if (isUserLoggedIn()) {
+      try {
+        const favorites = await favoritesService.getFavorites();
+        favoriteIds = favorites.map(fav => fav.id || fav.ID);
+      } catch (error) {
+        console.warn('Could not load favorites:', error);
+      }
+    }
+    
     pets.forEach(pet => {
+      pet.isFavorite = favoriteIds.includes(pet.id);
       const petCard = createPetCard(pet);
       container.appendChild(petCard);
     });
@@ -98,6 +111,59 @@ function createPetCard(pet) {
   card.setAttribute('data-pet-id', pet.id);
   card.classList.add('loaded');
   
+  const heartBtn = document.createElement('button');
+  heartBtn.className = 'favorite-btn';
+  heartBtn.title = 'Add to favorites';
+  heartBtn.innerHTML = '<span class="heart-icon' + (pet.isFavorite ? ' favorited' : '') + '">&#10084;</span>';
+  heartBtn.style.display = 'none';
+  heartBtn.tabIndex = 0;
+  card.style.position = 'relative';
+  card.appendChild(heartBtn);
+
+  if (pet.isFavorite) {
+    heartBtn.classList.add('favorited');
+  }
+
+  heartBtn.addEventListener('click', async (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (!isUserLoggedIn()) {
+      alert('Please log in to use favorites.');
+      return;
+    }
+    const heartIcon = heartBtn.querySelector('.heart-icon');
+    const isFavorited = heartBtn.classList.contains('favorited');
+    try {
+      if (isFavorited) {
+        await favoritesService.removeFavorite(pet.id);
+        heartBtn.classList.remove('favorited');
+        heartIcon.classList.remove('favorited');
+        pet.isFavorite = false;
+      } else {
+        await favoritesService.addFavorite(pet.id);
+        heartBtn.classList.add('favorited');
+        heartIcon.classList.add('favorited');
+        pet.isFavorite = true;
+      }
+    } catch (err) {
+      console.error('Error updating favorite:', err);
+      if (err.message && err.message.includes('already exists')) {
+        heartBtn.classList.add('favorited');
+        heartIcon.classList.add('favorited');
+        pet.isFavorite = true;
+      } else {
+        alert('Failed to update favorite.');
+      }
+    }
+  });
+
+  card.addEventListener('mouseenter', () => {
+    heartBtn.style.display = 'flex';
+  });
+  card.addEventListener('mouseleave', () => {
+    heartBtn.style.display = 'none';
+  });
+  
   return card;
 }
 
@@ -124,7 +190,7 @@ export function showPetLoadError(error, containerId = 'pets-grid') {
       container.innerHTML = `<div class="loading-spinner">${loadingText}</div>`;
       try {
         const pets = await fetchPets();
-        renderPets(pets, containerId);
+        await renderPets(pets, containerId);
       } catch (err) {
         showPetLoadError(err, containerId);
       }
@@ -143,8 +209,19 @@ export function filterPets() {
   const goodWithKids = document.getElementById('kids-filter')?.value;
   const goodWithPets = document.getElementById('pets-filter')?.value;
   const energyLevel = document.getElementById('energy-filter')?.value;
+  const tagSearch = document.getElementById('tag-search')?.value.toLowerCase();
+  const adoptionStatus = document.getElementById('adoption-status-filter')?.value;
   
   return allPets.filter(pet => {
+    if (adoptionStatus) {
+      if (pet.adoptionStatus?.toLowerCase() !== adoptionStatus.toLowerCase()) return false;
+    } else {
+      const statusFilter = document.getElementById('adoption-status-filter');
+      if (!statusFilter || statusFilter.value === 'available') {
+        if (pet.adoptionStatus?.toLowerCase() !== 'available') return false;
+      }
+    }
+    
     if (species && pet.species && pet.species.toLowerCase() !== species.toLowerCase()) return false;
     
     if (age) {
@@ -181,6 +258,20 @@ export function filterPets() {
       const hasEnergyLevel = pet.description.toLowerCase().includes(energyLevel.toLowerCase());
       if (!hasEnergyLevel) return false;
     }
+
+    if (tagSearch) {
+      const petTags = Array.isArray(pet.tags) ? pet.tags : [];
+      console.log(`Searching for tag "${tagSearch}" in pet "${pet.name}":`, petTags);
+      const hasMatchingTag = petTags.some(tag => {
+        const tagName = typeof tag === 'object' ? (tag.name || tag.NAME || '') : (tag || '');
+        const matches = tagName.toLowerCase().includes(tagSearch);
+        console.log(`  Tag "${tagName}" matches: ${matches}`);
+        return matches;
+      });
+      console.log(`  Has matching tag: ${hasMatchingTag}`);
+      if (!hasMatchingTag) return false;
+    }
+    
     return true;
   });
 }
@@ -257,16 +348,44 @@ export function initializeFilterButtons() {
   
   toggleAddPetButton();
   
-  if (applyBtn) {
-    applyBtn.addEventListener('click', () => {
+  const nameSearchInput = document.getElementById('name-search');
+  const tagSearchInput = document.getElementById('tag-search');
+  const adoptionStatusFilter = document.getElementById('adoption-status-filter');
+  
+  if (nameSearchInput) {
+    nameSearchInput.addEventListener('input', async () => {
       const filteredPets = filterPets();
       const sortedPets = sortPets(filteredPets);
-      renderPets(sortedPets);
+      await renderPets(sortedPets);
     });
   }
   
+  if (tagSearchInput) {
+    tagSearchInput.addEventListener('input', async () => {
+      const filteredPets = filterPets();
+      const sortedPets = sortPets(filteredPets);
+      await renderPets(sortedPets);
+    });
+  }
+  
+  if (adoptionStatusFilter) {
+    adoptionStatusFilter.addEventListener('change', async () => {
+      const filteredPets = filterPets();
+      const sortedPets = sortPets(filteredPets);
+      await renderPets(sortedPets);
+    });
+  }
+  
+  if (applyBtn) {
+    applyBtn.addEventListener('click', async () => {
+      const filteredPets = filterPets();
+      const sortedPets = sortPets(filteredPets);
+      await renderPets(sortedPets);
+    });
+  }
+    
   if (resetBtn) {
-    resetBtn.addEventListener('click', () => {
+    resetBtn.addEventListener('click', async () => {
       document.querySelectorAll('.filter-select').forEach(select => {
         select.selectedIndex = 0;
       });
@@ -275,9 +394,16 @@ export function initializeFilterButtons() {
         input.value = '';
       });
       
-      renderPets(allPets);
+      const adoptionStatusFilter = document.getElementById('adoption-status-filter');
+      if (adoptionStatusFilter) {
+        adoptionStatusFilter.value = 'available';
+      }
+      
+      const filteredPets = filterPets();
+      const sortedPets = sortPets(filteredPets);
+      await renderPets(sortedPets);
     });
-  }  
+  }
   
   initializeAddPetButton();
 }
@@ -348,18 +474,16 @@ export function initializeMatchingButton() {
       
       const userId = getCurrentUserId();
       if (!userId) throw new Error('User ID not found');
-      // Use backend matching endpoint
       const result = await petService.getPetsByTagOverlap(userId, 20);
       if (result && result.success && Array.isArray(result.data)) {
-        // Optionally, show matchingScore in UI (e.g., in pet card)
-        renderPets(result.data);
+        await renderPets(result.data);
         updateResultsCount(result.data.length);
       } else {
-        renderPets(allPets);
+        await renderPets(allPets);
       }
     } catch (err) {
       console.error('Error fetching pets by tag overlap:', err);
-      renderPets(allPets);
+      await renderPets(allPets);
     }
   });
 }
@@ -368,7 +492,6 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('DOM loaded - initializing pets page');
   checkLoginStatusAndToggleNavButtons();
   toggleAddPetButton();
-  // Give the navbar time to load before trying to initialize the add pet button
   setTimeout(() => {
     toggleAddPetButton();
     initializeAddPetButton();

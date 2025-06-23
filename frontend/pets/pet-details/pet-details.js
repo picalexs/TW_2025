@@ -452,47 +452,32 @@ class PetDetailsPage {
   async toggleFavorite() {
     const favoriteBtn = document.getElementById('favorite-btn');
     const heartIcon = favoriteBtn.querySelector('.heart-icon');
-    
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    if (!isLoggedIn) {
-      alert('Trebuie să fii autentificat pentru a folosi favoritele!');
+    if (localStorage.getItem('isLoggedIn') !== 'true') {
+      alert('Please log in to use favorites.');
       return;
     }
-    
-    const isCurrentlyFavorite = favoriteBtn.classList.contains('favorited');
-    const willBeFavorite = !isCurrentlyFavorite;
-    
+    const isFavorited = favoriteBtn.classList.contains('favorited');
     favoriteBtn.disabled = true;
-    
     try {
-      if (willBeFavorite) {
-        await this.favoritesService.addFavorite(this.currentPet.id);
-        favoriteBtn.classList.add('favorited');
-        if (heartIcon) {
-          heartIcon.textContent = '♥';
-        }
-      } else {
+      if (isFavorited) {
         await this.favoritesService.removeFavorite(this.currentPet.id);
         favoriteBtn.classList.remove('favorited');
-        if (heartIcon) {
-          heartIcon.textContent = '♡';
-        }
-      }
-    } catch (error) {
-      console.error('Error toggling favorite:', error);
-      
-      if (error.message && error.message.includes('already exists')) {
-        favoriteBtn.classList.add('favorited');
-        if (heartIcon) {
-          heartIcon.textContent = '♥';
-        }
-      } else if (error.message && error.message.includes('not found')) {
-        favoriteBtn.classList.remove('favorited');
-        if (heartIcon) {
-          heartIcon.textContent = '♡';
-        }
+        heartIcon.classList.remove('favorited');
+        heartIcon.innerHTML = '&#10084;';
       } else {
-        alert('Eroare la actualizarea favoritei! Vă rugăm încercați din nou.');
+        await this.favoritesService.addFavorite(this.currentPet.id);
+        favoriteBtn.classList.add('favorited');
+        heartIcon.classList.add('favorited');
+        heartIcon.innerHTML = '&#10084;';
+      }
+    } catch (err) {
+      console.error('Error updating favorite:', err);
+      if (err.message && err.message.includes('already exists')) {
+        favoriteBtn.classList.add('favorited');
+        heartIcon.classList.add('favorited');
+        heartIcon.innerHTML = '&#10084;';
+      } else {
+        alert('Failed to update favorite.');
       }
     } finally {
       favoriteBtn.disabled = false;
@@ -502,39 +487,31 @@ class PetDetailsPage {
   async initializeFavoriteState(pet) {
     const favoriteBtn = document.getElementById('favorite-btn');
     const heartIcon = favoriteBtn.querySelector('.heart-icon');
-    
-    const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    if (!isLoggedIn) {
-      favoriteBtn.style.display = 'none';
-      return;
-    }
-
-    try {
-      const userFavorites = await this.favoritesService.getFavorites();
-      const isFavorited = userFavorites.some(favorite => 
-        favorite.id === pet.id || favorite.ID === pet.id
-      );
-      
-      if (isFavorited) {
-        favoriteBtn.classList.add('favorited');
-        if (heartIcon) {
-          heartIcon.textContent = '♥';
+    if (localStorage.getItem('isLoggedIn') === 'true') {
+      try {
+        const favorites = await this.favoritesService.getFavorites();
+        const isFav = favorites.some(f => f.id === pet.id || f.ID === pet.id);
+        if (isFav) {
+          favoriteBtn.classList.add('favorited');
+          heartIcon.classList.add('favorited');
+          heartIcon.innerHTML = '&#10084;';
+        } else {
+          favoriteBtn.classList.remove('favorited');
+          heartIcon.classList.remove('favorited');
+          heartIcon.innerHTML = '&#10084;';
         }
-      } else {
+        favoriteBtn.style.display = 'flex';
+      } catch (e) {
+        console.error('Error checking favorite state:', e);
         favoriteBtn.classList.remove('favorited');
-        if (heartIcon) {
-          heartIcon.textContent = '♡';
-        }
+        heartIcon.classList.remove('favorited');
+        heartIcon.innerHTML = '&#10084;';
+        favoriteBtn.style.display = 'flex';
       }
-      
-      favoriteBtn.style.display = 'flex';
-      
-    } catch (error) {
-      console.error('Error checking favorite state:', error);
+    } else {
       favoriteBtn.classList.remove('favorited');
-      if (heartIcon) {
-        heartIcon.textContent = '♡';
-      }
+      heartIcon.classList.remove('favorited');
+      heartIcon.innerHTML = '&#10084;';
       favoriteBtn.style.display = 'flex';
     }
   }
@@ -601,7 +578,7 @@ class PetDetailsPage {
     }
 
     try {
-      let lat = 44.4268; // Default to Bucharest
+      let lat = 44.4268;
       let lng = 26.1025;
       let address = 'Location not available';
 
@@ -614,11 +591,8 @@ class PetDetailsPage {
         
         if (addressParts.length > 0) {
           address = addressParts.join(', ');
-          
-          // Try to get coordinates from predefined list first
           let cityCoords = this.getCityCoordinates(addr.city);
-          
-          // If not found, try geocoding service
+        
           if (!cityCoords && addr.city) {
             cityCoords = await this.geocodeCity(addr.city, addr.country);
           }

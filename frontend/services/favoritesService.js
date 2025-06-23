@@ -1,4 +1,4 @@
-import ApiService from './api.min.js';
+import ApiService from './api.js';
 
 export default class FavoritesService {
   constructor(options = {}) {
@@ -35,6 +35,10 @@ export default class FavoritesService {
       return await this.apiService.post(this.endpoints.base, { animal_id: animalId });
     } catch (error) {
       if (this.debug) console.error('Error adding favorite:', error);
+      if (error.status === 409 && error.message && error.message.includes('already exists')) {
+        if (this.debug) console.log('Favorite already exists, treating as success');
+        return { success: true, message: 'Already favorited' };
+      }
       throw error;
     }
   }
@@ -47,6 +51,17 @@ export default class FavoritesService {
     } catch (error) {
       if (this.debug) console.error('Error removing favorite:', error);
       throw error;
+    }
+  }
+
+  async isFavorite(animalId) {
+    if (!animalId) return false;
+    try {
+      const favorites = await this.getFavorites();
+      return favorites.some(f => f.id === animalId || f.ID === animalId);
+    } catch (error) {
+      if (this.debug) console.error('Error checking favorite status:', error);
+      return false;
     }
   }
 }
