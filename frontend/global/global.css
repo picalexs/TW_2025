@@ -1344,3 +1344,33 @@ img {
     width: 95vw;
   }
 }
+
+.favorite-btn {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: var(--background-color);
+  border: none;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 0.125rem 0.5rem var(--shadow-color);
+  z-index: 3;
+}
+.favorite-btn:hover {
+  background: var(--light-color);
+  transform: scale(1.1);
+}
+.favorite-btn.favorited .heart-icon {
+  color: var(--danger-color) !important;
+}
+.heart-icon {
+  font-size: 1.5rem;
+  color: var(--secondary-color);
+  transition: color 0.3s;
+}

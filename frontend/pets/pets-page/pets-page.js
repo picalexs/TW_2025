@@ -1,9 +1,15 @@
 import PetService from '../../services/petService.min.js';
+import FavoritesService from '../../services/favoritesService.js';
 import { checkLoginStatusAndToggleNavButtons } from '../../global/global.min.js';
 
 const petService = new PetService();
+const favoritesService = new FavoritesService();
 
 let allPets = [];
+
+function isUserLoggedIn() {
+  return localStorage.getItem('isLoggedIn') === 'true';
+}
 
 function getCurrentUserId() {
   let userId = localStorage.getItem('currentUserId');
@@ -22,10 +28,6 @@ function getCurrentUserId() {
   }
   
   return null;
-}
-
-function isUserLoggedIn() {
-  return localStorage.getItem('isLoggedIn') === 'true';
 }
 
 function toggleAddPetButton() {
@@ -56,7 +58,7 @@ export async function fetchPets() {
   }
 }
 
-export function renderPets(pets, containerId = 'pets-grid') {
+export async function renderPets(pets, containerId = 'pets-grid') {
   const container = document.getElementById(containerId);
   if (!container) {
     console.error(`Container with id '${containerId}' not found`);
@@ -66,7 +68,18 @@ export function renderPets(pets, containerId = 'pets-grid') {
   if (pets && pets.length > 0) {
     container.innerHTML = '';
     
+    let favoriteIds = [];
+    if (isUserLoggedIn()) {
+      try {
+        const favorites = await favoritesService.getFavorites();
+        favoriteIds = favorites.map(fav => fav.id || fav.ID);
+      } catch (error) {
+        console.warn('Could not load favorites:', error);
+      }
+    }
+    
     pets.forEach(pet => {
+      pet.isFavorite = favoriteIds.includes(pet.id);
       const petCard = createPetCard(pet);
       container.appendChild(petCard);
     });
@@ -98,6 +111,60 @@ function createPetCard(pet) {
   card.setAttribute('data-pet-id', pet.id);
   card.classList.add('loaded');
   
+  const heartBtn = document.createElement('button');
+  heartBtn.className = 'favorite-btn';
+  heartBtn.title = 'Add to favorites';
+  heartBtn.innerHTML = '<span class="heart-icon' + (pet.isFavorite ? ' favorited' : '') + '">&#10084;</span>';
+  heartBtn.style.display = 'none';
+  heartBtn.tabIndex = 0;
+  card.style.position = 'relative';
+  card.appendChild(heartBtn);
+
+  if (pet.isFavorite) {
+    heartBtn.classList.add('favorited');
+  }
+
+  heartBtn.addEventListener('click', async (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (!isUserLoggedIn()) {
+      alert('Please log in to use favorites.');
+      return;
+    }
+    const heartIcon = heartBtn.querySelector('.heart-icon');
+    const isFavorited = heartBtn.classList.contains('favorited');
+    try {
+      if (isFavorited) {
+        await favoritesService.removeFavorite(pet.id);
+        heartBtn.classList.remove('favorited');
+        heartIcon.classList.remove('favorited');
+        pet.isFavorite = false;
+      } else {
+        await favoritesService.addFavorite(pet.id);
+        heartBtn.classList.add('favorited');
+        heartIcon.classList.add('favorited');
+        pet.isFavorite = true;
+      }
+    } catch (err) {
+      console.error('Error updating favorite:', err);
+      if (err.message && err.message.includes('already exists')) {
+        // If favorite already exists, just update the UI
+        heartBtn.classList.add('favorited');
+        heartIcon.classList.add('favorited');
+        pet.isFavorite = true;
+      } else {
+        alert('Failed to update favorite.');
+      }
+    }
+  });
+
+  card.addEventListener('mouseenter', () => {
+    heartBtn.style.display = 'flex';
+  });
+  card.addEventListener('mouseleave', () => {
+    heartBtn.style.display = 'none';
+  });
+  
   return card;
 }
 
@@ -124,7 +191,7 @@ export function showPetLoadError(error, containerId = 'pets-grid') {
       container.innerHTML = `<div class="loading-spinner">${loadingText}</div>`;
       try {
         const pets = await fetchPets();
-        renderPets(pets, containerId);
+        await renderPets(pets, containerId);
       } catch (err) {
         showPetLoadError(err, containerId);
       }
@@ -256,17 +323,15 @@ export function initializeFilterButtons() {
   const resetBtn = document.getElementById('reset-filters');
   
   toggleAddPetButton();
-  
-  if (applyBtn) {
-    applyBtn.addEventListener('click', () => {
+    if (applyBtn) {
+    applyBtn.addEventListener('click', async () => {
       const filteredPets = filterPets();
       const sortedPets = sortPets(filteredPets);
-      renderPets(sortedPets);
+      await renderPets(sortedPets);
     });
   }
-  
-  if (resetBtn) {
-    resetBtn.addEventListener('click', () => {
+    if (resetBtn) {
+    resetBtn.addEventListener('click', async () => {
       document.querySelectorAll('.filter-select').forEach(select => {
         select.selectedIndex = 0;
       });
@@ -275,9 +340,9 @@ export function initializeFilterButtons() {
         input.value = '';
       });
       
-      renderPets(allPets);
+      await renderPets(allPets);
     });
-  }  
+  }
   
   initializeAddPetButton();
 }
@@ -348,18 +413,16 @@ export function initializeMatchingButton() {
       
       const userId = getCurrentUserId();
       if (!userId) throw new Error('User ID not found');
-      // Use backend matching endpoint
       const result = await petService.getPetsByTagOverlap(userId, 20);
       if (result && result.success && Array.isArray(result.data)) {
-        // Optionally, show matchingScore in UI (e.g., in pet card)
-        renderPets(result.data);
+        await renderPets(result.data);
         updateResultsCount(result.data.length);
       } else {
-        renderPets(allPets);
+        await renderPets(allPets);
       }
     } catch (err) {
       console.error('Error fetching pets by tag overlap:', err);
-      renderPets(allPets);
+      await renderPets(allPets);
     }
   });
 }
@@ -368,7 +431,6 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log('DOM loaded - initializing pets page');
   checkLoginStatusAndToggleNavButtons();
   toggleAddPetButton();
-  // Give the navbar time to load before trying to initialize the add pet button
   setTimeout(() => {
     toggleAddPetButton();
     initializeAddPetButton();
