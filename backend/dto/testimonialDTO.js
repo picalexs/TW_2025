@@ -34,11 +34,11 @@ class TestimonialDTO extends abstractDTO {
                END as user_name
         FROM ${this.tableName} t
         JOIN users u ON t.user_id = u.id
-        WHERE t.rating > 3.5
+        WHERE t.rating > :ratingThreshold
         ORDER BY t.created_at DESC
       `;
       
-      const result = await executeQuery(query, [], {
+      const result = await executeQuery(query, { ratingThreshold: 3.5 }, {
         outFormat: oracledb.OUT_FORMAT_OBJECT,
         fetchInfo: {
           TESTIMONIAL_TEXT: { type: oracledb.STRING }

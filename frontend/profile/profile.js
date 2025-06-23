@@ -1204,7 +1204,7 @@ class ProfilePage {
     const filterModal = document.getElementById('reviews-filter-modal');
     const filterForm = document.getElementById('reviews-filter-form');
     const resetBtn = document.getElementById('reset-filters-btn');
-    const closeButtons = filterModal.querySelectorAll('.modal-close');
+    const closeButtons = filterModal ? filterModal.querySelectorAll('.modal-close') : [];
 
     if (filterBtn) {
       filterBtn.addEventListener('click', () => {
@@ -1218,11 +1218,13 @@ class ProfilePage {
       });
     });
 
-    filterModal.addEventListener('click', (e) => {
-      if (e.target === filterModal) {
-        this.hideFilterModal();
-      }
-    });
+    if (filterModal) {
+      filterModal.addEventListener('click', (e) => {
+        if (e.target === filterModal) {
+          this.hideFilterModal();
+        }
+      });
+    }
 
     if (filterForm) {
       filterForm.addEventListener('submit', (e) => {

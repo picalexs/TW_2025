@@ -65,18 +65,21 @@ class AdminDTO extends abstractDTO {
   async getTableData(tableName, limit = null) {
     try {
       const allowedTables = await this.getAvailableTables();
-      if (!allowedTables.includes(tableName.toUpperCase())) {
+      const safeTableName = tableName.toUpperCase();
+      if (!allowedTables.includes(safeTableName)) {
         throw new Error('Invalid table name');
       }
-      const schema = await this.getTableSchema(tableName);
+      const schema = await this.getTableSchema(safeTableName);
       const columnNames = schema.map(col => col.columnName);
-      let query = `SELECT * FROM ${tableName.toUpperCase()}`;
+      let query = `SELECT * FROM "${safeTableName}"`;
+      let params = [];
       if (limit && limit > 0) {
-        query += ` ORDER BY 1 FETCH FIRST ${limit} ROWS ONLY`;
+        query += ` ORDER BY 1 FETCH FIRST :limit ROWS ONLY`;
+        params.push(limit);
       }
-      const result = await executeQuery(query);
+      const result = await executeQuery(query, params);
       return {
-        tableName: tableName.toUpperCase(),
+        tableName: safeTableName,
         columns: columnNames,
         rows: result.rows,
         totalRows: result.rows.length
@@ -90,10 +93,11 @@ class AdminDTO extends abstractDTO {
   async getTableStats(tableName) {
     try {
       const allowedTables = await this.getAvailableTables();
-      if (!allowedTables.includes(tableName.toUpperCase())) {
+      const safeTableName = tableName.toUpperCase();
+      if (!allowedTables.includes(safeTableName)) {
         throw new Error('Invalid table name');
       }
-      const countQuery = `SELECT COUNT(*) FROM ${tableName.toUpperCase()}`;
+      const countQuery = `SELECT COUNT(*) FROM "${safeTableName}"`;
       const countResult = await executeQuery(countQuery);
       const rowCount = countResult.rows[0][0];
       const sizeQuery = `
@@ -105,10 +109,10 @@ class AdminDTO extends abstractDTO {
         LEFT JOIN user_segments s ON t.table_name = s.segment_name
         WHERE t.table_name = :tableName
       `;
-      const sizeResult = await executeQuery(sizeQuery, [tableName.toUpperCase()]);
+      const sizeResult = await executeQuery(sizeQuery, [safeTableName]);
       const sizeInfo = sizeResult.rows[0] || [0, rowCount, null];
       return {
-        tableName: tableName.toUpperCase(),
+        tableName: safeTableName,
         rowCount: rowCount,
         sizeMB: sizeInfo[0] || 0,
         lastAnalyzed: sizeInfo[2]
