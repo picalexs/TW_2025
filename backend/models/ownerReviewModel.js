@@ -1,10 +1,10 @@
 const AbstractModel = require('./abstractModel');
-const ownerReviewDTO = require('../dto/ownerReviewDTO');
+const OwnerReviewDTO = require('../dto/ownerReviewDTO');
 
 class OwnerReviewModel extends AbstractModel {
     constructor() {
-        super(ownerReviewDTO);
-    }    
+        super(new OwnerReviewDTO());
+    }
     
     async create(reviewData) {
         try {
@@ -146,15 +146,53 @@ class OwnerReviewModel extends AbstractModel {
             statistics: stats,
             hasReviews: reviews.length > 0
         };
-    }
-
-    async getOwnerReviewsWithStats(ownerId) {
+    }    async getOwnerReviewsWithStats(ownerId) {
         try {
             if (!ownerId) {
                 throw new Error('Owner ID is required');
             }
+        
+            const reviews = await this.getByReviewedOwner(ownerId);
             
-            return await this.dto.getOwnerReviewsWithStats(ownerId);
+            const statistics = {
+                total_reviews: reviews.length,
+                average_rating: 0,
+                average_communication: 0,
+                average_pet_condition: 0,
+                average_process: 0,
+                recommendation_percentage: 0
+            };
+            
+            if (reviews.length > 0) {
+                const validRatings = reviews.filter(r => r.rating != null);
+                const validCommunicationRatings = reviews.filter(r => r.communication_rating != null);
+                const validPetConditionRatings = reviews.filter(r => r.pet_condition_rating != null);
+                const validProcessRatings = reviews.filter(r => r.process_rating != null);
+                
+                if (validRatings.length > 0) {
+                    statistics.average_rating = parseFloat((validRatings.reduce((sum, r) => sum + r.rating, 0) / validRatings.length).toFixed(1));
+                }
+                
+                if (validCommunicationRatings.length > 0) {
+                    statistics.average_communication = parseFloat((validCommunicationRatings.reduce((sum, r) => sum + r.communication_rating, 0) / validCommunicationRatings.length).toFixed(1));
+                }
+                
+                if (validPetConditionRatings.length > 0) {
+                    statistics.average_pet_condition = parseFloat((validPetConditionRatings.reduce((sum, r) => sum + r.pet_condition_rating, 0) / validPetConditionRatings.length).toFixed(1));
+                }
+                
+                if (validProcessRatings.length > 0) {
+                    statistics.average_process = parseFloat((validProcessRatings.reduce((sum, r) => sum + r.process_rating, 0) / validProcessRatings.length).toFixed(1));
+                }
+                
+                const recommendedCount = reviews.filter(r => r.would_recommend === true).length;
+                statistics.recommendation_percentage = Math.round((recommendedCount / reviews.length) * 100);
+            }
+            
+            return {
+                reviews,
+                statistics
+            };
         } catch (error) {
             console.error('Error in OwnerReviewModel.getOwnerReviewsWithStats:', error);
             throw error;

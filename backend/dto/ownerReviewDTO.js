@@ -124,13 +124,62 @@ class OwnerReviewDTO extends AbstractDTO {
                 fetchInfo: {
                     REVIEW_TEXT: { type: oracledb.STRING }
                 }
+            });            if (!result.rows) {
+                return [];
+            }
+
+            return result.rows.map(row => {
+                const review = {
+                    id: row.ID,
+                    reviewer_id: row.REVIEWER_ID,
+                    reviewed_owner_id: row.REVIEWED_OWNER_ID,
+                    adoption_id: row.ADOPTION_ID,
+                    rating: row.RATING,
+                    review_text: row.REVIEW_TEXT,
+                    communication_rating: row.COMMUNICATION_RATING,
+                    pet_condition_rating: row.PET_CONDITION_RATING,
+                    process_rating: row.PROCESS_RATING,
+                    would_recommend: row.WOULD_RECOMMEND === 1,
+                    created_at: row.CREATED_AT,
+                    updated_at: row.UPDATED_AT,
+                    reviewer: {
+                        id: row.REVIEWER_ID,
+                        first_name: row.REVIEWER_FIRST_NAME,
+                        last_name: row.REVIEWER_LAST_NAME,
+                        profile_picture: this.fixImagePath(row.REVIEWER_PROFILE_PICTURE),
+                        username: row.REVIEWER_USERNAME
+                    },
+                    animal: {
+                        id: row.ANIMAL_ID,
+                        name: row.ANIMAL_NAME,
+                        species: row.ANIMAL_SPECIES,
+                        image_path: this.fixImagePath(row.ANIMAL_IMAGE_PATH)
+                    }
+                };
+                return review;
             });
-            
-            return result.rows || [];
         } catch (error) {
             console.error('Error in OwnerReviewDTO.getByReviewedOwner:', error);
             throw error;
         }
+    }      fixImagePath(imagePath) {
+        if (!imagePath) return null;
+        
+        if (imagePath.startsWith('http') || imagePath.startsWith('/api/static/')) {
+            return imagePath;
+        }
+        
+        let fixedPath = imagePath;
+        
+        if (!fixedPath.endsWith('.webp') && !fixedPath.startsWith('http')) {
+            if (fixedPath.includes('.')) {
+                fixedPath = fixedPath.replace(/\.[^.]+$/, '.webp');
+            } else {
+                fixedPath += '.webp';
+            }
+        }
+        
+        return fixedPath;
     }
 
     async getByReviewer(reviewerId) {

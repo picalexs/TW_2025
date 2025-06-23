@@ -1,6 +1,6 @@
 select  * from favorites;
 
-select * from users;
+select * from users where id = 9;
 
 select * from tags;
 
@@ -19,6 +19,7 @@ SELECT id, DUMP(id), name FROM tags WHERE id IN (5, 12);
 SELECT * FROM tags ORDER BY id;
 
 
+select * from testimonials;
 
 UPDATE users
 SET role = 'admin'
@@ -27,17 +28,6 @@ COMMIT;
 
 SELECT * FROM users WHERE username = 'admin';
 
-UPDATE users
-SET role = 'admin'
-WHERE username = 'geo';
 
+select * from owner_reviews;
 
-SELECT * FROM users WHERE username = 'geo';
-
-SELECT ID, USERNAME, PASSWORD_HASH, EMAIL, IS_VERIFIED, ROLE FROM users WHERE email = 'admin@admin.com';
-
-
-UPDATE users
-SET role = 'admin'
-WHERE id = 31;
-COMMIT;

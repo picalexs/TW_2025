@@ -146,15 +146,16 @@ class petDTO extends abstractDTO {
           postalCode: result.rows[0].POSTAL_CODE,
         };
       }      
-      
-      if (result.rows[0].SHELTER_FIRST_NAME) {
+        if (result.rows[0].SHELTER_FIRST_NAME) {
+        let shelterProfilePicture = result.rows[0].SHELTER_PROFILE_PICTURE;
+        
         pet.shelter = {
           id: result.rows[0].SHELTER_USER_ID,
           firstName: result.rows[0].SHELTER_FIRST_NAME,
           lastName: result.rows[0].SHELTER_LAST_NAME,
           email: result.rows[0].SHELTER_EMAIL,
           phone: result.rows[0].SHELTER_PHONE,
-          profilePicture: result.rows[0].SHELTER_PROFILE_PICTURE,
+          profilePicture: shelterProfilePicture,
         };
       }
 

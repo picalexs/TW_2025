@@ -8,8 +8,9 @@ class userDTO extends abstractDTO {
   constructor() {
     super("users");
   }
-
   mapToEntity(dbRow) {
+    let profilePicture = dbRow.PROFILE_PICTURE;
+    
     return {
       id: dbRow.ID,
       username: dbRow.USERNAME,
@@ -18,9 +19,9 @@ class userDTO extends abstractDTO {
       last_name: dbRow.LAST_NAME,
       phone: dbRow.PHONE,
       role: dbRow.ROLE,
-      profile_picture: dbRow.PROFILE_PICTURE,      
+      profile_picture: profilePicture,      
       created_at: dbRow.CREATED_AT,
-      imagePath: ImagePathHandler.processUserImagePath(dbRow.PROFILE_PICTURE),
+      imagePath: ImagePathHandler.processUserImagePath(profilePicture),
       adoption_count: dbRow.ADOPTION_COUNT || 0,
       pets_helped_count: dbRow.PETS_HELPED_COUNT || 0,
       is_verified: dbRow.IS_VERIFIED,
@@ -287,7 +288,7 @@ class userDTO extends abstractDTO {
             const result = await connection.execute(sql, binds, options);
 
             if (result.rowsAffected > 0) {
-               
+                // Fetch and return the newly created user
                 const newUser = await this.findByEmail(connection, email);
                 return newUser;
             } else {
