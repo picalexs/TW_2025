@@ -11,7 +11,6 @@ class JavaScriptBundler {
     try {
       await fs.mkdir(this.outputDir, { recursive: true });
     } catch (error) {
-      // Directory already exists
     }
   }
 

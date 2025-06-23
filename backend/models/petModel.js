@@ -9,10 +9,10 @@ class PetModel extends AbstractModel {
   async createPet(petData) {
     this.validatePetData(petData);
     return await this.dto.create(petData);
-  }  async updatePet(id, petDataOrFields, files = null) {
-    // Handle both JSON updates (without files) and multipart updates (with files)
+  }
+
+  async updatePet(id, petDataOrFields, files = null) {
     if (files !== null) {
-      // Multipart form data update with files
       const validatedData = this.validatePetCreationData(petDataOrFields, files);
       const updatedPet = await this.dto.update(id, validatedData.petData);
       
@@ -20,7 +20,6 @@ class PetModel extends AbstractModel {
         return null;
       }
       
-      // Return the validated data so the controller can handle file saving
       return {
         pet: updatedPet,
         files: files,
@@ -31,7 +30,6 @@ class PetModel extends AbstractModel {
         careSchedule: validatedData.careSchedule
       };
     } else {
-      // JSON update without files
       this.validatePetData(petDataOrFields, true);
       return await this.dto.update(id, petDataOrFields);
     }
@@ -59,28 +57,23 @@ class PetModel extends AbstractModel {
       address: fields.address
     };
 
-    // Validate basic pet data
-    this.validatePetData(petData);    // Parse and validate JSON fields
+    this.validatePetData(petData);
     const tags = this.parseJsonField(fields.tags, []);
     const medicalHistory = this.parseJsonField(fields.medicalHistory, []);
     const careResources = this.parseJsonField(fields.careResources, []);
     const careSchedule = this.parseJsonField(fields.careSchedule, []);
 
-    // Validate arrays
     const validatedTags = this.validateArrayField(tags, 'Tags', { maxItems: 20 });
     const validatedMedicalHistory = this.validateArrayField(medicalHistory, 'Medical History', { maxItems: 50 });
     const validatedCareResources = this.validateArrayField(careResources, 'Care Resources', { maxItems: 20 });
     const validatedCareSchedule = this.validateArrayField(careSchedule, 'Care Schedule', { maxItems: 20 });
 
-    // Validate additional data
     this.validateMedicalHistory(validatedMedicalHistory);
     this.validateCareResources(validatedCareResources);
     this.validateCareSchedule(validatedCareSchedule);
 
-    // Validate files
     this.validateFileData(files);
 
-    // Validate profile image index
     const profileImageIndex = fields.profileImageIndex ? parseInt(fields.profileImageIndex) : 0;
     if (files && files.length > 0 && (profileImageIndex < 0 || profileImageIndex >= files.length)) {
       throw Object.assign(
@@ -208,7 +201,7 @@ class PetModel extends AbstractModel {
 
   validateMedicalHistory(medicalHistory) {
     if (!medicalHistory || !Array.isArray(medicalHistory)) {
-      return; // Medical history is optional
+      return;
     }
 
     medicalHistory.forEach((entry, index) => {
@@ -225,7 +218,7 @@ class PetModel extends AbstractModel {
 
   validateCareResources(careResources) {
     if (!careResources || !Array.isArray(careResources)) {
-      return; // Care resources are optional
+      return;
     }
 
     careResources.forEach((entry, index) => {
@@ -360,9 +353,6 @@ class PetModel extends AbstractModel {
     return await this.dto.clearCareSchedule(petId);
   }
 
-  /**
-   * Get pets sorted by tag overlap (matching score) for a user
-   */
   async getPetsByTagOverlap(userId, limit = 20) {
     return await this.dto.getPetsByTagOverlap(userId, limit);
   }

@@ -16,7 +16,17 @@
       "senior": "Vârstnic",
       "friendly": "Prietenos",
       "energetic": "Energic",
-      "shy": "Timid"
+      "shy": "Timid",
+      "lovesFetch": "Îi place să aducă mingea",
+      "goodWithKids": "Prietenos cu copiii",
+      "goodWithCats": "Prietenos cu pisicile",
+      "goodWithDogs": "Prietenos cu câinii",
+      "houseTrained": "Dresat în casă",
+      "playful": "Jucăuș",
+      "calm": "Liniștit",
+      "specialNeeds": "Nevoi speciale",
+      "largeSize": "Talie mare",
+      "smallSize": "Talie mică"
     }
   },
   "testimonials": {

@@ -192,6 +192,7 @@ class UserModel extends AbstractModel {
   async saveProfilePicture(file, userId) {
     const fs = require('fs').promises;
     const path = require('path');
+    const ImageProcessor = require('../utils/imageProcessor');
     
     const uploadDir = path.join(process.cwd(), 'server', 'images', 'profile', 'users');
     try {
@@ -200,20 +201,47 @@ class UserModel extends AbstractModel {
       if (error.code !== 'EEXIST') throw error;
     }
     
-    const fileExtension = path.extname(file.filename);
-    const fileName = `user_${userId}_${Date.now()}${fileExtension}`;
-    const filePath = path.join(uploadDir, fileName);
+    const fileName = `user_${userId}_${Date.now()}`;
+    const outputPath = path.join(uploadDir, fileName);
     
-    await fs.writeFile(filePath, file.buffer);
-    
-    const relativePath = `images/profile/users/${fileName}`;
-    
-    return {
-      path: relativePath,
-      filename: fileName,
-      originalName: file.filename,
-      mimeType: file.mimeType
-    };
+    try {
+      const result = await ImageProcessor.processAndSaveFile(file, outputPath, {
+        type: 'profilePicture'
+      });
+      
+      const relativePath = path.relative(
+        path.join(process.cwd(), 'server'),
+        result.path
+      ).replace(/\\/g, '/');
+
+      console.log(`Profile picture processed: ${file.filename} -> ${relativePath}`);
+      
+      return {
+        path: `images/profile/users/${path.basename(result.path)}`,
+        filename: path.basename(result.path),
+        originalName: file.filename,
+        mimeType: 'image/webp',
+        originalSize: result.originalSize,
+        processedSize: result.processedSize
+      };
+    } catch (processingError) {
+      console.error('Image processing failed, saving original:', processingError);
+      
+      const fileExtension = path.extname(file.filename);
+      const fallbackPath = path.join(uploadDir, `${fileName}${fileExtension}`);
+      await fs.writeFile(fallbackPath, file.buffer);
+      
+      const relativePath = `images/profile/users/${fileName}${fileExtension}`;
+      
+      return {
+        path: relativePath,
+        filename: `${fileName}${fileExtension}`,
+        originalName: file.filename,
+        mimeType: file.mimeType,
+        processed: false,
+        error: processingError.message
+      };
+    }
   }
 
   async authenticate(email, password) {
@@ -248,8 +276,6 @@ class UserModel extends AbstractModel {
     try {
       connection = await db.getConnection();
       const user = await this.dto.findByEmail(connection, email);
-     
-      console.log('[DEBUG] userModel.findByEmail result:', user);
       return user;
     } finally {
       if (connection) {

@@ -36,12 +36,12 @@ async function renderFavorites() {
     petDiv.className = 'favorite-pet-card';
     const imagePath = window.ImagePathHandler ? 
       window.ImagePathHandler.processPetImagePath(pet.imagePath) :
-      (pet.imagePath || '/frontend/assets/default-pet-profile.jpg');
+      (pet.imagePath || '/frontend/assets/default-pet-profile.webp');
     
     petDiv.innerHTML = `
       <a href="../pets/pet-details/pet-details.html?id=${pet.id}" class="favorite-pet-link">
         <div class="favorite-pet-image-wrapper">
-          <img src="${imagePath}" alt="${pet.name || 'Pet'}" class="favorite-pet-image" onerror="this.src='/frontend/assets/default-pet-profile.jpg'">
+          <img src="${imagePath}" alt="${pet.name || 'Pet'}" class="favorite-pet-image" onerror="this.src='/frontend/assets/default-pet-profile.webp'">
         </div>
         <div class="favorite-pet-info">
           <h3 class="favorite-pet-name">${pet.name || 'Unknown Pet'}</h3>
@@ -72,5 +72,4 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
-  console.log('[DEBUG] authToken in localStorage:', localStorage.getItem('authToken'));
 });

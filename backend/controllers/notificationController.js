@@ -4,13 +4,6 @@ const ErrorHandler = require('../utils/errorHandler');
 const oracledb = require('oracledb');
 
 class NotificationController {
-    constructor() {
-        this.debug = true;
-    }
-
-    /**
-     * Create a new notification
-     */
     async createNotification(req, res) {
         let connection;
         try {

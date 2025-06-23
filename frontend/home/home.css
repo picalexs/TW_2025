@@ -117,7 +117,6 @@ section:focus {
   position: relative;
   z-index: 41;
   font-weight: 700;
-  font-display: swap;
   line-height: 1.1;
   min-height: 5rem;
   display: flex;
@@ -445,5 +444,4 @@ section:focus {
 .pets-grid,
 .users-grid {
   content-visibility: auto;
-  contain-intrinsic-size: 0 400px;
 }

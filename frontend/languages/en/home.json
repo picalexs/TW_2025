@@ -16,7 +16,17 @@
       "senior": "Senior",
       "friendly": "Friendly",
       "energetic": "Energetic",
-      "shy": "Shy"
+      "shy": "Shy",
+      "lovesFetch": "Loves Fetch",
+      "goodWithKids": "Good with Kids",
+      "goodWithCats": "Good with Cats",
+      "goodWithDogs": "Good with Dogs",
+      "houseTrained": "House Trained",
+      "playful": "Playful",
+      "calm": "Calm",
+      "specialNeeds": "Special Needs",
+      "largeSize": "Large Size",
+      "smallSize": "Small Size"
     }  
   },
   "testimonials": {

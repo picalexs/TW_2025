@@ -51,14 +51,14 @@ function initHeroSection() {
 
 function createManualSlideshow(container) {
   const slideImages = [
-    "../assets/hero-bg.jpg",
-    "../assets/hero-bg2.jpg",
-    "../assets/hero-bg3.jpg",
-    "../assets/hero-bg4.jpg",
-    "../assets/hero-bg5.jpg",
-    "../assets/hero-bg6.jpg",
-    "../assets/hero-bg7.jpg",
-    "../assets/hero-bg8.jpg",
+    "../assets/hero-bg.webp",
+    "../assets/hero-bg2.webp",
+    "../assets/hero-bg3.webp",
+    "../assets/hero-bg4.webp",
+    "../assets/hero-bg5.webp",
+    "../assets/hero-bg6.webp",
+    "../assets/hero-bg7.webp",
+    "../assets/hero-bg8.webp",
   ];
 
   const uniqueImages = [...new Set(slideImages)];
@@ -197,10 +197,29 @@ function createSlides(testimonials, cardsPerSlide) {
 }
 
 let testimonialsCarousel = null;
+let testimonialsAutoScrollTimer = null;
+
+function startTestimonialsAutoScroll() {
+  clearTestimonialsAutoScroll();
+  if (!testimonialsCarousel) return;
+  testimonialsAutoScrollTimer = setInterval(() => {
+    if (testimonialsCarousel && !testimonialsCarousel.isDisabled) {
+      testimonialsCarousel.goToSlide(testimonialsCarousel.currentSlide + 1);
+    }
+  }, 6000);
+}
+
+function clearTestimonialsAutoScroll() {
+  if (testimonialsAutoScrollTimer) {
+    clearInterval(testimonialsAutoScrollTimer);
+    testimonialsAutoScrollTimer = null;
+  }
+}
 
 function initTestimonialsCarousel() {
   if (testimonialsCarousel) {
     testimonialsCarousel.destroy();
+    clearTestimonialsAutoScroll();
   }
 
   const config = window.CarouselHelpers.createTestimonialsCarouselConfig(
@@ -208,17 +227,55 @@ function initTestimonialsCarousel() {
   );
 
   config.onSlideChange = (currentSlide, previousSlide, carousel) => {
+    startTestimonialsAutoScroll();
     console.log(
       `Testimonials carousel moved from slide ${previousSlide} to ${currentSlide}`
     );
   };
 
   config.onInit = (carousel) => {
+    if (carousel && typeof carousel.goToSlide === 'function') {
+      carousel.goToSlide(1, false);
+    }
+    startTestimonialsAutoScroll();
+    const container = document.querySelector('.testimonials-carousel');
+    if (container) {
+      container.addEventListener('mouseenter', clearTestimonialsAutoScroll);
+      container.addEventListener('mouseleave', startTestimonialsAutoScroll);
+      container.addEventListener('touchstart', clearTestimonialsAutoScroll, {passive:true});
+      container.addEventListener('touchend', startTestimonialsAutoScroll, {passive:true});
+    }
     console.log("Testimonials carousel initialized successfully");
   };
 
   testimonialsCarousel = new window.Carousel(config);
 }
+
+let resizeTimeout;
+window.addEventListener('resize', () => {
+  if (testimonialsCarousel && window.currentTestimonials) {
+    clearTimeout(resizeTimeout);
+    
+    const testimonialsSection = document.getElementById("testimonials");
+    if (testimonialsSection) {
+      testimonialsSection.classList.add('resizing');
+    }
+    
+    resizeTimeout = setTimeout(() => {
+      if (testimonialsSection && window.currentTestimonials) {
+        testimonialsSection.innerHTML = createTestimonialsCarousel(window.currentTestimonials);
+        initTestimonialsCarousel();
+        if (window.languageManager) {
+          window.languageManager.updateContent();
+        }
+        
+        setTimeout(() => {
+          testimonialsSection.classList.remove('resizing');
+        }, 50);
+      }
+    }, 250);
+  }
+});
 
 window.addEventListener("beforeunload", () => {
   if (testimonialsCarousel) {
@@ -307,7 +364,7 @@ async function fetchAndRenderUsers() {
 
   const loadUsersWithRetry = async () => {
     try {
-      const userService = new UserService({ debug: true });
+      const userService = new UserService();
       const allUsersResponse = await userService.getAllUsersWithAdoptions();
       const allUsers = Array.isArray(allUsersResponse)
         ? allUsersResponse

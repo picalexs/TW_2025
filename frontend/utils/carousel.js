@@ -217,7 +217,8 @@ class Carousel {
         let translateX;
 
         if (this.animationConfig.gapCalculation === 'percentage') {
-            const gapInPercent = this.calculateGapAsPercentage();
+            const isMobile = window.innerWidth <= 768 && this.containerSelector === '.testimonials-carousel';
+            const gapInPercent = isMobile ? 0 : this.calculateGapAsPercentage();
             translateX = -this.currentSlide * (100 + gapInPercent);
         } else {
             translateX = -this.currentSlide * 100;
@@ -368,13 +369,80 @@ class Carousel {
                 }
                 break;
         }
-    }
-
+    }    
     handleResize() {
+        if (this.track) {
+            this.track.style.transition = 'none';
+        }
+        
         this.checkResponsiveState();
+        
+        if (this.containerSelector === '.testimonials-carousel') {
+            this.recalculateTestimonialsSlides();
+        }
+        
         if (!this.isDisabled) {
             this.updateCarousel();
         }
+        
+        setTimeout(() => {
+            if (this.track) {
+                this.track.style.transition = `transform ${this.animationConfig.duration}ms ${this.animationConfig.easing}`;
+            }
+        }, 50);
+    }
+
+    recalculateTestimonialsSlides() {
+        const allCards = Array.from(this.container.querySelectorAll('.testimonial-card'));
+        if (allCards.length === 0) return;
+
+        const cardsPerSlide = this.getResponsiveCardsPerSlide();
+        this.track.innerHTML = '';
+        
+        const slides = [];
+        for (let i = 0; i < allCards.length; i += cardsPerSlide) {
+            slides.push(allCards.slice(i, i + cardsPerSlide));
+        }
+        
+        slides.forEach((slide, slideIndex) => {
+            const slideDiv = document.createElement('div');
+            slideDiv.className = 'testimonials-grid';
+            slide.forEach(card => {
+                slideDiv.appendChild(card.cloneNode(true));
+            });
+            this.track.appendChild(slideDiv);
+        });
+        this.updateSlides();
+        this.updateIndicatorsForNewSlideCount();
+        
+        if (this.currentSlide >= this.totalSlides) {
+            this.currentSlide = 0;
+        }
+    }
+
+    getResponsiveCardsPerSlide() {
+        const width = window.innerWidth;
+        if (width <= 768) return 1;
+        if (width <= 1024) return 2;
+        return 3;
+    }
+
+    updateIndicatorsForNewSlideCount() {
+        if (!this.indicatorsConfig.enabled) return;
+        
+        const indicatorsContainer = this.container.querySelector(this.indicatorsConfig.containerSelector);
+        if (!indicatorsContainer) return;
+        indicatorsContainer.innerHTML = '';
+        
+        for (let i = 0; i < this.totalSlides; i++) {
+            const indicator = document.createElement('button');
+            indicator.className = `carousel-indicator ${i === 0 ? 'active' : ''}`;
+            indicator.setAttribute('data-slide', i);
+            indicator.setAttribute('aria-label', `Go to slide ${i + 1}`);
+            indicator.addEventListener('click', () => this.goToSlide(i));
+            indicatorsContainer.appendChild(indicator);
+        }
+        this.indicators = Array.from(indicatorsContainer.querySelectorAll('.carousel-indicator'));
     }
 
     refresh() {
@@ -486,6 +554,9 @@ function getResponsiveItemsPerSlide(breakpoints = null) {
         .sort((a, b) => b - a);
     for (const breakpoint of sortedBreakpoints) {
         if (width <= breakpoint) {
+            if (width <= 768) {
+                return 1;
+            }
             return config[breakpoint];
         }
     }

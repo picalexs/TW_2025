@@ -12,7 +12,7 @@ window.navigateToProfile = navigateToProfile;
 
 class ProfilePage {
   constructor() {
-    this.userService = new UserService({ debug: true });
+    this.userService = new UserService();
     this.petService = new PetService();
     this.ownerReviewService = new OwnerReviewService();
     this.currentUser = null;
@@ -856,20 +856,55 @@ class ProfilePage {
       profileImagePreview.src = imagePath;
     }
   }
-
-  handleProfileImagePreview(e) {
+  async handleProfileImagePreview(e) {
     const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const profileImagePreview = document.getElementById("edit-profile-image-preview");
-        if (profileImagePreview) {
-          profileImagePreview.src = e.target.result;
+    if (!file) return;
+    
+    const profileImagePreview = document.getElementById("edit-profile-image-preview");
+    if (!profileImagePreview) return;
+
+    try {
+      profileImagePreview.style.opacity = '0.5';
+      
+      if (window.ClientImageProcessor) {
+        const result = await window.ClientImageProcessor.validateAndPreviewFiles([file], 'profilePicture');
+        
+        if (result.errors.length > 0) {
+          this.showError(`Image validation error: ${result.errors[0].error}`);
+          return;
         }
-      };
-      reader.readAsDataURL(file);
+        
+        if (result.validFiles.length > 0) {
+          const fileInfo = result.validFiles[0];
+          profileImagePreview.src = fileInfo.previewUrl;
+          
+          const compressionInfo = document.querySelector('.profile-compression-info');
+          if (compressionInfo) {
+            compressionInfo.remove();
+          }
+          
+          if (fileInfo.warning.length > 0) {
+            fileInfo.warning.forEach(warning => {
+              this.showError(`⚠️ ${warning}`, 3000);
+            });
+          }
+        }
+      } else {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          profileImagePreview.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+      
+      profileImagePreview.style.opacity = '1';
+    } catch (error) {
+      console.error('Error processing profile image:', error);
+      this.showError('Error processing image: ' + error.message);
+      profileImagePreview.style.opacity = '1';
     }
   }
+
   async handleEditProfileSubmit(e) {
     e.preventDefault();
 

@@ -35,3 +35,9 @@ WHERE username = 'geo';
 SELECT * FROM users WHERE username = 'geo';
 
 SELECT ID, USERNAME, PASSWORD_HASH, EMAIL, IS_VERIFIED, ROLE FROM users WHERE email = 'admin@admin.com';
+
+
+UPDATE users
+SET role = 'admin'
+WHERE id = 31;
+COMMIT;

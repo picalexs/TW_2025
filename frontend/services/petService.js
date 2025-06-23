@@ -4,10 +4,11 @@ class PetService {
   constructor(options = {}) {
     this.apiService = options.apiService || new ApiService(options.baseURL, {
       debug: options.debug || false,
-      timeout: 0,
-      retryCount: options.retryCount || 999
+      timeout: options.timeout || 60000,
+      retryCount: options.retryCount || 2
     });
     this.debug = options.debug || false;
+    this.fileUploadTimeout = options.fileUploadTimeout || 120000;
     this.endpoints = {
       base: '/api/pets',
       detail: id => `/api/pets/${id}`
@@ -73,11 +74,19 @@ class PetService {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => {
+        controller.abort();
+      }, this.fileUploadTimeout);
+
       const response = await fetch(`${this.apiService.baseURL}${this.endpoints.base}`, {
         method: 'POST',
         headers: headers,
-        body: formData
+        body: formData,
+        signal: controller.signal
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -86,6 +95,9 @@ class PetService {
 
       return await response.json();
     } catch (error) {
+      if (error.name === 'AbortError') {
+        throw new Error('Upload timeout - please try with smaller images or check your connection');
+      }
       if (this.debug) {
         console.error('Error adding pet with files:', error);
       }
@@ -129,11 +141,19 @@ class PetService {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => {
+        controller.abort();
+      }, this.fileUploadTimeout);
+
       const response = await fetch(`${this.apiService.baseURL}${this.endpoints.detail(id)}`, {
         method: 'PUT',
         headers: headers,
-        body: formData
+        body: formData,
+        signal: controller.signal
       });
+
+      clearTimeout(timeoutId);
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
@@ -142,6 +162,9 @@ class PetService {
 
       return await response.json();
     } catch (error) {
+      if (error.name === 'AbortError') {
+        throw new Error('Upload timeout - please try with smaller images or check your connection');
+      }
       if (this.debug) {
         console.error(`Error updating pet with files, ID ${id}:`, error);
       }

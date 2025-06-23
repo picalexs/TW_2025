@@ -592,6 +592,7 @@ class AddPetPage {
     
     try {
       this.setLoading(true);
+      this.showMessage('Processing form data...', 'info');
       
       const formData = new FormData(e.target);
       
@@ -600,6 +601,8 @@ class AddPetPage {
         this.setLoading(false);
         return;
       }
+      
+      this.showMessage('Preparing files for upload...', 'info');
       
       const submitFormData = new FormData();
       Object.keys(petData).forEach(key => {
@@ -611,6 +614,7 @@ class AddPetPage {
       });
       
       if (this.mediaFiles && this.mediaFiles.length > 0) {
+        this.showMessage(`Processing ${this.mediaFiles.length} media file${this.mediaFiles.length > 1 ? 's' : ''}...`, 'info');
         this.mediaFiles.forEach((file, index) => {
           submitFormData.append('mediaFiles', file);
         });
@@ -624,24 +628,36 @@ class AddPetPage {
       
       let result;
       if (this.isEditMode && this.editPetId) {
-        // Update existing pet
+        this.showMessage('Updating pet profile...', 'info');
         result = await this.petService.updatePetWithFiles(this.editPetId, submitFormData);
         console.log('Pet update successful:', result);
-        alert('Pet updated successfully!');
+        this.showMessage('Pet updated successfully!', 'success');
       } else {
-        // Create new pet
+        this.showMessage('Creating pet profile...', 'info');
         result = await this.petService.addPetWithFiles(submitFormData);
         console.log('Pet creation successful:', result);
-        alert('Pet added successfully!');
+        this.showMessage('Pet added successfully!', 'success');
       }
-      
-      window.location.href = '../pets-page/pets-page.html';
+
+      setTimeout(() => {
+        window.location.href = '../pets-page/pets-page.html';
+      }, 1500);
 
     } catch (error) {
       console.error('Error submitting pet form:', error);
       console.error('Error details:', error.message);
       const action = this.isEditMode ? 'updating' : 'adding';
-      alert(`Error ${action} pet: ` + error.message);
+      
+      let errorMessage = `Error ${action} pet: `;
+      if (error.message.includes('timeout') || error.message.includes('Timeout')) {
+        errorMessage += 'Request timed out. This may be due to large images being processed. Please try with smaller images or wait a moment and try again.';
+      } else if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+        errorMessage += 'Network error. Please check your connection and try again.';
+      } else {
+        errorMessage += error.message;
+      }
+      
+      this.showMessage(errorMessage, 'error');
       this.setLoading(false);
     }
   }
@@ -1011,7 +1027,30 @@ class AddPetPage {
       }
     });
 
+    if (!isValid) {
+      this.scrollToFirstError();
+    }
+
     return isValid;
+  }
+
+  scrollToFirstError() {
+    const firstErrorField = document.querySelector('.form-input.error, .form-select.error, .form-textarea.error');
+    
+    if (firstErrorField) {
+      const navbarHeight = document.querySelector('#global-navbar')?.offsetHeight || 80;
+      const elementTop = firstErrorField.getBoundingClientRect().top + window.pageYOffset;
+      const offsetPosition = elementTop - navbarHeight - 20; // Extra 20px margin
+      
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+      
+      setTimeout(() => {
+        firstErrorField.focus();
+      }, 500);
+    }
   }
 
   setLoading(isLoading) {
@@ -1183,27 +1222,46 @@ class AddPetPage {
       btnText.style.opacity = '1';
     }
   }
-
   showMessage(message, type) {
-    const existingMessage = document.querySelector('.form-message');
-    if (existingMessage) {
-      existingMessage.remove();
-    }
+    const existingNotifications = document.querySelectorAll('.floating-notification');
+    existingNotifications.forEach(notification => notification.remove());
 
-    const messageElement = document.createElement('div');
-    messageElement.className = `form-message ${type} show`;
-    messageElement.textContent = message;
+    const notification = document.createElement('div');
+    notification.className = `floating-notification ${type}`;
+    notification.innerHTML = `
+      <div class="notification-content">
+        <span class="notification-icon">${this.getNotificationIcon(type)}</span>
+        <span class="notification-text">${message}</span>
+        <button class="notification-close" onclick="this.parentElement.parentElement.remove()">×</button>
+      </div>
+    `;
 
-    
-    const form = document.getElementById('add-pet-form');
-    form.insertBefore(messageElement, form.firstChild);
+    document.body.appendChild(notification);
 
-    if (type === 'error') {
-      setTimeout(() => {
-        if (messageElement.parentNode) {
-          messageElement.remove();
-        }
-      }, 5000);
+    setTimeout(() => {
+      notification.classList.add('show');
+    }, 10);
+
+    const delay = type === 'error' ? 8000 : 5000;
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.classList.remove('show');
+        setTimeout(() => {
+          if (notification.parentNode) {
+            notification.remove();
+          }
+        }, 300);
+      }
+    }, delay);
+  }
+
+  getNotificationIcon(type) {
+    switch (type) {
+      case 'success': return '✓';
+      case 'error': return '✕';
+      case 'warning': return '⚠';
+      case 'info': 
+      default: return 'ℹ';
     }
   }
   
@@ -1217,38 +1275,116 @@ class AddPetPage {
     if (uploadButton) {
       uploadButton.classList.add('empty');
     }
-      mediaInput.addEventListener('change', (e) => {
-      // Clear existing object URLs only for new files
+    
+    mediaInput.addEventListener('change', async (e) => {
       this.mediaObjectURLs.forEach(url => URL.revokeObjectURL(url));
       this.mediaObjectURLs = [];
-      this.mediaFiles = Array.from(e.target.files);
-      this.profileImageIndex = 0;
-      
-      // Clear existing media paths when new files are selected
       this.existingMediaPaths = [];
       
-      this.renderMediaPreview();
+      if (e.target.files.length === 0) {
+        this.mediaFiles = [];
+        this.renderMediaPreview();
+        return;
+      }
       
       if (uploadButton) {
-        const fileCount = this.mediaFiles.length;
         const buttonText = uploadButton.querySelector('span:last-child');
+        buttonText.textContent = 'Processing files...';
+        uploadButton.disabled = true;
+      }
+      
+      try {
+        const result = await window.ClientImageProcessor.validateAndPreviewFiles(
+          e.target.files, 
+          'petMedia'
+        );
         
-        if (fileCount === 0) {
+        if (result.errors.length > 0) {
+          const errorMessages = result.errors.map(e => `${e.file}: ${e.error}`).join('\n');
+          this.showMessage(`File validation errors:\n${errorMessages}`, 'error');
+        }
+        
+        this.mediaFiles = result.validFiles.map(fileInfo => fileInfo.file);
+        this.fileInfos = result.validFiles;
+        this.profileImageIndex = 0;
+        
+        this.renderMediaPreviewWithInfo();
+        
+        if (uploadButton) {
+          const fileCount = this.mediaFiles.length;
+          const buttonText = uploadButton.querySelector('span:last-child');
+          
+          if (fileCount === 0) {
+            buttonText.textContent = 'Choose Photos & Videos';
+            uploadButton.classList.add('empty');
+          } else {
+            buttonText.textContent = `${fileCount} file${fileCount !== 1 ? 's' : ''} selected`;
+            uploadButton.classList.remove('empty');
+          }
+          uploadButton.disabled = false;
+        }        
+      } catch (error) {
+        console.error('Error processing files:', error);
+        this.showMessage('Error processing files: ' + error.message, 'error');
+        this.mediaFiles = [];
+        this.renderMediaPreview();
+        
+        if (uploadButton) {
+          const buttonText = uploadButton.querySelector('span:last-child');
           buttonText.textContent = 'Choose Photos & Videos';
           uploadButton.classList.add('empty');
-        } else {
-          buttonText.textContent = `${fileCount} file${fileCount !== 1 ? 's' : ''} selected`;
-          uploadButton.classList.remove('empty');
+          uploadButton.disabled = false;
         }
       }
     });
   }
 
-  renderMediaPreview() {
+  renderMediaPreviewWithInfo() {
     const previewContainer = document.getElementById('media-preview');
     previewContainer.innerHTML = '';
     
-    // Handle new files
+    if (this.fileInfos && this.fileInfos.length > 0) {
+      this.fileInfos.forEach((fileInfo, idx) => {
+        const mediaWrapper = document.createElement('div');
+        mediaWrapper.className = 'media-thumb-wrapper' + (idx === this.profileImageIndex ? ' selected' : '');
+        
+        let mediaElem;
+        if (fileInfo.file.type.startsWith('image/')) {
+          mediaElem = document.createElement('img');
+          mediaElem.src = fileInfo.previewUrl;
+          mediaElem.className = 'media-thumb';
+          mediaElem.alt = fileInfo.originalName;
+        } else if (fileInfo.file.type.startsWith('video/')) {
+          mediaElem = document.createElement('video');
+          mediaElem.src = fileInfo.previewUrl;
+          mediaElem.className = 'media-thumb';
+          mediaElem.controls = true;
+        }
+        
+        if (mediaElem) {
+          mediaWrapper.appendChild(mediaElem);
+          mediaWrapper.addEventListener('click', () => {
+            this.profileImageIndex = idx;
+            this.renderMediaPreviewWithInfo();
+          });
+          
+          previewContainer.appendChild(mediaWrapper);
+        }
+      });
+    }
+    else if (this.existingMediaPaths.length) {
+      this.displayExistingMedia(this.existingMediaPaths);
+    }
+  }
+  renderMediaPreview() {
+    if (this.fileInfos && this.fileInfos.length > 0) {
+      this.renderMediaPreviewWithInfo();
+      return;
+    }
+    
+    const previewContainer = document.getElementById('media-preview');
+    previewContainer.innerHTML = '';
+    
     if (this.mediaFiles.length) {
       this.mediaObjectURLs = this.mediaFiles.map((file, idx) => {
         if (this.mediaObjectURLs[idx]) return this.mediaObjectURLs[idx];
@@ -1278,7 +1414,6 @@ class AddPetPage {
         }
       });
     }
-    // Handle existing media (when no new files are selected)
     else if (this.existingMediaPaths.length) {
       this.displayExistingMedia(this.existingMediaPaths);
     }

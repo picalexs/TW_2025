@@ -4,7 +4,6 @@ export let isLoggedIn = false;
 
 function checkLoginStatusAndToggleNavButtons() {
     isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
-    console.log('User login status:', isLoggedIn);
 
     const authButtonsLoggedOut = document.getElementById('auth-buttons-logged-out');
     const authButtonsLoggedIn = document.getElementById('auth-buttons-logged-in');
@@ -14,12 +13,16 @@ function checkLoginStatusAndToggleNavButtons() {
     const logoutButton = document.querySelector('.nav-logout-btn');
     const mobileLogoutLink = document.querySelector('.mobile-nav-logout');
 
-    // Dynamically set profile link if logged in
     const profileBtn = document.querySelector('.nav-profile-btn');
+    const mobileProfileBtn = document.querySelector('.mobile-nav-profile');
+    
     if (isLoggedIn && profileBtn) {
         const userId = localStorage.getItem('userId');
         if (userId) {
             profileBtn.href = `/frontend/profile/profile.html?id=${userId}`;
+            if (mobileProfileBtn) {
+                mobileProfileBtn.href = `/frontend/profile/profile.html?id=${userId}`;
+            }
         }
     }
 
@@ -48,11 +51,14 @@ function checkLoginStatusAndToggleNavButtons() {
     }
 
     const adminNavItem = document.getElementById('admin-nav-item');
+    const mobileAdminNavItem = document.getElementById('mobile-admin-nav-item');
     const userRole = localStorage.getItem('userRole');
     if (isLoggedIn && userRole === 'admin') {
         if (adminNavItem) adminNavItem.style.display = '';
+        if (mobileAdminNavItem) mobileAdminNavItem.style.display = '';
     } else {
         if (adminNavItem) adminNavItem.style.display = 'none';
+        if (mobileAdminNavItem) mobileAdminNavItem.style.display = 'none';
     }
 }
 
@@ -66,7 +72,6 @@ function handleLogout(event) {
     localStorage.removeItem('userRole');
     localStorage.removeItem('isLoggedIn');
     isLoggedIn = false;
-    console.log('User logged out. Updating UI and redirecting...');
     checkLoginStatusAndToggleNavButtons();
     window.location.href = '/frontend/home/home.html';
 }
@@ -80,8 +85,6 @@ function setupLanguageDropdown() {
         console.warn('Language dropdown elements not found during setupLanguageDropdown');
         return;
     }
-
-    console.log('Setting up language dropdown with options:', languageOptions.length);
 
     const currentLang = localStorage.getItem('language') || 'en';
     updateCurrentLanguage(currentLang);
@@ -98,8 +101,6 @@ function setupLanguageDropdown() {
 
         newOption.addEventListener('click', (e) => {
             e.preventDefault();
-            console.log(`Language option clicked: ${lang}`);
-
             updateCurrentLanguage(lang);
 
             document.querySelectorAll('.language-option').forEach(opt => {
@@ -120,8 +121,6 @@ function setupLanguageDropdown() {
     function updateCurrentLanguage(lang) {
         const flagSpan = currentLangButton.querySelector('.flag-icon');
         const textSpan = currentLangButton.querySelector('span:not(.flag-icon):not(.dropdown-arrow)');
-
-        console.log(`Updating language UI to ${lang}`);
 
         if (!flagSpan || !textSpan) return;
 
@@ -153,26 +152,54 @@ function setupMobileMenu() {
     if (!toggle.dataset.listenerAttached) {
         toggle.addEventListener('click', (e) => {
             e.stopPropagation();
-            console.log('Mobile menu toggle clicked!');
             toggle.classList.toggle('active');
             container.classList.toggle('active');
             overlay.classList.toggle('active');
             document.body.style.overflow = container.classList.contains('active') ? 'hidden' : '';
         });
         toggle.dataset.listenerAttached = 'true';
-    }
-
-    if (!overlay.dataset.listenerAttached) {
-        overlay.addEventListener('click', () => {
-            console.log('Overlay clicked - closing menu');
-            toggle.classList.remove('active');
-            container.classList.remove('active');
-            overlay.classList.remove('active');
-            document.body.style.overflow = '';
+    }    if (!overlay.dataset.listenerAttached) {
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                toggle.classList.remove('active');
+                container.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
         });
         overlay.dataset.listenerAttached = 'true';
-    }
+    } 
 
+    const navLinks = container.querySelectorAll('.mobile-nav-link, .mobile-nav-profile, .mobile-nav-favorites, .mobile-nav-login, .mobile-nav-signup');
+    navLinks.forEach(link => {
+        if (!link.dataset.listenerAttached) {
+            link.addEventListener('click', (e) => {
+                console.log('Mobile nav link clicked:', link.textContent.trim());
+                
+                if (!link.classList.contains('mobile-nav-logout')) {
+                    setTimeout(() => {
+                        toggle.classList.remove('active');
+                        container.classList.remove('active');
+                        overlay.classList.remove('active');
+                        document.body.style.overflow = '';
+                    }, 50);
+                } else {
+                    toggle.classList.remove('active');
+                    container.classList.remove('active');
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+            link.dataset.listenerAttached = 'true';
+        }
+    });
+
+    if (!container.dataset.listenerAttached) {
+        container.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+        container.dataset.listenerAttached = 'true';
+    }
 
     options.forEach(option => {
         const oldOption = option;
@@ -207,7 +234,6 @@ function setupMobileMenu() {
         const activeOption = document.querySelector(`.mobile-language-option[data-lang="${lang}"]`);
         if (activeOption) {
             activeOption.classList.add('active');
-            console.log(`Active mobile language set to: ${lang}`);
         } else {
             console.warn(`No mobile language option found for: ${lang}`);
         }
@@ -219,14 +245,14 @@ function createSlideshow(options = {}) {
         containerSelector: '.hero-slideshow, .login-slideshow',
         slideClass: 'hero-slide',
         images: [
-            '../assets/hero-bg.jpg',
-            '../assets/hero-bg1.jpg',
-            '../assets/hero-bg2.jpg',
-            '../assets/hero-bg3.jpg',
-            '../assets/hero-bg4.jpg',
-            '../assets/hero-bg5.jpg',
-            '../assets/hero-bg6.jpg',
-            '../assets/hero-bg7.jpg'
+            '../assets/hero-bg.webp',
+            '../assets/hero-bg1.webp',
+            '../assets/hero-bg2.webp',
+            '../assets/hero-bg3.webp',
+            '../assets/hero-bg4.webp',
+            '../assets/hero-bg5.webp',
+            '../assets/hero-bg6.webp',
+            '../assets/hero-bg7.webp'
         ],
         interval: 5000,
         overlay: 'rgba(0, 0, 0, 0.5)'
@@ -287,7 +313,6 @@ function createSlideshow(options = {}) {
 }
 
 function initSlideshow(options = {}) {
-    console.log('Initializing slideshow with options:', options);
     const slideshowContainer = document.querySelector(options.containerSelector || '.hero-slideshow');
 
     if (!slideshowContainer) {
@@ -299,14 +324,14 @@ function initSlideshow(options = {}) {
         containerSelector: options.containerSelector || '.hero-slideshow',
         slideClass: 'hero-slide',
         images: [
-            '../assets/hero-bg.jpg',
-            '../assets/hero-bg2.jpg',
-            '../assets/hero-bg3.jpg',
-            '../assets/hero-bg4.jpg',
-            '../assets/hero-bg5.jpg',
-            '../assets/hero-bg6.jpg',
-            '../assets/hero-bg7.jpg',
-            '../assets/hero-bg8.jpg'
+            '../assets/hero-bg.webp',
+            '../assets/hero-bg2.webp',
+            '../assets/hero-bg3.webp',
+            '../assets/hero-bg4.webp',
+            '../assets/hero-bg5.webp',
+            '../assets/hero-bg6.webp',
+            '../assets/hero-bg7.webp',
+            '../assets/hero-bg8.webp'
         ],
         interval: 5000,
         overlay: 'rgba(0, 0, 0, 0.5)'
@@ -322,7 +347,6 @@ function initializePageLanguage() {
 
     const currentPath = window.location.pathname;
     const pageName = currentPath.split('/').pop().replace('.html', '');
-    console.log(`Initializing language for page: ${pageName}`);
 
     if (languageManager) {
         languageManager.updateContent();
@@ -332,7 +356,6 @@ function initializePageLanguage() {
 }
 
 function initBasicFunctionality() {
-    console.log("Initializing basic functionality (language, menu, slideshow, login status)");
     setupLanguageDropdown();
     setupMobileMenu();
     initSlideshow();
@@ -341,10 +364,38 @@ function initBasicFunctionality() {
     if (window.languageManager) {
         window.languageManager.updateContent();
     }
+    setTimeout(ensureMobileMenuWorks, 200);
+}
+
+function ensureMobileMenuWorks() {
+    console.log('ensureMobileMenuWorks called');
+    
+    const toggle = document.querySelector('.mobile-menu-toggle');
+    const container = document.querySelector('.mobile-menu-container');
+    const overlay = document.querySelector('.mobile-overlay');
+    
+    console.log('Mobile menu elements check:', {
+        toggle: !!toggle,
+        container: !!container,
+        overlay: !!overlay,
+        toggleHasListener: toggle ? toggle.dataset.listenerAttached : 'N/A'
+    });
+    
+    if (!toggle || !container || !overlay) {
+        console.log('Mobile menu elements not found, retrying in 100ms');
+        setTimeout(ensureMobileMenuWorks, 100);
+        return;
+    }
+    
+    if (!toggle.dataset.listenerAttached) {
+        console.log('Mobile menu elements found but not initialized, setting up now');
+        setupMobileMenu();
+    } else {
+        console.log('Mobile menu already initialized');
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('global.min.js: DOMContentLoaded fired.');
     const navbarContainer = document.getElementById('global-navbar');
     const footerContainer = document.getElementById('global-footer');
 
@@ -357,7 +408,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (isSignupPage) {
         document.body.setAttribute('data-page', 'signupPage');
     }    if (navbarContainer || footerContainer) {
-      console.log('global.min.js: Attempting to fetch global.html...');
         const currentPath = window.location.pathname;
         let globalHtmlPath = '../global/global.html';
         
@@ -389,17 +439,38 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (footer && footerContainer) {
                     footerContainer.innerHTML = '';
                     footerContainer.appendChild(footer);
-                }
+                } 
                 initBasicFunctionality();
+                
+                setTimeout(() => {
+                    const toggle = document.querySelector('.mobile-menu-toggle');
+                    const container = document.querySelector('.mobile-menu-container');
+                    const overlay = document.querySelector('.mobile-overlay');
+                    
+                    console.log('Post-injection mobile menu check:', {
+                        toggle: !!toggle,
+                        container: !!container,
+                        overlay: !!overlay,
+                        toggleHasListener: toggle ? toggle.dataset.listenerAttached : 'N/A'
+                    });
+                    
+                    if (toggle && !toggle.dataset.listenerAttached) {
+                        console.log('Forcing mobile menu setup');
+                        setupMobileMenu();
+                    }
+                }, 100);
+                
+                setTimeout(ensureMobileMenuWorks, 500);
             })
             .catch(err => {
                 console.error('Error fetching or injecting global components:', err);
                 const errorMessage = '<div class="error-loading" style="color: red; text-align: center; padding: 20px;">Failed to load navigation. Please try refreshing the page.</div>';
                 if (navbarContainer) navbarContainer.innerHTML = errorMessage;
                 if (footerContainer) footerContainer.innerHTML = errorMessage;
-            });
-    } else {
+            });    } else {
+        console.log('No navbar/footer containers found, calling initBasicFunctionality directly');
         initBasicFunctionality();
+        setTimeout(ensureMobileMenuWorks, 300);
     }
 });
 
@@ -411,4 +482,4 @@ export function navigateToProfile(userId) {
   
   window.location.href = `/frontend/profile/profile.html?id=${userId}`;
 }
-export { setupLanguageDropdown, setupMobileMenu, initSlideshow, createSlideshow, initializePageLanguage, checkLoginStatusAndToggleNavButtons};
+export { setupLanguageDropdown, setupMobileMenu, initSlideshow, createSlideshow, initializePageLanguage, checkLoginStatusAndToggleNavButtons, ensureMobileMenuWorks};

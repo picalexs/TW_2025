@@ -33,17 +33,13 @@ function toggleAddPetButton() {
   if (addPetBtn) {
     const loggedIn = isUserLoggedIn();
     const userId = getCurrentUserId();
-    console.log('Checking add pet button visibility - logged in:', loggedIn, 'user ID:', userId);
     
     if (loggedIn && userId) {
       addPetBtn.style.display = 'flex';
-      console.log('Showing add pet button');
+      addPetBtn.style.visibility = 'visible';
     } else {
       addPetBtn.style.display = 'none';
-      console.log('Hiding add pet button');
     }
-  } else {
-    console.log('Add pet button not found in DOM');
   }
 }
 
@@ -258,7 +254,6 @@ export function initializeAdvancedFilters() {
 export function initializeFilterButtons() {
   const applyBtn = document.getElementById('apply-filters');
   const resetBtn = document.getElementById('reset-filters');
-  const addPetBtn = document.getElementById('add-pet-btn');
   
   toggleAddPetButton();
   
@@ -282,15 +277,33 @@ export function initializeFilterButtons() {
       
       renderPets(allPets);
     });
-  }  if (addPetBtn) {
-    addPetBtn.addEventListener('click', () => {
+  }  
+  
+  initializeAddPetButton();
+}
+
+function initializeAddPetButton() {
+  const addPetBtn = document.getElementById('add-pet-btn');
+  
+  if (addPetBtn) {
+    console.log('Add pet button found, attaching event listener');
+    addPetBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      console.log('Add pet button clicked');
+      console.log('User logged in:', isUserLoggedIn());
+      console.log('User ID:', getCurrentUserId());
+      
       if (isUserLoggedIn() && getCurrentUserId()) {
+        console.log('Redirecting to add pet page');
         window.location.href = '../add-pet/add-pet.html';
       } else {
+        console.log('User not logged in, redirecting to login');
         alert('Please log in to add a pet.');
         window.location.href = '../login/login.html';
       }
     });
+  } else {
+    console.log('Add pet button not found');
   }
 }
 
@@ -352,8 +365,14 @@ export function initializeMatchingButton() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('DOM loaded - initializing pets page');
   checkLoginStatusAndToggleNavButtons();
   toggleAddPetButton();
+  // Give the navbar time to load before trying to initialize the add pet button
+  setTimeout(() => {
+    toggleAddPetButton();
+    initializeAddPetButton();
+  }, 100);
 });
 
 document.addEventListener('visibilitychange', () => {

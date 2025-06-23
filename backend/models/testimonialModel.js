@@ -1,6 +1,5 @@
-const testimonialDTO = require("../dto/testimonialDTO");
 const AbstractModel = require("./abstractModel");
-const db = require('../db/dbConnection');
+const testimonialDTO = require("../dto/testimonialDTO");
 
 class TestimonialModel extends AbstractModel {
   constructor() {
@@ -9,68 +8,23 @@ class TestimonialModel extends AbstractModel {
   }
 
   async getAllActive() {
-    let connection;
-    try {
-      connection = await db.getConnection();
-      const testimonials = await this.dto.getAll(connection);
-      return testimonials;
-    } finally {
-      if (connection) {
-        await connection.close();
-      }
-    }
+    return await this.dto.getAll();
   }
 
   async createTestimonial(testimonialData) {
-    let connection;
-    try {
-      connection = await db.getConnection();
-      const result = await this.dto.create(connection, testimonialData);
-      return result;
-    } finally {
-      if (connection) {
-        await connection.close();
-      }
-    }
+    return await this.dto.create(testimonialData);
   }
 
   async updateTestimonial(id, testimonialData) {
-    let connection;
-    try {
-      connection = await db.getConnection();
-      const result = await this.dto.update(connection, id, testimonialData);
-      return result;
-    } finally {
-      if (connection) {
-        await connection.close();
-      }
-    }
+    return await this.dto.update(id, testimonialData);
   }
-  
+
   async getRandomTestimonials(count = 3) {
-    let connection;
-    try {
-      connection = await db.getConnection();
-      const testimonials = await this.dto.getRandom(connection, count);
-      return testimonials;
-    } finally {
-      if (connection) {
-        await connection.close();
-      }
-    }
+    return await this.dto.getRandom(count);
   }
 
   async getByUser(userId) {
-    let connection;
-    try {
-      connection = await db.getConnection();
-      const testimonials = await this.dto.getByUser(connection, userId);
-      return testimonials;
-    } finally {
-      if (connection) {
-        await connection.close();
-      }
-    }
+    return await this.dto.getByUser(userId);
   }
 }
 

@@ -31,13 +31,12 @@ async function handleUserRoutes(req, res) {
     }
 
     if (trimmedPath === "api/users/with-adoptions" && method === "get") {
-        console.log('[UserRoutes] Handling /api/users/with-adoptions GET request (Public via server.js whitelist)');
+        console.log('[UserRoutes] Handling /api/users/with-adoptions GET request (Public)');
         await userController.getAllUsersWithAdoptions(req, res);
         return true;
     }
 
-    
-if (trimmedPath === "api/users" || trimmedPath === "api/users/") {
+    if (trimmedPath === "api/users" || trimmedPath === "api/users/") {
     if (method === "get") {
         console.log('[UserRoutes] Handling /api/users GET request (Protected - Admin Only)');
       
@@ -126,9 +125,6 @@ if (trimmedPath === "api/users" || trimmedPath === "api/users/") {
             });
         });
     }
-
-    console.log(`[UserRoutes] No user route matched: ${trimmedPath}`);
     return false;
 }
-
 module.exports = handleUserRoutes;

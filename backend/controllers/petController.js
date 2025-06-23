@@ -132,6 +132,7 @@ class PetController {
   }
 
   async saveMediaFiles(files, petId, profileImageIndex = 0) {
+    const ImageProcessor = require('../utils/imageProcessor');
     const mediaDir = path.join(__dirname, '../../server/animal', petId.toString());
 
     try {
@@ -142,34 +143,90 @@ class PetController {
     }
 
     const mediaPaths = [];
-
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-
-      const ext = path.extname(file.originalname) || (file.mimetype.includes('image') ? '.jpg' : '.mp4');
-
+    const fileProcessingPromises = files.map(async (file, i) => {
+      const isProfile = i === profileImageIndex;
+      
       let filename;
-      if (i === profileImageIndex) {
-        filename = `profile${ext}`;
+      if (isProfile) {
+        filename = 'profile';
       } else {
         const fileNumber = i < profileImageIndex ? i + 1 : i;
-        filename = `${fileNumber}${ext}`;
+        filename = `${fileNumber}`;
       }
 
-      const filepath = path.join(mediaDir, filename);
-      const relativePath = `/server/animal/${petId}/${filename}`;
+      const outputPath = path.join(mediaDir, filename);
 
       try {
-        await fs.writeFile(filepath, file.buffer);
-        mediaPaths.push({
-          type: file.mimetype.startsWith('image') ? 'image' : 'video',
-          path: relativePath,
-          isProfile: i === profileImageIndex
+        const processPromise = ImageProcessor.processAndSaveFile(file, outputPath, {
+          type: isProfile ? 'profilePicture' : 'petMedia'
         });
+
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error('Image processing timeout')), 30000);
+        });
+
+        const result = await Promise.race([processPromise, timeoutPromise]);
+
+        const relativePath = `/server/animal/${petId}/${path.basename(result.path)}`;
+
+        return {
+          success: true,
+          data: {
+            type: file.mimetype.startsWith('image') ? 'image' : 'video',
+            path: relativePath,
+            isProfile: isProfile,
+            originalSize: result.originalSize,
+            processedSize: result.processedSize,
+            processed: result.processed
+          }
+        };
+
       } catch (error) {
-        console.error(`Error saving file ${filename}:`, error);
-        throw new Error(`Failed to save file ${filename}`);
+        console.error(`Error processing file ${filename}:`, error);
+        
+        const ext = path.extname(file.originalname) || (file.mimetype.includes('image') ? '.jpg' : '.mp4');
+        const fallbackPath = path.join(mediaDir, `${filename}${ext}`);
+        
+        try {
+          await fs.writeFile(fallbackPath, file.buffer);
+          const relativePath = `/server/animal/${petId}/${filename}${ext}`;
+          
+          return {
+            success: true,
+            data: {
+              type: file.mimetype.startsWith('image') ? 'image' : 'video',
+              path: relativePath,
+              isProfile: isProfile,
+              processed: false,
+              error: error.message
+            }
+          };
+          
+        } catch (fallbackError) {
+          console.error(`Failed to save even original file:`, fallbackError);
+          return {
+            success: false,
+            error: `Failed to save file ${filename}: ${fallbackError.message}`
+          };
+        }
       }
+    });
+
+    const results = await Promise.allSettled(fileProcessingPromises);
+    for (let i = 0; i < results.length; i++) {
+      const result = results[i];
+
+      if (result.status === 'fulfilled' && result.value.success) {
+        mediaPaths.push(result.value.data);
+        console.log(`Saved ${result.value.data.isProfile ? 'profile' : 'media'} file: ${files[i].originalname} -> ${result.value.data.path}`);
+      } else {
+        const errorMsg = result.status === 'fulfilled' ? result.value.error : result.reason?.message || 'Unknown error';
+        console.error(`Failed to process file ${files[i].originalname}:`, errorMsg);
+      }
+    }
+
+    if (mediaPaths.length === 0) {
+      throw new Error("Failed to save any media files");
     }
 
     return mediaPaths;
