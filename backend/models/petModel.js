@@ -201,7 +201,7 @@ class PetModel extends AbstractModel {
 
   validateMedicalHistory(medicalHistory) {
     if (!medicalHistory || !Array.isArray(medicalHistory)) {
-      return; // Medical history is optional
+      return;
     }
 
     medicalHistory.forEach((entry, index) => {
@@ -218,7 +218,7 @@ class PetModel extends AbstractModel {
 
   validateCareResources(careResources) {
     if (!careResources || !Array.isArray(careResources)) {
-      return; // Care resources are optional
+      return;
     }
 
     careResources.forEach((entry, index) => {

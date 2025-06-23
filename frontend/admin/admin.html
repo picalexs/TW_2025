@@ -17,11 +17,8 @@
       <div class="export-controls">
         <div class="form-group">
           <label for="table-select">Select Table:</label>
-          <select id="table-select" class="form-control">
-            <option value="">Loading tables...</option>
-          </select>
+          <select id="table-select" class="form-control"></select>
         </div>
-        
         <div class="form-group">
           <label for="format-select">Export Format:</label>
           <select id="format-select" class="form-control">
@@ -31,14 +28,14 @@
             <option value="txt">TXT (Tab-separated)</option>
           </select>
         </div>
-        
         <div class="form-group">
           <label for="limit-input">Limit Records (optional):</label>
           <input type="number" id="limit-input" class="form-control" min="1" placeholder="All records">
         </div>
-        
-        <button id="export-btn" class="btn btn-primary">Export Data</button>
-        <button id="preview-btn" class="btn btn-secondary">Preview</button>
+        <div class="export-btn-row">
+          <button id="export-btn" class="btn btn-primary">Export Data</button>
+          <button id="preview-btn" class="btn btn-secondary">Preview</button>
+        </div>
       </div>
       
       <div id="export-status" class="export-status"></div>
@@ -50,23 +47,26 @@
     <section class="admin-section">
       <h2>User Management</h2>
       <div id="admin-message"></div>
-      <table class="admin-table" id="users-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Email</th>
-            <th>Username</th>
-            <th>Role</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="users-tbody">
-        </tbody>
-      </table>    
+      <div class="admin-table-container">
+        <table class="admin-table" id="users-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Email</th>
+              <th>Username</th>
+              <th>Role</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="users-tbody">
+          </tbody>
+        </table>
+      </div>
     </section>
   </main>
   <script src="../config.js"></script>
   <script type="module" src="../global/inject-navbar.js"></script>
   <script type="module" src="admin.js"></script>
+  <div id="global-footer"></div>
 </body>
 </html>
