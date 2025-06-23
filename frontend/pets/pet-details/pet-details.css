@@ -100,8 +100,7 @@
 }
 
 .main-pet-image {  
-  width: 100%;
-  max-width: 28rem;
+  width: 28rem;
   aspect-ratio: 1/1;
   object-fit: cover;
   border-radius: 0.75rem;

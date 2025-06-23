@@ -638,7 +638,7 @@ class AddPetPage {
         console.log('Pet creation successful:', result);
         this.showMessage('Pet added successfully!', 'success');
       }
-      
+
       setTimeout(() => {
         window.location.href = '../pets-page/pets-page.html';
       }, 1500);
@@ -1280,20 +1280,7 @@ class AddPetPage {
             uploadButton.classList.remove('empty');
           }
           uploadButton.disabled = false;
-        }
-        
-        const processableFiles = result.validFiles.filter(f => f.estimatedCompression > 0);
-        if (processableFiles.length > 0) {
-          const totalOriginal = processableFiles.reduce((sum, f) => sum + f.originalSize, 0);
-          const totalProcessed = processableFiles.reduce((sum, f) => sum + f.estimatedProcessedSize, 0);
-          const overallCompression = Math.round((1 - totalProcessed / totalOriginal) * 100);
-          
-          this.showMessage(
-            `Files will be optimized: ${window.ClientImageProcessor.formatFileSize(totalOriginal)} → ${window.ClientImageProcessor.formatFileSize(totalProcessed)} (~${overallCompression}% reduction)`,
-            'success'
-          );
-        }
-        
+        }        
       } catch (error) {
         console.error('Error processing files:', error);
         this.showMessage('Error processing files: ' + error.message, 'error');
@@ -1334,24 +1321,6 @@ class AddPetPage {
         
         if (mediaElem) {
           mediaWrapper.appendChild(mediaElem);
-          
-          const infoTooltip = document.createElement('div');
-          infoTooltip.className = 'file-info-tooltip';
-          infoTooltip.innerHTML = `
-            <div class="file-info-compact">
-              <div class="file-name">${fileInfo.originalName}</div>
-              <div class="file-size-info">
-                ${window.ClientImageProcessor.formatFileSize(fileInfo.originalSize)}
-                ${fileInfo.estimatedCompression > 0 ? 
-                  ` → ${window.ClientImageProcessor.formatFileSize(fileInfo.estimatedProcessedSize)} (-${fileInfo.estimatedCompression}%)` : 
-                  ''
-                }
-              </div>
-              ${fileInfo.willResize ? '<div class="resize-notice">Will be resized</div>' : ''}
-            </div>
-          `;
-          mediaWrapper.appendChild(infoTooltip);
-          
           mediaWrapper.addEventListener('click', () => {
             this.profileImageIndex = idx;
             this.renderMediaPreviewWithInfo();

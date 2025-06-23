@@ -878,22 +878,9 @@ class ProfilePage {
           const fileInfo = result.validFiles[0];
           profileImagePreview.src = fileInfo.previewUrl;
           
-          if (fileInfo.estimatedCompression > 0) {
-            const compressionInfo = document.querySelector('.profile-compression-info');
-            if (compressionInfo) {
-              compressionInfo.remove();
-            }
-            
-            const infoElement = document.createElement('div');
-            infoElement.className = 'profile-compression-info';
-            infoElement.innerHTML = `
-              <small style="color: #28a745; font-size: 0.8em; margin-top: 0.5em; display: block;">
-                📸 Will be optimized: ${window.ClientImageProcessor.formatFileSize(fileInfo.originalSize)} → 
-                ${window.ClientImageProcessor.formatFileSize(fileInfo.estimatedProcessedSize)} 
-                (~${fileInfo.estimatedCompression}% smaller)
-              </small>
-            `;
-            profileImagePreview.parentNode.appendChild(infoElement);
+          const compressionInfo = document.querySelector('.profile-compression-info');
+          if (compressionInfo) {
+            compressionInfo.remove();
           }
           
           if (fileInfo.warning.length > 0) {

@@ -5,8 +5,8 @@ class ClientImageProcessor {
       previewQuality: 0.8,
       
       profilePicture: {
-        maxWidth: 400,
-        maxHeight: 400
+        maxWidth: 800,
+        maxHeight: 800
       },
       petMedia: {
         maxWidth: 1200,
@@ -50,7 +50,6 @@ class ClientImageProcessor {
     const dimensions = await this.getImageDimensions(previewUrl);
     const settings = this.SETTINGS[type] || this.SETTINGS.petMedia;
     const willResize = dimensions.width > settings.maxWidth || dimensions.height > settings.maxHeight;
-    const estimatedCompression = this.estimateCompression(file.size, file.type, willResize);
     
     return {
       file: file,
@@ -60,8 +59,6 @@ class ClientImageProcessor {
       previewUrl: previewUrl,
       dimensions: dimensions,
       willResize: willResize,
-      estimatedProcessedSize: estimatedCompression.estimatedSize,
-      estimatedCompression: estimatedCompression.compressionRatio,
       warning: this.getFileWarnings(file, dimensions, type)
     };
   }
@@ -80,89 +77,30 @@ class ClientImageProcessor {
       };
       img.src = url;
     });
-  }
-
-  static estimateCompression(originalSize, mimeType, willResize) {
-    let compressionRatio = 0.7;
-    
-    switch (mimeType) {
-      case 'image/png':
-        compressionRatio = 0.6;
-        break;
-      case 'image/jpeg':
-      case 'image/jpg':
-        compressionRatio = 0.8;
-        break;
-      case 'image/gif':
-        compressionRatio = 0.5;
-        break;
-      case 'image/bmp':
-        compressionRatio = 0.3;
-        break;
-    }
-    
-    if (willResize) {
-      compressionRatio *= 0.6;
-    }
-    
-    const estimatedSize = Math.floor(originalSize * compressionRatio);
-    const compressionPercentage = Math.floor((1 - compressionRatio) * 100);
-    
-    return {
-      estimatedSize: estimatedSize,
-      compressionRatio: compressionPercentage
-    };
-  }
-
-  static getFileWarnings(file, dimensions, type) {
+  }  static getFileWarnings(file, dimensions, type) {
     const warnings = [];
     const settings = this.SETTINGS[type] || this.SETTINGS.petMedia;
     
-    if (file.size > 5 * 1024 * 1024) {
-      warnings.push('Large file - will be significantly compressed');
+    if (file.size > 10 * 1024 * 1024) {
+      warnings.push('Large file size');
     }
     
     if (dimensions.width > settings.maxWidth * 2 || dimensions.height > settings.maxHeight * 2) {
-      warnings.push('Very large image - will be significantly resized');
-    }
-    
-    if (file.type === 'image/bmp') {
-      warnings.push('BMP format - will be converted to WebP for better compression');
+      warnings.push('Very large image - will be resized');
     }
     
     return warnings;
-  }
-
-  static formatFileSize(bytes) {
-    if (bytes === 0) return '0 Bytes';
-    
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
-  }
-
-  static createFileInfoDisplay(fileInfo) {
+  }  static createFileInfoDisplay(fileInfo) {
     const container = document.createElement('div');
     container.className = 'file-info-display';
-    
-    const originalSizeFormatted = this.formatFileSize(fileInfo.originalSize);
-    const estimatedSizeFormatted = this.formatFileSize(fileInfo.estimatedProcessedSize);
     
     container.innerHTML = `
       <div class="file-info-header">
         <span class="file-name">${fileInfo.originalName}</span>
-        <span class="file-size">${originalSizeFormatted}</span>
       </div>
       <div class="file-info-details">
         <div class="dimensions">${fileInfo.dimensions.width} × ${fileInfo.dimensions.height}px</div>
         ${fileInfo.willResize ? '<div class="resize-notice">Will be resized</div>' : ''}
-        <div class="compression-info">
-          <span class="arrow">→</span>
-          <span class="processed-size">${estimatedSizeFormatted}</span>
-          <span class="compression-ratio">(~${fileInfo.estimatedCompression}% smaller)</span>
-        </div>
       </div>
       ${fileInfo.warning.length > 0 ? `
         <div class="file-warnings">
@@ -193,10 +131,9 @@ style.textContent = `
     background: #f9f9f9;
     font-family: inherit;
   }
-  
-  .file-info-header {
+    .file-info-header {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
     margin-bottom: 8px;
   }
@@ -210,11 +147,6 @@ style.textContent = `
     white-space: nowrap;
   }
   
-  .file-size {
-    color: #666;
-    font-size: 0.9em;
-  }
-  
   .file-info-details {
     display: flex;
     align-items: center;
@@ -222,8 +154,7 @@ style.textContent = `
     font-size: 0.9em;
     color: #555;
   }
-  
-  .dimensions {
+    .dimensions {
     color: #777;
   }
   
@@ -233,27 +164,6 @@ style.textContent = `
     padding: 2px 6px;
     border-radius: 4px;
     font-size: 0.8em;
-  }
-  
-  .compression-info {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-  
-  .arrow {
-    color: #28a745;
-    font-weight: bold;
-  }
-  
-  .processed-size {
-    color: #28a745;
-    font-weight: 600;
-  }
-  
-  .compression-ratio {
-    color: #28a745;
-    font-size: 0.85em;
   }
   
   .file-warnings {

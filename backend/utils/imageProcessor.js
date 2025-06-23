@@ -6,22 +6,22 @@ class ImageProcessor {
   static get DEFAULT_SETTINGS() {
     return {
       profilePicture: {
-        maxWidth: 400,
-        maxHeight: 400,
-        quality: 85
-      },
-      petMedia: {
         maxWidth: 1200,
         maxHeight: 1200,
-        quality: 80
+        quality: 92
+      },
+      petMedia: {
+        maxWidth: 3000,
+        maxHeight: 3000,
+        quality: 92
       },
       thumbnail: {
-        maxWidth: 300,
-        maxHeight: 300,
-        quality: 75
+        maxWidth: 400,
+        maxHeight: 400,
+        quality: 80
       },
       format: 'webp',
-      compressionLevel: 6,
+      compressionLevel: 4,
       effort: 2
     };
   }
@@ -54,8 +54,8 @@ class ImageProcessor {
           }
         );
         console.log(`Resizing to max ${targetSettings.maxWidth}x${targetSettings.maxHeight}`);
-      }
-
+      }      
+      
       const processedBuffer = await sharpInstance
         .webp({
           quality: targetSettings.quality,
@@ -66,8 +66,7 @@ class ImageProcessor {
         })
         .toBuffer();
 
-      const compressionRatio = ((inputBuffer.length - processedBuffer.length) / inputBuffer.length * 100).toFixed(1);
-      console.log(`Image processed: ${inputBuffer.length} -> ${processedBuffer.length} bytes (${compressionRatio}% reduction)`);
+      console.log(`Image processed successfully`);
 
       return processedBuffer;
     } catch (error) {
@@ -78,7 +77,8 @@ class ImageProcessor {
 
   static async processAndSaveFile(file, outputPath, options = {}) {
     try {
-      if (!file.mimetype || !file.mimetype.startsWith('image/')) {
+      const fileMimeType = file.mimetype || file.mimeType;
+      if (!fileMimeType || !fileMimeType.startsWith('image/')) {
         await fs.writeFile(outputPath, file.buffer);
         return {
           path: outputPath,
@@ -87,7 +87,7 @@ class ImageProcessor {
           format: path.extname(file.filename || outputPath).slice(1),
           processed: false
         };
-      }      
+      }
       
       const processedBuffer = await this.processImage(file.buffer, options);
       const webpPath = path.extname(outputPath) 
@@ -102,8 +102,7 @@ class ImageProcessor {
         originalSize: file.buffer.length,
         processedSize: processedBuffer.length,
         format: 'webp',
-        processed: true,
-        compression: ((file.buffer.length - processedBuffer.length) / file.buffer.length * 100).toFixed(1) + '%'
+        processed: true
       };
     } catch (error) {
       console.error('Error processing and saving file:', error);

@@ -95,42 +95,45 @@ class AbstractModel {
 
   validateFileData(files, options = {}) {
     if (!files || !Array.isArray(files)) {
-      return; // Files are optional by default
+      return;
     }
 
     const maxFiles = options.maxFiles || 10;
-    const maxFileSize = options.maxFileSize || 10 * 1024 * 1024; // 10MB default
+    const maxFileSize = options.maxFileSize || 10 * 1024 * 1024;
     const allowedTypes = options.allowedTypes || ['image/', 'video/'];
 
-    // Validate file count
     if (files.length > maxFiles) {
       throw Object.assign(
         new Error(`Maximum ${maxFiles} files allowed`),
         { code: 'TOO_MANY_FILES', status: 400 }
       );
-    }
-
+    }    
+    
     files.forEach((file, index) => {
-      // Validate file size
-      if (file.size > maxFileSize) {
+      if (!file || typeof file === 'string') {
+        return;
+      }
+
+      if (file.size && file.size > maxFileSize) {
         const maxSizeMB = Math.round(maxFileSize / (1024 * 1024));
         throw Object.assign(
           new Error(`File ${index + 1} exceeds ${maxSizeMB}MB size limit`),
           { code: 'FILE_TOO_LARGE', status: 400 }
         );
+      } 
+      
+      const fileMimeType = file.mimetype || file.mimeType;
+      if (fileMimeType) {
+        const isValidType = allowedTypes.some(type => fileMimeType.startsWith(type));
+        if (!isValidType) {
+          const typeNames = allowedTypes.map(type => type.replace('/', '')).join(' or ');
+          throw Object.assign(
+            new Error(`File ${index + 1} must be ${typeNames}`),
+            { code: 'INVALID_FILE_TYPE', status: 400 }
+          );
+        }
       }
 
-      // Validate file type
-      const isValidType = allowedTypes.some(type => file.mimetype.startsWith(type));
-      if (!isValidType) {
-        const typeNames = allowedTypes.map(type => type.replace('/', '')).join(' or ');
-        throw Object.assign(
-          new Error(`File ${index + 1} must be ${typeNames}`),
-          { code: 'INVALID_FILE_TYPE', status: 400 }
-        );
-      }
-
-      // Validate file name length
       if (file.originalname && file.originalname.length > 255) {
         throw Object.assign(
           new Error(`File ${index + 1} name too long`),
@@ -138,8 +141,7 @@ class AbstractModel {
         );
       }
 
-      // Validate that file has content
-      if (!file.buffer || file.buffer.length === 0) {
+      if (file.buffer && file.buffer.length === 0) {
         throw Object.assign(
           new Error(`File ${index + 1} is empty`),
           { code: 'EMPTY_FILE', status: 400 }

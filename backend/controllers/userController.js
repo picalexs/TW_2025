@@ -512,11 +512,7 @@ class UserController {
             
             const relativePath = `/server/user/${id}/${path.basename(result.path)}`;
             userData.profile_picture = relativePath;
-            
             console.log(`[UserController] Profile picture processed and saved to: ${relativePath}`);
-            if (result.processed) {
-              console.log(`  Optimized: ${result.originalSize} -> ${result.processedSize} bytes (${result.compression})`);
-            }
           } catch (error) {
             console.error('Error processing profile picture:', error);
             const ext = path.extname(profilePictureFile.filename) || '.jpg';

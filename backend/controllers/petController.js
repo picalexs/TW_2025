@@ -177,7 +177,6 @@ class PetController {
             isProfile: isProfile,
             originalSize: result.originalSize,
             processedSize: result.processedSize,
-            compression: result.compression,
             processed: result.processed
           }
         };
@@ -216,13 +215,10 @@ class PetController {
     const results = await Promise.allSettled(fileProcessingPromises);
     for (let i = 0; i < results.length; i++) {
       const result = results[i];
-      
+
       if (result.status === 'fulfilled' && result.value.success) {
         mediaPaths.push(result.value.data);
         console.log(`Saved ${result.value.data.isProfile ? 'profile' : 'media'} file: ${files[i].originalname} -> ${result.value.data.path}`);
-        if (result.value.data.processed) {
-          console.log(`  Optimized: ${result.value.data.originalSize} -> ${result.value.data.processedSize} bytes (${result.value.data.compression})`);
-        }
       } else {
         const errorMsg = result.status === 'fulfilled' ? result.value.error : result.reason?.message || 'Unknown error';
         console.error(`Failed to process file ${files[i].originalname}:`, errorMsg);

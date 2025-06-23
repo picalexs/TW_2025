@@ -213,9 +213,8 @@ class UserModel extends AbstractModel {
         path.join(process.cwd(), 'server'),
         result.path
       ).replace(/\\/g, '/');
-      
+
       console.log(`Profile picture processed: ${file.filename} -> ${relativePath}`);
-      console.log(`Size reduction: ${result.originalSize} -> ${result.processedSize} bytes (${result.compression || 'no compression'})`);
       
       return {
         path: `images/profile/users/${path.basename(result.path)}`,
@@ -223,8 +222,7 @@ class UserModel extends AbstractModel {
         originalName: file.filename,
         mimeType: 'image/webp',
         originalSize: result.originalSize,
-        processedSize: result.processedSize,
-        compression: result.compression
+        processedSize: result.processedSize
       };
     } catch (processingError) {
       console.error('Image processing failed, saving original:', processingError);
