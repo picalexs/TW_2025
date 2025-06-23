@@ -2,7 +2,7 @@ import { setupMobileMenu, createSlideshow, initializePageLanguage, checkLoginSta
 import UserService from '../services/userService.min.js';
 import ApiService from '../services/api.min.js';
 
-const API_BASE_URL = window.APP_CONFIG?.api?.baseURL || 'http://localhost:80';
+const API_BASE_URL = window.APP_CONFIG?.api?.baseURL || 'http://localhost:8080';
 
 document.addEventListener('DOMContentLoaded', function() {
   initLoginPage();
@@ -106,7 +106,7 @@ async function handleLogin(event) {
         localStorage.setItem('authToken', response.token);
       }
       showMessage('Login successful! Redirecting...', 'success');
-      window.location.href = '../home/home.html';
+      window.location.href = '/frontend/home/home.html';
     } else {
     
       showMessage('Your email or password are wrong', 'error');

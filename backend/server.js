@@ -21,7 +21,7 @@ const handleFavoriteRoutes = require('./routes/favoriteRoutes');
 
 const { verifyToken, checkRole } = require('./middleware/authMiddleware');
 
-const PORT = process.env.API_PORT || 80;
+const PORT = process.env.API_PORT || 8080;
 const HOST = process.env.API_HOST || 'localhost';
 const PROTOCOL = process.env.API_PROTOCOL || 'http';
 const HTTPS_ENABLED = process.env.HTTPS_ENABLED === 'true';
