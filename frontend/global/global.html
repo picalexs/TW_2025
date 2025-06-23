@@ -45,9 +45,15 @@
   </div>
 
   <div class="mobile-menu-container">
-    <div class="mobile-auth" id="mobile-auth-logged-out"> <a href="/frontend/login/login.html" class="btn btn-outline-primary mobile-nav-login" data-i18n="nav.login"></a> <a href="/frontend/signup/signup.html" class="btn btn-primary mobile-nav-signup" data-i18n="nav.signup"></a> </div>
-
-    <div class="mobile-auth" id="mobile-auth-logged-in" style="display: none;"> <a href="#" class="btn btn-primary mobile-nav-logout" data-i18n="nav.logout">Logout</a> </div>
+    <div class="mobile-auth" id="mobile-auth-logged-out"> 
+      <a href="/frontend/login/login.html" class="btn btn-outline-primary mobile-nav-login" data-i18n="nav.login"></a> 
+      <a href="/frontend/signup/signup.html" class="btn btn-primary mobile-nav-signup" data-i18n="nav.signup"></a> 
+    </div>    
+    <div class="mobile-auth" id="mobile-auth-logged-in" style="display: none;">
+      <a href="/frontend/profile/profile.html" class="btn btn-outline-primary mobile-nav-profile" data-i18n="nav.profile">Profile</a>
+      <a href="/frontend/favorites/favorites.html" class="btn btn-outline-primary mobile-nav-favorites" data-i18n="nav.favorites">Favorites</a>
+      <a href="#" class="btn btn-primary mobile-nav-logout" data-i18n="nav.logout">Logout</a>
+    </div>
 
     <nav class="mobile-nav">      
       <ul class="mobile-nav-menu">        
@@ -59,6 +65,9 @@
         </li>
         <li class="mobile-nav-item">
           <a href="#about" class="mobile-nav-link" data-i18n="nav.about"></a>
+        </li>
+        <li class="mobile-nav-item" id="mobile-admin-nav-item" style="display:none;">
+          <a href="/frontend/admin/admin.html" class="mobile-nav-link" data-i18n="nav.admin">Admin</a>
         </li>
       </ul>
     </nav>

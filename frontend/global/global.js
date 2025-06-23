@@ -14,10 +14,15 @@ function checkLoginStatusAndToggleNavButtons() {
     const mobileLogoutLink = document.querySelector('.mobile-nav-logout');
 
     const profileBtn = document.querySelector('.nav-profile-btn');
+    const mobileProfileBtn = document.querySelector('.mobile-nav-profile');
+    
     if (isLoggedIn && profileBtn) {
         const userId = localStorage.getItem('userId');
         if (userId) {
             profileBtn.href = `/frontend/profile/profile.html?id=${userId}`;
+            if (mobileProfileBtn) {
+                mobileProfileBtn.href = `/frontend/profile/profile.html?id=${userId}`;
+            }
         }
     }
 
@@ -46,11 +51,14 @@ function checkLoginStatusAndToggleNavButtons() {
     }
 
     const adminNavItem = document.getElementById('admin-nav-item');
+    const mobileAdminNavItem = document.getElementById('mobile-admin-nav-item');
     const userRole = localStorage.getItem('userRole');
     if (isLoggedIn && userRole === 'admin') {
         if (adminNavItem) adminNavItem.style.display = '';
+        if (mobileAdminNavItem) mobileAdminNavItem.style.display = '';
     } else {
         if (adminNavItem) adminNavItem.style.display = 'none';
+        if (mobileAdminNavItem) mobileAdminNavItem.style.display = 'none';
     }
 }
 
@@ -150,18 +158,48 @@ function setupMobileMenu() {
             document.body.style.overflow = container.classList.contains('active') ? 'hidden' : '';
         });
         toggle.dataset.listenerAttached = 'true';
-    }
-
-    if (!overlay.dataset.listenerAttached) {
-        overlay.addEventListener('click', () => {
-            toggle.classList.remove('active');
-            container.classList.remove('active');
-            overlay.classList.remove('active');
-            document.body.style.overflow = '';
+    }    if (!overlay.dataset.listenerAttached) {
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                toggle.classList.remove('active');
+                container.classList.remove('active');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
         });
         overlay.dataset.listenerAttached = 'true';
-    }
+    } 
 
+    const navLinks = container.querySelectorAll('.mobile-nav-link, .mobile-nav-profile, .mobile-nav-favorites, .mobile-nav-login, .mobile-nav-signup');
+    navLinks.forEach(link => {
+        if (!link.dataset.listenerAttached) {
+            link.addEventListener('click', (e) => {
+                console.log('Mobile nav link clicked:', link.textContent.trim());
+                
+                if (!link.classList.contains('mobile-nav-logout')) {
+                    setTimeout(() => {
+                        toggle.classList.remove('active');
+                        container.classList.remove('active');
+                        overlay.classList.remove('active');
+                        document.body.style.overflow = '';
+                    }, 50);
+                } else {
+                    toggle.classList.remove('active');
+                    container.classList.remove('active');
+                    overlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+            link.dataset.listenerAttached = 'true';
+        }
+    });
+
+    if (!container.dataset.listenerAttached) {
+        container.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+        container.dataset.listenerAttached = 'true';
+    }
 
     options.forEach(option => {
         const oldOption = option;

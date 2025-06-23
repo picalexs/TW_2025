@@ -27,8 +27,8 @@ class ApiService {
       ...options.headers
     };
       this.debug = options.debug ?? features.enableDebugLogging ?? false;
-    this.timeout = options.timeout ?? timeouts.default ?? 0; // No timeout - wait indefinitely
-    this.retryCount = options.retryCount ?? retry.maxRetries ?? 999; // Keep retrying
+    this.timeout = options.timeout ?? timeouts.default ?? 0;
+    this.retryCount = options.retryCount ?? retry.maxRetries ?? 999;
     this.retryDelay = options.retryDelay ?? retry.initialDelay ?? 2000;
     
     this.pendingRequests = new Map();

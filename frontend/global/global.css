@@ -893,7 +893,7 @@ footer {
     width: 1.875rem;
     height: 1.313rem;
     cursor: pointer;
-    z-index: 200;
+    z-index: 200 !important;
     background: none;
     border: none;
     padding: 0;
@@ -933,11 +933,11 @@ footer {
     top: 0;
     right: -100%;
     width: 17.5rem;
-    height: 100%;
+    height: 100vh;
     background-color: var(--light-color);
-    box-shadow: -0.313rem 0 0.938rem rgba(0, 0, 0, 0.1);
+    box-shadow: -0.313rem 0 0.938rem rgba(0, 0, 0, 0.3);
     transition: right 0.3s ease;
-    z-index: 150;
+    z-index: 150 !important;
     padding: 3.75rem 1.25rem 1.25rem;
     overflow-y: auto;
     visibility: hidden;
@@ -950,19 +950,22 @@ footer {
 
 .mobile-overlay {
     display: none;
-    display: none;
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 140;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
     opacity: 0;
     transition: opacity 0.3s ease;
+    z-index: 140 !important;
+    pointer-events: none;
 }
 
 .mobile-overlay.active {
     opacity: 1;
+    display: block;
+    pointer-events: auto;
 }
 
 .mobile-auth {
