@@ -4,8 +4,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sign up</title>  <link rel="stylesheet" href="../global/global.min.css" />
-  <link rel="stylesheet" href="./signup.min.css" />
+  <title>Sign up</title>
+  <link rel="preload" href="../global/global.min.css" as="style" onload="this.rel='stylesheet'">
+  <link rel="preload" href="./signup.min.css" as="style" onload="this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="../global/global.min.css" />
+    <link rel="stylesheet" href="./signup.min.css" />
+  </noscript>
 </head>
 
 <body class="signup-page">
@@ -22,7 +27,8 @@
         <div class="skeleton-auth-btn"></div>
       </div>
     </div>
-  </div> <div id="mobile-overlay" class="mobile-overlay"></div>
+  </div>
+  <div id="mobile-overlay" class="mobile-overlay"></div>
 
   <div class="signup-background">
     <div class="signup-container">
@@ -32,17 +38,20 @@
 
         <div class="form-group">
           <label for="email" data-i18n="emailLabel" data-i18n-fallback="Email"></label>
-          <input type="email" id="email" data-i18n-placeholder="emailPlaceholder" data-i18n-placeholder-fallback="Enter your email address" required />
+          <input type="email" id="email" data-i18n-placeholder="emailPlaceholder"
+            data-i18n-placeholder-fallback="Enter your email address" required />
         </div>
 
         <div class="form-group">
           <label for="password" data-i18n="passwordLabel" data-i18n-fallback="Password"></label>
-          <input type="password" id="password" data-i18n-placeholder="passwordPlaceholder" data-i18n-placeholder-fallback="Enter your password" required />
+          <input type="password" id="password" data-i18n-placeholder="passwordPlaceholder"
+            data-i18n-placeholder-fallback="Enter your password" required />
         </div>
 
         <div class="form-group">
           <label for="username" data-i18n="usernameLabel" data-i18n-fallback="Username"></label>
-          <input type="username" id="username" data-i18n-placeholder="usernamePlaceholder" data-i18n-placeholder-fallback="Choose a username" required />
+          <input type="username" id="username" data-i18n-placeholder="usernamePlaceholder"
+            data-i18n-placeholder-fallback="Choose a username" required />
         </div>
 
         <button class="btn-submit" type="submit" data-i18n="signupButton" data-i18n-fallback="Next"></button>

@@ -5,8 +5,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Log In</title>  
-  <link rel="stylesheet" href="../global/global.min.css" />
-  <link rel="stylesheet" href="./login.min.css" />
+  <link rel="preload" href="../global/global.min.css" as="style" onload="this.rel='stylesheet'">
+  <link rel="preload" href="./login.min.css" as="style" onload="this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="../global/global.min.css" />
+    <link rel="stylesheet" href="./login.min.css" />
+  </noscript>
 </head>
 
 <body class="login-page">

@@ -4,10 +4,16 @@
     <meta charset="UTF-8">
     <title data-i18n="addPetPageTitle" data-i18n-fallback="Add New Pet"></title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">    
-    <link rel="stylesheet" href="../../global/global.min.css">
-    <link rel="stylesheet" href="../pets-page/pets-page.min.css">
-    <link rel="stylesheet" href="add-pet.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="preload" href="../../global/global.min.css" as="style" onload="this.rel='stylesheet'">
+    <link rel="preload" href="../pets-page/pets-page.min.css" as="style" onload="this.rel='stylesheet'">
+    <link rel="preload" href="add-pet.min.css" as="style" onload="this.rel='stylesheet'">
+    <link rel="preload" href="https://unpkg.com/leaflet/dist/leaflet.css" as="style" onload="this.rel='stylesheet'">
+    <noscript>
+      <link rel="stylesheet" href="../../global/global.min.css" />
+      <link rel="stylesheet" href="../pets-page/pets-page.min.css" />
+      <link rel="stylesheet" href="add-pet.min.css" />
+      <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    </noscript>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
 <body>
