@@ -25,7 +25,7 @@ async function loadConfig() {
     const response = await fetch(`${window.APP_CONFIG.api.baseURL}/api/config`);
     if (response.ok) {
       const config = await response.json();
-      window.APP_CONFIG.api.baseURL = config.baseUrl || `${config.apiProtocol}://${config.apiHost}:${config.apiPort}`;
+      window.APP_CONFIG.api.baseURL = `http://${config.apiHost}:${config.apiPort}`;
       console.log('Dynamic config loaded:', window.APP_CONFIG.api.baseURL);
     }
   } catch (error) {
