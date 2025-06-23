@@ -74,6 +74,20 @@ async function handleAdminRoutes(req, res) {
     return routeHandled;
   }
 
+  if (trimmedPath.startsWith("api/admin/tables/") && trimmedPath.endsWith("/import") && method === "post") {
+    console.log('[AdminRoutes] Handling table import POST request (Protected - Admin Only)');
+    const pathParts = trimmedPath.split('/');
+    const tableName = pathParts[3];
+    
+    req.body = req.body || {};
+    req.body.table = tableName;
+    
+    routeHandled = await requireAdmin(async () => {
+      await adminController.importTable(req, res);
+    });
+    return routeHandled;
+  }
+
   return routeHandled;
 }
 module.exports = handleAdminRoutes;

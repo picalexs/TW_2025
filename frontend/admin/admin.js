@@ -7,8 +7,10 @@ const adminMessage = document.getElementById('admin-message');
 const tableSelect = document.getElementById('table-select');
 const formatSelect = document.getElementById('format-select');
 const limitInput = document.getElementById('limit-input');
+const importFile = document.getElementById('import-file');
 const exportBtn = document.getElementById('export-btn');
 const previewBtn = document.getElementById('preview-btn');
+const importBtn = document.getElementById('import-btn');
 const exportStatus = document.getElementById('export-status');
 const tableInfo = document.getElementById('table-info');
 const exportPreview = document.getElementById('export-preview');
@@ -132,6 +134,10 @@ function setupExportEventListeners() {
 
   previewBtn.addEventListener('click', async () => {
     await showPreview();
+  });
+
+  importBtn.addEventListener('click', async () => {
+    await performImport();
   });
 }
 
@@ -305,4 +311,65 @@ function escapeHtml(text) {
   const div = document.createElement('div');
   div.textContent = text;
   return div.innerHTML;
+}
+
+async function performImport() {
+  const tableName = tableSelect.value;
+  const file = importFile.files[0];
+
+  if (!tableName) {
+    showExportStatus('Please select a table to import into', 'error');
+    return;
+  }
+
+  if (!file) {
+    showExportStatus('Please select a file to import', 'error');
+    return;
+  }
+
+  // Validate file format
+  const fileExtension = file.name.split('.').pop().toLowerCase();
+  const allowedFormats = ['csv', 'json', 'xml', 'txt'];
+  if (!allowedFormats.includes(fileExtension)) {
+    showExportStatus('Please select a valid file format (CSV, JSON, XML, or TXT)', 'error');
+    return;
+  }
+
+  try {
+    showExportStatus('Importing data...', 'info');
+    importBtn.disabled = true;
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('table', tableName);
+    formData.append('format', fileExtension);
+
+    const response = await fetch(apiService._buildUrl(`/api/admin/tables/${tableName}/import`), {
+      method: 'POST',
+      headers: { 
+        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+      },
+      body: formData
+    });
+
+    const result = await response.json();
+
+    if (response.ok && result.success) {
+      showExportStatus(`Successfully imported ${result.rowsImported || 0} rows into ${tableName}`, 'success');
+      importFile.value = ''; // Clear the file input
+      
+      // Refresh table info if the current table is selected
+      const selectedOption = tableSelect.selectedOptions[0];
+      if (selectedOption && selectedOption.value === tableName) {
+        await loadAvailableTables(); // Refresh table counts
+      }
+    } else {
+      throw new Error(result.message || 'Import failed');
+    }
+  } catch (error) {
+    console.error('Import error:', error);
+    showExportStatus(`Import failed: ${error.message}`, 'error');
+  } finally {
+    importBtn.disabled = false;
+  }
 }

@@ -1,4 +1,5 @@
 const zlib = require('zlib');
+const busboy = require('busboy');
 
 function compressResponse(data, acceptEncoding) {
   if (!acceptEncoding) {
@@ -31,15 +32,73 @@ function compressResponse(data, acceptEncoding) {
   return { data: bufferData, encoding: null };
 }
 
-async function collectRequestData(req) {
+async function collectRequestData(req, options = {}) {
   return new Promise((resolve, reject) => {
+    const contentType = req.headers['content-type'];
+    
+    if (contentType && contentType.includes('multipart/form-data')) {
+      try {
+        const bb = busboy({ headers: req.headers });
+        const fields = {};
+        const files = {};
+        
+        bb.on('field', (name, val) => {
+          fields[name] = val;
+        });
+        
+        bb.on('file', (name, file, info) => {
+          const { filename, encoding, mimeType } = info;
+          const chunks = [];
+          
+          file.on('data', (chunk) => {
+            chunks.push(chunk);
+          });
+          
+          file.on('end', () => {
+            files[name] = {
+              data: Buffer.concat(chunks),
+              filename,
+              encoding,
+              mimeType
+            };
+          });
+        });
+        
+        bb.on('finish', () => {
+          resolve({ ...fields, files });
+        });
+        
+        bb.on('error', (err) => {
+          reject(err);
+        });
+        
+        req.pipe(bb);
+      } catch (error) {
+        reject(error);
+      }
+      return;
+    }
+    
     const body = [];
     req.on("data", (chunk) => {
       body.push(chunk);
     });
     req.on("end", () => {
-      const parsedBody = Buffer.concat(body).toString();
       try {
+        const buffer = Buffer.concat(body);
+        
+        if (options.raw) {
+          resolve(buffer);
+          return;
+        }
+        
+        const parsedBody = buffer.toString();
+        
+        if (!parsedBody.trim()) {
+          resolve({});
+          return;
+        }
+        
         resolve(JSON.parse(parsedBody));
       } catch (error) {
         reject(error);

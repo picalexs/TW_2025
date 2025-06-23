@@ -31,10 +31,15 @@
         <div class="form-group">
           <label for="limit-input">Limit Records (optional):</label>
           <input type="number" id="limit-input" class="form-control" min="1" placeholder="All records">
+        </div>        
+        <div class="form-group">
+          <label for="import-file">Import File:</label>
+          <input type="file" id="import-file" class="form-control" accept=".csv,.json,.xml,.txt">
         </div>
         <div class="export-btn-row">
           <button id="export-btn" class="btn btn-primary">Export Data</button>
           <button id="preview-btn" class="btn btn-secondary">Preview</button>
+          <button id="import-btn" class="btn btn-success">Import Data</button>
         </div>
       </div>
       
