@@ -498,20 +498,37 @@ class UserController {
           phone_number: fields.phone_number || fields.phone || null,
           role: fields.role
         };
-        
-        if (profilePictureFile) {
+          if (profilePictureFile) {
+          const ImageProcessor = require('../utils/imageProcessor');
           const uploadDir = path.join(__dirname, '../../server/user', id.toString());
           await fs.mkdir(uploadDir, { recursive: true });
           
-          const ext = path.extname(profilePictureFile.filename) || '.jpg';
-          const filename = `profile${ext}`;
-          const filepath = path.join(uploadDir, filename);
-          const relativePath = `/server/user/${id}/${filename}`;
+          const outputPath = path.join(uploadDir, 'profile');
           
-          await fs.writeFile(filepath, profilePictureFile.buffer);
-          userData.profile_picture = relativePath;
-          
-          console.log(`[UserController] Profile picture saved to: ${relativePath}`);
+          try {
+            const result = await ImageProcessor.processAndSaveFile(profilePictureFile, outputPath, {
+              type: 'profilePicture'
+            });
+            
+            const relativePath = `/server/user/${id}/${path.basename(result.path)}`;
+            userData.profile_picture = relativePath;
+            
+            console.log(`[UserController] Profile picture processed and saved to: ${relativePath}`);
+            if (result.processed) {
+              console.log(`  Optimized: ${result.originalSize} -> ${result.processedSize} bytes (${result.compression})`);
+            }
+          } catch (error) {
+            console.error('Error processing profile picture:', error);
+            const ext = path.extname(profilePictureFile.filename) || '.jpg';
+            const filename = `profile${ext}`;
+            const filepath = path.join(uploadDir, filename);
+            const relativePath = `/server/user/${id}/${filename}`;
+            
+            await fs.writeFile(filepath, profilePictureFile.buffer);
+            userData.profile_picture = relativePath;
+            
+            console.log(`[UserController] Profile picture saved (fallback) to: ${relativePath}`);
+          }
         }
         
         console.log(`[UserController] Updating user with ID: ${id} (with files)`);

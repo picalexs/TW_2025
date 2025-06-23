@@ -158,7 +158,7 @@ class RSSFeedModel extends AbstractModel {
                 CITY: pet.city,
                 COUNTRY: pet.country,
                 CREATED_AT: new Date().toISOString(),
-                IMAGE_PATH: '/assets/default-pet-profile.jpg'
+                IMAGE_PATH: '/assets/default-pet-profile.webp'
             };
         });
     }    
@@ -219,7 +219,7 @@ class RSSFeedModel extends AbstractModel {
         if (pet.BREED) score += 3;
         if (pet.COLOR) score += 2;
         if (pet.AGE) score += 2;
-        if (pet.IMAGE_PATH && pet.IMAGE_PATH !== '/assets/default-pet-profile.jpg') score += 5;
+        if (pet.IMAGE_PATH && pet.IMAGE_PATH !== '/assets/default-pet-profile.webp') score += 5;
         if (pet.SHELTER_NAME) score += 3;
         if (pet.CITY) score += 2;
         if (pet.VIEWS_COUNT > 0) score += Math.min(pet.VIEWS_COUNT / 10, 5);

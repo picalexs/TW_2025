@@ -18,7 +18,8 @@
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.1",
     "nodemailer": "^7.0.3",
-    "oracledb": "^6.8.0"
+    "oracledb": "^6.8.0",
+    "sharp": "^0.33.5"
   },
   "devDependencies": {
     "chokidar": "^3.5.3",

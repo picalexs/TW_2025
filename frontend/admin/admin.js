@@ -255,7 +255,6 @@ async function performExport() {
           const errorData = await response.json();
           errorMessage = errorData.message || errorMessage;
         } else {
-          const errorText = await response.text();
           errorMessage = `Server error: ${response.status} ${response.statusText}`;
         }
       } catch (parseError) {

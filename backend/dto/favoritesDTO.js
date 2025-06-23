@@ -61,7 +61,7 @@ class FavoritesDTO extends abstractDTO {
         adoptionFee: row.ADOPTION_FEE,
         city: row.CITY,
         country: row.COUNTRY,
-        imagePath: row.IMAGE_PATH || '/assets/default-pet-profile.jpg'
+        imagePath: row.IMAGE_PATH || '/assets/default-pet-profile.webp'
       }));
       
       return transformedRows;

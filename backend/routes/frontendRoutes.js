@@ -7,7 +7,7 @@ const contentTypes = {
   '.css': 'text/css',
   '.js': 'text/javascript',
   '.json': 'application/json',
-  '.jpg': 'image/jpeg',
+  '.webp': 'image/jpeg',
   '.jpeg': 'image/jpeg',
   '.png': 'image/png',
   '.gif': 'image/gif',

@@ -10,7 +10,7 @@ class SharingService {
     const petURL = `${this.baseURL}/frontend/pets/pet-details/pet-details.html?id=${pet.id}`;
     const imageURL = pet.imagePath 
       ? `${this.baseURL}/api/static/${pet.imagePath}`
-      : `${this.baseURL}/frontend/assets/default-pet-profile.jpg`;
+      : `${this.baseURL}/frontend/assets/default-pet-profile.webp`;
     
     const shareText = this.generateShareText(pet);
     

@@ -4,7 +4,7 @@ const zlib = require('zlib');
 const { sendResponse } = require('../utils/helpers');
 
 const contentTypes = {
-  '.jpg': 'image/jpeg',
+  '.webp': 'image/jpeg',
   '.jpeg': 'image/jpeg',
   '.png': 'image/png',
   '.gif': 'image/gif',

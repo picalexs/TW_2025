@@ -725,6 +725,7 @@
   align-items: flex-start;
   width: 120px;
   height: 120px;
+  overflow: visible;
 }
 
 .media-thumb {

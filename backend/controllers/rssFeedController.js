@@ -113,7 +113,7 @@ class RSSFeedController {
 
         pets.forEach(pet => {
             const petUrl = `${baseUrl}/pets/pet-details?id=${pet.ID}`;
-            const imageUrl = pet.IMAGE_PATH ? `${baseUrl}/${pet.IMAGE_PATH}` : `${baseUrl}/assets/default-pet-profile.jpg`;
+            const imageUrl = pet.IMAGE_PATH ? `${baseUrl}/${pet.IMAGE_PATH}` : `${baseUrl}/assets/default-pet-profile.webp`;
             
             rssXml += `
         <item>
@@ -173,7 +173,7 @@ class RSSFeedController {
 
         pets.forEach(pet => {
             const petUrl = `${baseUrl}/pets/pet-details?id=${pet.ID}`;
-            const imageUrl = pet.IMAGE_PATH ? `${baseUrl}/${pet.IMAGE_PATH}` : `${baseUrl}/assets/default-pet-profile.jpg`;
+            const imageUrl = pet.IMAGE_PATH ? `${baseUrl}/${pet.IMAGE_PATH}` : `${baseUrl}/assets/default-pet-profile.webp`;
             const popularityScore = pet.POPULARITY_SCORE || 0;
             
             rssXml += `

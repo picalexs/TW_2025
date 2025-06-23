@@ -51,14 +51,14 @@ function initHeroSection() {
 
 function createManualSlideshow(container) {
   const slideImages = [
-    "../assets/hero-bg.jpg",
-    "../assets/hero-bg2.jpg",
-    "../assets/hero-bg3.jpg",
-    "../assets/hero-bg4.jpg",
-    "../assets/hero-bg5.jpg",
-    "../assets/hero-bg6.jpg",
-    "../assets/hero-bg7.jpg",
-    "../assets/hero-bg8.jpg",
+    "../assets/hero-bg.webp",
+    "../assets/hero-bg2.webp",
+    "../assets/hero-bg3.webp",
+    "../assets/hero-bg4.webp",
+    "../assets/hero-bg5.webp",
+    "../assets/hero-bg6.webp",
+    "../assets/hero-bg7.webp",
+    "../assets/hero-bg8.webp",
   ];
 
   const uniqueImages = [...new Set(slideImages)];
