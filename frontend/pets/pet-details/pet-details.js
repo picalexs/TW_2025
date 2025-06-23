@@ -269,13 +269,12 @@ class PetDetailsPage {
       const name = [shelter.firstName, shelter.lastName].filter(Boolean).join(' ') || 'Shelter Contact';
       const profilePic = window.ImagePathHandler.processUserImagePath(shelter.profilePicture);
       
-      // Use the shelter.id from the backend
       const shelterId = shelter.id;
       console.log('Shelter ID from backend:', shelterId);
       console.log('Full shelter object:', shelter);
       
       if (shelterId) {
-        const profileLink = `../profile/profile.html?id=${shelterId}`;
+        const profileLink = `/frontend/profile/profile.html?id=${shelterId}`;
         console.log('Generated profile link:', profileLink);
         
         container.innerHTML = `

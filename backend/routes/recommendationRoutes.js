@@ -2,7 +2,6 @@ const recommendationController = require('../controllers/recommendationControlle
 const url = require('url');
 const { sendResponse, collectRequestData } = require('../utils/helpers');
 
-// Helper function to validate numeric IDs
 const validateId = (id, paramName = 'ID') => {
     const numId = parseInt(id);
     if (isNaN(numId) || numId <= 0) {
@@ -19,7 +18,6 @@ async function handleRecommendationRoutes(req, res) {
     const query = parsedUrl.query;
 
     try {
-        // GET /api/recommendations/pets/:userId - Get intelligent pet recommendations
         const petRecommendationsMatch = trimmedPath.match(/^(?:\/)?api\/recommendations\/pets\/(\d+)\/?$/);
         if (petRecommendationsMatch && method === 'get') {
             const userId = validateId(petRecommendationsMatch[1], 'user ID');
@@ -34,7 +32,6 @@ async function handleRecommendationRoutes(req, res) {
             return true;
         }
 
-        // GET /api/recommendations/compatibility/:userId/:petId - Get compatibility score
         const compatibilityMatch = trimmedPath.match(/^(?:\/)?api\/recommendations\/compatibility\/(\d+)\/(\d+)\/?$/);
         if (compatibilityMatch && method === 'get') {
             const userId = validateId(compatibilityMatch[1], 'user ID');
@@ -44,7 +41,6 @@ async function handleRecommendationRoutes(req, res) {
             return true;
         }
 
-        // POST /api/recommendations/preferences/:userId - Update user preferences
         const preferencesMatch = trimmedPath.match(/^(?:\/)?api\/recommendations\/preferences\/(\d+)\/?$/);
         if (preferencesMatch && method === 'post') {
             const userId = validateId(preferencesMatch[1], 'user ID');
@@ -53,7 +49,6 @@ async function handleRecommendationRoutes(req, res) {
             return true;
         }
 
-        // GET /api/recommendations/preferences/:userId - Get user preferences
         if (preferencesMatch && method === 'get') {
             const userId = validateId(preferencesMatch[1], 'user ID');
             
@@ -61,7 +56,6 @@ async function handleRecommendationRoutes(req, res) {
             return true;
         }
 
-        // GET /api/recommendations/schedule/:userId - Get optimized care schedule
         const scheduleMatch = trimmedPath.match(/^(?:\/)?api\/recommendations\/schedule\/(\d+)\/?$/);
         if (scheduleMatch && method === 'get') {
             const userId = validateId(scheduleMatch[1], 'user ID');
@@ -71,7 +65,6 @@ async function handleRecommendationRoutes(req, res) {
             return true;
         }
 
-        // POST /api/recommendations/schedule/optimize/:userId - Trigger schedule optimization
         const optimizeMatch = trimmedPath.match(/^(?:\/)?api\/recommendations\/schedule\/optimize\/(\d+)\/?$/);
         if (optimizeMatch && method === 'post') {
             const userId = validateId(optimizeMatch[1], 'user ID');
@@ -80,7 +73,6 @@ async function handleRecommendationRoutes(req, res) {
             return true;
         }
 
-        // GET /api/recommendations/analytics/weekly/:userId - Get weekly care report
         const weeklyReportMatch = trimmedPath.match(/^(?:\/)?api\/recommendations\/analytics\/weekly\/(\d+)\/?$/);
         if (weeklyReportMatch && method === 'get') {
             const userId = validateId(weeklyReportMatch[1], 'user ID');
@@ -90,7 +82,6 @@ async function handleRecommendationRoutes(req, res) {
             return true;
         }
 
-        // GET /api/recommendations/analytics/engagement/:userId - Get user engagement analytics
         const engagementMatch = trimmedPath.match(/^(?:\/)?api\/recommendations\/analytics\/engagement\/(\d+)\/?$/);
         if (engagementMatch && method === 'get') {
             const userId = validateId(engagementMatch[1], 'user ID');
@@ -100,13 +91,11 @@ async function handleRecommendationRoutes(req, res) {
             return true;
         }
 
-        // POST /api/recommendations/feedback - Submit recommendation feedback
         if (trimmedPath === 'api/recommendations/feedback' && method === 'post') {
             await recommendationController.submitRecommendationFeedback(req, res);
             return true;
         }
 
-        // Route not handled by this handler
         return false;
 
     } catch (error) {

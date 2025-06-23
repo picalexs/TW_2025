@@ -118,7 +118,7 @@ const server = http.createServer(async (req, res) => {
   }
   try {
     let routeHandled = false;
-    
+
     const publicRoutes = [
       '/api/users/register',
       '/api/users/verify-email',
@@ -136,7 +136,8 @@ const server = http.createServer(async (req, res) => {
       '/api/owner-reviews/owner/',
       '/api/owner-reviews/user/',
       '/api/owner-reviews/adoption/',
-      '/api/owner-reviews/can-review/'
+      '/api/owner-reviews/can-review/',
+      '/api/rss'                   
     ];
 
     const userProfileMatch = req.url.match(/^\/api\/users\/\d+(\?.*)?$/);

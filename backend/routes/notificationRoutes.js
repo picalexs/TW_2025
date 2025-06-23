@@ -8,14 +8,12 @@ async function handleNotificationRoutes(req, res) {
   const trimmedPath = path.replace(/^\/+|\/+$/g, "");  
   const method = req.method.toLowerCase();
 
-  // Create notification
   if (trimmedPath === "api/notifications" && method === "post") {
     console.log('[NotificationRoutes] Handling /api/notifications POST request');
     await notificationController.createNotification(req, res);
     return true;
   }
 
-  // Get user notifications
   const userNotificationsMatch = trimmedPath.match(/^api\/notifications\/user\/(\d+)$/);
   if (userNotificationsMatch && method === "get") {
     const userId = parseInt(userNotificationsMatch[1]);
@@ -24,7 +22,6 @@ async function handleNotificationRoutes(req, res) {
     return true;
   }
 
-  // Mark notification as read
   const markReadMatch = trimmedPath.match(/^api\/notifications\/(\d+)\/read$/);
   if (markReadMatch && method === "put") {
     const notificationId = parseInt(markReadMatch[1]);
@@ -33,14 +30,12 @@ async function handleNotificationRoutes(req, res) {
     return true;
   }
 
-  // Send care reminders
   if (trimmedPath === "api/notifications/care-reminders" && method === "post") {
     console.log('[NotificationRoutes] Handling /api/notifications/care-reminders POST request');
     await notificationController.sendCareReminders(req, res);
     return true;
   }
 
-  // Get notification statistics
   const statsMatch = trimmedPath.match(/^api\/notifications\/stats\/(\d+)$/);
   if (statsMatch && method === "get") {
     const userId = parseInt(statsMatch[1]);

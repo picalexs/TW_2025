@@ -9,12 +9,6 @@ if (!JWT_SECRET) {
     console.error('FATAL ERROR: JWT_SECRET is not defined in environment variables.');
 }
 
-/**
- *
- * @param {object} req
- * @param {object} res 
- * @param {function} next 
- */
 const verifyToken = (req, res, next) => {
 
     const authHeader = req.headers['authorization'];
@@ -38,10 +32,6 @@ const verifyToken = (req, res, next) => {
     }
 };
 
-/**
- * @param {string|string[]} roles 
- * @returns {function} 
- */
 const checkRole = (roles) => {
     return (req, res, next) => {
         if (!req.user || !req.user.role) {
@@ -60,10 +50,6 @@ const checkRole = (roles) => {
     };
 };
 
-/**
- * @param {object} payload
- * @returns {string}
- */
 const generateToken = (payload) => {
     return jwt.sign(payload, JWT_SECRET, { expiresIn: TOKEN_EXPIRATION });
 };
