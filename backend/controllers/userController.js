@@ -548,12 +548,21 @@ class UserController {
     
     req.pipe(busboy);
   }
-
   async deleteUser(req, res, id) {
     try {
       if (!req.user || req.user.role !== 'admin') {
         return sendResponse(res, 403, { success: false, message: "Forbidden: Only administrators can delete users." });
       }
+      
+      const userToDelete = await userModel.getById(id);
+      if (!userToDelete) {
+        return sendResponse(res, 404, { success: false, message: "User not found." });
+      }
+      
+      if (userToDelete.role === 'admin') {
+        return sendResponse(res, 403, { success: false, message: "Cannot delete admin users." });
+      }
+      
       console.log(`[UserController] Deleting user with ID: ${id}`);
       const result = await userModel.delete(id);
       if (result) {

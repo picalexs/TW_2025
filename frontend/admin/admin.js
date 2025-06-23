@@ -37,20 +37,23 @@ function renderUsers(users) {
   if (!Array.isArray(users) || users.length === 0) {
     usersTbody.innerHTML = '<tr><td colspan="5">No users found.</td></tr>';
     return;
-  }
-  users.forEach(user => {
+  }  users.forEach(user => {
    
     const id = user[0] || '';
     const email = user[1] || '';
     const username = user[2] || '';
     const role = user[3] || '';
+    const deleteButton = role.toLowerCase() === 'admin' 
+      ? '<span class="admin-protected-text">Protected</span>'
+      : `<button class="admin-delete-btn" data-id="${id}">Delete</button>`;
+    
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${id}</td>
       <td>${email}</td>
       <td>${username}</td>
       <td>${role}</td>
-      <td><button class="admin-delete-btn" data-id="${id}">Delete</button></td>
+      <td>${deleteButton}</td>
     `;
     usersTbody.appendChild(tr);
   });

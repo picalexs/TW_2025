@@ -1,25 +1,10 @@
 select  * from favorites;
 
-select * from users where id = 9;
-
-select * from tags;
-
-select * from ANIMALS;
-
-select * from USER_PREFERENCE_TAGS;
+select * from users;
 
 select s.ID, s.username, u.name from users s join USER_PREFERENCE_TAGS t on s.id = t.user_id join tags u on u.ID = t.tag_id order by s.ID;
 
 
-SELECT constraint_name, constraint_type, search_condition
-FROM user_constraints
-WHERE table_name = 'USERS';
-
-SELECT id, DUMP(id), name FROM tags WHERE id IN (5, 12);
-SELECT * FROM tags ORDER BY id;
-
-
-select * from testimonials;
 
 UPDATE users
 SET role = 'admin'
