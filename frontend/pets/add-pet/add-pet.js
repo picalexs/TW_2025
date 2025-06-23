@@ -1027,7 +1027,30 @@ class AddPetPage {
       }
     });
 
+    if (!isValid) {
+      this.scrollToFirstError();
+    }
+
     return isValid;
+  }
+
+  scrollToFirstError() {
+    const firstErrorField = document.querySelector('.form-input.error, .form-select.error, .form-textarea.error');
+    
+    if (firstErrorField) {
+      const navbarHeight = document.querySelector('#global-navbar')?.offsetHeight || 80;
+      const elementTop = firstErrorField.getBoundingClientRect().top + window.pageYOffset;
+      const offsetPosition = elementTop - navbarHeight - 20; // Extra 20px margin
+      
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+      
+      setTimeout(() => {
+        firstErrorField.focus();
+      }, 500);
+    }
   }
 
   setLoading(isLoading) {
@@ -1199,27 +1222,46 @@ class AddPetPage {
       btnText.style.opacity = '1';
     }
   }
-
   showMessage(message, type) {
-    const existingMessage = document.querySelector('.form-message');
-    if (existingMessage) {
-      existingMessage.remove();
-    }
+    const existingNotifications = document.querySelectorAll('.floating-notification');
+    existingNotifications.forEach(notification => notification.remove());
 
-    const messageElement = document.createElement('div');
-    messageElement.className = `form-message ${type} show`;
-    messageElement.textContent = message;
+    const notification = document.createElement('div');
+    notification.className = `floating-notification ${type}`;
+    notification.innerHTML = `
+      <div class="notification-content">
+        <span class="notification-icon">${this.getNotificationIcon(type)}</span>
+        <span class="notification-text">${message}</span>
+        <button class="notification-close" onclick="this.parentElement.parentElement.remove()">×</button>
+      </div>
+    `;
 
-    
-    const form = document.getElementById('add-pet-form');
-    form.insertBefore(messageElement, form.firstChild);
+    document.body.appendChild(notification);
 
-    if (type === 'error') {
-      setTimeout(() => {
-        if (messageElement.parentNode) {
-          messageElement.remove();
-        }
-      }, 5000);
+    setTimeout(() => {
+      notification.classList.add('show');
+    }, 10);
+
+    const delay = type === 'error' ? 8000 : 5000;
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.classList.remove('show');
+        setTimeout(() => {
+          if (notification.parentNode) {
+            notification.remove();
+          }
+        }, 300);
+      }
+    }, delay);
+  }
+
+  getNotificationIcon(type) {
+    switch (type) {
+      case 'success': return '✓';
+      case 'error': return '✕';
+      case 'warning': return '⚠';
+      case 'info': 
+      default: return 'ℹ';
     }
   }
   
