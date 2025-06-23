@@ -15,7 +15,7 @@ body.login-page .mobile-auth {
   position: relative;
   flex: 1 0 auto;
   overflow: hidden;
-  background-image: linear-gradient(rgba(var(--dark-color-rgb), 0.6), rgba(var(--dark-color-rgb), 0.6)), url('../assets/pet-hero-bg.webp');
+  background-image: linear-gradient(rgba(var(--dark-color-rgb), 0.6), rgba(var(--dark-color-rgb), 0.6)), url('../assets/background.webp');
   background-repeat: no-repeat;
   background-position: center center;
   background-attachment: fixed;

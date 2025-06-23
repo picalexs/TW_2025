@@ -3,8 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <title data-i18n="admin.title" data-i18n-fallback="Admin Panel"></title>
-  <link rel="stylesheet" href="../global/global.min.css">
-  <link rel="stylesheet" href="admin.css">
+  <link rel="preload" href="../global/global.min.css" as="style" onload="this.rel='stylesheet'">
+  <link rel="preload" href="admin.css" as="style" onload="this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="../global/global.min.css" />
+    <link rel="stylesheet" href="admin.css" />
+  </noscript>
 </head>
 <body>
   <div id="global-navbar"></div>
