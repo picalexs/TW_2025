@@ -1,8 +1,8 @@
 class SharingService {  
 
-  constructor() {    this.baseURL = window.location.port === '80' ? 
+  constructor() {    this.baseURL = window.location.port === '8080' ? 
       window.location.origin : 
-      (window.APP_CONFIG?.api?.baseURL || 'http://localhost:80');
+      (window.APP_CONFIG?.api?.baseURL || 'http://localhost:8080');
   }
 
   sharePet(pet, platform = 'facebook') {

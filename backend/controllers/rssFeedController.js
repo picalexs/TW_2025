@@ -96,7 +96,7 @@ class RSSFeedController {
     generateRSSXML(pets, feedType, filters) {
         const feedTitle = this.getFeedTitle(feedType, filters);
         const feedDescription = this.getFeedDescription(feedType, filters);
-        const baseUrl = process.env.BASE_URL || `${process.env.API_PROTOCOL || 'http'}://${process.env.API_HOST || 'localhost'}:${process.env.API_PORT || 80}`;
+        const baseUrl = process.env.BASE_URL || `${process.env.API_PROTOCOL || 'http'}://${process.env.API_HOST || 'localhost'}:${process.env.API_PORT || 8080}`;
         
         let rssXml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
@@ -153,7 +153,7 @@ class RSSFeedController {
     
     generateTrendingRSSXML(pets, filters) {
         const feedTitle = `Trending Pets for Adoption${filters.zone ? ' in ' + filters.zone : ''}`;        const feedDescription = `Most popular and trending pets available for adoption${filters.zone ? ' in the ' + filters.zone + ' area' : ''}`;
-        const baseUrl = process.env.BASE_URL || `${process.env.API_PROTOCOL || 'http'}://${process.env.API_HOST || 'localhost'}:${process.env.API_PORT || 80}`;
+        const baseUrl = process.env.BASE_URL || `${process.env.API_PROTOCOL || 'http'}://${process.env.API_HOST || 'localhost'}:${process.env.API_PORT || 8080}`;
         
         let rssXml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
@@ -227,7 +227,7 @@ class RSSFeedController {
         const species = searchParams.get('species');
         const limit = searchParams.get('limit') || '10';
         
-        const baseUrl = process.env.BASE_URL || `${process.env.API_PROTOCOL || 'http'}://${process.env.API_HOST || 'localhost'}:${process.env.API_PORT || 80}`;
+        const baseUrl = process.env.BASE_URL || `${process.env.API_PROTOCOL || 'http'}://${process.env.API_HOST || 'localhost'}:${process.env.API_PORT || 8080}`;
         
         try {
             const links = {
@@ -412,7 +412,7 @@ class RSSFeedController {
 
     generateEmbedCode(rssUrl, type, filters) {
         const { zone, breed, species } = filters;
-        const baseUrl = process.env.BASE_URL || `${process.env.API_PROTOCOL || 'http'}://${process.env.API_HOST || 'localhost'}:${process.env.API_PORT || 80}`;
+        const baseUrl = process.env.BASE_URL || `${process.env.API_PROTOCOL || 'http'}://${process.env.API_HOST || 'localhost'}:${process.env.API_PORT || 8080}`;
         
         let description = 'Pet Adoption RSS Feed';
         if (type === 'trending') {

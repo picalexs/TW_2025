@@ -18,17 +18,15 @@ document.addEventListener('DOMContentLoaded', function() {
       messageDiv.textContent = window.languageManager.translate('error.selectAtLeastOne', 'Please select at least one answer!');
       return;
     }
-    // Check login
     const authToken = localStorage.getItem('authToken');
     if (!authToken) {
       messageDiv.textContent = window.languageManager.translate('error.mustBeLoggedIn', 'You must be logged in to save preferences!');
       return;
     }
     try {
-      const apiBase = window.APP_CONFIG?.api?.baseURL || 'http://localhost:80';
+      const apiBase = window.APP_CONFIG?.api?.baseURL || 'http://localhost:8080';
       const tagArray = Array.from(tags.entries()).map(([id, name]) => ({ id: Number(id), name }));
       
-      // Save preferences
       const res = await fetch(`${apiBase}/api/user/preferences/tags`, {
         method: 'POST',
         headers: {

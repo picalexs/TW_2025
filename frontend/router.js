@@ -17,13 +17,15 @@ export function loadPage(pageId) {
   */
   switch(pageId) {
     case 'home':
-      window.location.href = './home/home.html';
+      window.location.href = '/frontend/home/home.html';
       break;
       
     case 'login':
-      window.location.href = './login/login.html';
-      break;    case 'signup':
-      window.location.href = './signup/signup.html';
+      window.location.href = '/frontend/login/login.html';
+      break;
+
+    case 'signup':
+      window.location.href = '/frontend/signup/signup.html';
       break;
       
     case 'pet-details':

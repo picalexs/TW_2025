@@ -209,7 +209,7 @@ async function main() {
     setupGracefulShutdown(server, watcher);
     
     log('🎉 Development environment ready!', colors.green);
-    log('   - Server running on http://localhost:80', colors.green);
+    log('   - Server running on http://localhost:8080', colors.green);
     log('   - File watcher active for live minification & bundling', colors.green);
     log('   - Press Ctrl+C to stop', colors.yellow);
     

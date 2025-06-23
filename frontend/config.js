@@ -1,6 +1,6 @@
 window.APP_CONFIG = {
   api: {
-    baseURL: 'http://localhost:80',
+    baseURL: 'http://localhost:8080',
     
     timeouts: {
       default: 10000,
