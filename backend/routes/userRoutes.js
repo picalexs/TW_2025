@@ -126,9 +126,6 @@ if (trimmedPath === "api/users" || trimmedPath === "api/users/") {
             });
         });
     }
-
-    console.log(`[UserRoutes] No user route matched: ${trimmedPath}`);
     return false;
 }
-
 module.exports = handleUserRoutes;

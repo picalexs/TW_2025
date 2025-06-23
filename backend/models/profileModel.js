@@ -1,6 +1,11 @@
+const AbstractModel = require('./abstractModel');
 const profileDTO = require('../dto/profileDTO');
 
-class ProfileModel {
+class ProfileModel extends AbstractModel {
+  constructor() {
+    super(profileDTO);
+  }
+
   async getById(userId) {
     return await profileDTO.getById(userId);
   }

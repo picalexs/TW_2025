@@ -3,7 +3,7 @@ const RSSFeedDTO = require('../dto/rssFeedDTO');
 
 class RSSFeedModel extends AbstractModel {
     constructor() {
-        super();
+        super(RSSFeedDTO);
         this.rssFeedDTO = RSSFeedDTO;
     }
 

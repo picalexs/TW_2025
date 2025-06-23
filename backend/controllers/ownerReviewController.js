@@ -1,11 +1,7 @@
-const OwnerReviewDTO = require('../dto/ownerReviewDTO');
+const ownerReviewModel = require('../models/ownerReviewModel');
 const { sendResponse } = require('../utils/helpers');
 
 class OwnerReviewController {
-    constructor() {
-        this.ownerReviewDTO = new OwnerReviewDTO();
-    }
-
     async getReviewsForOwner(req, res) {
         try {
             const { ownerId } = req.params;
@@ -17,7 +13,7 @@ class OwnerReviewController {
                 });
             }
 
-            const result = await this.ownerReviewDTO.getByOwner(parseInt(ownerId));
+            const result = await ownerReviewModel.getOwnerReviewsWithStats(parseInt(ownerId));
             
             sendResponse(res, 200, {
                 success: true,
@@ -44,7 +40,7 @@ class OwnerReviewController {
                 });
             }
 
-            const reviews = await this.ownerReviewDTO.getByReviewer(parseInt(userId));
+            const reviews = await ownerReviewModel.getReviewerReviews(parseInt(userId));
             
             sendResponse(res, 200, {
                 success: true,
@@ -109,7 +105,7 @@ class OwnerReviewController {
                 });
             }
 
-            const canReview = await this.ownerReviewDTO.canUserReview(reviewer_id, adoption_id);
+            const canReview = await ownerReviewModel.canUserReview(reviewer_id, adoption_id);
               if (!canReview.canReview) {
                 return sendResponse(res, 403, {
                     success: false,
@@ -127,7 +123,7 @@ class OwnerReviewController {
                 pet_condition_rating: pet_condition_rating || null,
                 process_rating: process_rating || null,
                 would_recommend: would_recommend !== undefined ? would_recommend : 1
-            };            const review = await this.ownerReviewDTO.create(reviewData);
+            };            const review = await ownerReviewModel.createReview(reviewData);
             
             sendResponse(res, 201, {
                 success: true,
@@ -203,9 +199,8 @@ class OwnerReviewController {
             Object.keys(reviewData).forEach(key => {
                 if (reviewData[key] === undefined) {
                     delete reviewData[key];
-                }
-            });            
-            const review = await this.ownerReviewDTO.update(parseInt(reviewId), reviewData);
+                }            });            
+            const review = await ownerReviewModel.updateReview(parseInt(reviewId), reviewData);
             
             sendResponse(res, 200, {
                 success: true,
@@ -232,7 +227,7 @@ class OwnerReviewController {
                 });
             }
 
-            const review = await this.ownerReviewDTO.getByAdoption(parseInt(adoptionId));
+            const review = await ownerReviewModel.getAdoptionReview(parseInt(adoptionId));
             
             sendResponse(res, 200, {
                 success: true,
@@ -258,7 +253,7 @@ class OwnerReviewController {
                 });
             }
 
-            const result = await this.ownerReviewDTO.canUserReview(parseInt(userId), parseInt(adoptionId));
+            const result = await ownerReviewModel.checkUserCanReview(parseInt(userId), parseInt(adoptionId));
             
             sendResponse(res, 200, {
                 success: true,

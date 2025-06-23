@@ -1,4 +1,4 @@
-const AdminDTO = require('../dto/adminDTO');
+const AdminModel = require('../models/adminModel');
 const { handleError } = require('../utils/errorHandler');
 const fs = require('fs');
 const path = require('path');
@@ -6,7 +6,7 @@ const path = require('path');
 class AdminController {
   async getAvailableTables(req, res) {
     try {
-      const tables = await AdminDTO.getAvailableTables();
+      const tables = await AdminModel.getAvailableTables();
       
       res.status(200).json({
         success: true,
@@ -21,7 +21,7 @@ class AdminController {
   async getTableSchema(req, res) {
     try {
       const { tableName } = req.params;
-      const schema = await AdminDTO.getTableSchema(tableName);
+      const schema = await AdminModel.getTableSchema(tableName);
       
       res.status(200).json({
         success: true,
@@ -37,7 +37,7 @@ class AdminController {
   async getTableStats(req, res) {
     try {
       const { tableName } = req.params;
-      const stats = await AdminDTO.getTableStats(tableName);
+      const stats = await AdminModel.getTableStats(tableName);
       
       res.status(200).json({
         success: true,
@@ -60,7 +60,7 @@ class AdminController {
         });
       }
 
-      const tableData = await AdminDTO.getTableData(tableName, limit);
+      const tableData = await AdminModel.getTableData(tableName, limit);
       
       if (!tableData || tableData.rows.length === 0) {
         return res.status(404).json({

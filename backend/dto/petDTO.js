@@ -831,12 +831,10 @@ class petDTO extends abstractDTO {
       const binds = { id };
       let addressId = null;
 
-      // Handle address fields separately
       const addressFields = ['address', 'city', 'country', 'postalCode'];
       const hasAddressFields = addressFields.some(field => entityData[field] !== undefined);
       
       if (hasAddressFields) {
-        // Create or update address
         const addressData = {
           street: entityData.address,
           city: entityData.city,
@@ -851,7 +849,6 @@ class petDTO extends abstractDTO {
         }
       }
 
-      // Handle other pet fields, mapping to correct column names
       const fieldMapping = {
         name: 'name',
         species: 'species',
@@ -943,7 +940,6 @@ async getPetsByTagOverlap(userId, limit = 20) {
     try {
         const query = `
             WITH animal_scores AS (
-                -- Pasul 1: Calculăm scorul pentru fiecare animal ID, fără a atinge coloanele CLOB
                 SELECT
                     at.animal_id,
                     COUNT(upt.tag_id) AS matching_score
@@ -952,10 +948,10 @@ async getPetsByTagOverlap(userId, limit = 20) {
                 WHERE upt.user_id = :userId
                 GROUP BY at.animal_id
             )
-            -- Pasul 2: Selectăm toate detaliile animalelor, le unim cu scorurile și le sortăm
+                
             SELECT 
                 a.*, 
-                NVL(s.matching_score, 0) AS matching_score -- Folosim NVL pentru a afișa 0 în loc de NULL dacă nu există scor
+                NVL(s.matching_score, 0) AS matching_score
             FROM animals a
             LEFT JOIN animal_scores s ON a.id = s.animal_id
             WHERE a.adoption_status = 'available'
