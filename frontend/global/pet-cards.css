@@ -100,8 +100,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 4;
-    line-clamp: 4;
     -webkit-box-orient: vertical;
     max-height: 6.6em;
 }
@@ -243,7 +241,6 @@
     gap: 2rem;
     padding: 2rem 0;
     content-visibility: auto;
-    contain-intrinsic-size: 0 400px;
 }
 
 .pets-grid.list-view {
@@ -277,9 +274,8 @@
 
 .pets-grid.list-view .pet-description {
     font-size: 0.9rem;
-    margin-bottom: 0.5rem;    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
+    margin-bottom: 0.5rem;    
+    display: -webkit-box;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }

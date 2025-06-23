@@ -13,6 +13,7 @@ const handleConfigRoutes = require('./routes/configRoutes');
 const handleRSSRoutes = require('./routes/rssFeedRoutes');
 const { handleNotificationRoutes } = require('./routes/notificationRoutes');
 const handleFrontendRoutes = require('./routes/frontendRoutes');
+const handleAdminRoutes = require('./routes/adminRoutes');
 const { sendResponse } = require('./utils/helpers');
 const handleFavoriteRoutes = require('./routes/favoriteRoutes');
 
@@ -175,6 +176,9 @@ const server = http.createServer(async (req, res) => {
     }
     if (!routeHandled) {
       routeHandled = await handleFavoriteRoutes(req, res);
+    }
+    if (!routeHandled) {
+      routeHandled = await handleAdminRoutes(req, res);
     }
     if (!routeHandled) {
       routeHandled = await handleNotificationRoutes(req, res);

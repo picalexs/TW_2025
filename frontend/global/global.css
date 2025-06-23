@@ -1207,10 +1207,6 @@ footer {
   transform: translateZ(0);
 }
 
-body {
-  font-display: swap;
-}
-
 img {
   width: 100%;
   height: auto;

@@ -9,23 +9,63 @@
 <body>
   <div id="global-navbar"></div>
   <main class="section-container">
-    <h1 class="admin-header">Admin Panel - User Management</h1>
-    <div id="admin-message"></div>
-    <table class="admin-table" id="users-table">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Email</th>
-          <th>Username</th>
-          <th>Role</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="users-tbody">
-       
-      </tbody>
-    </table>
+    <h1 class="admin-header">Admin Panel</h1>
+    
+    <!-- Export Section -->
+    <section class="admin-section">
+      <h2>Database Export</h2>
+      <div class="export-controls">
+        <div class="form-group">
+          <label for="table-select">Select Table:</label>
+          <select id="table-select" class="form-control">
+            <option value="">Loading tables...</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="format-select">Export Format:</label>
+          <select id="format-select" class="form-control">
+            <option value="csv">CSV</option>
+            <option value="json">JSON</option>
+            <option value="xml">XML</option>
+            <option value="txt">TXT (Tab-separated)</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="limit-input">Limit Records (optional):</label>
+          <input type="number" id="limit-input" class="form-control" min="1" placeholder="All records">
+        </div>
+        
+        <button id="export-btn" class="btn btn-primary">Export Data</button>
+        <button id="preview-btn" class="btn btn-secondary">Preview</button>
+      </div>
+      
+      <div id="export-status" class="export-status"></div>
+      <div id="table-info" class="table-info"></div>
+      <div id="export-preview" class="export-preview"></div>
+    </section>
+    
+    <!-- User Management Section -->
+    <section class="admin-section">
+      <h2>User Management</h2>
+      <div id="admin-message"></div>
+      <table class="admin-table" id="users-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Email</th>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="users-tbody">
+         
+        </tbody>
+      </table>    </section>
   </main>
+  <script src="../config.js"></script>
   <script type="module" src="../global/inject-navbar.js"></script>
   <script type="module" src="admin.js"></script>
 </body>
