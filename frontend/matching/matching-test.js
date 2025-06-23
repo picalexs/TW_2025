@@ -27,6 +27,8 @@ document.addEventListener('DOMContentLoaded', function() {
     try {
       const apiBase = window.APP_CONFIG?.api?.baseURL || 'http://localhost:8080';
       const tagArray = Array.from(tags.entries()).map(([id, name]) => ({ id: Number(id), name }));
+      
+      // Save preferences
       const res = await fetch(`${apiBase}/api/user/preferences/tags`, {
         method: 'POST',
         headers: {
@@ -36,7 +38,11 @@ document.addEventListener('DOMContentLoaded', function() {
         body: JSON.stringify({ tags: tagArray })
       });
       if (res.ok) {
-        messageDiv.textContent = window.languageManager.translate('success.preferencesSaved', 'Preferences saved successfully!');
+        messageDiv.innerHTML = '<div style="color: green;">' + window.languageManager.translate('success.preferencesSaved', 'Preferences saved successfully!') + '</div>';
+        
+        setTimeout(async () => {
+          await showMatchingPets(tagArray, apiBase, authToken);
+        }, 1000);
       } else {
         const data = await res.json().catch(() => ({}));
         messageDiv.textContent = data.message || window.languageManager.translate('error.saveFailed', 'Error saving preferences!');

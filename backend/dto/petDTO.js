@@ -1014,5 +1014,31 @@ async getPetsByTagOverlap(userId, limit = 20) {
         });
     }
 }
+
+async getPetTags(petId) {
+    try {
+        const query = `
+            SELECT at.tag_id, at.tag_name
+            FROM animal_tags at
+            WHERE at.animal_id = :petId
+            ORDER BY at.tag_name
+        `;
+        
+        const result = await this.db.query(query, { petId });
+        
+        return result.rows.map(row => ({
+            id: row.tag_id,
+            name: row.tag_name
+        }));
+        
+    } catch (error) {
+        console.error("Error in getPetTags DTO:", error);
+        throw Object.assign(new Error(`Failed to fetch pet tags: ${error.message}`), {
+            code: "DB_ERROR",
+            status: 500,
+            originalError: error,
+        });
+    }
+}
 }
 module.exports = new petDTO();

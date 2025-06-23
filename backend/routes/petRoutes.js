@@ -67,6 +67,13 @@ async function handlePetRoutes(req, res) {
     return true;
   }
 
+  const petTagsMatch = trimmedPath.match(/^api\/pets\/(\d+)\/tags$/);
+  if (petTagsMatch && method === "get") {
+    const petId = parseInt(petTagsMatch[1]);
+    await petController.getPetTags(req, res, petId);
+    return true;
+  }
+
   return false;
 }
 module.exports = handlePetRoutes;

@@ -356,6 +356,10 @@ class PetModel extends AbstractModel {
   async getPetsByTagOverlap(userId, limit = 20) {
     return await this.dto.getPetsByTagOverlap(userId, limit);
   }
+
+  async getPetTags(petId) {
+    return await this.dto.getPetTags(petId);
+  }
 }
 
 module.exports = new PetModel();

@@ -29,6 +29,16 @@ class PetController {
     }
   }
 
+  async getPetTags(req, res, id) {
+    try {
+      const tags = await petModel.getPetTags(id);
+      sendResponse(res, 200, { tags });
+    } catch (error) {
+      console.error(`Error getting pet tags for ID ${id}:`, error);
+      sendResponse(res, 500, { error: "Failed to fetch pet tags", message: error.message });
+    }
+  }
+
   async createPet(req, res) {
     try {
       const contentType = req.headers['content-type'];

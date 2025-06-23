@@ -13,7 +13,8 @@ class UserService {
       currentUser: '/api/users/me',
       login: '/api/auth/login',
       register: '/api/auth/register',
-      profile: '/api/users/profile'
+      profile: '/api/users/profile',
+      getUserPreferenceTags: '/api/user/preferences/tags'
     };
     
     this._restoreAuthState();
@@ -200,6 +201,18 @@ class UserService {
     } catch (error) {
       if (this.debug) {
         console.error('Profile delete error:', error);
+      }
+      throw error;
+    }
+  }
+
+  async getUserPreferenceTags() {
+    try {
+      const response = await this.apiService.get(this.endpoints.getUserPreferenceTags);
+      return response.tagIds || [];
+    } catch (error) {
+      if (this.debug) {
+        console.error('Get user preference tags error:', error);
       }
       throw error;
     }
