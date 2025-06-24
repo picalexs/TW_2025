@@ -671,15 +671,12 @@ class PetDetailsPage {
       return;
     }
 
-    // Ascunde butonul implicit
     editBtn.style.display = 'none';
 
-    // Verifică dacă utilizatorul este logat
     const isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
     const currentUserId = localStorage.getItem('userId');
     const userRole = localStorage.getItem('userRole');
     
-    // Obține shelter ID din pet.shelter.id sau pet.shelterId
     const petShelterId = pet.shelter?.id || pet.shelterId;
     
     console.log('Ownership check:', {
@@ -696,9 +693,6 @@ class PetDetailsPage {
       return;
     }
 
-    // Arată butonul de edit doar dacă:
-    // 1. Utilizatorul este admin SAU
-    // 2. Utilizatorul este shelter-ul care a pus animalul în adopție
     const canEdit = userRole === 'admin' || 
                    (petShelterId && petShelterId.toString() === currentUserId.toString());
 
