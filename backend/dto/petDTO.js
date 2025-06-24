@@ -7,8 +7,7 @@ class petDTO extends abstractDTO {
   constructor() {
     super("animals");
   }
-  
-  mapToEntity(dbRow) {
+    mapToEntity(dbRow) {
     return {
       id: dbRow.ID,
       name: dbRow.NAME,
@@ -25,6 +24,7 @@ class petDTO extends abstractDTO {
       adoptionFee: dbRow.ADOPTION_FEE,
       relationWithOthers: dbRow.RELATION_WITH_OTHERS,
       createdAt: dbRow.CREATED_AT,
+      shelterId: dbRow.SHELTER_ID,
       imagePath: null,
     };
   }
