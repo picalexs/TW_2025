@@ -1,3 +1,12 @@
+function escapeHTML(str) {
+    return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
 class ImagePathHandler {
     static get API_BASE_URL() {
         return window.APP_CONFIG?.api?.baseURL || 'http://localhost:8080';
@@ -48,7 +57,7 @@ class ImagePathHandler {
         const processedPath = this.processImagePath(imagePath, defaultPath);
         
         img.src = processedPath;
-        img.alt = altText;
+        img.alt = escapeHTML(altText);
         
         img.onerror = function() {
             if (this.src !== defaultPath) {

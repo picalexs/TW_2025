@@ -1,3 +1,12 @@
+function escapeHTML(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 class ExportUtility {
   constructor() {
     this.supportedFormats = ['csv', 'json', 'xml', 'txt'];
@@ -113,19 +122,14 @@ class ExportUtility {
 
   escapeCSVField(value) {
     if (value === null || value === undefined) return '""';
-    const stringValue = String(value);
-    
-    if (stringValue.includes(',') || stringValue.includes('\n') || stringValue.includes('"')) {
-      return `"${stringValue.replace(/"/g, '""')}"`;
-    }
-    
-    return stringValue;
+    const stringValue = String(value).replace(/[\r\n]+/g, ' ');
+    return stringValue.includes(',') || stringValue.includes('\n') || stringValue.includes('"')
+      ? `"${stringValue.replace(/"/g, '""')}"`
+      : stringValue;
   }
 
   escapeXMLValue(value) {
-    if (value === null || value === undefined) return '';
-    
-    return String(value)
+    return value == null ? '' : String(value)
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
@@ -133,17 +137,12 @@ class ExportUtility {
       .replace(/'/g, '&apos;');
   }
 
-  sanitizeXMLTag(tagName) {
-    return tagName.toLowerCase().replace(/[^a-z0-9_]/g, '_');
+  sanitizeXMLTag(tag) {
+    return tag.toLowerCase().replace(/[^a-z0-9_]/g, '_');
   }
 
   escapeTXTField(value) {
-    if (value === null || value === undefined) return '';
-    
-    return String(value)
-      .replace(/\t/g, ' ')
-      .replace(/\n/g, ' ')
-      .replace(/\r/g, ' ');
+    return value == null ? '' : String(value).replace(/[\t\n\r]/g, ' ');
   }
 
   downloadFile(data, filename, contentType) {

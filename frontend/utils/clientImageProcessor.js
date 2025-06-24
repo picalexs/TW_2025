@@ -1,3 +1,12 @@
+function escapeHTML(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 class ClientImageProcessor {
   static get SETTINGS() {
     return {
@@ -93,18 +102,18 @@ class ClientImageProcessor {
   }  static createFileInfoDisplay(fileInfo) {
     const container = document.createElement('div');
     container.className = 'file-info-display';
-    
+    // Use escapeHTML for all DOM-injected values to prevent XSS
     container.innerHTML = `
       <div class="file-info-header">
-        <span class="file-name">${fileInfo.originalName}</span>
+        <span class="file-name">${escapeHTML(fileInfo.originalName)}</span>
       </div>
       <div class="file-info-details">
-        <div class="dimensions">${fileInfo.dimensions.width} × ${fileInfo.dimensions.height}px</div>
+        <div class="dimensions">${escapeHTML(fileInfo.dimensions.width)} × ${escapeHTML(fileInfo.dimensions.height)}px</div>
         ${fileInfo.willResize ? '<div class="resize-notice">Will be resized</div>' : ''}
       </div>
       ${fileInfo.warning.length > 0 ? `
         <div class="file-warnings">
-          ${fileInfo.warning.map(w => `<div class="warning">${w}</div>`).join('')}
+          ${fileInfo.warning.map(w => `<div class="warning">${escapeHTML(w)}</div>`).join('')}
         </div>
       ` : ''}
     `;
