@@ -35,6 +35,7 @@ const generateAllowedOrigins = () => {
     origins.push(`${PROTOCOL}://127.0.0.1:${port.trim()}`);
   });
 
+  origins.push('https://pet-center.site');
   return origins;
 };
 
@@ -93,7 +94,7 @@ let protocol = 'http';
 const SSL_KEY_PATH = process.env.SSL_KEY_PATH || path.join(__dirname, '../ssl/key.pem');
 const SSL_CERT_PATH = process.env.SSL_CERT_PATH || path.join(__dirname, '../ssl/cert.pem');
 
-let useHttps = false;
+let useHttps = true;
 let httpsOptions = {};
 try {
   if (fs.existsSync(SSL_KEY_PATH) && fs.existsSync(SSL_CERT_PATH)) {
