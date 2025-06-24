@@ -66,7 +66,7 @@ class ResourcePreloader {
   }
 
   prefetchAPI(endpoint) {
-    const baseURL = window.APP_CONFIG?.api?.baseURL || 'http://localhost:8080';
+    const baseURL = window.APP_CONFIG?.api?.baseURL || 'http://localhost:8888';
     
     fetch(baseURL + endpoint, {
       method: 'GET',

@@ -2,7 +2,7 @@ import { setupMobileMenu, createSlideshow, initializePageLanguage, checkLoginSta
 import UserService from '../services/userService.min.js';
 import ApiService from '../services/api.min.js';
 
-const API_BASE_URL = window.APP_CONFIG?.api?.baseURL || 'http://localhost:8080';
+const API_BASE_URL = window.APP_CONFIG?.api?.baseURL || 'http://localhost:8888';
 
 document.addEventListener('DOMContentLoaded', function() {
   initLoginPage();
