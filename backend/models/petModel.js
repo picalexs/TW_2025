@@ -12,14 +12,16 @@ class PetModel extends AbstractModel {
   }
 
   async updatePet(id, petDataOrFields, files = null) {
+    const currentPet = await this.dto.getById(id);
+    if (currentPet && currentPet.shelterId) {
+      petDataOrFields.shelterId = currentPet.shelterId;
+    }
     if (files !== null) {
       const validatedData = this.validatePetCreationData(petDataOrFields, files);
       const updatedPet = await this.dto.update(id, validatedData.petData);
-      
       if (!updatedPet) {
         return null;
       }
-      
       return {
         pet: updatedPet,
         files: files,
@@ -36,6 +38,11 @@ class PetModel extends AbstractModel {
   }
 
   validatePetCreationData(fields, files) {    
+    let shelterId = null;
+    if (fields.shelterId && String(fields.shelterId).trim() !== '') {
+      shelterId = fields.shelterId;
+    }
+    
     const petData = {
       name: fields.name,
       species: fields.species,
@@ -50,7 +57,7 @@ class PetModel extends AbstractModel {
       relationWithOthers: fields.relationWithOthers,
       adoptionStatus: fields.adoptionStatus || 'available',
       adoptionFee: fields.adoptionFee ? parseFloat(fields.adoptionFee) : null,
-      shelterId: fields.shelterId || fields.userId || parseInt(fields.shelterId) || null,
+      shelterId: shelterId,
       city: fields.city,
       postalCode: fields.postalCode,
       country: fields.country,

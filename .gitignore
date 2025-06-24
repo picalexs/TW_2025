@@ -1,3 +1,4 @@
 *.env
 *.min.*
 node_modules/
+server/animal/*
