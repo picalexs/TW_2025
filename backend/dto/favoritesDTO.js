@@ -78,8 +78,8 @@ class FavoritesDTO extends abstractDTO {
 
   async add(userId, animalId) {
     try {
-      const safeUserId = typeof userId === 'string' ? validator.escape(userId) : userId;
-      const safeAnimalId = typeof animalId === 'string' ? validator.escape(animalId) : animalId;
+      const safeUserId = (typeof userId === 'string' && userId != null) ? validator.escape(userId) : userId;
+      const safeAnimalId = (typeof animalId === 'string' && animalId != null) ? validator.escape(animalId) : animalId;
       const sql = `INSERT INTO favorites (user_id, animal_id) VALUES (:userId, :animalId)`;
       await this.executeCustomQuery(sql, [safeUserId, safeAnimalId], { autoCommit: true });
       return { success: true };

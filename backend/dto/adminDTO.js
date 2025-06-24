@@ -33,7 +33,7 @@ class AdminDTO extends abstractDTO {
   async getTableSchema(tableName) {
     try {
       if (typeof tableName !== 'string') throw new Error('Invalid table name');
-      const safeTableName = validator.escape(tableName);
+      const safeTableName = tableName != null ? validator.escape(tableName) : null;
       const allowedTables = await this.getAvailableTables();
       if (!allowedTables.includes(safeTableName.toUpperCase())) {
         throw new Error('Invalid table name');
@@ -68,7 +68,7 @@ class AdminDTO extends abstractDTO {
   async getTableData(tableName, limit = null) {
     try {
       if (typeof tableName !== 'string') throw new Error('Invalid table name');
-      const safeTableName = validator.escape(tableName);
+      const safeTableName = tableName != null ? validator.escape(tableName) : null;
       const allowedTables = await this.getAvailableTables();
       if (!allowedTables.includes(safeTableName.toUpperCase())) {
         throw new Error('Invalid table name');
@@ -97,7 +97,7 @@ class AdminDTO extends abstractDTO {
   async getTableStats(tableName) {
     try {
       if (typeof tableName !== 'string') throw new Error('Invalid table name');
-      const safeTableName = validator.escape(tableName);
+      const safeTableName = tableName != null ? validator.escape(tableName) : null;
       const allowedTables = await this.getAvailableTables();
       if (!allowedTables.includes(safeTableName.toUpperCase())) {
         throw new Error('Invalid table name');

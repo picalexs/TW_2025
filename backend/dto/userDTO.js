@@ -334,31 +334,31 @@ class userDTO extends abstractDTO {
 
       if (userData.first_name !== undefined) {
         updates.push("first_name = :first_name");
-        binds.first_name = validator.escape(userData.first_name);
+        binds.first_name = (typeof userData.first_name === 'string') ? validator.escape(userData.first_name) : (userData.first_name === null ? null : undefined);
       }
       if (userData.last_name !== undefined) {
         updates.push("last_name = :last_name");
-        binds.last_name = validator.escape(userData.last_name);
+        binds.last_name = (typeof userData.last_name === 'string') ? validator.escape(userData.last_name) : (userData.last_name === null ? null : undefined);
       }
       if (userData.username !== undefined) {
         updates.push("username = :username");
-        binds.username = validator.escape(userData.username);
+        binds.username = (typeof userData.username === 'string') ? validator.escape(userData.username) : (userData.username === null ? null : undefined);
       }
       if (userData.email !== undefined) {
         updates.push("email = :email");
-        binds.email = validator.normalizeEmail(userData.email);
+        binds.email = (typeof userData.email === 'string') ? validator.normalizeEmail(userData.email) : (userData.email === null ? null : undefined);
       }
       if (userData.phone_number !== undefined) {
         updates.push("phone = :phone_number");
-        binds.phone_number = validator.escape(userData.phone_number);
+        binds.phone_number = (typeof userData.phone_number === 'string') ? validator.escape(userData.phone_number) : (userData.phone_number === null ? null : undefined);
       }
       if (userData.role !== undefined) {
         updates.push("role = :role");
-        binds.role = validator.escape(userData.role);
+        binds.role = (typeof userData.role === 'string') ? validator.escape(userData.role) : (userData.role === null ? null : undefined);
       }
       if (userData.profile_picture !== undefined) {
         updates.push("profile_picture = :profile_picture");
-        binds.profile_picture = validator.escape(userData.profile_picture);
+        binds.profile_picture = (typeof userData.profile_picture === 'string') ? validator.escape(userData.profile_picture) : (userData.profile_picture === null ? null : undefined);
       }
 
       if (updates.length === 0) {

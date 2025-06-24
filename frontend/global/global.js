@@ -142,7 +142,6 @@ function setupMobileMenu() {
     const options = document.querySelectorAll('.mobile-language-option');
 
     if (!toggle || !container || !overlay) {
-        console.error("Mobile menu elements not found during setupMobileMenu!");
         return;
     }
 

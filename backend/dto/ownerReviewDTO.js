@@ -71,7 +71,7 @@ class OwnerReviewDTO extends AbstractDTO {
                 RETURNING id INTO :id
             `;
 
-            const safeReviewText = review_text ? validator.escape(review_text) : null;
+            const safeReviewText = review_text != null ? validator.escape(review_text) : null;
 
             const binds = {
                 reviewer_id,
@@ -347,7 +347,7 @@ class OwnerReviewDTO extends AbstractDTO {
             }
             if (review_text !== undefined) {
                 updates.push("review_text = :review_text");
-                binds.review_text = validator.escape(review_text);
+                binds.review_text = review_text != null ? validator.escape(review_text) : null;
             }
             if (communication_rating !== undefined) {
                 updates.push("communication_rating = :communication_rating");

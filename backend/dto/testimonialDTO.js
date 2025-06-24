@@ -166,7 +166,7 @@ class TestimonialDTO extends abstractDTO {
       }
       if (testimonialData.testimonial_text !== undefined) {
         updates.push("testimonial_text = :testimonial_text");
-        binds.testimonial_text = validator.escape(testimonialData.testimonial_text);
+        binds.testimonial_text = testimonialData.testimonial_text != null ? validator.escape(testimonialData.testimonial_text) : null;
       }
       if (testimonialData.rating !== undefined) {
         updates.push("rating = :rating");
@@ -174,7 +174,7 @@ class TestimonialDTO extends abstractDTO {
       }
       if (testimonialData.location !== undefined) {
         updates.push("location = :location");
-        binds.location = validator.escape(testimonialData.location);
+        binds.location = testimonialData.location != null ? validator.escape(testimonialData.location) : null;
       }
 
       if (updates.length === 0) {

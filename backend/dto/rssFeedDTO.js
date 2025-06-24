@@ -60,9 +60,9 @@ class RSSFeedDTO extends AbstractDTO {
         try {
             let query;
             let params = {};
-            const safeZone = zone ? validator.escape(zone) : undefined;
-            const safeBreed = breed ? validator.escape(breed) : undefined;
-            const safeSpecies = species ? validator.escape(species) : undefined;
+            const safeZone = zone != null ? validator.escape(zone) : undefined;
+            const safeBreed = breed != null ? validator.escape(breed) : undefined;
+            const safeSpecies = species != null ? validator.escape(species) : undefined;
             if (type === 'popular') {
                 query = `
                     SELECT 

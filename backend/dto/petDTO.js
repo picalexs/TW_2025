@@ -443,20 +443,20 @@ class petDTO extends abstractDTO {
         postalCode
       } = petData;
 
-      const safeName = name ? validator.escape(name) : null;
-      const safeSpecies = species ? validator.escape(species) : null;
-      const safeBreed = breed ? validator.escape(breed) : null;
-      const safeGender = gender ? validator.escape(gender) : null;
-      const safeSizeCategory = sizeCategory ? validator.escape(sizeCategory) : null;
-      const safeColor = color ? validator.escape(color) : null;
-      const safeHealthStatus = healthStatus ? validator.escape(healthStatus) : null;
-      const safeDescription = description ? validator.escape(description) : null;
-      const safeAdoptionStatus = adoptionStatus ? validator.escape(adoptionStatus) : null;
-      const safeRelationWithOthers = relationWithOthers ? validator.escape(relationWithOthers) : null;
-      const safeCity = city ? validator.escape(city) : null;
-      const safeCountry = country ? validator.escape(country) : null;
-      const safeAddress = address ? validator.escape(address) : null;
-      const safePostalCode = postalCode ? validator.escape(postalCode) : null;
+      const safeName = name != null ? validator.escape(name) : null;
+      const safeSpecies = species != null ? validator.escape(species) : null;
+      const safeBreed = breed != null ? validator.escape(breed) : null;
+      const safeGender = gender != null ? validator.escape(gender) : null;
+      const safeSizeCategory = sizeCategory != null ? validator.escape(sizeCategory) : null;
+      const safeColor = color != null ? validator.escape(color) : null;
+      const safeHealthStatus = healthStatus != null ? validator.escape(healthStatus) : null;
+      const safeDescription = description != null ? validator.escape(description) : null;
+      const safeAdoptionStatus = adoptionStatus != null ? validator.escape(adoptionStatus) : null;
+      const safeRelationWithOthers = relationWithOthers != null ? validator.escape(relationWithOthers) : null;
+      const safeCity = city != null ? validator.escape(city) : null;
+      const safeCountry = country != null ? validator.escape(country) : null;
+      const safeAddress = address != null ? validator.escape(address) : null;
+      const safePostalCode = postalCode != null ? validator.escape(postalCode) : null;
 
       if (!safeName || !safeSpecies) {
         throw Object.assign(
