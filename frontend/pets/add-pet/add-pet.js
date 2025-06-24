@@ -153,11 +153,10 @@ class AddPetPage {
       this.setFieldValue('pet-address', pet.address.address);
       this.setFieldValue('pet-postal-code', pet.address.postalCode);
     }
-    
-    // Adoption information
+   
     this.setFieldValue('adoption-status', pet.adoptionStatus);
     this.setFieldValue('adoption-fee', pet.adoptionFee);
-    // Tags
+   
     if (pet.tags && Array.isArray(pet.tags)) {
       if (this.availableTags.length === 0) {
         await this.loadTags();
@@ -171,12 +170,12 @@ class AddPetPage {
       this.renderTags();
     }
     
-    // Media files
+   
     if (pet.media && Array.isArray(pet.media)) {
       this.displayExistingMedia(pet.media);
     }
       
-    // Medical history, care resources, and care schedule
+
     this.populateMedicalData(pet);
     
     this.updateUIForEditMode();
@@ -270,7 +269,7 @@ class AddPetPage {
   populateMedicalData(pet) {
     console.log('Populating medical data:', pet);
     
-    // Populate medical history entries
+   
     if (pet.medicalHistory && Array.isArray(pet.medicalHistory)) {
       const validMedicalHistory = pet.medicalHistory.filter(entry => 
         entry && (entry.description || entry.date || entry.record_date)
@@ -289,7 +288,7 @@ class AddPetPage {
             console.log(`✓ Set medical history description: "${entry.description}"`);
           }
           if (dateField && entry.date) {
-            // Format date properly for input field
+          
             const date = new Date(entry.date);
             if (!isNaN(date.getTime())) {
               dateField.value = date.toISOString().split('T')[0];
@@ -333,7 +332,7 @@ class AddPetPage {
               const resourceType = resource.type || resource.resource_type;
               this.setDropdownValue(typeField, resourceType);
               console.log(`✓ Set care resource type: "${resourceType}"`);            } else if (typeField) {
-              // Ensure resource type always has a value, default to "general" if not specified
+             
               this.setDropdownValue(typeField, 'general');
               console.log(`✓ Set care resource type to default "general"`);
             }
@@ -363,10 +362,10 @@ class AddPetPage {
         console.log(`Populating care schedule entry ${index + 1}:`, schedule);
         this.addCareScheduleEntry();
         
-        // Use a small delay to ensure DOM is updated and target the correct entry
+        
         setTimeout(() => {
           const careScheduleEntries = document.querySelectorAll('#care-schedule-list .care-schedule-entry');
-          const targetEntry = careScheduleEntries[index]; // Target the entry at the current index, not the last one
+          const targetEntry = careScheduleEntries[index]; 
           
           if (targetEntry) {
             console.log(`Populating care schedule entry at index ${index}`, targetEntry);
@@ -538,11 +537,13 @@ class AddPetPage {
 
     if (form) {
       form.addEventListener('submit', (e) => this.handleFormSubmit(e));
-    }
-
-    if (cancelBtn) {
+    }    if (cancelBtn) {
       cancelBtn.addEventListener('click', () => {
-        window.location.href = '../pets-page/pets-page.html';
+        if (this.isEditMode && this.editPetId) {
+          window.location.href = `../pet-details/pet-details.html?id=${this.editPetId}`;
+        } else {
+          window.location.href = '../pets-page/pets-page.html';
+        }
       });
     }
 
@@ -626,8 +627,7 @@ class AddPetPage {
       submitFormData.append('careSchedule', JSON.stringify(petData.careSchedule));
       submitFormData.append('tags', JSON.stringify(petData.tags));
       
-      let result;
-      if (this.isEditMode && this.editPetId) {
+      let result;      if (this.isEditMode && this.editPetId) {
         this.showMessage('Updating pet profile...', 'info');
         result = await this.petService.updatePetWithFiles(this.editPetId, submitFormData);
         console.log('Pet update successful:', result);
@@ -640,7 +640,11 @@ class AddPetPage {
       }
 
       setTimeout(() => {
-        window.location.href = '../pets-page/pets-page.html';
+        if (this.isEditMode && this.editPetId) {
+          window.location.href = `../pet-details/pet-details.html?id=${this.editPetId}`;
+        } else {
+          window.location.href = '../pets-page/pets-page.html';
+        }
       }, 1500);
 
     } catch (error) {
@@ -679,7 +683,7 @@ class AddPetPage {
       adoptionFee: formData.get('adoptionFee') ? parseFloat(formData.get('adoptionFee')) : null,
       shelterId: this.currentUserId,
       tags: this.getSelectedTagsForSubmission(),
-      // Address fields as expected by backend
+    
       address: formData.get('address') || '',
       city: formData.get('city') || '',
       postalCode: formData.get('postalCode') || '',
