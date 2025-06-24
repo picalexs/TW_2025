@@ -18,7 +18,9 @@ class RSSFeedController {
 
             if (!req.query || Object.keys(req.query).length === 0) {
                 if (req.url) {
-                    const url = new URL(req.url, `http://${req.headers.host}`);
+                    // Use BASE_URL or fallback to https
+                    const baseUrl = process.env.BASE_URL || `https://${req.headers.host}`;
+                    const url = new URL(req.url, baseUrl);
                     const searchParams = url.searchParams;
                     type = searchParams.get('type') || 'recent';
                     zone = searchParams.get('zone');
@@ -63,7 +65,8 @@ class RSSFeedController {
 
             if (!req.query || Object.keys(req.query).length === 0) {
                 if (req.url) {
-                    const url = new URL(req.url, `http://${req.headers.host}`);
+                    const baseUrl = process.env.BASE_URL || `https://${req.headers.host}`;
+                    const url = new URL(req.url, baseUrl);
                     const searchParams = url.searchParams;
                     zone = searchParams.get('zone');
                     radius = searchParams.get('radius') || '50';
@@ -96,7 +99,7 @@ class RSSFeedController {
     generateRSSXML(pets, feedType, filters) {
         const feedTitle = this.getFeedTitle(feedType, filters);
         const feedDescription = this.getFeedDescription(feedType, filters);
-        const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+        const baseUrl = process.env.BASE_URL || 'https://localhost:3000';
         
         let rssXml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
@@ -154,7 +157,7 @@ class RSSFeedController {
     generateTrendingRSSXML(pets, filters) {
         const feedTitle = `Trending Pets for Adoption${filters.zone ? ' in ' + filters.zone : ''}`;        
         const feedDescription = `Most popular and trending pets available for adoption${filters.zone ? ' in the ' + filters.zone + ' area' : ''}`;
-        const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
+        const baseUrl = process.env.BASE_URL || 'https://localhost:3000';
 
         let rssXml = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
@@ -219,7 +222,8 @@ class RSSFeedController {
     }
 
     async getShareableLinks(req, res) {
-        const url = new URL(req.url, `http://${req.headers.host}`);
+        const baseUrl = process.env.BASE_URL || `https://${req.headers.host}`;
+        const url = new URL(req.url, baseUrl);
         const searchParams = url.searchParams;
         
         const type = searchParams.get('type') || 'recent';
@@ -227,8 +231,6 @@ class RSSFeedController {
         const breed = searchParams.get('breed');
         const species = searchParams.get('species');
         const limit = searchParams.get('limit') || '10';
-        
-        const baseUrl = process.env.BASE_URL || `${process.env.API_PROTOCOL || 'http'}://${process.env.API_HOST || 'localhost'}:${process.env.API_PORT || 8080}`;
         
         try {
             const links = {
@@ -275,7 +277,8 @@ class RSSFeedController {
 
             if (!req.query || Object.keys(req.query).length === 0) {
                 if (req.url) {
-                    const url = new URL(req.url, `http://${req.headers.host}`);
+                    const baseUrl = process.env.BASE_URL || `https://${req.headers.host}`;
+                    const url = new URL(req.url, baseUrl);
                     const searchParams = url.searchParams;
                     type = searchParams.get('type') || 'recent';
                     zone = searchParams.get('zone');

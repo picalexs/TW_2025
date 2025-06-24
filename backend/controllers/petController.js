@@ -362,7 +362,7 @@ class PetController {
 
   async getPetsFeed(req, res) {
     try {
-      const url = new URL(req.url, `http://${req.headers.host}`);
+      const url = new URL(req.url, `${req.protocol}://${req.headers.host}`);
       const searchParams = url.searchParams;
 
       const type = searchParams.get('type') || 'recent';
@@ -372,7 +372,6 @@ class PetController {
       const limit = parseInt(searchParams.get('limit')) || 20;
       const format = searchParams.get('format') || 'json';
 
-      // For demo purposes, create some sample pets if no database is available
       const demoPets = [
         {
           id: 1,

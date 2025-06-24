@@ -49,7 +49,12 @@ class UserController {
         },
       });
 
-      const verificationLink = `http://${process.env.API_HOST || 'localhost'}:${process.env.API_PORT}/api/users/verify-email?token=${emailToken}`;
+
+      const protocol = process.env.API_PROTOCOL || 'http';
+      const host = process.env.API_HOST || 'localhost';
+      const port = process.env.API_PORT || 80;
+      const baseUrl = process.env.BASE_URL || `${protocol}://${host}${port == 80 || port == 443 ? '' : ':' + port}`;
+      const verificationLink = `${baseUrl}/api/users/verify-email?token=${emailToken}`;
       const mailOptions = {
         from: `"Your App" <${process.env.EMAIL_USER}>`,
         to: email,
@@ -148,7 +153,8 @@ class UserController {
   }
 
   async verifyEmail(req, res) {
-    const parsedUrl = new URL(req.url, `http://${req.headers.host}`);
+    const baseUrl = process.env.BASE_URL || `https://${req.headers.host}`;
+    const parsedUrl = new URL(req.url, baseUrl);
     const token = parsedUrl.searchParams.get('token');
 
     if (!token) {

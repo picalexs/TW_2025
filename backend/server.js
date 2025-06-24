@@ -17,8 +17,13 @@ const handleAdminRoutes = require('./routes/adminRoutes');
 const handleFavoriteRoutes = require('./routes/favoriteRoutes');
 
 const { verifyToken, checkRole } = require('./middleware/authMiddleware');
+const fs = require('fs');
+const path = require('path');
 
 const PORT = process.env.API_PORT || 8080;
+const PROTOCOL = process.env.API_PROTOCOL || 'http';
+const HOST = process.env.API_HOST || 'localhost';
+const BASE_URL = process.env.BASE_URL || `${PROTOCOL}://${HOST}${PORT == 80 || PORT == 443 ? '' : ':' + PORT}`;
 
 const generateAllowedOrigins = () => {
   const frontendPorts = process.env.FRONTEND_PORTS ?
@@ -26,8 +31,8 @@ const generateAllowedOrigins = () => {
 
   const origins = [];
   frontendPorts.forEach(port => {
-    origins.push(`http://localhost:${port.trim()}`);
-    origins.push(`http://127.0.0.1:${port.trim()}`);
+    origins.push(`${PROTOCOL}://localhost:${port.trim()}`);
+    origins.push(`${PROTOCOL}://127.0.0.1:${port.trim()}`);
   });
 
   return origins;
@@ -82,14 +87,33 @@ const sendCompressedResponse = (res, statusCode, data, contentType = 'applicatio
   res.end(compressedData);
 };
 
-const server = http.createServer(async (req, res) => {
+let server;
+let protocol = 'http';
+
+const SSL_KEY_PATH = process.env.SSL_KEY_PATH || path.join(__dirname, '../ssl/key.pem');
+const SSL_CERT_PATH = process.env.SSL_CERT_PATH || path.join(__dirname, '../ssl/cert.pem');
+
+let useHttps = false;
+let httpsOptions = {};
+try {
+  if (fs.existsSync(SSL_KEY_PATH) && fs.existsSync(SSL_CERT_PATH)) {
+    httpsOptions = {
+      key: fs.readFileSync(SSL_KEY_PATH),
+      cert: fs.readFileSync(SSL_CERT_PATH)
+    };
+    useHttps = true;
+    protocol = 'https';
+  }
+} catch (e) {
+  console.warn('Could not load SSL cert or key:', e);
+}
+
+const requestHandler = async (req, res) => {
   console.log(`[${new Date().toISOString()}] Incoming request: ${req.method} ${req.url}`);
   res.req = req;
 
   const allowedOrigins = generateAllowedOrigins();
-
   const origin = req.headers.origin;
-  
   if (req.url.includes('/api/pets/feed') || req.url.includes('/api/rss/')) {
     res.setHeader('Access-Control-Allow-Origin', '*');
   } else if (allowedOrigins.includes(origin)) {
@@ -117,7 +141,6 @@ const server = http.createServer(async (req, res) => {
   }
   try {
     let routeHandled = false;
-
     const publicRoutes = [
       '/api/users/register',
       '/api/users/verify-email',
@@ -141,9 +164,7 @@ const server = http.createServer(async (req, res) => {
 
     const userProfileMatch = req.url.match(/^\/api\/users\/\d+(\?.*)?$/);
     const isUserProfileGet = userProfileMatch && req.method.toLowerCase() === 'get';
-
     const isPublicRoute = publicRoutes.some(route => req.url.startsWith(route)) || isUserProfileGet;
-
     const isFrontendAsset = !req.url.startsWith('/api/') && req.url !== '/' && !req.url.startsWith('/home/');
 
     if (!isPublicRoute && !isFrontendAsset) {
@@ -159,40 +180,17 @@ const server = http.createServer(async (req, res) => {
 
     
     routeHandled = await handleConfigRoutes(req, res);
-    if (!routeHandled) {
-      routeHandled = await handleUserRoutes(req, res);
-    }
-    if (!routeHandled) {
-      routeHandled = await handlePetRoutes(req, res);
-    }
-    if (!routeHandled) {
-      routeHandled = await handleRecommendationRoutes(req, res);
-    }
-    if (!routeHandled) {
-      routeHandled = await handleTestimonialRoutes(req, res);
-    }
-    if (!routeHandled) {
-      routeHandled = await handleOwnerReviewRoutes(req, res);
-    }
-    if (!routeHandled) {
-      routeHandled = await handleFavoriteRoutes(req, res);
-    }
-    if (!routeHandled) {
-      routeHandled = await handleAdminRoutes(req, res);
-    }
-    if (!routeHandled) {
-      routeHandled = await handleNotificationRoutes(req, res);
-    }
-    if (!routeHandled) {
-      routeHandled = await handleRSSRoutes(req, res);
-    }
-   
-    if (!routeHandled) {
-      routeHandled = await handleStaticRoutes(req, res);
-    }
-    if (!routeHandled) {
-      routeHandled = await handleFrontendRoutes(req, res);
-    }
+    if (!routeHandled) routeHandled = await handleUserRoutes(req, res);
+    if (!routeHandled) routeHandled = await handlePetRoutes(req, res);
+    if (!routeHandled) routeHandled = await handleRecommendationRoutes(req, res);
+    if (!routeHandled) routeHandled = await handleTestimonialRoutes(req, res);
+    if (!routeHandled) routeHandled = await handleOwnerReviewRoutes(req, res);
+    if (!routeHandled) routeHandled = await handleFavoriteRoutes(req, res);
+    if (!routeHandled) routeHandled = await handleAdminRoutes(req, res);
+    if (!routeHandled) routeHandled = await handleNotificationRoutes(req, res);
+    if (!routeHandled) routeHandled = await handleRSSRoutes(req, res);
+    if (!routeHandled) routeHandled = await handleStaticRoutes(req, res);
+    if (!routeHandled) routeHandled = await handleFrontendRoutes(req, res);
     if (!routeHandled) {
       console.log(`Route not found: ${req.url}`);
       sendCompressedResponse(res, 404, {
@@ -210,7 +208,14 @@ const server = http.createServer(async (req, res) => {
       });
     }
   }
-});
+};
+
+if (useHttps) {
+  const https = require('https');
+  server = https.createServer(httpsOptions, requestHandler);
+} else {
+  server = http.createServer(requestHandler);
+}
 
 async function startServer() {
   try {
@@ -219,7 +224,7 @@ async function startServer() {
     if (poolInitialized) {
       server.listen(PORT, () => {
         console.log(`[${new Date().toISOString()}] Server running on port ${PORT}`);
-        console.log(`API available at http://localhost:${PORT}/api/status`);
+        console.log(`API available at ${protocol}://localhost:${PORT}/api/status`);
       });
 
       process.on('SIGINT', async () => {
@@ -237,4 +242,5 @@ async function startServer() {
     process.exit(1);
   }
 }
+
 startServer();

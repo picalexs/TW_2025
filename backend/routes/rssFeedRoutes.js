@@ -1,7 +1,8 @@
 const rssFeedController = require('../controllers/rssFeedController');
 
 async function handleRSSRoutes(req, res) {
-  const url = new URL(req.url, `http://${req.headers.host}`);
+  const protocol = req.headers['x-forwarded-proto'] || req.connection.encrypted ? 'https' : 'http';
+  const url = new URL(req.url, `${protocol}://${req.headers.host}`);
   
   switch (url.pathname) {
     case '/api/rss':

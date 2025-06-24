@@ -164,16 +164,15 @@ class GoogleAuthController {
         return `${baseUsername}${randomSuffix}`;
     }    
     getBaseUrl() {
-        return process.env.BASE_URL || 'http://127.0.0.1:5500';
+        return process.env.BASE_URL || 'https://pet-center.site';
     }
-      
+    
     getFrontendBaseUrlFromApi() {
         return new Promise((resolve) => {
             if (frontendUrl) {
                 resolve(frontendUrl);
                 return;
             }
-            
             const baseUrl = process.env.BASE_URL;
             if (baseUrl) {
                 const fallbackUrl = `${baseUrl}/frontend`;
@@ -181,8 +180,7 @@ class GoogleAuthController {
                 resolve(fallbackUrl);
                 return;
             }
-            
-            const finalFallback = 'http://127.0.0.1:5500/frontend';
+            const finalFallback = 'https://pet-center.site/frontend';
             console.log(`[GoogleAuth] Using hardcoded fallback: ${finalFallback}`);
             resolve(finalFallback);
         });

@@ -1,7 +1,9 @@
 (function() {
     'use strict';
       window.PetWidgetConfig = window.PetWidgetConfig || {
-        apiUrl: 'http://localhost:8080',
+        apiUrl: (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+          ? 'http://localhost:8080'
+          : 'https://pet-center.site',
         limit: 10,
         showTitle: true,
         title: 'Recent Pets for Adoption',

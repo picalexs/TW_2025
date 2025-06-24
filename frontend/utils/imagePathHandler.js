@@ -9,7 +9,7 @@ function escapeHTML(str) {
 
 class ImagePathHandler {
     static get API_BASE_URL() {
-        return window.APP_CONFIG?.api?.baseURL || 'http://localhost:8080';
+        return window.APP_CONFIG?.api?.baseURL || (window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : ''));
     }    
     
     static get DEFAULTS() {
