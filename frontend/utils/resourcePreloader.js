@@ -3,8 +3,8 @@ class ResourcePreloader {
     this.preloadedResources = new Set();
     this.criticalFonts = [];
     this.criticalImages = [      
-      '/frontend/assets/default-pet-profile.webp',
-      '/frontend/assets/default-user-profile.webp'
+      '/assets/default-pet-profile.webp',
+      '/assets/default-user-profile.webp'
     ];
   }
 

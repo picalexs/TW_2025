@@ -14,8 +14,8 @@ class ImagePathHandler {
     
     static get DEFAULTS() {
         return {
-            USER: '/frontend/assets/default-user-profile.webp',
-            PET: '/frontend/assets/default-pet-profile.webp'
+            USER: '/assets/default-user-profile.webp',
+            PET: '/assets/default-pet-profile.webp'
         };
     }
 

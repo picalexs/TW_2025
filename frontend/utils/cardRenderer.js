@@ -16,7 +16,7 @@ class CardRenderer {
       pet.imagePath || pet.media?.[0]?.filePath
     );
     
-    const defaultPetImage = this.imagePathHandler?.DEFAULTS?.PET || '/frontend/assets/default-pet-profile.webp';
+    const defaultPetImage = this.imagePathHandler?.DEFAULTS?.PET || '/assets/default-pet-profile.webp';
     
     const description = this._formatDescription(pet.description, showFullDescription);
     const petInfo = this._formatPetInfo(pet, variant);
@@ -51,7 +51,7 @@ class CardRenderer {
       user.imagePath || user.profile_picture
     );
     
-    const defaultUserImage = this.imagePathHandler?.DEFAULTS?.USER || '/frontend/assets/default-user-profile.webp';
+    const defaultUserImage = this.imagePathHandler?.DEFAULTS?.USER || '/assets/default-user-profile.webp';
     
     const userInfo = this._formatUserInfo(user, variant);
     const userStats = showStats ? this._formatUserStats(user, variant) : '';
