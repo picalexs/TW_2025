@@ -641,9 +641,9 @@ class AddPetPage {
 
       setTimeout(() => {
         if (this.isEditMode && this.editPetId) {
-          window.location.href = `../pet-details/pet-details.html?id=${this.editPetId}`;
+          window.location.href = `/frontend/pets/pet-details/pet-details.html?id=${this.editPetId}`;
         } else {
-          window.location.href = '../pets-page/pets-page.html';
+          window.location.href = '/frontend/pets/pets-page/pets-page.html';
         }
       }, 1500);
 

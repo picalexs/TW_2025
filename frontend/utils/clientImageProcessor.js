@@ -102,7 +102,6 @@ class ClientImageProcessor {
   }  static createFileInfoDisplay(fileInfo) {
     const container = document.createElement('div');
     container.className = 'file-info-display';
-    // Use escapeHTML for all DOM-injected values to prevent XSS
     container.innerHTML = `
       <div class="file-info-header">
         <span class="file-name">${escapeHTML(fileInfo.originalName)}</span>
