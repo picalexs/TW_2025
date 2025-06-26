@@ -19,7 +19,7 @@
   <b>Pets Listing</b><br>
   <img src="Screenshots/pets.png" alt="Pets Listing" width="600"/><br><br>
   <b>Map in Pets Page</b><br>
-  <img src="Screenshots/map.png" alt="RSS Feed" width="600"/>
+  <img src="Screenshots/map.png" alt="RSS Feed" width="600"/><br><br>
   <b>RSS Feed Example</b><br>
   <img src="Screenshots/rss.png" alt="RSS Feed" width="600"/>
 </p>
