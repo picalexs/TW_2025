@@ -7,6 +7,38 @@
 
 ---
 
+## 📸 Screenshots
+
+<p align="center">
+  <b>Login Page</b><br>
+  <img src="Screenshots/login.png" alt="Login Page" width="600"/><br><br>
+  <b>Home Page</b><br>
+  <img src="Screenshots/home.png" alt="Home Page" width="600"/><br><br>
+  <b>Testimonials / Reviews</b><br>
+  <img src="Screenshots/testimonials.png" alt="Testimonials" width="600"/><br><br>
+  <b>Pets Listing</b><br>
+  <img src="Screenshots/pets.png" alt="Pets Listing" width="600"/><br><br>
+  <b>Map in Pets Page</b><br>
+  <img src="Screenshots/map.png" alt="RSS Feed" width="600"/>
+  <b>RSS Feed Example</b><br>
+  <img src="Screenshots/rss.png" alt="RSS Feed" width="600"/>
+</p>
+
+---
+
+## 🛠️ Technologies Used
+
+- **JavaScript** (frontend & backend logic)
+- **HTML5** (structure)
+- **CSS3** (styling)
+- **Leaflet** + **OpenStreetMap** (maps integration)
+- **JWT** (JSON Web Token for authentication)
+- **OAuth 2.0** (Google OAuth login)
+- **RSS Feed** (Syndication via RSS)
+- **Database:** OracleXE
+
+---
+
 ## 🌟 Highlighted Features
 
 ### 🐾 Pet Management & Adoption
@@ -57,37 +89,6 @@
 
 ### 📰 RSS Feed
 - **RSS Feed Generation:** Exposes pet data as an RSS feed for syndication and news aggregators.
-
----
-
-## 📸 Screenshots
-
-> _Add your screenshots here!_
-> 
-> - Home page displaying adoption offers
-> - Pet profile with multimedia gallery
-> - Calendar view for feeding schedules
-> - Medical history interface
-
-<!-- Example images (replace with your actual screenshots) -->
-<p align="center">
-  <img src="screenshots/homepage.png" alt="Homepage" width="600"/>
-  <img src="screenshots/pet-profile.png" alt="Pet Profile" width="600"/>
-  <img src="screenshots/calendar.png" alt="Feeding Calendar" width="600"/>
-</p>
-
----
-
-## 🛠️ Technologies Used
-
-- **JavaScript** (frontend & backend logic)
-- **HTML5** (structure)
-- **CSS3** (styling)
-- **Leaflet** + **OpenStreetMap** (maps integration)
-- **JWT** (JSON Web Token for authentication)
-- **OAuth 2.0** (Google OAuth login)
-- **RSS Feed** (Syndication via RSS)
-- **Database:** OracleXE
 
 ---
 
