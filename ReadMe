@@ -32,7 +32,7 @@ DB_USER=pot_user
 DB_PASSWORD=your_password
 DB_CONNECTION_STRING=localhost:1521/XEPDB1
 
-API_PORT=8888
+API_PORT=8080
 
 JWT_SECRET=your_jwt_secret
 TOKEN_EXPIRATION=1d
@@ -43,7 +43,7 @@ EMAIL_SECURE=false
 
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
-GOOGLE_REDIRECT_URI=http://localhost:8888/api/auth/google/callback
+GOOGLE_REDIRECT_URI=http://localhost:8080/api/auth/google/callback
 
 
 4. Running the App
@@ -56,7 +56,7 @@ Access the MailDev interface at: http://localhost:1080
 
 5. Access the App
 Open your browser and go to:
-http://localhost:8888
+http://localhost:8080
 
 
 

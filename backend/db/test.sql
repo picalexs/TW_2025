@@ -16,3 +16,16 @@ SELECT * FROM users WHERE username = 'admin';
 
 select * from owner_reviews;
 
+DELETE FROM animal_tags WHERE animal_id = 61;
+DELETE FROM favorites WHERE animal_id = 61;
+DELETE FROM care_schedule WHERE animal_id = 61;
+DELETE FROM care_resources WHERE animal_id = 61;
+DELETE FROM medical_history WHERE animal_id = 61;
+DELETE FROM media WHERE animal_id = 61;
+DELETE FROM animal_metrics WHERE animal_id = 61;
+DELETE FROM adoptions WHERE animal_id = 61;
+DELETE FROM conversations WHERE animal_id = 61;
+DELETE FROM system_logs WHERE animal_id = 61;
+DELETE FROM animals WHERE id = 61;
+COMMIT;
+

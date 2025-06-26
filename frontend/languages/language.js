@@ -17,7 +17,7 @@ class LanguageManager {
       const page = window.location.pathname.split('/').pop().replace('.html', '');
       const translationPage = page;
       
-      const basePath = '/';
+      const basePath = '/frontend/';
       
       const globalPath = `${basePath}languages/${this.currentLanguage}/global.json`;
       const pagePath = `${basePath}languages/${this.currentLanguage}/${translationPage}.json`;

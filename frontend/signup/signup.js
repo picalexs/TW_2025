@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
   if (googleLoginButton) {
     googleLoginButton.addEventListener('click', async () => {
       try {
-        const apiBaseUrl = window.APP_CONFIG?.api?.baseURL || 'http://localhost:8888';
+        const apiBaseUrl = window.APP_CONFIG?.api?.baseURL || 'http://localhost:8080';
         const configResponse = await fetch(`${apiBaseUrl}/api/config`);
         const config = await configResponse.json();
         
@@ -49,7 +49,7 @@ async function handleSignup(event) {
     alert('Please fill in all fields');
     return;
   }  try {
-    const apiBaseUrl = window.APP_CONFIG?.api?.baseURL || 'http://localhost:8888';
+    const apiBaseUrl = window.APP_CONFIG?.api?.baseURL || 'http://localhost:8080';
     const response = await fetch(`${apiBaseUrl}/api/users/register`, { 
       method: 'POST',
       headers: {

@@ -17,15 +17,15 @@ export function loadPage(pageId) {
   */
   switch(pageId) {
     case 'home':
-      window.location.href = '/home/home.html';
+      window.location.href = '/frontend/home/home.html';
       break;
       
     case 'login':
-      window.location.href = '/login/login.html';
+      window.location.href = '/frontend/login/login.html';
       break;
 
     case 'signup':
-      window.location.href = '/signup/signup.html';
+      window.location.href = '/frontend/signup/signup.html';
       break;
       
     case 'pet-details':
@@ -33,9 +33,9 @@ export function loadPage(pageId) {
       const petId = urlParams.get('id');
       
       if (petId) {
-        window.location.href = '/pets/pet-details/pet-details.html?id=' + petId;
+        window.location.href = './pets/pet-details/pet-details.html?id=' + petId;
       } else {
-        window.location.href = '/pets/pets-page/pets-page.html';
+        window.location.href = './pets/pets-page/pets-page.html';
       }
       break;
     

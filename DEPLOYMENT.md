@@ -40,16 +40,16 @@ GOOGLE_REDIRECT_URI=https://yourdomain.com/api/auth/google/callback
 
 ### Custom Port Configuration
 
-For custom ports (e.g., port 8888):
+For custom ports (e.g., port 8080):
 ```env
 # Server configuration
 API_HOST=localhost
-API_PORT=8888
+API_PORT=8080
 API_PROTOCOL=http
-BASE_URL=http://localhost:8888
+BASE_URL=http://localhost:8080
 
 # Google OAuth
-GOOGLE_REDIRECT_URI=http://localhost:8888/api/auth/google/callback
+GOOGLE_REDIRECT_URI=http://localhost:8080/api/auth/google/callback
 ```
 
 ## HTTP Server Hosting

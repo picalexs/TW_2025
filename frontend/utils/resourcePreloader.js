@@ -3,8 +3,8 @@ class ResourcePreloader {
     this.preloadedResources = new Set();
     this.criticalFonts = [];
     this.criticalImages = [      
-      '/assets/default-pet-profile.webp',
-      '/assets/default-user-profile.webp'
+      '/frontend/assets/default-pet-profile.webp',
+      '/frontend/assets/default-user-profile.webp'
     ];
   }
 
@@ -66,7 +66,7 @@ class ResourcePreloader {
   }
 
   prefetchAPI(endpoint) {
-    const baseURL = window.APP_CONFIG?.api?.baseURL || 'http://localhost:8888';
+    const baseURL = window.APP_CONFIG?.api?.baseURL || 'http://localhost:8080';
     
     fetch(baseURL + endpoint, {
       method: 'GET',

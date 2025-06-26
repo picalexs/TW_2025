@@ -18,7 +18,7 @@ const handleFavoriteRoutes = require('./routes/favoriteRoutes');
 
 const { verifyToken, checkRole } = require('./middleware/authMiddleware');
 
-const PORT = process.env.API_PORT || 8888;
+const PORT = process.env.API_PORT || 8080;
 
 const generateAllowedOrigins = () => {
   const frontendPorts = process.env.FRONTEND_PORTS ?

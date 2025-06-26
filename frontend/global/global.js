@@ -19,9 +19,9 @@ function checkLoginStatusAndToggleNavButtons() {
     if (isLoggedIn && profileBtn) {
         const userId = localStorage.getItem('userId');
         if (userId) {
-            profileBtn.href = `/profile/profile.html?id=${userId}`;
+            profileBtn.href = `/frontend/profile/profile.html?id=${userId}`;
             if (mobileProfileBtn) {
-                mobileProfileBtn.href = `/profile/profile.html?id=${userId}`;
+                mobileProfileBtn.href = `/frontend/profile/profile.html?id=${userId}`;
             }
         }
     }

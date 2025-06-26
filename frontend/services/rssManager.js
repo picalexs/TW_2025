@@ -1,10 +1,10 @@
 class RSSManager {  
   constructor() {
     this.baseUrl = window.location.origin;
-    if (window.location.port === '8888' || window.location.host.includes(':8888')) {
+    if (window.location.port === '8080' || window.location.host.includes(':8080')) {
       this.apiBaseUrl = `${this.baseUrl}/api`;
     } else {
-      this.apiBaseUrl = `http://localhost:8888/api`;
+      this.apiBaseUrl = `http://localhost:8080/api`;
     }
   }
 
@@ -389,7 +389,7 @@ class RSSManager {
       
       if (!response.ok) {
         if (response.status === 404) {
-          throw new Error('Backend server not available. Please ensure the server is running on port 8888.');
+          throw new Error('Backend server not available. Please ensure the server is running on port 8080.');
         }
         throw new Error(`Server error: ${response.status} - ${response.statusText}`);
       }
@@ -411,7 +411,7 @@ class RSSManager {
       console.error('RSSManager: Failed to get sharing options:', error);
       
       if (error.message.includes('fetch') || error.name === 'TypeError') {
-        this.showNotification('Backend server not available. Please ensure the server is running on port 8888.', 'error');
+        this.showNotification('Backend server not available. Please ensure the server is running on port 8080.', 'error');
       } else {
         this.showNotification(`Failed to get sharing options: ${error.message}`, 'error');
       }

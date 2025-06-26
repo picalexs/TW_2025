@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
     try {
-      const apiBase = window.APP_CONFIG?.api?.baseURL || 'http://localhost:8888';
+      const apiBase = window.APP_CONFIG?.api?.baseURL || 'http://localhost:8080';
       const tagArray = Array.from(tags.entries()).map(([id, name]) => ({ id: Number(id), name }));
       
       const res = await fetch(`${apiBase}/api/user/preferences/tags`, {
