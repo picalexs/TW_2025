@@ -104,6 +104,7 @@
    ```bash
    npm install
    ```
+
 3. **Set Up the Database**
 
    - **Download and install Oracle XE 21c:**  
@@ -119,9 +120,9 @@
    
    - **Create tables and populate the database:**  
      Run the following scripts in order (located in the repository):
-     1. `databaseScheme.sql` &mdash; creates the tables
-     2. `triggers.sql` &mdash; sets up database triggers
-     3. `populatingDB.sql` &mdash; populates the tables with sample data
+     1. `databaseScheme.sql` – creates the tables
+     2. `triggers.sql` – sets up database triggers
+     3. `populatingDB.sql` – populates the tables with sample data
 
      You can use SQL*Plus, SQLcl, or any Oracle database tool:
      ```bash
@@ -131,9 +132,9 @@
      ```
 
 4. **Configure Environment**
-   - Copy  to `.env` and add your configuration
+   - Copy `.env.example` to `.env` and add your configuration:
 
-  ```env
+   ```env
    # Database configuration
    DB_USER=
    DB_PASSWORD=
@@ -159,12 +160,23 @@
    GOOGLE_REDIRECT_URI=
    ```
 
-5. **Run the Application**
+5. **Install and Run Maildev (for local email testing)**
+   - Install Maildev globally if you don't have it:
+     ```bash
+     npm install -g maildev
+     ```
+   - Start Maildev in a new terminal:
+     ```bash
+     maildev
+     ```
+   - Access the Maildev web interface at `http://localhost:1080` to view sent emails.
+
+6. **Run the Application**
    ```bash
    npm start
    ```
-   The backend should now be running at `http://localhost:3000/` (or the specified port).
-   For the frontend use a live server.
+   The backend should now be running at `http://localhost:3000/` (or the specified port).  
+   For the frontend, use a live server (such as VSCode Live Server extension or similar).
 
 ---
 
